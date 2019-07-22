@@ -34,7 +34,7 @@ func createPublish(d *schema.ResourceData, m interface{}) error {
 		log.Println("publish other session uid - ", uid)
 	} else {
 		// Publish current session
-		s, err := GetSid()
+		s, err := GetSession()
 		if err != nil {
 			return err
 		}
