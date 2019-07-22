@@ -29,10 +29,19 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHKP_PASSWORD", nil),
 				Description: "Check Point Management admin password",
 			},
+			"context": {
+				Type: schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHKP_CONTEXT", nil),
+				Description: "Check Point access context - gaia_api or web_api",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"chkp_network": resourceNetwork(),
 			"chkp_publish": resourcePublish(),
+			"chkp_hostname": resourceHostname(),
+			"chkp_physical_interface": resourcePhysicalInterface(),
+			"chkp_put_file": resourcePutFile(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -43,6 +52,11 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	server := data.Get("server").(string)
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)
+
+	context := chkp.WebContext
+	if val, ok := data.GetOk("context"); ok {
+		context = val.(string)
+	}
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("chkp-provider missing parameters to initialize (server, username, password)")
@@ -56,20 +70,20 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return nil,err
 	}
 	client = chkp.APIClient(chkp.ApiClientArgs{
-												Port: chkp.DefaultPort,
-												Fingerprint: "",
-												Sid: session.Sid,
-												Server: server,
-												ProxyHost: "",
-												ProxyPort: -1,
-												ApiVersion: "",
-												IgnoreServerCertificate: false,
-												AcceptServerCertificate: false,
-												DebugFile: "deb.txt",
-												Context: chkp.WebContext,
-												Timeout: chkp.TimeOut,
-												Sleep: chkp.SleepTime,
-											})
+		Port: chkp.DefaultPort,
+		Fingerprint: "",
+		Sid: session.Sid,
+		Server: server,
+		ProxyHost: "",
+		ProxyPort: -1,
+		ApiVersion: "",
+		IgnoreServerCertificate: false,
+		AcceptServerCertificate: false,
+		DebugFile: "deb.txt",
+		Context: context,
+		Timeout: chkp.TimeOut,
+		Sleep: chkp.SleepTime,
+	})
 	if CheckSession(client, session.Uid) {
 		log.Printf("Client connected with last session (SID = %s)", session.Sid)
 		doLogin = false
@@ -93,9 +107,15 @@ func preformLogin(client *chkp.ApiClient, username string, pwd string) error {
 		log.Println("Failed to preform login")
 		return err
 	}
+
+	uid := ""
+	if val, ok := loginRes.GetData()["uid"]; ok {
+		uid = val.(string)
+	}
+
 	s := Session {
 		Sid: client.GetSessionID(),
-		Uid: loginRes.GetData()["uid"].(string),
+		Uid: uid,
 	}
 	if err := s.Save(); err != nil {
 		return err

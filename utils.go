@@ -55,7 +55,7 @@ func GetSid() (Session,error) {
 	return s,nil
 }
 func CheckSession(c *chkp.ApiClient, uid string) bool {
-	if uid == "" {
+	if uid == "" || c.GetContext() != chkp.WebContext{
 		return false
 	}
 	payload := map[string]interface{}{
@@ -64,5 +64,3 @@ func CheckSession(c *chkp.ApiClient, uid string) bool {
 	res, _ := c.ApiCall("show-session",payload,c.GetSessionID(),true,false)
 	return res.Success
 }
-
-
