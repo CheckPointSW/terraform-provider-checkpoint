@@ -157,14 +157,10 @@ func resourceNetwork() *schema.Resource {
 
 func createNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*chkp.ApiClient)
-
 	network := make(map[string]interface{})
-
-	// Parsing only attributes that were set by client or default value attributes.
 	if val, ok := d.GetOk("name"); ok {
 		network["name"] = val.(string)
 	}
-	// subnet handling
 	if val, ok := d.GetOk("subnet"); ok {
 		network["subnet"] = val.(string)
 	}
@@ -174,8 +170,6 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("subnet6"); ok {
 		network["subnet6"] = val.(string)
 	}
-
-	// mask handling
 	if val, ok := d.GetOk("mask_length"); ok {
 		network["mask-length"] = val.(int)
 	}
@@ -188,8 +182,6 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("subnet_mask"); ok {
 		network["subnet-mask"] = val.(string)
 	}
-
-	// nat settings handling
 	if val, ok := d.GetOk("nat_settings"); ok {
 		nat := val.(*schema.Set).List()
 		if len(nat) > 0 {
@@ -197,7 +189,6 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 			network["nat-settings"] = expandNatSettings(nat)
 		}
 	}
-
 	if val, ok := d.GetOk("tags"); ok {
 		network["tags"] = val.([]interface{})
 	}
@@ -225,14 +216,11 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("ignore_warnings"); ok {
 		network["ignore-warnings"] = val.(bool)
 	}
-
 	log.Println("Create Network - Map = ", network)
 	addNetworkRes, _ := client.ApiCall("add-network",network,client.GetSessionID(),true,false)
 	if !addNetworkRes.Success {
 		return fmt.Errorf(addNetworkRes.ErrorMsg)
 	}
-
-	// Set Schema UID = Object UID
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
 	return readNetwork(d, m)
 }
@@ -246,7 +234,7 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	if !showNetworkRes.Success {
 		// Handle delete resource from other clients
 		if objectNotFound(showNetworkRes.GetData()["code"].(string)) {
-			d.SetId("") // Destroy resource
+			d.SetId("")
 			return nil
 		}
 		return fmt.Errorf(showNetworkRes.ErrorMsg)
@@ -264,12 +252,13 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 		} else if v := networkJson["subnet6"].(string); v != "" {
 			_ = d.Set("subnet", v)
 		}
-	}else if _, ok := d.GetOk("subnet4"); ok {
+	}
+	if _, ok := d.GetOk("subnet4"); ok {
 		_ = d.Set("subnet4", networkJson["subnet4"].(string))
-	} else if _, ok := d.GetOk("subnet6"); ok {
+	}
+	if _, ok := d.GetOk("subnet6"); ok {
 		_ = d.Set("subnet6", networkJson["subnet6"].(string))
 	}
-
 
 	if _, ok := d.GetOk("mask_length"); ok {
 		if v := int(networkJson["mask-length4"].(float64)); v != 0 {
@@ -277,31 +266,30 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 		} else if v := int(networkJson["mask-length6"].(float64)); v != 0 {
 			_ = d.Set("mask_length", v)
 		}
-	}else if _, ok := d.GetOk("mask_length4"); ok {
+	}
+	if _, ok := d.GetOk("mask_length4"); ok {
 		_ = d.Set("mask_length4", int(networkJson["mask-length4"].(float64)))
-	}else if _, ok := d.GetOk("mask_length6"); ok {
+	}
+	if _, ok := d.GetOk("mask_length6"); ok {
 		_ = d.Set("mask_length6", int(networkJson["mask-length6"].(float64)))
-	}else if _, ok := d.GetOk("subnet_mask"); ok {
+	}
+	if _, ok := d.GetOk("subnet_mask"); ok {
 		_ = d.Set("subnet_mask", networkJson["subnet-mask"].(string))
 	}
 
 	if _, ok := d.GetOk("broadcast"); ok {
 		_ = d.Set("broadcast", networkJson["broadcast"].(string))
 	}
-
 	if _, ok := d.GetOk("color"); ok {
 		_ = d.Set("color", networkJson["color"].(string))
 	}
-
 	if _, ok := d.GetOk("comments"); ok {
 		_ = d.Set("comments", networkJson["comments"].(string))
 	}
-
 	if v, ok := d.GetOk("nat_settings"); ok {
 		v := v.(*schema.Set).List()
 		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"], v[0]))
 	}
-
 	if _, ok := d.GetOk("groups"); ok {
 		groupsJson := networkJson["groups"].([]interface{})
 		groupsIds := make([]interface{}, len(groupsJson))
@@ -314,7 +302,6 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 		_ = d.Set("groups", groupsIds)
 	}
-
 	if _, ok := d.GetOk("tags"); ok {
 		tagsJson := networkJson["tags"].([]interface{})
 		var tagsIds = make([]interface{}, len(tagsJson))
@@ -327,23 +314,19 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 		_ = d.Set("tags", tagsIds)
 	}
-
 	return nil
 }
 
 func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*chkp.ApiClient)
-	//payload := parseSchemaToMap(d, false)
 	network := make(map[string]interface{})
-	// name is required
-	network["name"] = d.Get("name")
-
+	// Name is required
+	network["name"] = d.Get("name").(string)
 	if d.HasChange("name") {
 		oldName , newName := d.GetChange("name")
 		network["name"] = oldName.(string)
 		network["new-name"] = newName.(string)
 	}
-	// subnet handling
 	if ok := d.HasChange("subnet"); ok {
 		network["subnet"] = d.Get("subnet").(string)
 	}
@@ -353,8 +336,6 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	if ok := d.HasChange("subnet6"); ok {
 		network["subnet6"] = d.Get("subnet6").(string)
 	}
-
-	// mask handling
 	if ok := d.HasChange("mask_length"); ok {
 		network["mask-length"] = d.Get("mask_length").(int)
 	}
@@ -367,8 +348,6 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	if ok := d.HasChange("subnet_mask"); ok {
 		network["subnet-mask"] = d.Get("subnet_mask").(string)
 	}
-
-	// nat settings handling
 	if ok := d.HasChange("nat_settings"); ok {
 		nat := d.Get("nat_settings").(*schema.Set).List()
 		if len(nat) > 0 {
@@ -376,7 +355,6 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 			network["nat-settings"] = expandNatSettings(nat)
 		}
 	}
-
 	if ok := d.HasChange("tags"); ok {
 		network["tags"] = d.Get("tags").([]interface{})
 	}
@@ -389,7 +367,6 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	if ok := d.HasChange("comments"); ok {
 		network["comments"] = d.Get("comments").(string)
 	}
-
 	if ok := d.HasChange("color"); ok {
 		network["color"] = d.Get("color").(string)
 	}
@@ -419,14 +396,16 @@ func deleteNetwork(d *schema.ResourceData, m interface{}) error {
 	if !deleteNetworkRes.Success {
 		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
 	}
-	d.SetId("") // Destroy resource
+	d.SetId("")
 	return nil
 }
 
 // Call from Create or Update
 func expandNatSettings(natSchema map[string]interface{}) interface{} {
+	if natSchema == nil {
+		return nil
+	}
 	natSettingsConf := make(map[string]interface{})
-
 	natSettingsConf["auto-rule"] = natSchema["auto_rule"].(bool)
 	if v := natSchema["ip_address"].(string); v != "" {
 		natSettingsConf["ip-address"] = v
