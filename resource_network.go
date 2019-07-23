@@ -288,7 +288,11 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 	if v, ok := d.GetOk("nat_settings"); ok {
 		v := v.(*schema.Set).List()
-		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"], v[0]))
+		var nat interface{}
+		if len(v) > 0 {
+			nat = v[0]
+		}
+		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"], nat))
 	}
 	if _, ok := d.GetOk("groups"); ok {
 		groupsJson := networkJson["groups"].([]interface{})
@@ -440,19 +444,20 @@ func flattenNatSettings(showNat interface{}, currNat interface{}) interface{} {
 	}
 
 	// Normalize IP
-	nat := currNat.(map[string]interface{})
-	if v, ok := nat["ip_address"]; ok && v.(string) != ""  {
-		if v, ok := res["ipv4_address"]; ok && v.(string) != "" {
-			v := v.(string)
-			res["ip_address"] = v
-			res["ipv4_address"] = ""
-		} else if v, ok := res["ipv6_address"]; ok && v.(string) != "" {
-			v := v.(string)
-			res["ip_address"] = v
-			res["ipv6_address"] = ""
+	if currNat != nil {
+		nat := currNat.(map[string]interface{})
+		if v, ok := nat["ip_address"]; ok && v.(string) != "" {
+			if v, ok := res["ipv4_address"]; ok && v.(string) != "" {
+				v := v.(string)
+				res["ip_address"] = v
+				res["ipv4_address"] = ""
+			} else if v, ok := res["ipv6_address"]; ok && v.(string) != "" {
+				v := v.(string)
+				res["ip_address"] = v
+				res["ipv6_address"] = ""
+			}
 		}
 	}
-
 	var natSettingsConf []interface{}
 	natSettingsConf = append(natSettingsConf, res)
 	return natSettingsConf
