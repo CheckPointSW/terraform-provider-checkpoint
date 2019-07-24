@@ -10,7 +10,7 @@ import (
 
 
 func resourceNetwork() *schema.Resource {
-	return &schema.Resource{
+	return &schema.Resource {
 		Create: createNetwork,
 		Read:   readNetwork,
 		Update: updateNetwork,
@@ -21,11 +21,6 @@ func resourceNetwork() *schema.Resource {
 				Required: true,
 				Description: "Object name. Should be unique in the domain.",
 			},
-			"subnet": {
-				Type: schema.TypeString,
-				Optional: true,
-				Description: "IPv4 or IPv6 network address. If both addresses are required use subnet4 and subnet6 fields explicitly.",
-			},
 			"subnet4": {
 				Type: schema.TypeString,
 				Optional: true,
@@ -35,11 +30,6 @@ func resourceNetwork() *schema.Resource {
 				Type: schema.TypeString,
 				Optional: true,
 				Description: "IPv6 network address.",
-			},
-			"mask_length": {
-				Type: schema.TypeInt,
-				Optional: true,
-				Description: "IPv4 or IPv6 network mask length. If both masks are required use mask-length4 and mask-length6 fields explicitly. Instead of IPv4 mask length it is possible to specify IPv4 mask itself in subnet-mask field.",
 			},
 			"mask_length4": {
 				Type: schema.TypeInt,
@@ -66,11 +56,6 @@ func resourceNetwork() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Description: "Whether to add automatic address translation rules.",
-						},
-						"ip_address": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: "IPv4 or IPv6 address. If both addresses are required use ipv4-address and ipv6-address fields explicitly. This parameter is not required in case \"method\" parameter is \"hide\" and \"hide-behind\" parameter is \"gateway\"",
 						},
 						"ipv4_address": {
 							Type:     schema.TypeString,
@@ -156,17 +141,11 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("name"); ok {
 		network["name"] = val.(string)
 	}
-	if val, ok := d.GetOk("subnet"); ok {
-		network["subnet"] = val.(string)
-	}
 	if val, ok := d.GetOk("subnet4"); ok {
 		network["subnet4"] = val.(string)
 	}
 	if val, ok := d.GetOk("subnet6"); ok {
 		network["subnet6"] = val.(string)
-	}
-	if val, ok := d.GetOk("mask_length"); ok {
-		network["mask-length"] = val.(int)
 	}
 	if val, ok := d.GetOk("mask_length4"); ok {
 		network["mask-length4"] = val.(int)
@@ -233,31 +212,14 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 	networkJson := showNetworkRes.GetData()
 	log.Println("Read Network - Show JSON = ", networkJson)
-
 	if _, ok := d.GetOk("name"); ok {
 		_ = d.Set("name", networkJson["name"].(string))
-	}
-
-	if _, ok := d.GetOk("subnet"); ok {
-		if v := networkJson["subnet4"].(string); v != ""{
-			_ = d.Set("subnet", v)
-		} else if v := networkJson["subnet6"].(string); v != "" {
-			_ = d.Set("subnet", v)
-		}
 	}
 	if _, ok := d.GetOk("subnet4"); ok {
 		_ = d.Set("subnet4", networkJson["subnet4"].(string))
 	}
 	if _, ok := d.GetOk("subnet6"); ok {
 		_ = d.Set("subnet6", networkJson["subnet6"].(string))
-	}
-
-	if _, ok := d.GetOk("mask_length"); ok {
-		if v := int(networkJson["mask-length4"].(float64)); v != 0 {
-			_ = d.Set("mask_length", v)
-		} else if v := int(networkJson["mask-length6"].(float64)); v != 0 {
-			_ = d.Set("mask_length", v)
-		}
 	}
 	if _, ok := d.GetOk("mask_length4"); ok {
 		_ = d.Set("mask_length4", int(networkJson["mask-length4"].(float64)))
@@ -268,7 +230,6 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("subnet_mask"); ok {
 		_ = d.Set("subnet_mask", networkJson["subnet-mask"].(string))
 	}
-
 	if _, ok := d.GetOk("broadcast"); ok {
 		_ = d.Set("broadcast", networkJson["broadcast"].(string))
 	}
@@ -278,13 +239,8 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("comments"); ok {
 		_ = d.Set("comments", networkJson["comments"].(string))
 	}
-	if v, ok := d.GetOk("nat_settings"); ok {
-		v := v.(*schema.Set).List()
-		var nat interface{}
-		if len(v) > 0 {
-			nat = v[0]
-		}
-		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"], nat))
+	if _, ok := d.GetOk("nat_settings"); ok {
+		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"]))
 	}
 	if _, ok := d.GetOk("groups"); ok {
 		groupsJson := networkJson["groups"].([]interface{})
@@ -316,94 +272,103 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*chkp.ApiClient)
 	network := make(map[string]interface{})
+	apiCall := false
 	// Name is required
 	network["name"] = d.Get("name").(string)
 	if d.HasChange("name") {
 		oldName , newName := d.GetChange("name")
 		network["name"] = oldName.(string)
 		network["new-name"] = newName.(string)
-	}
-	if ok := d.HasChange("subnet"); ok {
-		if v, ok := d.GetOk("subnet"); ok {
-			network["subnet"] = v.(string)
-		}
+		apiCall = true
 	}
 	if ok := d.HasChange("subnet4"); ok {
 		if v, ok := d.GetOk("subnet4"); ok {
 			network["subnet4"] = v.(string)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("subnet6"); ok {
 		if v, ok := d.GetOk("subnet6"); ok {
 			network["subnet6"] = v.(string)
-		}
-	}
-	if ok := d.HasChange("mask_length"); ok {
-		if v, ok := d.GetOk("mask_length"); ok {
-			network["mask-length"] = v.(int)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("mask_length4"); ok {
 		if v, ok := d.GetOk("mask_length4"); ok {
 			network["mask-length4"] = v.(int)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("mask_length6"); ok {
 		if v, ok := d.GetOk("mask_length6"); ok {
 			network["mask-length6"] = v.(int)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("subnet_mask"); ok {
 		if v, ok := d.GetOk("subnet_mask"); ok {
 			network["subnet-mask"] = v.(string)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("nat_settings"); ok {
-		nat := d.Get("nat_settings").(*schema.Set).List()
-		if len(nat) > 0 {
-			nat := nat[0].(map[string]interface{})
-			network["nat-settings"] = expandNatSettings(nat)
+		if v, ok := d.GetOk("nat_settings"); ok {
+			nat := v.(*schema.Set).List()
+			if len(nat) > 0 {
+				nat := nat[0].(map[string]interface{})
+				network["nat-settings"] = expandNatSettings(nat)
+				apiCall = true
+			}
 		}
 	}
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			network["tags"] = v.([]interface{})
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("groups"); ok {
 		if v, ok := d.GetOk("groups"); ok {
 			network["groups"] = v.([]interface{})
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("broadcast"); ok {
 		if v, ok := d.GetOk("broadcast"); ok {
 			network["broadcast"] = v.(string)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("comments"); ok {
 		if v, ok := d.GetOk("comments"); ok {
 			network["comments"] = v.(string)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("color"); ok {
 		if v, ok := d.GetOk("color"); ok {
 			network["color"] = v.(string)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("ignore_errors"); ok {
 		if v, ok := d.GetOk("ignore_errors"); ok {
 			network["ignore-errors"] = v.(bool)
+			apiCall = true
 		}
 	}
 	if ok := d.HasChange("ignore_warnings"); ok {
 		if v, ok := d.GetOk("ignore_warnings"); ok {
 			network["ignore-warnings"] = v.(bool)
+			apiCall = true
 		}
 	}
-	log.Println("Update Network - Map = ", network)
-	setNetworkRes, _ := client.ApiCall("set-network",network,client.GetSessionID(),true,false)
-	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+	if apiCall {
+		log.Println("Update Network - Map = ", network)
+		setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, false)
+		if !setNetworkRes.Success {
+			return fmt.Errorf(setNetworkRes.ErrorMsg)
+		}
 	}
 	return readNetwork(d, m)
 }
@@ -426,56 +391,37 @@ func expandNatSettings(natSchema map[string]interface{}) interface{} {
 	if natSchema == nil {
 		return nil
 	}
-	natSettingsConf := make(map[string]interface{})
-	natSettingsConf["auto-rule"] = natSchema["auto_rule"].(bool)
-	if v := natSchema["ip_address"].(string); v != "" {
-		natSettingsConf["ip-address"] = v
-	}
+	res := make(map[string]interface{})
+	res["auto-rule"] = natSchema["auto_rule"].(bool)
 	if v := natSchema["ipv4_address"].(string); v != "" {
-		natSettingsConf["ipv4-address"] = v
+		res["ipv4-address"] = v
 	}
-	if v := natSchema["ipv6_address"].(string); v != ""{
-		natSettingsConf["ipv6-address"] = v
+	if v := natSchema["ipv6_address"].(string); v != "" {
+		res["ipv6-address"] = v
 	}
 	if v := natSchema["hide_behind"].(string); v != "" {
-		natSettingsConf["hide-behind"] = v
+		res["hide-behind"] = v
 	}
 	if v := natSchema["install_on"].(string); v != "" {
-		natSettingsConf["install-on"] = v
+		res["install-on"] = v
 	}
 	if v := natSchema["method"].(string); v != "" {
-		natSettingsConf["method"] = v
+		res["method"] = v
 	}
-	return natSettingsConf
+	return res
 }
 
 // Call from Read
-func flattenNatSettings(showNat interface{}, currNat interface{}) interface{} {
-	if showNat == nil {
+func flattenNatSettings(natJson interface{}) interface{} {
+	if natJson == nil {
 		return nil
 	}
 	res := make(map[string]interface{})
-	for k, v := range showNat.(map[string]interface{}) {
+	for k, v := range natJson.(map[string]interface{}) {
 		newKey := strings.ReplaceAll(k,"-","_")
 		res[newKey] = v
 	}
-
-	// Normalize IP
-	if currNat != nil {
-		nat := currNat.(map[string]interface{})
-		if v, ok := nat["ip_address"]; ok && v.(string) != "" {
-			if v, ok := res["ipv4_address"]; ok && v.(string) != "" {
-				v := v.(string)
-				res["ip_address"] = v
-				res["ipv4_address"] = ""
-			} else if v, ok := res["ipv6_address"]; ok && v.(string) != "" {
-				v := v.(string)
-				res["ip_address"] = v
-				res["ipv6_address"] = ""
-			}
-		}
-	}
-	var natSettingsConf []interface{}
-	natSettingsConf = append(natSettingsConf, res)
-	return natSettingsConf
+	var nat []interface{}
+	nat = append(nat, res)
+	return nat
 }

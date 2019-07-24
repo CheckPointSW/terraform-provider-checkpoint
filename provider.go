@@ -54,7 +54,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return nil, fmt.Errorf("chkp-provider missing parameters to initialize (server, username, password)")
 	}
 
-	args := chkp.ApiClientArgs{
+	args := chkp.ApiClientArgs {
 		Port:                    chkp.DefaultPort,
 		Fingerprint:             "",
 		Sid:                     "",
