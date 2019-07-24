@@ -123,11 +123,6 @@ func resourceNetwork() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
-			},
 			"groups": {
 				Type: schema.TypeList,
 				Optional: true,
@@ -206,9 +201,6 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 	if val, ok := d.GetOk("color"); ok {
 		network["color"] = val.(string)
-	}
-	if val, ok := d.GetOk("details_level"); ok {
-		network["details-level"] = val.(bool)
 	}
 	if val, ok := d.GetOk("ignore_errors"); ok {
 		network["ignore-errors"] = val.(bool)
@@ -332,25 +324,39 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 		network["new-name"] = newName.(string)
 	}
 	if ok := d.HasChange("subnet"); ok {
-		network["subnet"] = d.Get("subnet").(string)
+		if v, ok := d.GetOk("subnet"); ok {
+			network["subnet"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("subnet4"); ok {
-		network["subnet4"] = d.Get("subnet4").(string)
+		if v, ok := d.GetOk("subnet4"); ok {
+			network["subnet4"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("subnet6"); ok {
-		network["subnet6"] = d.Get("subnet6").(string)
+		if v, ok := d.GetOk("subnet6"); ok {
+			network["subnet6"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("mask_length"); ok {
-		network["mask-length"] = d.Get("mask_length").(int)
+		if v, ok := d.GetOk("mask_length"); ok {
+			network["mask-length"] = v.(int)
+		}
 	}
 	if ok := d.HasChange("mask_length4"); ok {
-		network["mask-length4"] = d.Get("mask_length4").(int)
+		if v, ok := d.GetOk("mask_length4"); ok {
+			network["mask-length4"] = v.(int)
+		}
 	}
 	if ok := d.HasChange("mask_length6"); ok {
-		network["mask-length6"] = d.Get("mask_length6").(int)
+		if v, ok := d.GetOk("mask_length6"); ok {
+			network["mask-length6"] = v.(int)
+		}
 	}
 	if ok := d.HasChange("subnet_mask"); ok {
-		network["subnet-mask"] = d.Get("subnet_mask").(string)
+		if v, ok := d.GetOk("subnet_mask"); ok {
+			network["subnet-mask"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("nat_settings"); ok {
 		nat := d.Get("nat_settings").(*schema.Set).List()
@@ -360,28 +366,39 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 	if ok := d.HasChange("tags"); ok {
-		network["tags"] = d.Get("tags").([]interface{})
+		if v, ok := d.GetOk("tags"); ok {
+			network["tags"] = v.([]interface{})
+		}
 	}
 	if ok := d.HasChange("groups"); ok {
-		network["groups"] = d.Get("groups").([]interface{})
+		if v, ok := d.GetOk("groups"); ok {
+			network["groups"] = v.([]interface{})
+		}
 	}
 	if ok := d.HasChange("broadcast"); ok {
-		network["broadcast"] = d.Get("broadcast").(string)
+		if v, ok := d.GetOk("broadcast"); ok {
+			network["broadcast"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("comments"); ok {
-		network["comments"] = d.Get("comments").(string)
+		if v, ok := d.GetOk("comments"); ok {
+			network["comments"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("color"); ok {
-		network["color"] = d.Get("color").(string)
-	}
-	if ok := d.HasChange("details_level"); ok {
-		network["details-level"] = d.Get("details_level").(bool)
+		if v, ok := d.GetOk("color"); ok {
+			network["color"] = v.(string)
+		}
 	}
 	if ok := d.HasChange("ignore_errors"); ok {
-		network["ignore-errors"] = d.Get("ignore_errors").(bool)
+		if v, ok := d.GetOk("ignore_errors"); ok {
+			network["ignore-errors"] = v.(bool)
+		}
 	}
 	if ok := d.HasChange("ignore_warnings"); ok {
-		network["ignore-warnings"] = d.Get("ignore_warnings").(bool)
+		if v, ok := d.GetOk("ignore_warnings"); ok {
+			network["ignore-warnings"] = v.(bool)
+		}
 	}
 	log.Println("Update Network - Map = ", network)
 	setNetworkRes, _ := client.ApiCall("set-network",network,client.GetSessionID(),true,false)
