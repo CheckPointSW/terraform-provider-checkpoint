@@ -11,21 +11,12 @@ const (
 	FILENAME = "sid.json"
 )
 
-
-func logout(client *chkp.ApiClient) error {
-	logoutRes, err := client.ApiCall("logout",map[string]interface{}{}, client.GetSessionID(), true, false)
-	if !logoutRes.Success{
-		return err
-	}
-	return nil
-}
-
 type Session struct {
 	Sid string `json:"sid"`
 	Uid string `json:"uid"`
 }
 
-func (s Session) Save() error {
+func (s *Session) Save() error {
 	f, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
 		return err
@@ -37,7 +28,7 @@ func (s Session) Save() error {
 	return nil
 }
 
-func GetSid() (Session,error) {
+func GetSession() (Session,error) {
 	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
 		_, err := os.Create(FILENAME)
 		if err != nil {
@@ -50,12 +41,13 @@ func GetSid() (Session,error) {
 	}
 	var s Session
 	if err = json.Unmarshal(b, &s); err != nil {
-		return Session{},err
+		return Session{}, err
 	}
-	return s,nil
+	return s, nil
 }
+
 func CheckSession(c *chkp.ApiClient, uid string) bool {
-	if uid == "" {
+	if uid == "" || c.GetContext() != chkp.WebContext {
 		return false
 	}
 	payload := map[string]interface{}{

@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
+	"strings"
 )
 
 
 func resourceNetwork() *schema.Resource {
-	return &schema.Resource{
+	return &schema.Resource {
 		Create: createNetwork,
 		Read:   readNetwork,
 		Update: updateNetwork,
@@ -20,11 +21,6 @@ func resourceNetwork() *schema.Resource {
 				Required: true,
 				Description: "Object name. Should be unique in the domain.",
 			},
-			"subnet": {
-				Type: schema.TypeString,
-				Optional: true,
-				Description: "IPv4 or IPv6 network address. If both addresses are required use subnet4 and subnet6 fields explicitly.",
-			},
 			"subnet4": {
 				Type: schema.TypeString,
 				Optional: true,
@@ -34,11 +30,6 @@ func resourceNetwork() *schema.Resource {
 				Type: schema.TypeString,
 				Optional: true,
 				Description: "IPv6 network address.",
-			},
-			"mask_length": {
-				Type: schema.TypeInt,
-				Optional: true,
-				Description: "IPv4 or IPv6 network mask length. If both masks are required use mask-length4 and mask-length6 fields explicitly. Instead of IPv4 mask length it is possible to specify IPv4 mask itself in subnet-mask field.",
 			},
 			"mask_length4": {
 				Type: schema.TypeInt,
@@ -65,11 +56,6 @@ func resourceNetwork() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Description: "Whether to add automatic address translation rules.",
-						},
-						"ip_address": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: "IPv4 or IPv6 address. If both addresses are required use ipv4-address and ipv6-address fields explicitly. This parameter is not required in case \"method\" parameter is \"hide\" and \"hide-behind\" parameter is \"gateway\"",
 						},
 						"ipv4_address": {
 							Type:     schema.TypeString,
@@ -122,11 +108,6 @@ func resourceNetwork() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
-			},
 			"groups": {
 				Type: schema.TypeList,
 				Optional: true,
@@ -154,110 +135,63 @@ func resourceNetwork() *schema.Resource {
 	}
 }
 
-func parseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
-	networkMap := make(map[string]interface{})
-
-	// Parsing only attributes that were set by client or default value attributes.
-	if val, ok := d.GetOk("name"); ok {
-		networkMap["name"] = val.(string)
-	}
-	// subnet handling
-	if val, ok := d.GetOk("subnet"); ok {
-		networkMap["subnet"] = val.(string)
-	}
-	if val, ok := d.GetOk("subnet4"); ok {
-		networkMap["subnet4"] = val.(string)
-	}
-	if val, ok := d.GetOk("subnet6"); ok {
-		networkMap["subnet6"] = val.(string)
-	}
-
-	// mask handling
-	if val, ok := d.GetOk("mask_length"); ok {
-		networkMap["mask-length"] = val.(int)
-	}
-	if val, ok := d.GetOk("mask_length4"); ok {
-		networkMap["mask-length4"] = val.(int)
-	}
-	if val, ok := d.GetOk("mask_length6"); ok {
-		networkMap["mask-length6"] = val.(int)
-	}
-	if val, ok := d.GetOk("subnet_mask"); ok {
-		networkMap["subnet-mask"] = val.(string)
-	}
-
-	// nat settings handling
-	if val, ok := d.GetOk("nat_settings"); ok {
-		natSettingsSchemaMap := val.(*schema.Set).List()[0].(map[string]interface{}) // v[0] = Nat settings item cast as map
-		natSettingsConf := make(map[string]interface{})
-
-		natSettingsConf["auto-rule"] = natSettingsSchemaMap["auto_rule"].(bool)
-		if v := natSettingsSchemaMap["ip_address"].(string); v != "" {
-				natSettingsConf["ip-address"] = v
-		}
-		if v := natSettingsSchemaMap["ipv4_address"].(string); v != "" {
-				natSettingsConf["ipv4-address"] = v
-		}
-		if v := natSettingsSchemaMap["ipv6_address"].(string); v != ""{
-				natSettingsConf["ipv6-address"] = v
-		}
-		if v := natSettingsSchemaMap["hide_behind"].(string); v != "" {
-				natSettingsConf["hide-behind"] = v
-		}
-		if v := natSettingsSchemaMap["install_on"].(string); v != "" {
-				natSettingsConf["install-on"] = v
-		}
-		if v := natSettingsSchemaMap["method"].(string); v != "" {
-				natSettingsConf["method"] = v
-		}
-		networkMap["nat-settings"] = natSettingsConf
-	}
-	if val, ok := d.GetOk("tags"); ok {
-		networkMap["tags"] = val.([]interface{})
-	}
-	if val, ok := d.GetOk("groups"); ok {
-		networkMap["groups"] = val.([]interface{})
-	}
-	if val, ok := d.GetOk("broadcast"); ok {
-		networkMap["broadcast"] = val.(string)
-	}
-	if val, ok := d.GetOk("comments"); ok {
-		networkMap["comments"] = val.(string)
-	}
-	if val, ok := d.GetOk("set_if_exists"); ok {
-		networkMap["set-if-exists"] = val.(bool)
-	}
-	if val, ok := d.GetOk("color"); ok {
-		networkMap["color"] = val.(string)
-	}
-	if val, ok := d.GetOk("details_level"); ok {
-		networkMap["details-level"] = val.(bool)
-	}
-	if val, ok := d.GetOk("ignore_errors"); ok {
-		networkMap["ignore-errors"] = val.(bool)
-	}
-	if val, ok := d.GetOk("ignore_warnings"); ok {
-		networkMap["ignore-warnings"] = val.(bool)
-	}
-
-	if !createResource {
-		// Call from updateNetwork
-		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(networkMap,"set-if-exists")
-	}
-	return networkMap
-}
-
 func createNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*chkp.ApiClient)
-	payload := parseSchemaToMap(d, true)
-	log.Println(payload)
-	addNetworkRes, _ := client.ApiCall("add-network",payload,client.GetSessionID(),true,false)
+	network := make(map[string]interface{})
+	if val, ok := d.GetOk("name"); ok {
+		network["name"] = val.(string)
+	}
+	if val, ok := d.GetOk("subnet4"); ok {
+		network["subnet4"] = val.(string)
+	}
+	if val, ok := d.GetOk("subnet6"); ok {
+		network["subnet6"] = val.(string)
+	}
+	if val, ok := d.GetOk("mask_length4"); ok {
+		network["mask-length4"] = val.(int)
+	}
+	if val, ok := d.GetOk("mask_length6"); ok {
+		network["mask-length6"] = val.(int)
+	}
+	if val, ok := d.GetOk("subnet_mask"); ok {
+		network["subnet-mask"] = val.(string)
+	}
+	if val, ok := d.GetOk("nat_settings"); ok {
+		nat := val.(*schema.Set).List()
+		if len(nat) > 0 {
+			nat := nat[0].(map[string]interface{})
+			network["nat-settings"] = expandNatSettings(nat)
+		}
+	}
+	if val, ok := d.GetOk("tags"); ok {
+		network["tags"] = val.([]interface{})
+	}
+	if val, ok := d.GetOk("groups"); ok {
+		network["groups"] = val.([]interface{})
+	}
+	if val, ok := d.GetOk("broadcast"); ok {
+		network["broadcast"] = val.(string)
+	}
+	if val, ok := d.GetOk("comments"); ok {
+		network["comments"] = val.(string)
+	}
+	if val, ok := d.GetOk("set_if_exists"); ok {
+		network["set-if-exists"] = val.(bool)
+	}
+	if val, ok := d.GetOk("color"); ok {
+		network["color"] = val.(string)
+	}
+	if val, ok := d.GetOk("ignore_errors"); ok {
+		network["ignore-errors"] = val.(bool)
+	}
+	if val, ok := d.GetOk("ignore_warnings"); ok {
+		network["ignore-warnings"] = val.(bool)
+	}
+	log.Println("Create Network - Map = ", network)
+	addNetworkRes, _ := client.ApiCall("add-network",network,client.GetSessionID(),true,false)
 	if !addNetworkRes.Success {
 		return fmt.Errorf(addNetworkRes.ErrorMsg)
 	}
-
-	// Set Schema UID = Object UID
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
 	return readNetwork(d, m)
 }
@@ -271,14 +205,13 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	if !showNetworkRes.Success {
 		// Handle delete resource from other clients
 		if objectNotFound(showNetworkRes.GetData()["code"].(string)) {
-			d.SetId("") // Destroy resource
+			d.SetId("")
 			return nil
 		}
 		return fmt.Errorf(showNetworkRes.ErrorMsg)
 	}
 	networkJson := showNetworkRes.GetData()
-	log.Println(networkJson)
-	// Handle non-nested attributes
+	log.Println("Read Network - Show JSON = ", networkJson)
 	if _, ok := d.GetOk("name"); ok {
 		_ = d.Set("name", networkJson["name"].(string))
 	}
@@ -306,19 +239,14 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("comments"); ok {
 		_ = d.Set("comments", networkJson["comments"].(string))
 	}
-
-	// Handle nat settings
 	if _, ok := d.GetOk("nat_settings"); ok {
-		var natSettingsConf []interface{}
-		natSettingsConf = append(natSettingsConf, networkJson["nat-settings"].(map[string]interface{}))
-		_ = d.Set("nat_settings", natSettingsConf)
+		_ = d.Set("nat_settings", flattenNatSettings(networkJson["nat-settings"]))
 	}
-
-	// Handle groups. Creates slice of groups uid
 	if _, ok := d.GetOk("groups"); ok {
-		var groupsIds []interface{}
 		groupsJson := networkJson["groups"].([]interface{})
-		if len(groupsJson) != 0 {
+		groupsIds := make([]interface{}, len(groupsJson))
+		if len(groupsJson) > 0 {
+			// Create slice of group names
 			for _, group := range groupsJson {
 				group := group.(map[string]interface{})
 				groupsIds = append(groupsIds, group["name"].(string))
@@ -326,12 +254,11 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 		_ = d.Set("groups", groupsIds)
 	}
-
-	// Handle tags. Creates slice of tags uid
 	if _, ok := d.GetOk("tags"); ok {
-		var tagsIds []interface{}
 		tagsJson := networkJson["tags"].([]interface{})
-		if len(tagsJson) != 0 {
+		var tagsIds = make([]interface{}, len(tagsJson))
+		if len(tagsJson) > 0 {
+			// Create slice of tag names
 			for _, tag := range tagsJson {
 				tag := tag.(map[string]interface{})
 				tagsIds = append(tagsIds, tag["name"].(string))
@@ -344,16 +271,104 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 
 func updateNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*chkp.ApiClient)
-	payload := parseSchemaToMap(d, false)
+	network := make(map[string]interface{})
+	apiCall := false
+	// Name is required
+	network["name"] = d.Get("name").(string)
 	if d.HasChange("name") {
 		oldName , newName := d.GetChange("name")
-		payload["name"] = oldName
-		payload["new-name"] = newName
+		network["name"] = oldName.(string)
+		network["new-name"] = newName.(string)
+		apiCall = true
 	}
-	log.Println(payload)
-	setNetworkRes, _ := client.ApiCall("set-network",payload,client.GetSessionID(),true,false)
-	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+	if ok := d.HasChange("subnet4"); ok {
+		if v, ok := d.GetOk("subnet4"); ok {
+			network["subnet4"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("subnet6"); ok {
+		if v, ok := d.GetOk("subnet6"); ok {
+			network["subnet6"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("mask_length4"); ok {
+		if v, ok := d.GetOk("mask_length4"); ok {
+			network["mask-length4"] = v.(int)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("mask_length6"); ok {
+		if v, ok := d.GetOk("mask_length6"); ok {
+			network["mask-length6"] = v.(int)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("subnet_mask"); ok {
+		if v, ok := d.GetOk("subnet_mask"); ok {
+			network["subnet-mask"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("nat_settings"); ok {
+		if v, ok := d.GetOk("nat_settings"); ok {
+			nat := v.(*schema.Set).List()
+			if len(nat) > 0 {
+				nat := nat[0].(map[string]interface{})
+				network["nat-settings"] = expandNatSettings(nat)
+				apiCall = true
+			}
+		}
+	}
+	if ok := d.HasChange("tags"); ok {
+		if v, ok := d.GetOk("tags"); ok {
+			network["tags"] = v.([]interface{})
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("groups"); ok {
+		if v, ok := d.GetOk("groups"); ok {
+			network["groups"] = v.([]interface{})
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("broadcast"); ok {
+		if v, ok := d.GetOk("broadcast"); ok {
+			network["broadcast"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("comments"); ok {
+		if v, ok := d.GetOk("comments"); ok {
+			network["comments"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("color"); ok {
+		if v, ok := d.GetOk("color"); ok {
+			network["color"] = v.(string)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("ignore_errors"); ok {
+		if v, ok := d.GetOk("ignore_errors"); ok {
+			network["ignore-errors"] = v.(bool)
+			apiCall = true
+		}
+	}
+	if ok := d.HasChange("ignore_warnings"); ok {
+		if v, ok := d.GetOk("ignore_warnings"); ok {
+			network["ignore-warnings"] = v.(bool)
+			apiCall = true
+		}
+	}
+	if apiCall {
+		log.Println("Update Network - Map = ", network)
+		setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, false)
+		if !setNetworkRes.Success {
+			return fmt.Errorf(setNetworkRes.ErrorMsg)
+		}
 	}
 	return readNetwork(d, m)
 }
@@ -367,6 +382,46 @@ func deleteNetwork(d *schema.ResourceData, m interface{}) error {
 	if !deleteNetworkRes.Success {
 		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
 	}
-	d.SetId("") // Destroy resource
+	d.SetId("")
 	return nil
+}
+
+// Call from Create or Update
+func expandNatSettings(natSchema map[string]interface{}) interface{} {
+	if natSchema == nil {
+		return nil
+	}
+	res := make(map[string]interface{})
+	res["auto-rule"] = natSchema["auto_rule"].(bool)
+	if v := natSchema["ipv4_address"].(string); v != "" {
+		res["ipv4-address"] = v
+	}
+	if v := natSchema["ipv6_address"].(string); v != "" {
+		res["ipv6-address"] = v
+	}
+	if v := natSchema["hide_behind"].(string); v != "" {
+		res["hide-behind"] = v
+	}
+	if v := natSchema["install_on"].(string); v != "" {
+		res["install-on"] = v
+	}
+	if v := natSchema["method"].(string); v != "" {
+		res["method"] = v
+	}
+	return res
+}
+
+// Call from Read
+func flattenNatSettings(natJson interface{}) interface{} {
+	if natJson == nil {
+		return nil
+	}
+	res := make(map[string]interface{})
+	for k, v := range natJson.(map[string]interface{}) {
+		newKey := strings.ReplaceAll(k,"-","_")
+		res[newKey] = v
+	}
+	var nat []interface{}
+	nat = append(nat, res)
+	return nat
 }
