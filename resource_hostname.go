@@ -42,7 +42,6 @@ func hostnameParseSchemaToMap(d *schema.ResourceData, createResource bool) map[s
 func createHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createHostname...")
 	client := m.(*chkp.ApiClient)
-	client.SetContext("gaia_api")
 	payload := hostnameParseSchemaToMap(d, true)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-hostname",payload,client.GetSessionID(),true,false)
