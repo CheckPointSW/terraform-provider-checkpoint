@@ -100,65 +100,65 @@ func resourcePhysicalInterface() *schema.Resource {
 }
 
 func physicalInterfaceParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
-	networkMap := make(map[string]interface{})
+	physicalInterfaceMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("name"); ok {
-		networkMap["name"] = val.(string)
+		physicalInterfaceMap["name"] = val.(string)
 	}
 	if val, ok := d.GetOk("monitor_mode"); ok {
-		networkMap["monitor-mode"] = val.(bool)
+		physicalInterfaceMap["monitor-mode"] = val.(bool)
 	}
 	if val, ok := d.GetOk("duplex"); ok {
-		networkMap["duplex"] = val.(string)
+		physicalInterfaceMap["duplex"] = val.(string)
 	}
 	if val, ok := d.GetOk("ipv6_autoconfig"); ok {
-		networkMap["ipv6-autoconfig"] = val.(bool)
+		physicalInterfaceMap["ipv6-autoconfig"] = val.(bool)
 	}
 
 	if val, ok := d.GetOk("mac_addr"); ok {
-		networkMap["mac-addr"] = val.(int)
+		physicalInterfaceMap["mac-addr"] = val.(int)
 	}
 	if val, ok := d.GetOk("enabled"); ok {
-		networkMap["enabled"] = val.(bool)
+		physicalInterfaceMap["enabled"] = val.(bool)
 	}
 	if val, ok := d.GetOk("comments"); ok {
-		networkMap["comments"] = val.(string)
+		physicalInterfaceMap["comments"] = val.(string)
 	}
 	if val, ok := d.GetOk("mtu"); ok {
-		networkMap["mtu"] = val.(int)
+		physicalInterfaceMap["mtu"] = val.(int)
 	}
 
 	if val, ok := d.GetOk("rx_ringsize"); ok {
-		networkMap["rx-ringsize"] = val.(int)
+		physicalInterfaceMap["rx-ringsize"] = val.(int)
 	}
 	if val, ok := d.GetOk("ipv6_mask_length"); ok {
-		networkMap["ipv6-mask-length"] = val.(int)
+		physicalInterfaceMap["ipv6-mask-length"] = val.(int)
 	}
 	if val, ok := d.GetOk("ipv6_address"); ok {
-		networkMap["ipv6-address"] = val.(string)
+		physicalInterfaceMap["ipv6-address"] = val.(string)
 	}
 	if val, ok := d.GetOk("ipv4_address"); ok {
-		networkMap["ipv4-address"] = val.(string)
+		physicalInterfaceMap["ipv4-address"] = val.(string)
 	}
 	if val, ok := d.GetOk("ipv4_mask_length"); ok {
-		networkMap["ipv4-mask-length"] = val.(int)
+		physicalInterfaceMap["ipv4-mask-length"] = val.(int)
 	}
 	if val, ok := d.GetOk("speed"); ok {
-		networkMap["speed"] = val.(string)
+		physicalInterfaceMap["speed"] = val.(string)
 	}
 	if val, ok := d.GetOk("tx_ringsize"); ok {
-		networkMap["tx-ringsize"] = val.(int)
+		physicalInterfaceMap["tx-ringsize"] = val.(int)
 	}
 	if val, ok := d.GetOk("auto_negotiation"); ok {
-		networkMap["auto-negotiation"] = val.(bool)
+		physicalInterfaceMap["auto-negotiation"] = val.(bool)
 	}
 
 	if !createResource {
 		// Call from updatePhysicalInterface
 		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(networkMap,"set-if-exists")
+		delete(physicalInterfaceMap,"set-if-exists")
 	}
-	return networkMap
+	return physicalInterfaceMap
 }
 
 func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {

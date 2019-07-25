@@ -35,24 +35,24 @@ func resourcePutFile() *schema.Resource {
 }
 
 func putFileParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
-	networkMap := make(map[string]interface{})
+	putFileMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("file_name"); ok {
-		networkMap["file-name"] = val.(string)
+		putFileMap["file-name"] = val.(string)
 	}
 	if val, ok := d.GetOk("text_content"); ok {
-		networkMap["text-content"] = val.(string)
+		putFileMap["text-content"] = val.(string)
 	}
 	if val, ok := d.GetOk("override"); ok {
-		networkMap["override"] = val.(bool)
+		putFileMap["override"] = val.(bool)
 	}
 
 	if !createResource {
 		// Call from updatePutFile
 		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(networkMap,"set-if-exists")
+		delete(putFileMap,"set-if-exists")
 	}
-	return networkMap
+	return putFileMap
 }
 
 func createPutFile(d *schema.ResourceData, m interface{}) error {

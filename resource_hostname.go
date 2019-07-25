@@ -25,18 +25,18 @@ func resourceHostname() *schema.Resource {
 }
 
 func hostnameParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
-	networkMap := make(map[string]interface{})
+	hostnameMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("name"); ok {
-		networkMap["name"] = val.(string)
+		hostnameMap["name"] = val.(string)
 	}
 
 	if !createResource {
 		// Call from updateHostname
 		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(networkMap,"set-if-exists")
+		delete(hostnameMap,"set-if-exists")
 	}
-	return networkMap
+	return hostnameMap
 }
 
 func createHostname(d *schema.ResourceData, m interface{}) error {
