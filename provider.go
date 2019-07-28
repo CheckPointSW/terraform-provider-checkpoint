@@ -53,7 +53,6 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	password := data.Get("password").(string)
 	context := data.Get("context").(string)
 
-	context := chkp.WebContext
 	if val, ok := data.GetOk("context"); ok {
 		context = val.(string)
 	}
@@ -127,8 +126,7 @@ func login(client *chkp.ApiClient, username string, pwd string) (Session, error)
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}
-
-	uid := ""
+	
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}
