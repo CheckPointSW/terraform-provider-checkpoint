@@ -24,25 +24,20 @@ func resourceHostname() *schema.Resource {
 	}
 }
 
-func hostnameParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
+func hostnameParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 	hostnameMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("name"); ok {
 		hostnameMap["name"] = val.(string)
 	}
 
-	if !createResource {
-		// Call from updateHostname
-		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(hostnameMap,"set-if-exists")
-	}
 	return hostnameMap
 }
 
 func createHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createHostname...")
 	client := m.(*chkp.ApiClient)
-	payload := hostnameParseSchemaToMap(d, true)
+	payload := hostnameParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-hostname",payload,client.GetSessionID(),true,false)
 	if !setPIRes.Success {
@@ -83,7 +78,7 @@ func readHostname(d *schema.ResourceData, m interface{}) error {
 func updateHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updateHostname...")
 	client := m.(*chkp.ApiClient)
-	payload := hostnameParseSchemaToMap(d, false)
+	payload := hostnameParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("set-hostname",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)

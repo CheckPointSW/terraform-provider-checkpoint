@@ -99,7 +99,7 @@ func resourcePhysicalInterface() *schema.Resource {
 	}
 }
 
-func physicalInterfaceParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
+func physicalInterfaceParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 	physicalInterfaceMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("name"); ok {
@@ -153,18 +153,13 @@ func physicalInterfaceParseSchemaToMap(d *schema.ResourceData, createResource bo
 		physicalInterfaceMap["auto-negotiation"] = val.(bool)
 	}
 
-	if !createResource {
-		// Call from updatePhysicalInterface
-		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(physicalInterfaceMap,"set-if-exists")
-	}
 	return physicalInterfaceMap
 }
 
 func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createPhysicalInterface...")
 	client := m.(*chkp.ApiClient)
-	payload := physicalInterfaceParseSchemaToMap(d, true)
+	payload := physicalInterfaceParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
 	if !setPIRes.Success {
@@ -200,6 +195,49 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("name", PIJson["name"].(string))
 	}
 
+	if _, ok := d.GetOk("monitor_mode"); ok {
+		_ = d.Set("monitor_mode", PIJson["monitor-mode"].(bool))
+	}
+	if _, ok := d.GetOk("duplex"); ok {
+		_ = d.Set("duplex", PIJson["duplex"].(string))
+	}
+	if _, ok := d.GetOk("ipv6_autoconfig"); ok {
+			_ = d.Set("ipv6_autoconfig", PIJson["ipv6-autoconfig"].(bool))
+		}
+	if _, ok := d.GetOk("mac_addr"); ok {
+		_ = d.Set("mac_addr", PIJson["mac-addr"].(int))
+	}
+	if _, ok := d.GetOk("enabled"); ok {
+		_ = d.Set("enabled", PIJson["enabled"].(bool))
+	}
+	if _, ok := d.GetOk("mtu"); ok {
+		_ = d.Set("mtu", PIJson["mtu"].(int))
+	}
+	if _, ok := d.GetOk("ipv6_mask_length"); ok {
+		_ = d.Set("ipv6_mask_length", PIJson["ipv6-mask-length"].(string))
+	}
+	if _, ok := d.GetOk("rx_ringsize"); ok {
+		_ = d.Set("rx_ringsize", PIJson["rx-ringsize"].(int))
+	}
+	if _, ok := d.GetOk("ipv6_address"); ok {
+		_ = d.Set("ipv6_address", PIJson["ipv6-address"].(string))
+	}
+	if _, ok := d.GetOk("ipv4_address"); ok {
+		_ = d.Set("ipv4_address", PIJson["ipv4-address"].(string))
+	}
+	if _, ok := d.GetOk("ipv4_mask_length"); ok {
+		_ = d.Set("ipv4_mask_length", PIJson["ipv4-mask-length"].(string))
+	}
+	if _, ok := d.GetOk("speed"); ok {
+		_ = d.Set("speed", PIJson["speed"].(string))
+	}
+	if _, ok := d.GetOk("tx_ringsize"); ok {
+		_ = d.Set("tx_ringsize", PIJson["tx-ringsize"].(int))
+	}
+	if _, ok := d.GetOk("auto_negotiation"); ok {
+		_ = d.Set("auto_negotiation", PIJson["auto-negotiation"].(bool))
+	}
+
 	log.Println("Exit readPhysicalInterface...")
 	return nil
 }
@@ -207,7 +245,7 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updatePhysicalInterface...")
 	client := m.(*chkp.ApiClient)
-	payload := physicalInterfaceParseSchemaToMap(d, false)
+	payload := physicalInterfaceParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)

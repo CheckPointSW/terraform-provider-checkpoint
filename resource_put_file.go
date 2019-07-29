@@ -34,7 +34,7 @@ func resourcePutFile() *schema.Resource {
 	}
 }
 
-func putFileParseSchemaToMap(d *schema.ResourceData, createResource bool) map[string]interface{} {
+func putFileParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 	putFileMap := make(map[string]interface{})
 
 	if val, ok := d.GetOk("file_name"); ok {
@@ -47,18 +47,13 @@ func putFileParseSchemaToMap(d *schema.ResourceData, createResource bool) map[st
 		putFileMap["override"] = val.(bool)
 	}
 
-	if !createResource {
-		// Call from updatePutFile
-		// Remove attributes that cannot be set from map - Schema contain ADD + SET attr.
-		delete(putFileMap,"set-if-exists")
-	}
 	return putFileMap
 }
 
 func createPutFile(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createPutFile...")
 	client := m.(*chkp.ApiClient)
-	payload := putFileParseSchemaToMap(d, true)
+	payload := putFileParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
 	if !setPIRes.Success {
@@ -73,35 +68,13 @@ func createPutFile(d *schema.ResourceData, m interface{}) error {
 }
 
 func readPutFile(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter readPutFile...")
-	//client := m.(*chkp.ApiClient)
-	//payload := map[string]interface{}{
-	//	"name": d.Get("name"),
-	//}
-	//showPIRes, _ := client.ApiCall("show-physical-interface",payload,client.GetSessionID(),true,false)
-	//if !showPIRes.Success {
-	//	// Handle deletion of an object from other clients - Object not found
-	//	if objectNotFound(showPIRes.GetData()["code"].(string)) {
-	//		d.SetId("") // Destroy resource
-	//		return nil
-	//	}
-	//	return fmt.Errorf(showPIRes.ErrorMsg)
-	//}
-	//PIJson := showPIRes.GetData()
-	//log.Println(PIJson)
-	//
-	//if _, ok := d.GetOk("name"); ok {
-	//	_ = d.Set("name", PIJson["name"].(string))
-	//}
-
-	log.Println("Exit readPutFile...")
 	return nil
 }
 
 func updatePutFile(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updatePutFile...")
 	client := m.(*chkp.ApiClient)
-	payload := putFileParseSchemaToMap(d, false)
+	payload := putFileParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)

@@ -101,11 +101,8 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 			return mgmt, nil
 		case chkp.GaiaContext:
 			gaia := chkp.APIClient(args)
-			s, err := login(gaia, username, password)
+			_, err := login(gaia, username, password)
 			if err != nil {
-				return nil, err
-			}
-      if err := s.Save(); err != nil {
 				return nil, err
 			}
 			return gaia, nil
@@ -126,7 +123,7 @@ func login(client *chkp.ApiClient, username string, pwd string) (Session, error)
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}
-	
+
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}
