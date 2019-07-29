@@ -53,10 +53,6 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	password := data.Get("password").(string)
 	context := data.Get("context").(string)
 
-	if val, ok := data.GetOk("context"); ok {
-		context = val.(string)
-	}
-
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("chkp-provider missing parameters to initialize (server, username, password)")
 	}
@@ -120,10 +116,6 @@ func login(client *chkp.ApiClient, username string, pwd string) (Session, error)
 		return Session{}, err
 	}
 	uid := ""
-	if val, ok := loginRes.GetData()["uid"]; ok {
-		uid = val.(string)
-	}
-
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}

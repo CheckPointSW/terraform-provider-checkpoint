@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// Resource hostname acceptance test:
+// Resource put file acceptance test:
 // 1. Create resource
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
