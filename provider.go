@@ -39,6 +39,9 @@ func Provider() terraform.ResourceProvider {
 		ResourcesMap: map[string]*schema.Resource{
 			"chkp_network": resourceNetwork(),
 			"chkp_publish": resourcePublish(),
+			"chkp_hostname": resourceHostname(),
+			"chkp_physical_interface": resourcePhysicalInterface(),
+			"chkp_put_file": resourcePutFile(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -116,6 +119,7 @@ func login(client *chkp.ApiClient, username string, pwd string) (Session, error)
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
 	}
+
 	s := Session {
 		Sid: client.GetSessionID(),
 		Uid: uid,

@@ -56,5 +56,3 @@ func CheckSession(c *chkp.ApiClient, uid string) bool {
 	res, _ := c.ApiCall("show-session",payload,c.GetSessionID(),true,false)
 	return res.Success
 }
-
-
