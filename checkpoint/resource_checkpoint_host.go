@@ -639,9 +639,6 @@ func updateHost(d *schema.ResourceData, m interface{}) error {
 		host["name"] = d.Get("name")
 	}
 
-	log.Println("check")
-	log.Println(d.HasChange("interfaces"))
-	log.Println(d.GetOk("interfaces"))
 	if d.HasChange("interfaces") {
 		if v, ok := d.GetOk("interfaces"); ok {
 
@@ -677,9 +674,7 @@ func updateHost(d *schema.ResourceData, m interface{}) error {
 						}
 					}
 					if d.HasChange("interfaces." + strconv.Itoa(i) + ".color"){
-						log.Println("sedafsdfsdfds3")
 						if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".color"); ok {
-							log.Println("sedafsdfsdfds1")
 							payload["color"] = v.(string)
 						}
 					}
