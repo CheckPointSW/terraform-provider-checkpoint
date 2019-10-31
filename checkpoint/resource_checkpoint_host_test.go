@@ -43,7 +43,7 @@ func TestAccChkpHost_basic(t *testing.T){
 func testAccChkpHostDestroy(s *terraform.State) error {
 	log.Println("Enter testAccChkpHostDestroy")
 
-	client := testAccProvider.Meta().(chkp.ApiClient)
+	client := testAccProvider.Meta().(*chkp.ApiClient)
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "chkp_host" {
 			continue
@@ -79,7 +79,7 @@ func testAccCheckChkpHostExists(resourceTfName string, res *map[string]interface
 		}
 
 		// retrieve the client from the test provider
-		client := testAccProvider.Meta().(chkp.ApiClient)
+		client := testAccProvider.Meta().(*chkp.ApiClient)
 
 		response, err := client.ApiCall("show-host", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(),true,false)
 		if !response.Success {

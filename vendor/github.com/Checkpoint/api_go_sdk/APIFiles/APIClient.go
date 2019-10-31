@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -296,20 +297,30 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
    						"\nCode: " + res.GetData()["code"].(string) +
    						"\nMessage: " + res.GetData()["message"].(string)
 
-   		if  res.data["errors"] != nil {
-   			fullErrorMsg += "\nErrors: "
-   			warningsList := res.data["errors"].([]interface{})
-   			for i := range warningsList {
-   				fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
-   			}
+   		if errorMsg := res.data["errors"]; errorMsg != nil {
+			fullErrorMsg += "\nErrors: "
+   			errorMsgType := reflect.TypeOf(errorMsg).Kind()
+   			if errorMsgType == reflect.String {
+				fullErrorMsg += errorMsg.(string) + "\n"
+			} else {
+				errorsList := res.data["errors"].([]interface{})
+				for i := range errorsList {
+					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + errorsList[i].(map[string]interface{})["message"].(string)
+				}
+			}
    		}
 
-   		if  res.data["warnings"] != nil {
+   		if warningMsg := res.data["warnings"]; warningMsg != nil {
    			fullErrorMsg += "\nWarnings: "
-   			warningsList := res.data["warnings"].([]interface{})
-   			for i := range warningsList {
-   				fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
-   			}
+   			warningMsgType := reflect.TypeOf(warningMsg).Kind()
+   			if warningMsgType == reflect.String {
+				fullErrorMsg += warningMsg.(string) + "\n"
+			} else {
+				warningsList := res.data["warnings"].([]interface{})
+				for i := range warningsList {
+					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
+				}
+			}
    		}
    		res.ErrorMsg = fullErrorMsg
    	}

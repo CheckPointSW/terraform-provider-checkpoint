@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform/plugin"
-	chkp "terraform-provider-chkp/checkpoint"
+	chkp "terraform-provider-checkpoint/checkpoint"
 )
 
 func main() {
