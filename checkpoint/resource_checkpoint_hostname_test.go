@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
+	"os"
 	"testing"
 )
 
@@ -18,6 +19,14 @@ func TestAccChkpHostname_basic(t *testing.T){
 	var hostname map[string]interface{}
 	resourceName := "chkp_hostname.test"
 	objName := "terratest"
+
+	context := os.Getenv("CHKP_CONTEXT")
+	if context != "gaia_api" {
+		t.Skip("Skipping Gaia test")
+	} else if context == "" {
+		t.Skip("Env CHKP_CONTEXT must be specified to run this acc test")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

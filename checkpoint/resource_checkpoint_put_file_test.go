@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
+	"os"
 	"strconv"
 	"testing"
 )
@@ -21,6 +22,14 @@ func TestAccChkpPutFile_basic(t *testing.T){
 	objName := "/home/admin/terrafile.txt"
 	objContent := "It's terrafile 114"
 	objOverride := true
+
+	context := os.Getenv("CHKP_CONTEXT")
+	if context != "gaia_api" {
+		t.Skip("Skipping Gaia test")
+	} else if context == "" {
+		t.Skip("Env CHKP_CONTEXT must be specified to run this acc test")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

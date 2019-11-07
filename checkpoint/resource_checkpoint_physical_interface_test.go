@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
+	"os"
 	"strconv"
 	"testing"
 )
@@ -21,6 +22,14 @@ func TestAccChkpPhysicalInterface_basic(t *testing.T){
 	objName := "eth1"
 	objPhysicalInterface := "20.30.1.2"
 	objMaskLen := 24
+
+	context := os.Getenv("CHKP_CONTEXT")
+	if context != "gaia_api" {
+		t.Skip("Skipping Gaia test")
+	} else if context == "" {
+		t.Skip("Env CHKP_CONTEXT must be specified to run this acc test")
+	}
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
