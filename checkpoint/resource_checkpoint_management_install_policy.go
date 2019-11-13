@@ -2,16 +2,16 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
 
-func resourceInstallPolicy() *schema.Resource {
+func resourceManagementInstallPolicy() *schema.Resource {
 	return &schema.Resource{
-		Create: createInstallPolicy,
-		Read:   readInstallPolicy,
-		Delete: deleteInstallPolicy,
+		Create: createManagementInstallPolicy,
+		Read:   readManagementInstallPolicy,
+		Delete: deleteManagementInstallPolicy,
 		Schema: map[string]*schema.Schema{
 			"policy_package": {
 				Type: schema.TypeString,
@@ -74,8 +74,8 @@ func resourceInstallPolicy() *schema.Resource {
 	}
 }
 
-func createInstallPolicy(d *schema.ResourceData, m interface{}) error {
-	client := m.(*chkp.ApiClient)
+func createManagementInstallPolicy(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
 
 	var payload = make(map[string]interface{})
 
@@ -110,14 +110,14 @@ func createInstallPolicy(d *schema.ResourceData, m interface{}) error {
 	}
 	// Set Schema UID = Session UID
 	d.SetId(installPolicyRes.GetData()["task-id"].(string))
-	return readInstallPolicy(d, m)
+	return readManagementInstallPolicy(d, m)
 }
 
-func readInstallPolicy(d *schema.ResourceData, m interface{}) error {
+func readManagementInstallPolicy(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func deleteInstallPolicy(d *schema.ResourceData, m interface{}) error {
+func deleteManagementInstallPolicy(d *schema.ResourceData, m interface{}) error {
 	d.SetId("") // Destroy resource
 	return nil
 }

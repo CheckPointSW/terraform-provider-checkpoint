@@ -1,17 +1,17 @@
 package checkpoint
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 )
 
 
-func resourcePublish() *schema.Resource {
+func resourceManagementPublish() *schema.Resource {
 	return &schema.Resource{
-		Create: createPublish,
-		Read:   readPublish,
-		Delete: deletePublish,
+		Create: createManagementPublish,
+		Read:   readManagementPublish,
+		Delete: deleteManagementPublish,
 		Schema: map[string]*schema.Schema{
 			"uid": {
 				Type: schema.TypeString,
@@ -23,8 +23,8 @@ func resourcePublish() *schema.Resource {
 	}
 }
 
-func createPublish(d *schema.ResourceData, m interface{}) error {
-	client := m.(*chkp.ApiClient)
+func createManagementPublish(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
 	var uid string
 	var payload = make(map[string]interface{})
 
@@ -47,14 +47,14 @@ func createPublish(d *schema.ResourceData, m interface{}) error {
 	}
 	// Set Schema UID = Session UID
 	d.SetId(uid)
-	return readPublish(d, m)
+	return readManagementPublish(d, m)
 }
 
-func readPublish(d *schema.ResourceData, m interface{}) error {
+func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func deletePublish(d *schema.ResourceData, m interface{}) error {
+func deleteManagementPublish(d *schema.ResourceData, m interface{}) error {
 	d.SetId("") // Destroy resource
 	return nil
 }

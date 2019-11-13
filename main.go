@@ -1,12 +1,13 @@
 package main
 
 import (
+	"./checkpoint"
 	"github.com/hashicorp/terraform/plugin"
-	chkp "terraform-provider-checkpoint/checkpoint"
+	//checkpoint "github.com/terraform-providers/terraform-provider-checkpoint"
 )
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: chkp.Provider,
+		ProviderFunc: checkpoint.Provider,
 	})
 }
