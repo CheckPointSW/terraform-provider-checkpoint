@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 )
@@ -36,7 +36,7 @@ func hostnameParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 
 func createHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createHostname...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := hostnameParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-hostname",payload,client.GetSessionID(),true,false)
@@ -53,7 +53,7 @@ func createHostname(d *schema.ResourceData, m interface{}) error {
 
 func readHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter readHostname...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := map[string]interface{}{}
 	showHostnameRes, _ := client.ApiCall("show-hostname",payload,client.GetSessionID(),true,false)
 	if !showHostnameRes.Success {
@@ -77,7 +77,7 @@ func readHostname(d *schema.ResourceData, m interface{}) error {
 
 func updateHostname(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updateHostname...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := hostnameParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("set-hostname",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {

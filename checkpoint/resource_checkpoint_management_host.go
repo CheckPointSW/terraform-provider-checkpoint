@@ -2,24 +2,24 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"sort"
 	"strconv"
 )
 
-func resourceHost() *schema.Resource {
+func resourceManagementHost() *schema.Resource {
 	return &schema.Resource{
-		Create: createHost,
-		Read:   readHost,
-		Update: updateHost,
-		Delete: deleteHost,
+		Create: createManagementHost,
+		Read:   readManagementHost,
+		Update: updateManagementHost,
+		Delete: deleteManagementHost,
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"ipv4_address": &schema.Schema{
@@ -247,8 +247,8 @@ func resourceHost() *schema.Resource {
 	}
 }
 
-func createHost(d *schema.ResourceData, m interface{}) error {
-	client := m.(*chkp.ApiClient)
+func createManagementHost(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
 
 	host := make(map[string]interface{})
 
@@ -415,12 +415,12 @@ func createHost(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(addHostRes.GetData()["uid"].(string))
 
-	return readHost(d, m)
+	return readManagementHost(d, m)
 }
 
-func readHost(d *schema.ResourceData, m interface{}) error{
+func readManagementHost(d *schema.ResourceData, m interface{}) error{
 
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
 		"uid": d.Id(),
@@ -624,16 +624,16 @@ func readHost(d *schema.ResourceData, m interface{}) error{
 
 }
 
-func updateHost(d *schema.ResourceData, m interface{}) error {
+func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	host := make(map[string]interface{})
 	apiCall := false
 
 	if d.HasChange("name") {
 		oldName, newName := d.GetChange("name")
 		host["name"] = oldName
-		host["new-name"] = newName
+			host["new-name"] = newName
 		apiCall = true
 	} else {
 		host["name"] = d.Get("name")
@@ -843,12 +843,12 @@ func updateHost(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return readHost(d, m)
+	return readManagementHost(d, m)
 }
 
-func deleteHost(d *schema.ResourceData, m interface{}) error {
+func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 
 	hostPayload := map[string]interface{}{
 		"uid" : d.Id(),

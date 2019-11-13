@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
@@ -16,18 +16,17 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccChkpPhysicalInterface_basic(t *testing.T){
+func TestAccCheckpointPhysicalInterface_basic(t *testing.T){
 	var physical_inter map[string]interface{}
-	resourceName := "chkp_physical_interface.test"
+	resourceName := "checkpoint_physical_interface.test"
 	objName := "eth1"
 	objPhysicalInterface := "20.30.1.2"
 	objMaskLen := 24
-
-	context := os.Getenv("CHKP_CONTEXT")
+	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "gaia_api" {
 		t.Skip("Skipping Gaia test")
 	} else if context == "" {
-		t.Skip("Env CHKP_CONTEXT must be specified to run this acc test")
+		t.Skip("Env CHECKPOINT_CONTEXT must be specified to run this acc test")
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -38,8 +37,8 @@ func TestAccChkpPhysicalInterface_basic(t *testing.T){
 			{
 				Config: testAccPhysicalInterfaceConfig(objName, objPhysicalInterface, objMaskLen),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckChkpPhysicalInterfaceExists(resourceName,&physical_inter),
-					testAccCheckChkpPhysicalInterfaceAttributes(&physical_inter,objName, objPhysicalInterface, objMaskLen),
+					testAccCheckCheckpointPhysicalInterfaceExists(resourceName,&physical_inter),
+					testAccCheckCheckpointPhysicalInterfaceAttributes(&physical_inter,objName, objPhysicalInterface, objMaskLen),
 				),
 			},
 		},
@@ -47,9 +46,9 @@ func TestAccChkpPhysicalInterface_basic(t *testing.T){
 }
 
 // verifies resource exists by ID and init res with response data
-func testAccCheckChkpPhysicalInterfaceExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointPhysicalInterfaceExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		log.Println("Enter testAccCheckChkpPhysicalInterfaceExists...")
+		log.Println("Enter testAccCheckCheckpointPhysicalInterfaceExists...")
 		rs, ok := s.RootModule().Resources[resourceTfName]
 		if !ok {
 			return fmt.Errorf("resource not found: %s", resourceTfName)
@@ -60,7 +59,7 @@ func testAccCheckChkpPhysicalInterfaceExists(resourceTfName string, res *map[str
 		}
 
 		// retrieve the client from test provider. client is after providerConfigure()
-		client := testAccProvider.Meta().(*chkp.ApiClient)
+		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
 		payload := make(map[string]interface{})
 
@@ -72,15 +71,15 @@ func testAccCheckChkpPhysicalInterfaceExists(resourceTfName string, res *map[str
 		}
 		// init res with response data for next step (CheckAttributes)
 		*res = response.GetData()
-		log.Println("Exit testAccCheckChkpPhysicalInterfaceExists...")
+		log.Println("Exit testAccCheckCheckpointPhysicalInterfaceExists...")
 		return nil
 	}
 }
 
 // verifies resource attributes are same as in configure
-func testAccCheckChkpPhysicalInterfaceAttributes(piRes *map[string]interface{},name string, address string, maskLen int) resource.TestCheckFunc {
+func testAccCheckCheckpointPhysicalInterfaceAttributes(piRes *map[string]interface{},name string, address string, maskLen int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		log.Println("Enter testAccCheckChkpPhysicalInterfaceAttributes")
+		log.Println("Enter testAccCheckCheckpointPhysicalInterfaceAttributes")
 		PIMap := *piRes
 		if PIMap == nil {
 			return fmt.Errorf("PIMap is nil")
@@ -101,7 +100,7 @@ func testAccCheckChkpPhysicalInterfaceAttributes(piRes *map[string]interface{},n
 			return fmt.Errorf("name is %d, expected %d", inter_mask_len, maskLen)
 		}
 
-		log.Println("Exit testAccCheckChkpPhysicalInterfaceAttributes")
+		log.Println("Exit testAccCheckCheckpointPhysicalInterfaceAttributes")
 		return nil
 	}
 }
@@ -109,7 +108,7 @@ func testAccCheckChkpPhysicalInterfaceAttributes(piRes *map[string]interface{},n
 // return a string of the resource like define in a .tf file
 func testAccPhysicalInterfaceConfig(name string, address string,masklen int) string {
 	return fmt.Sprintf(`
-resource "chkp_physical_interface" "test" {
+resource "checkpoint_physical_interface" "test" {
       name = "%s"
       ipv4_address = "%s"
       ipv4_mask_length = %d

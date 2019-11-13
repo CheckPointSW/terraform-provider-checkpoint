@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
+	"os"
 	"testing"
 )
 
@@ -15,20 +16,28 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccChkpNetwork_basic(t *testing.T){
+func TestAccCheckpointManagement_basic(t *testing.T){
 	var network map[string]interface{}
-	resourceName := "chkp_network.test"
-	objName := "tfTestNetwork_" + acctest.RandString(6)
+	resourceName := "checkpoint_management_network.test"
+	objName := "tfTestManagementNetwork_" + acctest.RandString(6)
+
+	context := os.Getenv("CHECKPOINT_CONTEXT")
+	if context != "web_api" {
+		t.Skip("Skipping management test")
+	} else if context == "" {
+		t.Skip("Env CHECKPOINT_CONTEXT must be specified to run this acc test")
+	}
+
 	resource.Test(t, resource.TestCase{
 			PreCheck: func() { testAccPreCheck(t) },
 			Providers: testAccProviders,
-			CheckDestroy: testAccChkpNetworkDestroy,
+			CheckDestroy: testAccCheckpointNetworkDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config: testAccNetworkConfig(objName,"10.20.0.0",24),
+					Config: testAccManagementNetworkConfig(objName,"10.20.0.0",24),
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckChkpNetworkExists(resourceName,&network),
-						testAccCheckChkpNetworkAttributes(&network,objName,"10.20.0.0",24),
+						testAccCheckCheckpointNetworkExists(resourceName,&network),
+						testAccCheckCheckpointNetworkAttributes(&network,objName,"10.20.0.0",24),
 					),
 				},
 			},
@@ -36,11 +45,11 @@ func TestAccChkpNetwork_basic(t *testing.T){
 }
 
 // verifies Network resource has been destroyed
-func testAccChkpNetworkDestroy(s *terraform.State) error {
-	log.Println("Enter testAccChkpNetworkDestroy")
-	client := testAccProvider.Meta().(*chkp.ApiClient)
+func testAccCheckpointNetworkDestroy(s *terraform.State) error {
+	log.Println("Enter testAccCheckpointNetworkDestroy")
+	client := testAccProvider.Meta().(*checkpoint.ApiClient)
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chkp_network" {
+		if rs.Type != "checkpoint_management_network" {
 			continue
 		}
 		if rs.Primary.ID != "" {
@@ -51,16 +60,16 @@ func testAccChkpNetworkDestroy(s *terraform.State) error {
 		}
 		break
 	}
-	log.Println("Exit testAccChkpNetworkDestroy")
+	log.Println("Exit testAccCheckpointNetworkDestroy")
 	return nil
 }
 // verifies Network resource exists by ID and init res with response data
-func testAccCheckChkpNetworkExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		// Retrieve the resource from state. resourceTfName is the terraform resource name in .tf file:
-		// For: resource "chkp_network" "test" {...}
-		// resourceTfName = "chkp_network.test"
-		log.Println("Enter testAccCheckChkpNetworkExists...")
+		// For: resource "checkpoint_management_network" "test" {...}
+		// resourceTfName = "checkpoint_management_network.test"
+		log.Println("Enter testAccCheckCheckpointNetworkExists...")
 		rs, ok := s.RootModule().Resources[resourceTfName]
 		if !ok {
 			return fmt.Errorf("resource not found: %s", resourceTfName)
@@ -71,21 +80,21 @@ func testAccCheckChkpNetworkExists(resourceTfName string, res *map[string]interf
 		}
 
 		// retrieve the client from test provider. client is after providerConfigure()
-		client := testAccProvider.Meta().(*chkp.ApiClient)
+		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-network",map[string]interface{}{"uid": rs.Primary.ID},client.GetSessionID(),true,false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
 		// init res with response data for next step (CheckAttributes)
 		*res = response.GetData()
-		log.Println("Exit testAccCheckChkpNetworkExists...")
+		log.Println("Exit testAccCheckCheckpointNetworkExists...")
 		return nil
 	}
 }
 // verifies Network resource attributes are same as in configure
-func testAccCheckChkpNetworkAttributes(network *map[string]interface{},name string,subnet4 string,masklen4 int) resource.TestCheckFunc {
+func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{},name string,subnet4 string,masklen4 int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		log.Println("Enter testAccCheckChkpNetworkAttributes")
+		log.Println("Enter testAccCheckCheckpointNetworkAttributes")
 		network := *network
 		if network == nil {
 			return fmt.Errorf("network is nil")
@@ -104,15 +113,15 @@ func testAccCheckChkpNetworkAttributes(network *map[string]interface{},name stri
 		if networkMl4 != masklen4 {
 			return fmt.Errorf("mask-length4 is %d, expected %d", networkMl4, masklen4)
 		}
-		log.Println("Exit testAccCheckChkpNetworkAttributes")
+		log.Println("Exit testAccCheckCheckpointNetworkAttributes")
 		return nil
 	}
 }
 
 // return a string of Network resource like define in a .tf file
-func testAccNetworkConfig(name string, subnet4 string,masklen4 int) string {
+func testAccManagementNetworkConfig(name string, subnet4 string,masklen4 int) string {
 	return fmt.Sprintf(`
-resource "chkp_network" "test" {
+resource "checkpoint_management_network" "test" {
     name = "%s"
 	subnet4 = "%s"
 	mask_length4 = "%d"

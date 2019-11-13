@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 )
@@ -52,7 +52,7 @@ func putFileParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 
 func createPutFile(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createPutFile...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
@@ -73,7 +73,7 @@ func readPutFile(d *schema.ResourceData, m interface{}) error {
 
 func updatePutFile(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updatePutFile...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {
