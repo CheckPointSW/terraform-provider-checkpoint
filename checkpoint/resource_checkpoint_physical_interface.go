@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 )
@@ -158,7 +158,7 @@ func physicalInterfaceParseSchemaToMap(d *schema.ResourceData) map[string]interf
 
 func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter createPhysicalInterface...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := physicalInterfaceParseSchemaToMap(d)
 	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
@@ -175,7 +175,7 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
 func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter readPhysicalInterface...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := map[string]interface{}{
 		"name": d.Get("name"),
 	}
@@ -244,7 +244,7 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
 func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	log.Println("Enter updatePhysicalInterface...")
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	payload := physicalInterfaceParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {

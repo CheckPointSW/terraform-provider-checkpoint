@@ -1,8 +1,8 @@
 package checkpoint
 
 import (
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"fmt"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
@@ -14,36 +14,36 @@ func Provider() terraform.ResourceProvider {
 			"server":{
 				Type: schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHKP_SERVER", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SERVER", nil),
 				Description: "Check Point Management server IP",
 			},
 			"username": {
 				Type: schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHKP_USERNAME", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_USERNAME", nil),
 				Description: "Check Point Management admin name",
 			},
 			"password": {
 				Type: schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHKP_PASSWORD", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PASSWORD", nil),
 				Description: "Check Point Management admin password",
 			},
 			"context": {
 				Type: schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHKP_CONTEXT", chkp.WebContext),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CONTEXT", checkpoint.WebContext),
 				Description: "Check Point access context - gaia_api or web_api",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"chkp_network": resourceNetwork(),
-			"chkp_host": resourceHost(),
-			"chkp_publish": resourcePublish(),
-			"chkp_hostname": resourceHostname(),
-			"chkp_physical_interface": resourcePhysicalInterface(),
-			"chkp_put_file": resourcePutFile(),
-			"chkp_install_policy": resourceInstallPolicy(),
+			"checkpoint_management_network": resourceManagementNetwork(),
+			"checkpoint_management_host": resourceManagementHost(),
+			"checkpoint_management_publish": resourceManagementPublish(),
+			"checkpoint_hostname": resourceHostname(),
+			"checkpoint_physical_interface": resourcePhysicalInterface(),
+			"checkpoint_put_file": resourcePutFile(),
+			"checkpoint_management_install_policy": resourceManagementInstallPolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -56,11 +56,11 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	context := data.Get("context").(string)
 
 	if server == "" || username == "" || password == "" {
-		return nil, fmt.Errorf("chkp-provider missing parameters to initialize (server, username, password)")
+		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
 	}
 
-	args := chkp.ApiClientArgs {
-		Port:                    chkp.DefaultPort,
+	args := checkpoint.ApiClientArgs {
+		Port:                    checkpoint.DefaultPort,
 		Fingerprint:             "",
 		Sid:                     "",
 		Server:                  server,
@@ -71,12 +71,12 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 context,
-		Timeout:                 chkp.TimeOut,
-		Sleep:                   chkp.SleepTime,
+		Timeout:                 checkpoint.TimeOut,
+		Sleep:                   checkpoint.SleepTime,
 	}
 
 	switch context {
-		case chkp.WebContext:
+		case checkpoint.WebContext:
 			s, err := GetSession()
 			if err != nil {
 				return nil, err
@@ -84,7 +84,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 			if s.Sid != "" {
 				args.Sid = s.Sid
 			}
-			mgmt := chkp.APIClient(args)
+			mgmt := checkpoint.APIClient(args)
 			if CheckSession(mgmt, s.Uid) {
 				log.Printf("Client connected with last session (SID = %s)", s.Sid)
 			} else {
@@ -97,8 +97,8 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 				}
 			}
 			return mgmt, nil
-		case chkp.GaiaContext:
-			gaia := chkp.APIClient(args)
+		case checkpoint.GaiaContext:
+			gaia := checkpoint.APIClient(args)
 			_, err := login(gaia, username, password)
 			if err != nil {
 				return nil, err
@@ -110,11 +110,11 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 }
 
 // Preform login. Creating new session...
-func login(client *chkp.ApiClient, username string, pwd string) (Session, error) {
-	log.Printf("Preform login")
+func login(client *checkpoint.ApiClient, username string, pwd string) (Session, error) {
+	log.Printf("Perform login")
 	loginRes, err := client.Login(username, pwd,false,"",false,"")
 	if err != nil {
-		log.Println("Failed to preform login")
+		log.Println("Failed to perform login")
 		return Session{}, err
 	}
 	uid := ""

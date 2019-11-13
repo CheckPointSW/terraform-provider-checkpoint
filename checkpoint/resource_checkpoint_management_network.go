@@ -2,18 +2,18 @@ package checkpoint
 
 import (
 	"fmt"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 )
 
 
-func resourceNetwork() *schema.Resource {
+func resourceManagementNetwork() *schema.Resource {
 	return &schema.Resource {
-		Create: createNetwork,
-		Read:   readNetwork,
-		Update: updateNetwork,
-		Delete: deleteNetwork,
+		Create: createManagementNetwork,
+		Read:   readManagementNetwork,
+		Update: updateManagementNetwork,
+		Delete: deleteManagementNetwork,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type: schema.TypeString,
@@ -140,8 +140,8 @@ func resourceNetwork() *schema.Resource {
 	}
 }
 
-func createNetwork(d *schema.ResourceData, m interface{}) error {
-	client := m.(*chkp.ApiClient)
+func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
 
 	network := make(map[string]interface{})
 
@@ -225,12 +225,12 @@ func createNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
-	return readNetwork(d, m)
+	return readManagementNetwork(d, m)
 }
 
-func readNetwork(d *schema.ResourceData, m interface{}) error {
+func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
 		"uid": d.Id(),
@@ -345,9 +345,9 @@ func readNetwork(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func updateNetwork(d *schema.ResourceData, m interface{}) error {
+func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
-	client := m.(*chkp.ApiClient)
+	client := m.(*checkpoint.ApiClient)
 	network := make(map[string]interface{})
 	apiCall := false
 
@@ -468,11 +468,11 @@ func updateNetwork(d *schema.ResourceData, m interface{}) error {
 			return fmt.Errorf(setNetworkRes.ErrorMsg)
 		}
 	}
-	return readNetwork(d, m)
+	return readManagementNetwork(d, m)
 }
 
-func deleteNetwork(d *schema.ResourceData, m interface{}) error {
-	client := m.(*chkp.ApiClient)
+func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
