@@ -35,6 +35,13 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CONTEXT", checkpoint.WebContext),
 				Description: "Check Point access context - gaia_api or web_api",
 			},
+			"auto_publish": {
+				Type: schema.TypeBool,
+				Optional:    true,
+				Default: true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_AUTO_PUBLISH", nil),
+				Description: "publish on each change",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_network": resourceManagementNetwork(),
@@ -44,6 +51,17 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_physical_interface": resourcePhysicalInterface(),
 			"checkpoint_put_file": resourcePutFile(),
 			"checkpoint_management_install_policy": resourceManagementInstallPolicy(),
+			"checkpoint_management_run_ips_update": resourceManagementRunIpsUpdate(),
+			"checkpoint_management_address_range": resourceManagementAddressRange(),
+			"checkpoint_management_group": resourceManagementGroup(),
+			"checkpoint_management_service_group": resourceManagementServiceGroup(),
+			"checkpoint_management_service_tcp": resourceManagementServiceTcp(),
+			"checkpoint_management_service_udp": resourceManagementServiceUdp(),
+			"checkpoint_management_package": resourceManagementPackage(),
+			"checkpoint_management_access_rule": resourceManagementAccessRule(),
+			"checkpoint_management_login": resourceManagementLogin(),
+			"checkpoint_management_logout": resourceManagementLogout(),
+			"checkpoint_management_threat_indicator": resourceManagementThreatIndicator(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -54,6 +72,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)
 	context := data.Get("context").(string)
+	autoPublish := data.Get("auto_publish").(bool)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
@@ -71,6 +90,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 context,
+		AutoPublish: 			 autoPublish,
 		Timeout:                 checkpoint.TimeOut,
 		Sleep:                   checkpoint.SleepTime,
 	}
@@ -109,7 +129,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-// Preform login. Creating new session...
+// Perform login. Creating new session...
 func login(client *checkpoint.ApiClient, username string, pwd string) (Session, error) {
 	log.Printf("Perform login")
 	loginRes, err := client.Login(username, pwd,false,"",false,"")

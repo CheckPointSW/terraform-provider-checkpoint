@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"encoding/json"
 	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"os"
 )
@@ -67,4 +68,11 @@ func Compare(a, b []string) []string {
 		}
 	}
 	return a
+}
+
+func ParseChangedSimpleArgument(d *schema.ResourceData, key string) interface{} {
+	if ok := d.HasChange(key); ok {
+		return d.Get(key)
+	}
+	return nil
 }

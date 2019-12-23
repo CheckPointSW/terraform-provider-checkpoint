@@ -24,6 +24,10 @@ func resourceManagementPublish() *schema.Resource {
 }
 
 func createManagementPublish(d *schema.ResourceData, m interface{}) error {
+	return readManagementPublish(d, m)
+}
+
+func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	var uid string
 	var payload = make(map[string]interface{})
@@ -41,16 +45,12 @@ func createManagementPublish(d *schema.ResourceData, m interface{}) error {
 		uid = s.Uid
 		log.Println("publish current session uid - ", uid)
 	}
-	publishRes, _ := client.ApiCall("publish",payload,client.GetSessionID(),true,false)
+	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(),true,false)
 	if !publishRes.Success {
 		return fmt.Errorf(publishRes.ErrorMsg)
 	}
 	// Set Schema UID = Session UID
 	d.SetId(uid)
-	return readManagementPublish(d, m)
-}
-
-func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 

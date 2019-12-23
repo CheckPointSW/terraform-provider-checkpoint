@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"log"
 	"os"
 	"testing"
 )
@@ -16,7 +15,7 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccCheckpointManagement_basic(t *testing.T){
+func TestAccCheckpointManagementNetwork_basic(t *testing.T){
 	var network map[string]interface{}
 	resourceName := "checkpoint_management_network.test"
 	objName := "tfTestManagementNetwork_" + acctest.RandString(6)
@@ -46,7 +45,7 @@ func TestAccCheckpointManagement_basic(t *testing.T){
 
 // verifies Network resource has been destroyed
 func testAccCheckpointNetworkDestroy(s *terraform.State) error {
-	log.Println("Enter testAccCheckpointNetworkDestroy")
+
 	client := testAccProvider.Meta().(*checkpoint.ApiClient)
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "checkpoint_management_network" {
@@ -60,16 +59,13 @@ func testAccCheckpointNetworkDestroy(s *terraform.State) error {
 		}
 		break
 	}
-	log.Println("Exit testAccCheckpointNetworkDestroy")
+
 	return nil
 }
-// verifies Network resource exists by ID and init res with response data
+
 func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		// Retrieve the resource from state. resourceTfName is the terraform resource name in .tf file:
-		// For: resource "checkpoint_management_network" "test" {...}
-		// resourceTfName = "checkpoint_management_network.test"
-		log.Println("Enter testAccCheckCheckpointNetworkExists...")
+
 		rs, ok := s.RootModule().Resources[resourceTfName]
 		if !ok {
 			return fmt.Errorf("resource not found: %s", resourceTfName)
@@ -87,14 +83,14 @@ func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]
 		}
 		// init res with response data for next step (CheckAttributes)
 		*res = response.GetData()
-		log.Println("Exit testAccCheckCheckpointNetworkExists...")
+
 		return nil
 	}
 }
 // verifies Network resource attributes are same as in configure
-func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{},name string,subnet4 string,masklen4 int) resource.TestCheckFunc {
+func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{},name string,subnet4 string, masklen4 int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		log.Println("Enter testAccCheckCheckpointNetworkAttributes")
+
 		network := *network
 		if network == nil {
 			return fmt.Errorf("network is nil")
@@ -113,13 +109,13 @@ func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{},nam
 		if networkMl4 != masklen4 {
 			return fmt.Errorf("mask-length4 is %d, expected %d", networkMl4, masklen4)
 		}
-		log.Println("Exit testAccCheckCheckpointNetworkAttributes")
+
 		return nil
 	}
 }
 
 // return a string of Network resource like define in a .tf file
-func testAccManagementNetworkConfig(name string, subnet4 string,masklen4 int) string {
+func testAccManagementNetworkConfig(name string, subnet4 string, masklen4 int) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_network" "test" {
     name = "%s"

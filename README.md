@@ -2,7 +2,7 @@ Terraform Provider for CHECK POINT SOFTWARE TECHNOLOGIES
 =========================
 
 - Website: https://www.terraform.io
-- Documentation: <link to documentation>
+- Documentation: https://www.terraform.io/docs/providers/checkpoint/index.html
 - [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
@@ -37,7 +37,11 @@ $ make build
 
 Using the provider
 ----------------------
-## Fill in for each provider
+To use a released provider in your Terraform environment, run [`terraform init`](https://www.terraform.io/docs/commands/init.html) and Terraform will automatically install the provider. To specify a particular provider version when installing released providers, see the [Terraform documentation on provider versioning](https://www.terraform.io/docs/configuration/providers.html#version-provider-versions).
+
+To instead use a custom-built provider in your Terraform environment (e.g. the provider binary from the build instructions above), follow the instructions to [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin) After placing it into your plugins directory,  run `terraform init` to initialize it.
+
+For either installation method, documentation about the provider specific configuration options can be found on the [provider's website](https://www.terraform.io/docs/providers/checkpoint/index.html).
 
 Developing the Provider
 ---------------------------

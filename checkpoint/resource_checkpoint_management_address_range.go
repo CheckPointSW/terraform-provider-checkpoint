@@ -9,48 +9,50 @@ import (
 	"strconv"
 )
 
+func resourceManagementAddressRange() *schema.Resource {
+	return &schema.Resource{
+		Create: createManagementAddressRange,
+		Read:   readManagementAddressRange,
+		Update: updateManagementAddressRange,
+		Delete: deleteManagementAddressRange,
 
-func resourceManagementNetwork() *schema.Resource {
-	return &schema.Resource {
-		Create: createManagementNetwork,
-		Read:   readManagementNetwork,
-		Update: updateManagementNetwork,
-		Delete: deleteManagementNetwork,
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type: schema.TypeString,
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
 				Required: true,
 				Description: "Object name. Should be unique in the domain.",
 			},
-			"subnet4": {
-				Type: schema.TypeString,
+			"ipv4_address_first": &schema.Schema{
+				Type:     schema.TypeString,
 				Optional: true,
-				Description: "IPv4 network address.",
+				Description: "First IPv4 address in the range.",
 			},
-			"subnet6": {
-				Type: schema.TypeString,
+			"ipv6_address_first": &schema.Schema{
+				Type:     schema.TypeString,
 				Optional: true,
-				Description: "IPv6 network address.",
+				Description: "First IPv6 address in the range.",
 			},
-			"mask_length4": {
-				Type: schema.TypeInt,
+			"ipv4_address_last": &schema.Schema{
+				Type:     schema.TypeString,
 				Optional: true,
-				Description: "IPv4 network mask length.",
+				Description: "Last IPv4 address in the range.",
 			},
-			"mask_length6": {
-				Type: schema.TypeInt,
+			"ipv6_address_last": &schema.Schema{
+				Type:     schema.TypeString,
 				Optional: true,
-				Description: "IPv6 network mask length.",
+				Description: "Last IPv6 address in the range.",
 			},
 			"nat_settings" : {
 				Type: schema.TypeMap,
 				Optional: true,
 				Description: "NAT settings.",
+				//Default: map[string]interface{}{"auto_rule":false},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_rule": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default: false,
 							Description: "Whether to add automatic address translation rules.",
 						},
 						"ipv4_address": {
@@ -81,40 +83,6 @@ func resourceManagementNetwork() *schema.Resource {
 					},
 				},
 			},
-			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
-				Description: "Collection of tag identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"broadcast": {
-				Type: schema.TypeString,
-				Optional: true,
-				Description: "Allow broadcast address inclusion.",
-				Default: "allow",
-
-			},
-			"color": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  "Color of the object. Should be one of existing colors.",
-				Default: "black",
-			},
-			"comments": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Comments string.",
-			},
-			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema {
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -127,29 +95,56 @@ func resourceManagementNetwork() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default: false,
 			},
+			"color": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default: "black",
+			},
+			"comments": &schema.Schema{
+				Type:	schema.TypeString,
+				Optional: true,
+				Description: "Comments string.",
+			},
+			"groups": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of group identifiers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"tags": {
+				Type: schema.TypeSet,
+				Optional: true,
+				Description: "Collection of tag identifiers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
-func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
+func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	network := make(map[string]interface{})
+	addressRange := make(map[string]interface{})
 
 	if v, ok := d.GetOk("name"); ok {
-		network["name"] = v.(string)
+		addressRange["name"] = v.(string)
 	}
-	if val, ok := d.GetOk("subnet4"); ok {
-		network["subnet4"] = val.(string)
+	if v, ok := d.GetOk("ipv4_address_first"); ok {
+		addressRange["ipv4-address-first"] = v.(string)
 	}
-	if val, ok := d.GetOk("subnet6"); ok {
-		network["subnet6"] = val.(string)
+	if v, ok := d.GetOk("ipv6_address_first"); ok {
+		addressRange["ipv6-address-first"] = v.(string)
 	}
-	if val, ok := d.GetOk("mask_length4"); ok {
-		network["mask-length4"] = val.(int)
+	if v, ok := d.GetOk("ipv4_address_last"); ok {
+		addressRange["ipv4-address-last"] = v.(string)
 	}
-	if val, ok := d.GetOk("mask_length6"); ok {
-		network["mask-length6"] = val.(int)
+	if v, ok := d.GetOk("ipv6_address_last"); ok {
+		addressRange["ipv6-address-last"] = v.(string)
 	}
 
 	if _, ok := d.GetOk("nat_settings"); ok {
@@ -174,42 +169,39 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		if v, ok := d.GetOk("nat_settings.method"); ok {
 			res["method"] = v.(string)
 		}
-		network["nat-settings"] = res
+		addressRange["nat-settings"] = res
 	}
 
+	if val, ok := d.GetOk("comments"); ok {
+		addressRange["comments"] = val.(string)
+	}
 	if val, ok := d.GetOk("tags"); ok {
-		network["tags"] = val.(*schema.Set).List()
+		addressRange["tags"] = val.(*schema.Set).List()
 	}
 	if val, ok := d.GetOk("groups"); ok {
-		network["groups"] = val.(*schema.Set).List()
-	}
-	if val, ok := d.GetOk("broadcast"); ok {
-		network["broadcast"] = val.(string)
-	}
-	if val, ok := d.GetOk("comments"); ok {
-		network["comments"] = val.(string)
+		addressRange["groups"] = val.(*schema.Set).List()
 	}
 	if val, ok := d.GetOk("color"); ok {
-		network["color"] = val.(string)
+		addressRange["color"] = val.(string)
 	}
 	if val, ok := d.GetOkExists("ignore_errors"); ok {
-		network["ignore-errors"] = val.(bool)
+		addressRange["ignore-errors"] = val.(bool)
 	}
 	if val, ok := d.GetOkExists("ignore_warnings"); ok {
-		network["ignore-warnings"] = val.(bool)
+		addressRange["ignore-warnings"] = val.(bool)
 	}
 
-	log.Println("Create Network - Map = ", network)
+	log.Println("Create Address Range - Map = ", addressRange)
 
-	addNetworkRes, err := client.ApiCall("add-network",network,client.GetSessionID(),true,false)
-	if err != nil || !addNetworkRes.Success {
-		if addNetworkRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkRes.ErrorMsg)
+	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), false, false)
+	if err != nil || !addAddressRangeRes.Success {
+		if addAddressRangeRes.ErrorMsg != "" {
+			return fmt.Errorf(addAddressRangeRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
 	}
 
-	d.SetId(addNetworkRes.GetData()["uid"].(string))
+	d.SetId(addAddressRangeRes.GetData()["uid"].(string))
 
 	if client.GetAutoPublish() {
 
@@ -221,10 +213,10 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return readManagementNetwork(d, m)
+	return readManagementAddressRange(d, m)
 }
 
-func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
+func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 
 	client := m.(*checkpoint.ApiClient)
 
@@ -232,60 +224,59 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showNetworkRes, err := client.ApiCall("show-network",payload,client.GetSessionID(),true,false)
+	showAddressRangeRes, err := client.ApiCall("show-address-range",payload,client.GetSessionID(),true,false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !showNetworkRes.Success {
+	if !showAddressRangeRes.Success {
 		// Handle delete resource from other clients
-		if objectNotFound(showNetworkRes.GetData()["code"].(string)) {
+		if objectNotFound(showAddressRangeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkRes.ErrorMsg)
+		return fmt.Errorf(showAddressRangeRes.ErrorMsg)
 	}
 
-	network := showNetworkRes.GetData()
+	addressRange := showAddressRangeRes.GetData()
 
-	if v := network["name"]; v != nil {
+	log.Println("Read Address Range - Show JSON = ", addressRange)
+
+
+	if v := addressRange["name"]; v != nil {
 		_ = d.Set("name", v)
 	}
 
-	if v := network["subnet4"]; v != nil {
-		_ = d.Set("subnet4", v)
+	if v := addressRange["ipv4-address-first"]; v != nil {
+		_ = d.Set("ipv4_address_first", v)
 	}
 
-	if v := network["subnet6"]; v != nil {
-		_ = d.Set("subnet6", v)
+	if v := addressRange["ipv6-address-first"]; v != nil {
+		_ = d.Set("ipv6_address_first", v)
 	}
 
-	if v := network["mask-length4"]; v != nil {
-		_ = d.Set("mask_length4", v)
+	if v := addressRange["ipv4-address-last"]; v != nil {
+		_ = d.Set("ipv4_address_last", v)
 	}
 
-	if v := network["mask-length6"]; v != nil {
-		_ = d.Set("mask_length6", v)
+
+	if v := addressRange["ipv6-address-last"]; v != nil {
+		_ = d.Set("ipv6_address_last", v)
 	}
 
-	if v := network["subnet-mask"]; v != nil {
-		_ = d.Set("subnet_mask", v)
-	}
 
-	if v := network["broadcast"]; v != nil {
-		_ = d.Set("broadcast", v)
-	}
-
-	if v := network["comments"]; v != nil {
+	if v := addressRange["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
 
-	if v := network["color"]; v != nil {
+
+	if v := addressRange["color"]; v != nil {
 		_ = d.Set("color", v)
 	}
 
-	if network["nat-settings"] != nil {
 
-		natSettingsMap := network["nat-settings"].(map[string]interface{})
+	if addressRange["nat-settings"] != nil {
+
+		natSettingsMap := addressRange["nat-settings"].(map[string]interface{})
 
 		natSettingsMapToReturn := make(map[string]interface{})
 
@@ -313,9 +304,9 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			natSettingsMapToReturn["method"] = v
 		}
 
+
 		_, natSettingInConf := d.GetOk("nat_settings")
 		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
-
 		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
 			_ = d.Set("nat_settings", map[string]interface{}{})
 		} else {
@@ -326,8 +317,9 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("nat_settings", nil)
 	}
 
-	if network["groups"] != nil {
-		groupsJson := network["groups"].([]interface{})
+
+	if addressRange["groups"] != nil {
+		groupsJson := addressRange["groups"].([]interface{})
 		groupsIds := make([]string, 0)
 		if len(groupsJson) > 0 {
 			// Create slice of group names
@@ -341,8 +333,8 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("groups", nil)
 	}
 
-	if network["tags"] != nil {
-		tagsJson := network["tags"].([]interface{})
+	if addressRange["tags"] != nil {
+		tagsJson := addressRange["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
 		if len(tagsJson) > 0 {
 			// Create slice of tag names
@@ -359,31 +351,44 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
+func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
-	network := make(map[string]interface{})
-
+	addressRange := make(map[string]interface{})
 
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
-		network["name"] = oldName.(string)
-		network["new-name"] = newName.(string)
+		oldName, newName := d.GetChange("name")
+		addressRange["name"] = oldName
+		addressRange["new-name"] = newName
 	} else {
-		network["name"] = d.Get("name")
+		addressRange["name"] = d.Get("name")
 	}
 
-	if ok := d.HasChange("subnet4"); ok {
-		network["subnet4"] = d.Get("subnet4")
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		addressRange["ignore-errors"] = v.(bool)
 	}
-	if ok := d.HasChange("subnet6"); ok {
-		network["subnet6"] = d.Get("subnet6")
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		addressRange["ignore-warnings"] = v.(bool)
 	}
-	if ok := d.HasChange("mask_length4"); ok {
-		network["mask-length4"] = d.Get("mask_length4")
+
+	if ok := d.HasChange("comments"); ok {
+		addressRange["comments"] = d.Get("comments")
 	}
-	if ok := d.HasChange("mask_length6"); ok {
-		network["mask-length6"] = d.Get("mask_length6")
+	if ok := d.HasChange("color"); ok {
+		addressRange["color"] = d.Get("color")
+	}
+
+	if ok := d.HasChange("ipv4_address_first"); ok {
+		addressRange["ipv4-address-first"] = d.Get("ipv4_address_first")
+	}
+	if ok := d.HasChange("ipv6_address_first"); ok {
+		addressRange["ipv6-address-first"] = d.Get("ipv6_address_first")
+	}
+	if ok := d.HasChange("ipv4_address_last"); ok {
+		addressRange["ipv4-address-last"] = d.Get("ipv4_address_last")
+	}
+	if ok := d.HasChange("ipv6_address_last"); ok {
+		addressRange["ipv6-address-last"] = d.Get("ipv6_address_last")
 	}
 
 	if ok := d.HasChange("nat_settings"); ok {
@@ -411,50 +416,37 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 				res["method"] = d.Get("nat_settings.method")
 			}
 
-			network["nat-settings"] = res
+			addressRange["nat-settings"] = res
 		} else {  //argument deleted - go back to defaults
-			network["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
+			addressRange["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
 	}
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
-			network["tags"] = v.(*schema.Set).List()
+			addressRange["tags"] = v.(*schema.Set).List()
 		} else {
 			oldTags, _ := d.GetChange("tags")
-			network["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+			addressRange["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
 	}
 
 	if ok := d.HasChange("groups"); ok {
 		if v, ok := d.GetOk("groups"); ok {
-			network["groups"] = v.(*schema.Set).List()
+			addressRange["groups"] = v.(*schema.Set).List()
 		} else {
 			oldGroups, _ := d.GetChange("groups")
-			network["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
+			addressRange["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
 		}
 	}
 
-	if ok := d.HasChange("broadcast"); ok {
-		network["broadcast"] = d.Get("broadcast")
-	}
-	if ok := d.HasChange("comments"); ok {
-		network["comments"] = d.Get("comments")
-	}
-	if ok := d.HasChange("color"); ok {
-		network["color"] = d.Get("color")
-	}
-	if v, ok := d.GetOkExists("ignore_errors"); ok {
-		network["ignore-errors"] = v.(bool)
-	}
-	if v, ok := d.GetOkExists("ignore_warnings"); ok {
-		network["ignore-warnings"] = v.(bool)
-	}
-
-	log.Println("Update Network - Map = ", network)
-	setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, false)
-	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+	log.Println("Update Address Range - Map = ", addressRange)
+	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), false, false)
+	if err != nil || !updateAddressRangeRes.Success {
+		if updateAddressRangeRes.ErrorMsg != "" {
+			return fmt.Errorf(updateAddressRangeRes.ErrorMsg)
+		}
+		return fmt.Errorf(err.Error())
 	}
 
 	if client.GetAutoPublish() {
@@ -467,17 +459,23 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	return readManagementNetwork(d, m)
+	return readManagementAddressRange(d, m)
 }
 
-func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
+func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
+
 	client := m.(*checkpoint.ApiClient)
-	payload := map[string]interface{}{
-		"uid": d.Id(),
+
+	addressRangePayload := map[string]interface{}{
+		"uid" : d.Id(),
 	}
-	deleteNetworkRes, _ := client.ApiCall("delete-network",payload,client.GetSessionID(),true,false)
-	if !deleteNetworkRes.Success {
-		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
+
+	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, false)
+	if err != nil || !deleteAddressRangeRes.Success {
+		if deleteAddressRangeRes.ErrorMsg != "" {
+			return fmt.Errorf(deleteAddressRangeRes.ErrorMsg)
+		}
+		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
 
@@ -493,6 +491,5 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
 
 
