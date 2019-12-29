@@ -211,16 +211,6 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementNetwork(d, m)
 }
 
@@ -457,16 +447,6 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementNetwork(d, m)
 }
 
@@ -480,16 +460,6 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

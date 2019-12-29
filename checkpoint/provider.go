@@ -38,7 +38,6 @@ func Provider() terraform.ResourceProvider {
 			"auto_publish": {
 				Type: schema.TypeBool,
 				Optional:    true,
-				Default: true,
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_AUTO_PUBLISH", nil),
 				Description: "publish on each change",
 			},
@@ -68,6 +67,7 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(data *schema.ResourceData) (interface{}, error) {
+
 	server := data.Get("server").(string)
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)

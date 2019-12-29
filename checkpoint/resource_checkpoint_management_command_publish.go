@@ -1,4 +1,5 @@
 package checkpoint
+
 import (
 	"fmt"
 	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"

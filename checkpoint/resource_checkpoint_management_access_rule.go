@@ -484,7 +484,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Access Rule - Map = ", accessRule)
 
-	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), false, false)
+	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true,false)
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessRuleRes.ErrorMsg)
@@ -493,16 +493,6 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(addAccessRuleRes.GetData()["uid"].(string))
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return readManagementAccessRule(d, m)
 }
@@ -815,7 +805,6 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 	if v := accessRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
-
 	return nil
 }
 
@@ -1074,24 +1063,13 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Access Rule - Map = ", accessRule)
 
-	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), false, false)
+	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true,false)
 	if err != nil || !updateAccessRuleRes.Success {
 		if updateAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
 	}
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementAccessRule(d, m)
 }
 
@@ -1112,17 +1090,6 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 
 	return nil
 }

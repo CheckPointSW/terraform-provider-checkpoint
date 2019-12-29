@@ -193,7 +193,7 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Address Range - Map = ", addressRange)
 
-	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), false, false)
+	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true,false)
 	if err != nil || !addAddressRangeRes.Success {
 		if addAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(addAddressRangeRes.ErrorMsg)
@@ -202,16 +202,6 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(addAddressRangeRes.GetData()["uid"].(string))
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return readManagementAddressRange(d, m)
 }
@@ -441,22 +431,12 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Address Range - Map = ", addressRange)
-	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), false, false)
+	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true,false)
 	if err != nil || !updateAddressRangeRes.Success {
 		if updateAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAddressRangeRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
-	}
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
 	}
 
 	return readManagementAddressRange(d, m)
@@ -478,16 +458,6 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

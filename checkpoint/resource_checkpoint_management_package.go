@@ -149,7 +149,7 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Package - Map = ", _package)
 
-	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), false, false)
+	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true,false)
 	if err != nil || !addPackageRes.Success {
 		if addPackageRes.ErrorMsg != "" {
 			return fmt.Errorf(addPackageRes.ErrorMsg)
@@ -158,16 +158,6 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(addPackageRes.GetData()["uid"].(string))
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return readManagementPackage(d, m)
 }
@@ -348,22 +338,12 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Package - Map = ", _package)
-	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), false, false)
+	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true,false)
 	if err != nil || !updatePackageRes.Success {
 		if updatePackageRes.ErrorMsg != "" {
 			return fmt.Errorf(updatePackageRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
-	}
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
 	}
 
 	return readManagementPackage(d, m)
@@ -385,16 +365,6 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

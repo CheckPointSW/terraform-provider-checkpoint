@@ -245,16 +245,6 @@ func createManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	d.SetId(addServiceUdpRes.GetData()["uid"].(string))
 
 	return readManagementServiceUdp(d, m)
@@ -519,16 +509,6 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(setServiceUdpRes.ErrorMsg)
 	}
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementServiceUdp(d, m)
 }
 
@@ -542,16 +522,6 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(deleteServiceUdpRes.ErrorMsg)
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

@@ -113,16 +113,6 @@ func createManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(addGroupRes.GetData()["uid"].(string))
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementGroup(d, m)
 }
 
@@ -268,16 +258,6 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(setGroupRes.ErrorMsg)
 	}
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementGroup(d, m)
 }
 
@@ -291,16 +271,6 @@ func deleteManagementGroup(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(deleteGroupRes.ErrorMsg)
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

@@ -238,16 +238,6 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(addServiceTcpRes.GetData()["uid"].(string))
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementServiceTcp(d, m)
 }
 
@@ -501,16 +491,6 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(setServiceTcpRes.ErrorMsg)
 	}
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementServiceTcp(d, m)
 }
 
@@ -524,16 +504,6 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(deleteServiceTcpRes.ErrorMsg)
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

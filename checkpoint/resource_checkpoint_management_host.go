@@ -391,7 +391,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Host - Map = ", host)
 
-	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), false, false)
+	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true,false)
 	if err != nil || !addHostRes.Success {
 		if addHostRes.ErrorMsg != "" {
 			return fmt.Errorf(addHostRes.ErrorMsg)
@@ -400,16 +400,6 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(addHostRes.GetData()["uid"].(string))
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return readManagementHost(d, m)
 }
@@ -838,22 +828,12 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 
 
 	log.Println("Update Host - Map = ", host)
-	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), false, false)
+	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true,false)
 	if err != nil || !updateHostRes.Success {
 		if updateHostRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHostRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
-	}
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
 	}
 
 	return readManagementHost(d, m)
@@ -875,16 +855,6 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }

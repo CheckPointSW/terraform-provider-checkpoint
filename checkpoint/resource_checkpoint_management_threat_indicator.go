@@ -316,16 +316,6 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	}
 	d.SetId(showThreatIndicatorRes.GetData()["uid"].(string))
 
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
-
 	return readManagementThreatIndicator(d, m)
 }
 
@@ -493,22 +483,12 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 
 
 	log.Println("Update Threat Indicator - Map = ", threatIndicator)
-	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), false, false)
+	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true,false)
 	if err != nil || !updateThreatIndicatorRes.Success {
 		if updateThreatIndicatorRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatIndicatorRes.ErrorMsg)
 		}
 		return fmt.Errorf(err.Error())
-	}
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
 	}
 
 	return readManagementThreatIndicator(d, m)
@@ -530,16 +510,6 @@ func deleteManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		return fmt.Errorf(err.Error())
 	}
 	d.SetId("")
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return fmt.Errorf(publishRes.ErrorMsg)
-		}
-	}
 
 	return nil
 }
