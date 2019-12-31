@@ -2,10 +2,15 @@ package checkpoint
 
 import (
 	"encoding/json"
+	"fmt"
+	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"io/ioutil"
+	"log"
 	"os"
 )
+
+//var lock sync.Mutex
 
 const (
 	FILENAME = "sid.json"
@@ -67,4 +72,21 @@ func Compare(a, b []string) []string {
 		}
 	}
 	return a
+}
+
+func PublishAction(client *checkpoint.ApiClient) (bool, error) {
+	//lock.Lock()
+	//defer lock.Unlock()
+
+	if client.GetAutoPublish() {
+
+		log.Println("publish current session")
+
+		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
+		if !publishRes.Success {
+			return false, fmt.Errorf(publishRes.ErrorMsg)
+		}
+		//time.Sleep(10 * time.Second)
+	}
+	return true, nil
 }

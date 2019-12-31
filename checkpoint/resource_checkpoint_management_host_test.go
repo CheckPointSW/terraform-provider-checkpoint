@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"log"
 	"os"
 	"testing"
 )
@@ -17,8 +16,7 @@ import (
 // 3. Validate resource attributes are the same as in configuration
 // 4. Check resource destroy
 func TestAccCheckpointManagementHost_basic(t *testing.T){
-	t.Log("Enter TestAccCheckpointManagementHost_basic")
-	log.Println("Enter TestAccCheckpointManagementHost_basic")
+
 	var hostMap map[string]interface{}
 	resourceName := "checkpoint_management_host.test"
 	objName := "tfTestManagementHost_" + acctest.RandString(6)
@@ -44,13 +42,10 @@ func TestAccCheckpointManagementHost_basic(t *testing.T){
 				},
 			},
 	})
-	t.Log("Exit TestAccCheckpointManagementHost_basic...")
-	log.Println("Exit TestAccCheckpointManagementHost_basic...")
 
 }
 // verifies Host resource has been destroyed
 func testAccCheckpointManagementHostDestroy(s *terraform.State) error {
-	log.Println("Enter testAccCheckpointManagementHostDestroy")
 
 	client := testAccProvider.Meta().(*checkpoint.ApiClient)
 	for _, rs := range s.RootModule().Resources {
@@ -62,22 +57,16 @@ func testAccCheckpointManagementHostDestroy(s *terraform.State) error {
 			if res.Success {
 				return fmt.Errorf("host object (%s) still exists", rs.Primary.ID)
 			}
-			_, _ = client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(), true, false)
 		}
-		log.Println("Exit testAccCheckpointManagementHostDestroy (for)")
 		return nil
 	}
-	log.Println("Exit testAccCheckpointManagementHostDestroy")
 	return nil
 }
 
 // verifies Host resource exists by ID and init map with attributes
 func testAccCheckCheckpointManagementHostExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		// Retrieve the resource from state. resourceTfName is the resource name in .tf file:
-		// For: resource "checkpoint_management_host" "test" {...}
-		// resourceTfName = "checkpoint_management_host.test"
-		log.Println("Enter testAccCheckCheckpointManagementHostExists...")
+
 		rs, ok := s.RootModule().Resources[resourceTfName]
 		if !ok {
 			return fmt.Errorf("Resource not found: %s", resourceTfName)
@@ -96,9 +85,6 @@ func testAccCheckCheckpointManagementHostExists(resourceTfName string, res *map[
 		}
 		// init res - host map object for next step
 		*res = response.GetData()
-		log.Println("Exit testAccCheckCheckpointManagementHostExists...")
-
-		_, _ = client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(), true, false)
 
 		return nil
 	}
@@ -106,7 +92,7 @@ func testAccCheckCheckpointManagementHostExists(resourceTfName string, res *map[
 // verifies host resource attributes are same as in configure
 func testAccCheckCheckpointManagementHostAttributes(hostMap *map[string]interface{}, name string, ipv4address string, color string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		log.Println("Enter testAccCheckCheckpointManagementHostAttributes")
+
 		hostName := (*hostMap)["name"].(string)
 		if hostName != name {
 			return fmt.Errorf("name is %s, expected %s", hostName, name)
@@ -120,7 +106,7 @@ func testAccCheckCheckpointManagementHostAttributes(hostMap *map[string]interfac
 		if hostColor != color {
 			return fmt.Errorf("color is %s, expected %s", hostColor, color)
 		}
-		log.Println("Exit testAccCheckCheckpointManagementHostAttributes")
+
 		return nil
 
 	}

@@ -16,6 +16,7 @@ type ApiClientArgs struct {
 	AcceptServerCertificate bool
 	DebugFile               string
 	Context                 string
+	AutoPublish				bool
 	Timeout 				time.Duration
 	Sleep 				time.Duration
 }
@@ -37,7 +38,7 @@ DebugFile: name of debug file
 Context: which API to use - Management API = web_api (default) or GAIA API = gaia_api
 Timeout: HTTP Client timeout value
 */
-func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration) ApiClientArgs {
+func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, autoPublish bool, timeout time.Duration, sleep time.Duration) ApiClientArgs {
 
 	return ApiClientArgs{
 		Port: port,
@@ -51,6 +52,7 @@ func APIClientArgs(port int, fingerprint string, sid string, server string, prox
 		AcceptServerCertificate: acceptServerCertificate,
 		DebugFile: debugFile,
 		Context: context,
+		AutoPublish: autoPublish,
 		Timeout: timeout,
 		Sleep: sleep,
 	}

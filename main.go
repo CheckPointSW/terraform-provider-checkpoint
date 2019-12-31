@@ -1,9 +1,8 @@
 package main
 
 import (
-	"./checkpoint"
 	"github.com/hashicorp/terraform/plugin"
-	//checkpoint "github.com/terraform-providers/terraform-provider-checkpoint"
+	"github.com/terraform-providers/terraform-provider-checkpoint/checkpoint"
 )
 
 func main() {

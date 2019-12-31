@@ -56,6 +56,7 @@ type ApiClient struct {
 	debugFile        string
 	httpDebugLevel   string
 	context 		 string
+	autoPublish 	 bool
 	timeout          time.Duration
 	sleep			 time.Duration
 }
@@ -99,6 +100,7 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		debugFile: apiCA.DebugFile,
 		httpDebugLevel: apiCA.HttpDebugLevel,
 		context: apiCA.Context,
+		autoPublish: apiCA.AutoPublish,
 		timeout: apiCA.Timeout,
 		sleep: apiCA.Sleep,
 	}
@@ -112,6 +114,11 @@ func (c *ApiClient) GetPort() int {
 // Returns the context of API client
 func (c *ApiClient) GetContext() string {
 	return c.context
+}
+
+
+func (c *ApiClient) GetAutoPublish() bool {
+	return c.autoPublish
 }
 
 // Returns the fingerprint of API client
