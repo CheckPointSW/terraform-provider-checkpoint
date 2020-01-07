@@ -15,7 +15,7 @@ func resourceManagementPackage() *schema.Resource {
 		Delete: deleteManagementPackage,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				Description: "Object name. Should be unique in the domain.",

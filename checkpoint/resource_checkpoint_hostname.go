@@ -67,9 +67,7 @@ func readHostname(d *schema.ResourceData, m interface{}) error {
 	hostnameJson := showHostnameRes.GetData()
 	log.Println(hostnameJson)
 
-	if _, ok := d.GetOk("name"); ok {
-		_ = d.Set("name", hostnameJson["name"].(string))
-	}
+	_ = d.Set("name", hostnameJson["name"].(string))
 
 	log.Println("Exit readHostname...")
 	return nil
