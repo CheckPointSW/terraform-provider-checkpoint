@@ -4,7 +4,6 @@ import (
 	"fmt"
 	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
-	"log"
 	"reflect"
 	"strconv"
 )
@@ -266,7 +265,6 @@ func physicalInterfaceParseSchemaToMap(d *schema.ResourceData) map[string]interf
 }
 
 func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter createPhysicalInterface...")
 	client := m.(*checkpoint.ApiClient)
 	payload := physicalInterfaceParseSchemaToMap(d)
 
@@ -284,7 +282,6 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		payload["ipv4-mask-length"] = v.(int)
 	}
 
-	log.Println(payload)
 	setPIRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
@@ -293,12 +290,10 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	// Set Schema UID = Object key
 	d.SetId(setPIRes.GetData()["name"].(string))
 
-	log.Println("Exit createPhysicalInterface...")
 	return readPhysicalInterface(d, m)
 }
 
 func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter readPhysicalInterface...")
 	client := m.(*checkpoint.ApiClient)
 	payload := map[string]interface{}{
 		"name": d.Get("name"),
@@ -313,7 +308,6 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(showPIRes.ErrorMsg)
 	}
 	PIJson := showPIRes.GetData()
-	log.Println(PIJson)
 
 	_ = d.Set("name", PIJson["name"].(string))
 
@@ -345,12 +339,10 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	}
 
 
-	log.Println("Exit readPhysicalInterface...")
 	return nil
 }
 
 func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter updatePhysicalInterface...")
 	client := m.(*checkpoint.ApiClient)
 	payload := physicalInterfaceParseSchemaToMap(d)
 
@@ -368,13 +360,10 @@ func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}
-	log.Println("Exit updatePhysicalInterface...")
 	return readPhysicalInterface(d, m)
 }
 
 func deletePhysicalInterface(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter deletePhysicalInterface...")
 	d.SetId("") // Destroy resource
-	log.Println("Exit deletePhysicalInterface...")
 	return nil
 }
