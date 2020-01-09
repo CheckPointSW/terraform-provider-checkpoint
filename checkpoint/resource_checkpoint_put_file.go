@@ -4,7 +4,6 @@ import (
 	"fmt"
 	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
-	"log"
 )
 
 
@@ -51,10 +50,8 @@ func putFileParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 }
 
 func createPutFile(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter createPutFile...")
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
-	log.Println(payload)
 	setPIRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
@@ -63,7 +60,6 @@ func createPutFile(d *schema.ResourceData, m interface{}) error {
 	// Set Schema UID = Object key
 	d.SetId(payload["file-name"].(string))
 
-	log.Println("Exit createPutFile...")
 	return readPutFile(d, m)
 }
 
@@ -72,20 +68,16 @@ func readPutFile(d *schema.ResourceData, m interface{}) error {
 }
 
 func updatePutFile(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter updatePutFile...")
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}
-	log.Println("Exit updatePutFile...")
 	return readPutFile(d, m)
 }
 
 func deletePutFile(d *schema.ResourceData, m interface{}) error {
-	log.Println("Enter deletePutFile...")
 	d.SetId("") // Destroy resource
-	log.Println("Exit deletePutFile...")
 	return nil
 }

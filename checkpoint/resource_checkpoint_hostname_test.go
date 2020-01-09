@@ -19,7 +19,6 @@ func TestAccCheckpointHostname_basic(t *testing.T){
 	var hostname map[string]interface{}
 	resourceName := "checkpoint_hostname.test"
 	objName := "terratest"
-
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "gaia_api" {
 		t.Skip("Skipping Gaia test")

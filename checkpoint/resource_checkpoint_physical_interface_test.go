@@ -20,9 +20,9 @@ func TestAccCheckpointPhysicalInterface_basic(t *testing.T){
 	var physical_inter map[string]interface{}
 	resourceName := "checkpoint_physical_interface.test"
 	objName := "eth1"
-	objPhysicalInterface := "20.30.1.2"
+	objPhysicalInterface := "20.30.1.37"
+	objPhysicalInterfaceUpdate := "20.30.1.29"
 	objMaskLen := 24
-
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "gaia_api" {
 		t.Skip("Skipping Gaia test")
@@ -40,6 +40,14 @@ func TestAccCheckpointPhysicalInterface_basic(t *testing.T){
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointPhysicalInterfaceExists(resourceName,&physical_inter),
 					testAccCheckCheckpointPhysicalInterfaceAttributes(&physical_inter,objName, objPhysicalInterface, objMaskLen),
+				),
+			},
+			{
+				Config: testAccPhysicalInterfaceUpdatedConfig(objName, objPhysicalInterfaceUpdate, objMaskLen),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointPhysicalInterfaceExists(resourceName,&physical_inter),
+					testAccCheckPhysicalInterfaceUpdated(&physical_inter, objName, objPhysicalInterfaceUpdate, objMaskLen),
+					testAccCheckCheckpointPhysicalInterfaceAttributes(&physical_inter,objName, objPhysicalInterfaceUpdate, objMaskLen),
 				),
 			},
 		},
@@ -111,8 +119,52 @@ func testAccPhysicalInterfaceConfig(name string, address string,masklen int) str
 	return fmt.Sprintf(`
 resource "checkpoint_physical_interface" "test" {
       name = "%s"
+      enabled = "true"
       ipv4_address = "%s"
       ipv4_mask_length = %d
+      auto_negotiation = "true"
+      comments = "dfsf"
 }
 `,name, address, masklen)
+}
+
+// return a string of the resource like define in a .tf file
+func testAccPhysicalInterfaceUpdatedConfig(name string, address string,masklen int) string {
+	return fmt.Sprintf(`
+resource "checkpoint_physical_interface" "test" {
+      name = "%s"
+      enabled = "true"
+      ipv4_address = "%s"
+      ipv4_mask_length = %d
+      mtu = "1600"
+}
+`,name, address, masklen)
+}
+
+func testAccCheckPhysicalInterfaceUpdated(piRes *map[string]interface{}, name string, address string, maskLen int) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		log.Println("Enter testAccCheckCheckpointPhysicalInterfaceAttributes")
+		PIMap := *piRes
+		if PIMap == nil {
+			return fmt.Errorf("PIMap is nil")
+		}
+
+		inter_name := PIMap["name"].(string)
+		if inter_name != name {
+			return fmt.Errorf("name is %s, expected %s", inter_name, name)
+		}
+
+		inter_address := PIMap["ipv4-address"].(string)
+		if inter_address != address {
+			return fmt.Errorf("name is %s, expected %s", inter_address, address)
+		}
+
+		inter_mask_len, _ := strconv.Atoi(PIMap["ipv4-mask-length"].(string))
+		if inter_mask_len != maskLen {
+			return fmt.Errorf("name is %d, expected %d", inter_mask_len, maskLen)
+		}
+
+		log.Println("Exit testAccCheckCheckpointPhysicalInterfaceAttributes")
+		return nil
+	}
 }

@@ -22,7 +22,6 @@ func TestAccCheckpointPutFile_basic(t *testing.T){
 	objName := "/home/admin/terrafile.txt"
 	objContent := "It's terrafile 114"
 	objOverride := true
-
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "gaia_api" {
 		t.Skip("Skipping Gaia test")
