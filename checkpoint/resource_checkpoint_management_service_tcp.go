@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/CheckpointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"reflect"
@@ -70,6 +70,7 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Type:         schema.TypeBool,
 				Optional:     true,
 				Description:  "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
+				Default: true,
 			},
 			"override_default_settings": {
 				Type:        schema.TypeBool,

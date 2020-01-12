@@ -2,11 +2,8 @@ package checkpoint
 
 import (
 	"encoding/json"
-	"fmt"
-	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
-	chkp "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/CheckpointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -33,7 +30,7 @@ func (s *Session) Save() error {
 	return nil
 }
 
-func GetSession() (Session,error) {
+func GetSession() (Session, error) {
 	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
 		_, err := os.Create(FILENAME)
 		if err != nil {
@@ -51,8 +48,8 @@ func GetSession() (Session,error) {
 	return s, nil
 }
 
-func CheckSession(c *chkp.ApiClient, uid string) bool {
-	if uid == "" || c.GetContext() != chkp.WebContext {
+func CheckSession(c *checkpoint.ApiClient, uid string) bool {
+	if uid == "" || c.GetContext() != checkpoint.WebContext {
 		return false
 	}
 	payload := map[string]interface{}{
@@ -72,21 +69,4 @@ func Compare(a, b []string) []string {
 		}
 	}
 	return a
-}
-
-func PublishAction(client *checkpoint.ApiClient) (bool, error) {
-	//lock.Lock()
-	//defer lock.Unlock()
-
-	if client.GetAutoPublish() {
-
-		log.Println("publish current session")
-
-		publishRes, _ := client.ApiCall("publish", map[string]interface{}{}, client.GetSessionID(),true,false)
-		if !publishRes.Success {
-			return false, fmt.Errorf(publishRes.ErrorMsg)
-		}
-		//time.Sleep(10 * time.Second)
-	}
-	return true, nil
 }

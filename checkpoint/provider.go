@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/CheckpointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
@@ -35,12 +35,6 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CONTEXT", checkpoint.WebContext),
 				Description: "Check Point access context - gaia_api or web_api",
 			},
-			"auto_publish": {
-				Type: schema.TypeBool,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_AUTO_PUBLISH", nil),
-				Description: "publish on each change",
-			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_network": resourceManagementNetwork(),
@@ -72,7 +66,6 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)
 	context := data.Get("context").(string)
-	autoPublish := data.Get("auto_publish").(bool)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
@@ -90,7 +83,6 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 context,
-		AutoPublish: 			 autoPublish,
 		Timeout:                 checkpoint.TimeOut,
 		Sleep:                   checkpoint.SleepTime,
 	}
