@@ -3,9 +3,7 @@ layout: "checkpoint"
 page_title: "Provider: Check Point"
 sidebar_current: "docs-checkpoint-index"
 description: |-
-  Check point provider is used to interact with a resources supported by Management and Gaia API’s.
-  The provider allows managing firewall, and threat capabilities. 
-.
+  Check point provider is used to interact with a resources supported by Management and Gaia API’s. The provider allows managing firewall, and threat capabilities. 
 ---
 
 # Check Point Provider
