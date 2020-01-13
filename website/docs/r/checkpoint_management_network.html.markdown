@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_network "
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-network"
 description: |-
-  Configure Network Object.
+  This resource allows you to add/update/delete Check Point Network Object.
 ---
 
 # checkpoint_management_network
 
-Configure Network Object.
+This resource allows you to add/update/delete Check Point Network Object.
 
 ## Example Usage
 

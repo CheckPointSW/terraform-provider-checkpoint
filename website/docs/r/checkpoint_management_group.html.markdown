@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_group"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-group"
 description: |-
-  Configure Group.
+  This resource allows you to add/update/delete Check Point Group.
 ---
 
 # checkpoint_management_group
 
-Configure Group.
+This resource allows you to add/update/delete Check Point Group.
 
 ## Example Usage
 

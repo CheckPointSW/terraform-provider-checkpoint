@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_group"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-group"
 description: |-
-  Configure Service Group.
+  This resource allows you to add/update/delete Check Point Service Group.
 ---
 
 # checkpoint_management_service_group
 
-Configure Service Group.
+This resource allows you to add/update/delete Check Point Service Group.
 
 ## Example Usage
 

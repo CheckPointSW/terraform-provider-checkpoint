@@ -3,21 +3,20 @@ layout: "checkpoint"
 page_title: "Provider: Check Point"
 sidebar_current: "docs-checkpoint-index"
 description: |-
-  Check point provider is used to interact with a resources supported by Management and Gaia API’s. The provider allows managing firewall, and threat capabilities. 
+  The Check Point provider can be used to automate security responses to threats, provision both physical and virtualized next-generation firewalls and automate routine Security Management configuration tasks, saving time and reducing configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into DevSecOps workflows.
 ---
 
 # Check Point Provider
 
-Check point provider is used to interact with a resources supported by Management and Gaia API’s.
-  The provider allows managing firewall, and threat capabilities.
+The Check Point provider can be used to automate security responses to threats, provision both physical and virtualized next-generation firewalls and automate routine Security Management configuration tasks, saving time and reducing configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into DevSecOps workflows.
 
 ##Example usage
 ```hcl
 # Configure the Check Point Provider
 provider "checkpoint" {
-	server = "192.168.52.178"
-	username = "bob"
-	password = "Bob123"
+	server = "192.0.2.1"
+	username = "aa"
+	password = "aaaa"
 	context = "web_api"
 }
 
@@ -40,9 +39,9 @@ The Check Point provider offers providing credentials for authentication. The fo
 Usage:
 ```hcl
 provider "checkpoint" {
-	server = "192.168.52.178"
-	username = "bob"
-	password = "Bob123"
+	server = "192.0.2.1"
+	username = "aa"
+	password = "aaaa"
 	context = "web_api"
 }
 ```
@@ -53,9 +52,9 @@ You can provide your credentials via environment variables. Note that setting yo
 Usage:
 
 ```hcl
-$ export CHECKPOINT_SERVER=192.168.52.178
-$ export CHECKPOINT_USERNAME="bob"
-$ export CHECKPOINT_PASSWORD="Bob123"
+$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_USERNAME="aa"
+$ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
 ```
 

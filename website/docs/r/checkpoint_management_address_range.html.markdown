@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_address_range"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-address-range"
 description: |-
-  Configure Address Range.
+  This resource allows you to add/update/delete Check Point Address Range.
 ---
 
 # checkpoint_management_address_range
 
-Configure Address Range.
+This resource allows you to add/update/delete Check Point Address Range.
 
 ## Example Usage
 

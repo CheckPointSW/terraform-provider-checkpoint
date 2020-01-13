@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_threat_indicator"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-threat_indicator"
 description: |-
-  Configure Threat Indicator.
+  This resource allows you to add/update/delete Check Point Threat Indicator.
 ---
 
 # checkpoint_management_threat_indicator
 
-Configure Threat Indicator.
+This resource allows you to add/update/delete Check Point Threat Indicator.
 
 ## Example Usage
 
