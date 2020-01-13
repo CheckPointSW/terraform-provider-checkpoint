@@ -1,4 +1,4 @@
-module terraform-provider-checkpoint
+module terraform-provider-checkpoint/checkpoint
 
 require (
 	github.com/CheckpointSW/api-go-sdk v0.0.0-20200112133826-7eb14b75a7c1
