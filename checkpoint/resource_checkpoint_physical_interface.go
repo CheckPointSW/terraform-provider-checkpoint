@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-
 func resourcePhysicalInterface() *schema.Resource {
 	return &schema.Resource{
 		Create: createPhysicalInterface,
@@ -17,15 +16,15 @@ func resourcePhysicalInterface() *schema.Resource {
 		Delete: deletePhysicalInterface,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "interface name",
 			},
 			"auto_negotiation": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Activating auto_negotiation will skip the speed and duplex configuration",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					// if the parameter does not exist in the tf configuration file it gets the default value. we
 					// don't want it to be considered as a change on the 'plan' stage,
@@ -37,8 +36,8 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"comments": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "comments",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "" || new == old {
@@ -48,10 +47,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"duplex": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Duplex is not relevant when 'auto_negotiation' is enabled.",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -60,15 +59,15 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"enabled": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "",
 			},
 			"ipv4_address": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -77,10 +76,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"monitor_mode": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -89,10 +88,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"ipv6_autoconfig": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -101,10 +100,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"mac_addr": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -113,8 +112,8 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"mtu": {
-				Type: schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
 				Description: "",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "0" || new == old {
@@ -124,10 +123,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"rx_ringsize": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  "",
-				Default: "Not-Configured",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -147,10 +146,10 @@ func resourcePhysicalInterface() *schema.Resource {
 				},
 			},
 			"ipv6_address": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -174,20 +173,19 @@ func resourcePhysicalInterface() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Speed is not relevant when 'auto_negotiation' is enabled",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
 					}
 					return false
 				},
-
 			},
 			"tx_ringsize": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "",
-				Default: "Not-Configured",
+				Default:     "Not-Configured",
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					if new == "Not-Configured" || new == old {
 						return true
@@ -222,8 +220,6 @@ func physicalInterfaceParseSchemaToMap(d *schema.ResourceData) map[string]interf
 		physicalInterfaceMap["mac-addr"] = d.Get("mac_addr")
 	}
 
-
-
 	if val, ok := d.GetOkExists("enabled"); ok {
 		physicalInterfaceMap["enabled"] = val.(bool)
 	}
@@ -235,7 +231,6 @@ func physicalInterfaceParseSchemaToMap(d *schema.ResourceData) map[string]interf
 	if d.HasChange("mtu") {
 		physicalInterfaceMap["mtu"] = d.Get("mtu")
 	}
-
 
 	if d.HasChange("rx_ringsize") {
 		physicalInterfaceMap["rx-ringsize"] = d.Get("rx_ringsize")
@@ -282,7 +277,7 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		payload["ipv4-mask-length"] = v.(int)
 	}
 
-	setPIRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
+	setPIRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, false)
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
 	}
@@ -298,7 +293,7 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"name": d.Get("name"),
 	}
-	showPIRes, _ := client.ApiCall("show-physical-interface",payload,client.GetSessionID(),true,false)
+	showPIRes, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, false)
 	if !showPIRes.Success {
 		// Handle deletion of an object from other clients - Object not found
 		if objectNotFound(showPIRes.GetData()["code"].(string)) {
@@ -338,7 +333,6 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("auto_negotiation", PIJson["auto-negotiation"].(string))
 	}
 
-
 	return nil
 }
 
@@ -351,12 +345,12 @@ func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		payload["ipv6-mask-length"] = d.Get("ipv6_mask_length")
 	}
 
-	if d.HasChange("ipv4_address") || d.HasChange("ipv4_mask_length"){
+	if d.HasChange("ipv4_address") || d.HasChange("ipv4_mask_length") {
 		payload["ipv4-address"] = d.Get("ipv4_address")
 		payload["ipv4-mask-length"] = d.Get("ipv4_mask_length")
 	}
 
-	setNetworkRes, _ := client.ApiCall("set-physical-interface",payload,client.GetSessionID(),true,false)
+	setNetworkRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}

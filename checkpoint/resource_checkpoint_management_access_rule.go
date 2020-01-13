@@ -16,118 +16,118 @@ func resourceManagementAccessRule() *schema.Resource {
 		Update: updateManagementAccessRule,
 		Delete: deleteManagementAccessRule,
 
-		Schema: map[string]*schema.Schema {
-			"layer": &schema.Schema {
-				Type:     schema.TypeString,
-				Required: true,
+		Schema: map[string]*schema.Schema{
+			"layer": &schema.Schema{
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
-			"position": &schema.Schema {
-				Type:     schema.TypeMap,
-				Required: true,
+			"position": &schema.Schema{
+				Type:        schema.TypeMap,
+				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"top": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"above": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"below": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"bottom": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 					},
 				},
 			},
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Rule name.",
 			},
 			"action": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "\"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".",
-				Default: "Drop",
+				Default:     "Drop",
 			},
-			"action_settings" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"action_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Action settings.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable_identity_captive_portal": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"limit": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 					},
 				},
 			},
 			"content": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "List of processed file types that this rule applies on.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"content_direction": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "On which direction the file types processing is applied.",
-				Default: "any",
+				Default:     "any",
 			},
 			"content_negate": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True if negate is set for data.",
-				Default: false,
+				Default:     false,
 			},
-			"custom_fields" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"custom_fields": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Custom fields.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"field_1": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "First custom field.",
 						},
 						"field_2": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Second custom field.",
 						},
 						"field_3": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Third custom field.",
 						},
 					},
 				},
 			},
 			"destination": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of Network objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -137,30 +137,30 @@ func resourceManagementAccessRule() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True if negate is set for destination.",
-				Default: false,
+				Default:     false,
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Enable/Disable the rule.",
-				Default: true,
+				Default:     true,
 			},
 			"inline_layer": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Inline Layer identified by the name or UID. Relevant only if \"Action\" was set to \"Apply Layer\".",
 			},
 			"install_on": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Which Gateways identified by the name or UID to install the policy on.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"service": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of Network objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -170,11 +170,11 @@ func resourceManagementAccessRule() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True if negate is set for service.",
-				Default: false,
+				Default:     false,
 			},
 			"source": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of Network objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -184,128 +184,127 @@ func resourceManagementAccessRule() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True if negate is set for source.",
-				Default: false,
+				Default:     false,
 			},
 			"time": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "List of time objects. For example: \"Weekend\", \"Off-Work\", \"Every-Day\".",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
-			"track" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"track": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Track Settings.",
-				Elem: &schema.Resource {
+				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"accounting": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "Turns accounting for track on and off.",
-							Default: false,
+							Default:     false,
 						},
 						"alert": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Type of alert for the track.",
-							Default: "none",
+							Default:     "none",
 						},
 						"enable_firewall_session": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "Determine whether to generate session log to firewall only connections.",
-							Default: false,
+							Default:     false,
 						},
 						"per_connection": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "Determines whether to perform the log per connection.",
-							Default: false,
+							Default:     false,
 						},
 						"per_session": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "Determines whether to perform the log per session.",
-							Default: false,
+							Default:     false,
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "\"Log\", \"Extended Log\", \"Detailed Log\", \"None\".",
-							Default: "None",
+							Default:     "None",
 						},
 					},
 				},
 			},
 			"user_check": &schema.Schema{
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Description: "User check settings.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"confirm": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"custom_frequency": &schema.Schema{
-							Type:     schema.TypeList,
-							MaxItems: 1,
-							Optional: true,
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
 							Description: "N/A",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"every": &schema.Schema{
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:        schema.TypeInt,
+										Optional:    true,
 										Description: "N/A",
 									},
 									"unit": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
 										Description: "N/A",
 									},
 								},
 							},
 						},
 						"frequency": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"interaction": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "N/A",
-
 						},
 					},
 				},
 			},
 			"vpn": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Communities or Directional.",
-				Default: "Any",
+				Default:     "Any",
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 		},
@@ -484,7 +483,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Access Rule - Map = ", accessRule)
 
-	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true,false)
+	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, false)
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessRuleRes.ErrorMsg)
@@ -497,16 +496,16 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	return readManagementAccessRule(d, m)
 }
 
-func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
+func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
-		"uid": d.Id(),
+		"uid":   d.Id(),
 		"layer": d.Get("layer"),
 	}
 
-	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(),true,false)
+	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -530,7 +529,6 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 	if v := accessRule["action"]; v != nil {
 		_ = d.Set("action", v.(map[string]interface{})["name"])
 	}
-
 
 	if accessRule["action-settings"] != nil {
 
@@ -561,7 +559,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 			}
 		}
 		_, contentInConf := d.GetOk("content")
-		if contentIds[0] == "Any" && !contentInConf{
+		if contentIds[0] == "Any" && !contentInConf {
 			_ = d.Set("content", []interface{}{})
 		} else {
 			_ = d.Set("content", contentIds)
@@ -598,7 +596,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 
 		_, customFieldsInConf := d.GetOk("custom_fields")
 		defaultCustomField := map[string]interface{}{"field_1": "", "field_2": "", "field_3": ""}
-		if reflect.DeepEqual(defaultCustomField, customFieldsMapToReturn) && !customFieldsInConf{
+		if reflect.DeepEqual(defaultCustomField, customFieldsMapToReturn) && !customFieldsInConf {
 			_ = d.Set("custom_fields", map[string]interface{}{})
 		} else {
 			_ = d.Set("custom_fields", customFieldsMapToReturn)
@@ -617,7 +615,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 			}
 		}
 		_, destinationInConf := d.GetOk("destination")
-		if destinationIds[0] == "Any" && !destinationInConf{
+		if destinationIds[0] == "Any" && !destinationInConf {
 			_ = d.Set("destination", []interface{}{})
 		} else {
 			_ = d.Set("destination", destinationIds)
@@ -744,12 +742,12 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 
 		_, trackInConf := d.GetOk("track")
 		defaultTrack := map[string]interface{}{
-			"accounting": "false",
-			"alert": "none",
+			"accounting":              "false",
+			"alert":                   "none",
 			"enable_firewall_session": "false",
-			"per_connection": "false",
-			"per_session": "false",
-			"type": "None"}
+			"per_connection":          "false",
+			"per_session":             "false",
+			"type":                    "None"}
 
 		if reflect.DeepEqual(defaultTrack, trackMapToReturn) && !trackInConf {
 			_ = d.Set("track", map[string]interface{}{})
@@ -766,32 +764,32 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error{
 
 		userCheckMapToReturn := make(map[string]interface{})
 
-			if v, _ := userCheckMap["confirm"]; v != nil {
-				userCheckMapToReturn["confirm"] = v
+		if v, _ := userCheckMap["confirm"]; v != nil {
+			userCheckMapToReturn["confirm"] = v
+		}
+
+		if v, ok := userCheckMap["custom-frequency"]; ok {
+
+			userCheckConfigMap := v.(map[string]interface{})
+			userCheckConfigMapToReturn := make(map[string]interface{})
+
+			if v, _ := userCheckConfigMap["every"]; v != nil {
+				userCheckConfigMapToReturn["every"] = v
 			}
 
-			if v, ok := userCheckMap["custom-frequency"]; ok {
-
-				userCheckConfigMap := v.(map[string]interface{})
-				userCheckConfigMapToReturn := make(map[string]interface{})
-
-					if v, _ := userCheckConfigMap["every"]; v != nil {
-						userCheckConfigMapToReturn["every"] = v
-					}
-
-					if v, _ := userCheckConfigMap["unit"]; v != nil {
-						userCheckConfigMapToReturn["unit"] = v
-					}
-				userCheckMapToReturn["custom_frequency"] = []interface{}{userCheckConfigMapToReturn}
+			if v, _ := userCheckConfigMap["unit"]; v != nil {
+				userCheckConfigMapToReturn["unit"] = v
 			}
+			userCheckMapToReturn["custom_frequency"] = []interface{}{userCheckConfigMapToReturn}
+		}
 
-			if v, _ := userCheckMap["frequency"]; v != nil {
-				userCheckMapToReturn["frequency"] = v
-			}
+		if v, _ := userCheckMap["frequency"]; v != nil {
+			userCheckMapToReturn["frequency"] = v
+		}
 
-			if v, _ := userCheckMap["interaction"]; v != nil {
-				userCheckMapToReturn["interaction"] = v.(map[string]interface{})["name"]
-			}
+		if v, _ := userCheckMap["interaction"]; v != nil {
+			userCheckMapToReturn["interaction"] = v.(map[string]interface{})["name"]
+		}
 
 		_ = d.Set("user_check", []interface{}{userCheckMapToReturn})
 	} else {
@@ -813,8 +811,8 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	accessRule := make(map[string]interface{})
 
-	if d.HasChange("position")  {
-		if _, ok := d.GetOk("position"); ok{
+	if d.HasChange("position") {
+		if _, ok := d.GetOk("position"); ok {
 			if _, ok := d.GetOk("position.top"); ok {
 				accessRule["new-position"] = "top"
 			}
@@ -849,18 +847,18 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			res := make(map[string]interface{})
 
 			if d.HasChange("action_settings.enable_identity_captive_portal") {
-				 if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
+				if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
 					res["enable-identity-captive-portal"] = v
 				}
 			}
-			if d.HasChange("action_settings.limit"){
-			 	if v, ok := d.GetOk("action_settings.limit"); ok {
+			if d.HasChange("action_settings.limit") {
+				if v, ok := d.GetOk("action_settings.limit"); ok {
 					res["limit"] = v.(string)
 				}
 			}
 
 			accessRule["action-settings"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			accessRule["action-settings"] = map[string]interface{}{"enable-identity-captive-portal": "false"}
 		}
 	}
@@ -891,10 +889,10 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			if d.HasChange("custom_fields.field_1") {
 				res["field-1"] = d.Get("custom_fields.field_1")
 			}
-			if d.HasChange("custom_fields.field_2"){
+			if d.HasChange("custom_fields.field_2") {
 				res["field-2"] = d.Get("custom_fields.field_2")
 			}
-			if d.HasChange("custom_fields.field_3"){
+			if d.HasChange("custom_fields.field_3") {
 				res["field-3"] = d.Get("custom_fields.field_3")
 			}
 			accessRule["custom-fields"] = res
@@ -913,21 +911,21 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if  d.HasChange("destination_negate") {
+	if d.HasChange("destination_negate") {
 		accessRule["destination-negate"] = d.Get("destination_negate")
 	}
 
-	if  d.HasChange("enabled") {
+	if d.HasChange("enabled") {
 		accessRule["enabled"] = d.Get("enabled")
 	}
 
-	if  d.HasChange("inline_layer") {
+	if d.HasChange("inline_layer") {
 		if v, ok := d.GetOk("inline_layer"); ok {
 			accessRule["inline-layer"] = v.(string)
 		}
 	}
 
-	if  d.HasChange("install_on") {
+	if d.HasChange("install_on") {
 		if v, ok := d.GetOk("install_on"); ok {
 			accessRule["install-on"] = v.(*schema.Set).List()
 		} else {
@@ -936,7 +934,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if  d.HasChange("service") {
+	if d.HasChange("service") {
 		if v, ok := d.GetOk("service"); ok {
 			accessRule["service"] = v.(*schema.Set).List()
 		} else {
@@ -945,11 +943,11 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if  d.HasChange("service_negate") {
+	if d.HasChange("service_negate") {
 		accessRule["service-negate"] = d.Get("service_negate")
 	}
 
-	if  d.HasChange("source") {
+	if d.HasChange("source") {
 		if v, ok := d.GetOk("source"); ok {
 			accessRule["source"] = v.(*schema.Set).List()
 		} else {
@@ -958,11 +956,11 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if  d.HasChange("source_negate") {
+	if d.HasChange("source_negate") {
 		accessRule["source-negate"] = d.Get("source_negate")
 	}
 
-	if  d.HasChange("time") {
+	if d.HasChange("time") {
 		if v, ok := d.GetOk("time"); ok {
 			accessRule["time"] = v.(*schema.Set).List()
 		}
@@ -971,7 +969,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		accessRule["time"] = map[string]interface{}{"remove": oldTime.(*schema.Set).List()}
 	}
 
-	if  d.HasChange("track") {
+	if d.HasChange("track") {
 
 		if _, ok := d.GetOk("track"); ok {
 
@@ -999,17 +997,17 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 		} else {
 			defaultTrack := map[string]interface{}{
-				"accounting": false,
-				"alert": "none",
+				"accounting":              false,
+				"alert":                   "none",
 				"enable-firewall-session": false,
-				"per-connection": false,
-				"per-session": false,
-				"type": "None"}
+				"per-connection":          false,
+				"per-session":             false,
+				"type":                    "None"}
 			accessRule["track"] = defaultTrack
 		}
 	}
 
-	if  d.HasChange("user_check") {
+	if d.HasChange("user_check") {
 		if v, ok := d.GetOk("user_check"); ok {
 			userCheckList := v.([]interface{})
 			if len(userCheckList) > 0 {
@@ -1034,7 +1032,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				if d.HasChange("user_check.0.frequency") {
 					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(bool)
 				}
-				if d.HasChange("user_check.0.web_server"){
+				if d.HasChange("user_check.0.web_server") {
 					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(bool)
 				}
 
@@ -1044,7 +1042,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if  d.HasChange("vpn") {
+	if d.HasChange("vpn") {
 		accessRule["vpn"] = d.Get("vpn")
 	}
 
@@ -1055,7 +1053,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		accessRule["ignore-warnings"] = v.(bool)
 	}
 
-	if  d.HasChange("comments") {
+	if d.HasChange("comments") {
 		accessRule["comments"] = d.Get("comments")
 	}
 
@@ -1063,7 +1061,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Access Rule - Map = ", accessRule)
 
-	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true,false)
+	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, false)
 	if err != nil || !updateAccessRuleRes.Success {
 		if updateAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
@@ -1078,7 +1076,7 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	accessRulePayload := map[string]interface{}{
-		"uid" : d.Id(),
+		"uid":   d.Id(),
 		"layer": d.Get("layer"),
 	}
 
@@ -1093,5 +1091,3 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-

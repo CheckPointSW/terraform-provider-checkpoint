@@ -16,7 +16,7 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccCheckpointPutFile_basic(t *testing.T){
+func TestAccCheckpointPutFile_basic(t *testing.T) {
 	var put_file_res map[string]interface{}
 	resourceName := "checkpoint_put_file.test"
 	objName := "/home/admin/terrafile.txt"
@@ -30,15 +30,15 @@ func TestAccCheckpointPutFile_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 
 			{
 				Config: testAccPutFileConfig(objName, objContent, objOverride),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointPutFileExists(resourceName,&put_file_res),
-					testAccCheckCheckpointPutFileAttributes(&put_file_res,objName, objContent, objOverride),
+					testAccCheckCheckpointPutFileExists(resourceName, &put_file_res),
+					testAccCheckCheckpointPutFileAttributes(&put_file_res, objName, objContent, objOverride),
 				),
 			},
 		},
@@ -67,7 +67,7 @@ func testAccCheckCheckpointPutFileExists(resourceTfName string, res *map[string]
 		payload["text-content"] = rs.Primary.Attributes["text_content"]
 		payload["override"], _ = strconv.ParseBool(rs.Primary.Attributes["override"])
 
-		response, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

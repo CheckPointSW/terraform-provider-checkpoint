@@ -14,7 +14,7 @@ func validateStringValue(optionalValues ...string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (warns []string, errs []error) {
 		value := v.(string)
 		ok := false
-		for _ , optionalValue := range optionalValues {
+		for _, optionalValue := range optionalValues {
 			if value == optionalValue {
 				ok = true
 				break
@@ -26,4 +26,3 @@ func validateStringValue(optionalValues ...string) schema.SchemaValidateFunc {
 		return
 	}
 }
-

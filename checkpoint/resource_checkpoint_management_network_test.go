@@ -15,7 +15,7 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccCheckpointManagementNetwork_basic(t *testing.T){
+func TestAccCheckpointManagementNetwork_basic(t *testing.T) {
 	var network map[string]interface{}
 	resourceName := "checkpoint_management_network.test"
 	objName := "tfTestManagementNetwork_" + acctest.RandString(6)
@@ -28,18 +28,18 @@ func TestAccCheckpointManagementNetwork_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointNetworkDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementNetworkConfig(objName,"10.20.0.0",24),
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointNetworkExists(resourceName,&network),
-						testAccCheckCheckpointNetworkAttributes(&network,objName,"10.20.0.0",24),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointNetworkDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementNetworkConfig(objName, "10.20.0.0", 24),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointNetworkExists(resourceName, &network),
+					testAccCheckCheckpointNetworkAttributes(&network, objName, "10.20.0.0", 24),
+				),
 			},
+		},
 	})
 }
 
@@ -52,7 +52,7 @@ func testAccCheckpointNetworkDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-network", map[string]interface{}{"uid": rs.Primary.ID,},client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-network", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("network object (%s) still exists", rs.Primary.ID)
 			}
@@ -77,7 +77,7 @@ func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]
 
 		// retrieve the client from test provider. client is after providerConfigure()
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-network",map[string]interface{}{"uid": rs.Primary.ID},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-network", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -87,8 +87,9 @@ func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]
 		return nil
 	}
 }
+
 // verifies Network resource attributes are same as in configure
-func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{},name string,subnet4 string, masklen4 int) resource.TestCheckFunc {
+func testAccCheckCheckpointNetworkAttributes(network *map[string]interface{}, name string, subnet4 string, masklen4 int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		network := *network
@@ -122,5 +123,5 @@ resource "checkpoint_management_network" "test" {
 	subnet4 = "%s"
 	mask_length4 = "%d"
 }
-`,name,subnet4,masklen4)
+`, name, subnet4, masklen4)
 }

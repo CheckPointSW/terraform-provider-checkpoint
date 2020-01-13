@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-
 func resourceManagementLogin() *schema.Resource {
 	return &schema.Resource{
 		Create: createManagementLogin,
@@ -14,63 +13,63 @@ func resourceManagementLogin() *schema.Resource {
 		Delete: deleteManagementLogin,
 		Schema: map[string]*schema.Schema{
 			"user": {
-				Type: schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Administrator user name.",
 			},
 			"password": {
-				Type: schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Administrator password.",
 			},
 			"continue_last_session": {
-				Type: schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "When 'continue-last-session' is set to 'True', the new session would continue where the last session was stopped. This option is available when the administrator has only one session that can be continued. If there is more than one session, see 'switch-session' API.",
 			},
 			"domain": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Use domain to login to specific domain. Domain can be identified by name or UID.",
 			},
 			"enter_last_published_session": {
-				Type: schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Login to the last published session. Such login is done with the Read Only permissions.",
 			},
 			"read_only": {
-				Type: schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Login with Read Only permissions. This parameter is not considered in case continue-last-session is true.",
 			},
 			"session_comments": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Session comments.",
 			},
 			"session_description": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Session description.",
 			},
 			"session_name": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Session unique name.",
 			},
 			"session_timeout": {
-				Type: schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Session expiration timeout in seconds. Default 600 seconds.",
 			},
 		},
@@ -118,7 +117,7 @@ func readManagementLogin(d *schema.ResourceData, m interface{}) error {
 		payload["session-timeout"] = v.(int)
 	}
 
-	loginRes, _ := client.ApiCall("login", payload, "",true,false)
+	loginRes, _ := client.ApiCall("login", payload, "", true, false)
 	if !loginRes.Success {
 		return fmt.Errorf(loginRes.ErrorMsg)
 	}

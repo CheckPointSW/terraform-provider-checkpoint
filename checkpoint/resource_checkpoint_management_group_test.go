@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementGroup_basic(t *testing.T){
+func TestAccCheckpointManagementGroup_basic(t *testing.T) {
 	var group map[string]interface{}
 	resourceName := "checkpoint_management_group.test"
 	objName := "tfTestManagementGroup_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementGroup_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointGroupDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementGroupConfig(objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointGroupExists(resourceName,&group),
-						testAccCheckCheckpointGroupAttributes(&group, objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementGroupConfig(objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointGroupExists(resourceName, &group),
+					testAccCheckCheckpointGroupAttributes(&group, objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
+				),
 			},
+		},
 	})
 }
 
@@ -46,7 +45,7 @@ func testAccCheckpointGroupDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-group", map[string]interface{}{"uid": rs.Primary.ID,}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("group object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +68,7 @@ func testAccCheckCheckpointGroupExists(resourceTfName string, res *map[string]in
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-group", map[string]interface{}{"uid": rs.Primary.ID},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -121,5 +120,5 @@ resource "checkpoint_management_group" "test" {
     name = "%s"
 	members = ["%s","%s"]
 }
-`, name, member1 ,member2)
+`, name, member1, member2)
 }

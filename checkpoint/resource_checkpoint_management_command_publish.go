@@ -7,7 +7,6 @@ import (
 	"log"
 )
 
-
 func resourceManagementPublish() *schema.Resource {
 	return &schema.Resource{
 		Create: createManagementPublish,
@@ -15,9 +14,9 @@ func resourceManagementPublish() *schema.Resource {
 		Delete: deleteManagementPublish,
 		Schema: map[string]*schema.Schema{
 			"uid": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Session unique identifier. Specify it to publish a different session than the one you currently use.",
 			},
 		},
@@ -46,7 +45,7 @@ func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 		uid = s.Uid
 		log.Println("publish current session uid - ", uid)
 	}
-	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(),true,false)
+	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(), true, false)
 	if !publishRes.Success {
 		return fmt.Errorf(publishRes.ErrorMsg)
 	}

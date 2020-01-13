@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementAddressRange_basic(t *testing.T){
+func TestAccCheckpointManagementAddressRange_basic(t *testing.T) {
 	var addressRangeMap map[string]interface{}
 	resourceName := "checkpoint_management_address_range.test"
 	objName := "tfTestManagementAddressRange_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementAddressRange_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointManagementAddressRangeDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementAddressRangeConfig(objName,"10.123.174.32","10.123.174.35"), //runs "terraform apply"
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointManagementAddressRangeExists(resourceName, &addressRangeMap),
-						testAccCheckCheckpointManagementAddressRangeAttributes(&addressRangeMap, objName, "10.123.174.32","10.123.174.35"),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointManagementAddressRangeDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementAddressRangeConfig(objName, "10.123.174.32", "10.123.174.35"), //runs "terraform apply"
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointManagementAddressRangeExists(resourceName, &addressRangeMap),
+					testAccCheckCheckpointManagementAddressRangeAttributes(&addressRangeMap, objName, "10.123.174.32", "10.123.174.35"),
+				),
 			},
+		},
 	})
 
 }
@@ -47,7 +46,7 @@ func testAccCheckpointManagementAddressRangeDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-address-range", map[string]interface{}{"uid": rs.Primary.ID,}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-address-range", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success {
 				return fmt.Errorf("address-range object (%s) still exists", rs.Primary.ID)
 			}
@@ -56,7 +55,6 @@ func testAccCheckpointManagementAddressRangeDestroy(s *terraform.State) error {
 	}
 	return nil
 }
-
 
 func testAccCheckCheckpointManagementAddressRangeExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -71,7 +69,7 @@ func testAccCheckCheckpointManagementAddressRangeExists(resourceTfName string, r
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-address-range", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(),true,false)
+		response, err := client.ApiCall("show-address-range", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return err
 		}
@@ -112,5 +110,5 @@ resource "checkpoint_management_address_range" "test" {
     ipv4_address_first = "%s"
     ipv4_address_last = "%s"
 }
-`,name, ipv4AddressFirst, ipv4AddressLast)
+`, name, ipv4AddressFirst, ipv4AddressLast)
 }

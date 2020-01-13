@@ -18,178 +18,178 @@ func resourceManagementHost() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
-			"ipv4_address": &schema.Schema {
-				Type:     schema.TypeString,
-				Optional: true,
+			"ipv4_address": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "IPv4 address.",
 			},
-			"ipv6_address": &schema.Schema {
-				Type:     schema.TypeString,
-				Optional: true,
+			"ipv6_address": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "IPv6 address.",
 			},
-			"interfaces": &schema.Schema {
-				Type:     schema.TypeList,
-				Optional: true,
+			"interfaces": &schema.Schema{
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "Host interfaces.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Object name. Should be unique in the domain.",
 						},
 						"subnet4": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv4 network address.",
 						},
 						"subnet6": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv6 network address.",
 						},
 						"mask_length4": {
-							Type: schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "IPv4 network mask length.",
 						},
 						"mask_length6": {
-							Type: schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "IPv6 network mask length.",
 						},
 						"ignore_warnings": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default: false,
+							Default:     false,
 							Description: "Apply changes ignoring warnings.",
 						},
 						"ignore_errors": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default: false,
+							Default:     false,
 							Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 						},
 						"color": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Default: "black",
+							Default:     "black",
 							Description: "Color of the object. Should be one of existing colors.",
 						},
 						"comments": &schema.Schema{
-							Type:	schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Comments string.",
 						},
 					},
 				},
 			},
-			"nat_settings" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"nat_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "NAT settings.",
 				//Default: map[string]interface{}{"auto_rule":false},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_rule": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default: false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 							Description: "Whether to add automatic address translation rules.",
 						},
 						"ipv4_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv4 address.",
 						},
 						"ipv6_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv6 address.",
 						},
 						"hide_behind": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Hide behind method. This parameter is not required in case \"method\" parameter is \"static\".",
 						},
 						"install_on": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Which gateway should apply the NAT translation.",
 						},
 						"method": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "NAT translation method.",
 						},
 					},
 				},
 			},
 			"host_servers": &schema.Schema{
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
 				Description: "Servers Configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dns_server": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default: false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 							Description: "Gets True if this server is a DNS Server.",
 						},
 						"mail_server": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default: false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 							Description: "Gets True if this server is a Mail Server.",
 						},
 						"web_server": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default: false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 							Description: "Gets True if this server is a Web Server.",
 						},
 						"web_server_config": &schema.Schema{
-							Type:     schema.TypeList,
-							MaxItems: 1,
-							Optional: true,
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
 							Description: "Web Server configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"additional_ports": &schema.Schema{
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
 										Description: "Server additional ports.",
-										Elem:     &schema.Schema{Type: schema.TypeString},
+										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 									"application_engines": &schema.Schema{
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
 										Description: "Application engines of this web server.",
-										Elem:     &schema.Schema{Type: schema.TypeString},
+										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 									"listen_standard_port": &schema.Schema{
-										Type:     schema.TypeBool,
-										Optional: true,
-										Default: true,
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     true,
 										Description: "Whether server listens to standard port.",
 									},
 									"operating_system": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
-										Default: "other",
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     "other",
 										Description: "Operating System.",
 									},
 									"protected_by": &schema.Schema{
-										Type:     schema.TypeString,
-										Optional: true,
-										Default: "97aeb368-9aea-11d5-bd16-0090272ccb30",
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     "97aeb368-9aea-11d5-bd16-0090272ccb30",
 										Description: "Network object which protects this server identified by the name or UID.",
 									},
 								},
@@ -202,23 +202,23 @@ func resourceManagementHost() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 			"color": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"groups": {
@@ -230,8 +230,8 @@ func resourceManagementHost() *schema.Resource {
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -298,7 +298,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 				interfacesPayload = append(interfacesPayload, payload)
 			}
 
-		host["interfaces"] = interfacesPayload
+			host["interfaces"] = interfacesPayload
 		}
 	}
 
@@ -391,7 +391,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Host - Map = ", host)
 
-	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true,false)
+	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, false)
 	if err != nil || !addHostRes.Success {
 		if addHostRes.ErrorMsg != "" {
 			return fmt.Errorf(addHostRes.ErrorMsg)
@@ -404,7 +404,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 	return readManagementHost(d, m)
 }
 
-func readManagementHost(d *schema.ResourceData, m interface{}) error{
+func readManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
 
@@ -412,7 +412,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 		"uid": d.Id(),
 	}
 
-	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(),true,false)
+	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -428,7 +428,6 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 	host := showHostRes.GetData()
 
 	log.Println("Read Host - Show JSON = ", host)
-
 
 	if v := host["name"]; v != nil {
 		_ = d.Set("name", v)
@@ -511,11 +510,11 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
 		}
 
-		if v, _ := natSettingsMap["ipv4-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
 		}
 
-		if v, _ := natSettingsMap["ipv6-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv6-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv6_address"] = v
 		}
 
@@ -531,7 +530,6 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 			natSettingsMapToReturn["method"] = v
 		}
 
-
 		_, natSettingInConf := d.GetOk("nat_settings")
 		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
 		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
@@ -543,7 +541,6 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 	} else {
 		_ = d.Set("nat_settings", nil)
 	}
-
 
 	if host["host-servers"] != nil {
 
@@ -581,7 +578,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 
 				//show returned the uid, we want to set the name.
 				payload := map[string]interface{}{
-					"uid" : v,
+					"uid": v,
 				}
 				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, false)
 				if err != nil || !showProtectedByRes.Success {
@@ -634,7 +631,6 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error{
 
 	return nil
 
-
 }
 
 func updateManagementHost(d *schema.ResourceData, m interface{}) error {
@@ -678,16 +674,16 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 				if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".mask_length6"); ok {
 					payload["mask-length6"] = v.(int)
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_warnings"){
+				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_warnings") {
 					payload["ignore-warnings"] = d.Get("interfaces." + strconv.Itoa(i) + ".ignore_warnings")
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".color"){
+				if d.HasChange("interfaces." + strconv.Itoa(i) + ".color") {
 					payload["color"] = d.Get("interfaces." + strconv.Itoa(i) + ".color")
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_errors"){
+				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_errors") {
 					payload["ignore-errors"] = d.Get("interfaces." + strconv.Itoa(i) + ".ignore_errors")
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".comments"){
+				if d.HasChange("interfaces." + strconv.Itoa(i) + ".comments") {
 					payload["comments"] = d.Get("interfaces." + strconv.Itoa(i) + ".comments")
 				}
 				interfacesPayload = append(interfacesPayload, payload)
@@ -695,7 +691,7 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 
 			host["interfaces"] = interfacesPayload
 
-		} else {  //delete all of the list
+		} else { //delete all of the list
 			oldInterfaces, _ := d.GetChange("interfaces")
 			var interfacesToDelete []interface{}
 			for _, inter := range oldInterfaces.([]interface{}) {
@@ -746,7 +742,7 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 			if d.HasChange("nat_settings.hide_behind") {
 				res["hide-behind"] = d.Get("nat_settings.hide_behind")
 			}
-			if d.HasChange("nat_settings.install_on"){
+			if d.HasChange("nat_settings.install_on") {
 				res["install-on"] = d.Get("nat_settings.install_on")
 			}
 			if d.HasChange("nat_settings.method") {
@@ -754,7 +750,7 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 			}
 
 			host["nat-settings"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			host["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
 	}
@@ -793,7 +789,7 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 				if d.HasChange("host_servers.0.mail_server") {
 					hostServersPayload["mail-server"] = d.Get("host_servers.0.mail_server").(bool)
 				}
-				if d.HasChange("host_servers.0.web_server"){
+				if d.HasChange("host_servers.0.web_server") {
 					hostServersPayload["web-server"] = d.Get("host_servers.0.web_server").(bool)
 				}
 
@@ -821,14 +817,13 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 				}
 				host["host-servers"] = hostServersPayload
 			}
-		} else {  // argument deleted - go back to defaults
+		} else { // argument deleted - go back to defaults
 			host["host-servers"] = map[string]interface{}{"dns-server": false, "mail-server": false, "web-server": false}
 		}
 	}
 
-
 	log.Println("Update Host - Map = ", host)
-	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true,false)
+	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, false)
 	if err != nil || !updateHostRes.Success {
 		if updateHostRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHostRes.ErrorMsg)
@@ -844,7 +839,7 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	hostPayload := map[string]interface{}{
-		"uid" : d.Id(),
+		"uid": d.Id(),
 	}
 
 	deleteHostRes, err := client.ApiCall("delete-host", hostPayload, client.GetSessionID(), true, false)
@@ -858,5 +853,3 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-

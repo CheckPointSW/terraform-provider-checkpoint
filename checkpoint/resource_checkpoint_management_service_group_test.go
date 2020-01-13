@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementServiceGroup_basic(t *testing.T){
+func TestAccCheckpointManagementServiceGroup_basic(t *testing.T) {
 	var serviceGroup map[string]interface{}
 	resourceName := "checkpoint_management_service_group.test"
 	objName := "tfTestManagementServiceGroup_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementServiceGroup_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointServiceGroupDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementServiceGroupConfig(objName, "domain-tcp", "domain-udp"),
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointServiceGroupExists(resourceName,&serviceGroup),
-						testAccCheckCheckpointServiceGroupAttributes(&serviceGroup, objName, "domain-tcp", "domain-udp"),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointServiceGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementServiceGroupConfig(objName, "domain-tcp", "domain-udp"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointServiceGroupExists(resourceName, &serviceGroup),
+					testAccCheckCheckpointServiceGroupAttributes(&serviceGroup, objName, "domain-tcp", "domain-udp"),
+				),
 			},
+		},
 	})
 }
 
@@ -46,7 +45,7 @@ func testAccCheckpointServiceGroupDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-service-group", map[string]interface{}{"uid": rs.Primary.ID,}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-service-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("service group object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +68,7 @@ func testAccCheckCheckpointServiceGroupExists(resourceTfName string, res *map[st
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-service-group", map[string]interface{}{"uid": rs.Primary.ID},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-service-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -121,5 +120,5 @@ resource "checkpoint_management_service_group" "test" {
     name = "%s"
 	members = ["%s","%s"]
 }
-`, name, member1 ,member2)
+`, name, member1, member2)
 }

@@ -7,40 +7,39 @@ import (
 	"log"
 )
 
-
 func resourceManagementGroup() *schema.Resource {
-	return &schema.Resource {
+	return &schema.Resource{
 		Create: createManagementGroup,
 		Read:   readManagementGroup,
 		Update: updateManagementGroup,
 		Delete: deleteManagementGroup,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"members": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of Network objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"color": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default:     "black",
 			},
 			"comments": {
 				Type:        schema.TypeString,
@@ -48,10 +47,10 @@ func resourceManagementGroup() *schema.Resource {
 				Description: "Comments string.",
 			},
 			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of group name.",
-				Elem: &schema.Schema {
+				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
@@ -59,13 +58,13 @@ func resourceManagementGroup() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 		},
 	}
@@ -103,7 +102,7 @@ func createManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Group - Map = ", group)
 
-	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(),true,false)
+	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, false)
 	if err != nil || !addGroupRes.Success {
 		if addGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addGroupRes.ErrorMsg)
@@ -124,7 +123,7 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showGroupRes, err := client.ApiCall("show-group", payload, client.GetSessionID(),true,false)
+	showGroupRes, err := client.ApiCall("show-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -150,7 +149,6 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 	if v := group["color"]; v != nil {
 		_ = d.Set("color", v)
 	}
-
 
 	if group["members"] != nil {
 		membersJson := group["members"].([]interface{})
@@ -206,7 +204,7 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 	group := make(map[string]interface{})
 
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
+		oldName, newName := d.GetChange("name")
 		group["name"] = oldName.(string)
 		group["new-name"] = newName.(string)
 	} else {
@@ -266,7 +264,7 @@ func deleteManagementGroup(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteGroupRes, _ := client.ApiCall("delete-group", payload, client.GetSessionID(),true,false)
+	deleteGroupRes, _ := client.ApiCall("delete-group", payload, client.GetSessionID(), true, false)
 	if !deleteGroupRes.Success {
 		return fmt.Errorf(deleteGroupRes.ErrorMsg)
 	}
@@ -274,6 +272,3 @@ func deleteManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-
-

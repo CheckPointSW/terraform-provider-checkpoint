@@ -8,17 +8,16 @@ import (
 	"reflect"
 )
 
-
 func resourceManagementServiceTcp() *schema.Resource {
-	return &schema.Resource {
+	return &schema.Resource{
 		Create: createManagementServiceTcp,
 		Read:   readManagementServiceTcp,
 		Update: updateManagementServiceTcp,
 		Delete: deleteManagementServiceTcp,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"port": {
@@ -26,51 +25,51 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Optional:    true,
 				Description: "The number of the port used to provide this service. To specify a port range, place a hyphen between the lowest and highest port numbers, for example 44-55.",
 			},
-			"aggressive_aging" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"aggressive_aging": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Sets short (aggressive) timeouts for idle connections.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"default_timeout": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "Default aggressive aging timeout in seconds.",
 						},
 						"enable": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"timeout": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "Aggressive aging timeout in seconds.",
 						},
 						"use_default_timeout": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "N/A",
 						},
 					},
 				},
 			},
 			"keep_connections_open_after_policy_installation": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "Keep connections open after policy has been installed even if they are not allowed under the new policy. This overrides the settings in the Connection Persistence page. If you change this property, the change will not affect open connections, but only future connections.",
 			},
 			"match_by_protocol_signature": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "A value of true enables matching by the selected protocol's signature - the signature identifies the protocol as genuine. Select this option to limit the port to the specified protocol. If the selected protocol does not support matching by signature, this field cannot be set to true.",
-				Default: false,
+				Default:     false,
 			},
 			"match_for_any": {
-				Type:         schema.TypeBool,
-				Optional:     true,
-				Description:  "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
-				Default: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
+				Default:     true,
 			},
 			"override_default_settings": {
 				Type:        schema.TypeBool,
@@ -86,7 +85,7 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Time (in seconds) before the session times out.",
-				Default: 3600,
+				Default:     3600,
 			},
 			"source_port": {
 				Type:        schema.TypeString,
@@ -97,25 +96,25 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Enables state-synchronized High Availability or Load Sharing on a ClusterXL or OPSEC-certified cluster.",
-				Default: true,
+				Default:     true,
 			},
 			"use_default_session_timeout": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Use default virtual session timeout.",
-				Default: true,
+				Default:     true,
 			},
 			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of group name.",
-				Elem: &schema.Schema {
+				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -125,24 +124,24 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 		},
 	}
@@ -175,7 +174,6 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		}
 		serviceTcp["aggressive-aging"] = res
 	}
-
 
 	if val, ok := d.GetOkExists("keep_connections_open_after_policy_installation"); ok {
 		serviceTcp["keep-connections-open-after-policy-installation"] = val.(bool)
@@ -226,10 +224,9 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		serviceTcp["ignore-warnings"] = val.(bool)
 	}
 
-
 	log.Println("Create Service Tcp - Map = ", serviceTcp)
 
-	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(),true,false)
+	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(), true, false)
 	if err != nil || !addServiceTcpRes.Success {
 		if addServiceTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceTcpRes.ErrorMsg)
@@ -250,7 +247,7 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(),true,false)
+	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -334,10 +331,10 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")
 		defaultAggressiveAging := map[string]interface{}{
-			"enable": true,
-			"timeout": 600,
+			"enable":              true,
+			"timeout":             600,
 			"use_default_timeout": true,
-			"default_timeout": 0,
+			"default_timeout":     0,
 		}
 		if reflect.DeepEqual(defaultAggressiveAging, aggressiveAgingMapToReturn) && !aggressiveAgingInConf {
 			_ = d.Set("aggressive_aging", map[string]interface{}{})
@@ -386,9 +383,8 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	serviceTcp := make(map[string]interface{})
 
-
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
+		oldName, newName := d.GetChange("name")
 		serviceTcp["name"] = oldName.(string)
 		serviceTcp["new-name"] = newName.(string)
 	} else {
@@ -414,12 +410,12 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 				res["use-default-timeout"] = d.Get("aggressive_aging.use_default_timeout")
 			}
 			serviceTcp["aggressive-aging"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			defaultAggressiveAging := map[string]interface{}{
-				"enable": true,
-				"timeout": 600,
+				"enable":              true,
+				"timeout":             600,
 				"use-default-timeout": true,
-				"default-timeout": 0,
+				"default-timeout":     0,
 			}
 			serviceTcp["aggressive-aging"] = defaultAggressiveAging
 		}
@@ -500,7 +496,7 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(),true,false)
+	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(), true, false)
 	if !deleteServiceTcpRes.Success {
 		return fmt.Errorf(deleteServiceTcpRes.ErrorMsg)
 	}
@@ -508,6 +504,3 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-
-

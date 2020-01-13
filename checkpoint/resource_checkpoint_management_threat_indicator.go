@@ -17,114 +17,114 @@ func resourceManagementThreatIndicator() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"observables": &schema.Schema{
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "The indicator's observables.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
-							Type: schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
 							Description: "Object name. Should be unique in the domain.",
 						},
 						"md5": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid MD5 sequence.",
 						},
 						"url": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid URL.",
 						},
 						"ip_address": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid IP-Address.",
 						},
 						"ip_address_first": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid IP-Address, the beginning of the range. If you configure this parameter with a value, you must also configure the value of the 'ip-address-last' parameter",
 						},
 						"ip_address_last": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid IP-Address, the end of the range. If you configure this parameter with a value, you must also configure the value of the 'ip-address-first' parameter.",
 						},
 						"domain": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The name of a domain.",
 						},
 						"mail_to": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid E-Mail address, recipient filed.",
 						},
 						"mail_from": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid E-Mail address, sender field.",
 						},
 						"mail_cc": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid E-Mail address, cc field.",
 						},
 						"mail_reply_to": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "A valid E-Mail address, reply-to field.",
 						},
 						"mail_subject": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Subject of E-Mail.",
 						},
 						"confidence": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The confidence level the indicator has that a real threat has been uncovered.",
 						},
 						"product": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The software blade that processes the observable: AV - AntiVirus, AB - AntiBot.",
 						},
 						"severity": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The severity level of the threat.",
 						},
 					},
 				},
 			},
 			"action": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "The indicator's action.",
-				Default: "Prevent",
+				Default:     "Prevent",
 			},
 			"profile_overrides": &schema.Schema{
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
 				Description: "Profiles in which to override the indicator's default action.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"action": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The indicator's action in this profile.",
 						},
 						"profile": {
-							Type: schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "The profile in which to override the indicator's action.",
 						},
 					},
@@ -134,28 +134,28 @@ func resourceManagementThreatIndicator() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 			"color": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -302,7 +302,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		"name": d.Get("name"),
 	}
 
-	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(),true,false)
+	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -319,7 +319,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	return readManagementThreatIndicator(d, m)
 }
 
-func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error{
+func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
 
@@ -327,7 +327,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error{
 		"name": d.Get("name"),
 	}
 
-	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(),true,false)
+	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -372,7 +372,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error{
 				profileOverridesListToReturn = append(profileOverridesListToReturn, profileOverridesMapToAdd)
 			}
 			_ = d.Set("profile_overrides", profileOverridesListToReturn)
-		}  else {
+		} else {
 			_ = d.Set("interfaces", profileOverridesList)
 		}
 	} else {
@@ -447,7 +447,7 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 				threatIndicator["profile-overrides"] = profileOverridesPayload
 			}
 
-		} else {  //delete all of the list
+		} else { //delete all of the list
 			oldProfileOverride, _ := d.GetChange("profile_overrides")
 			var profileOverridesToDelete []interface{}
 			for _, profile := range oldProfileOverride.([]interface{}) {
@@ -471,7 +471,6 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		threatIndicator["color"] = d.Get("color")
 	}
 
-
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			threatIndicator["tags"] = v.(*schema.Set).List()
@@ -481,9 +480,8 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		}
 	}
 
-
 	log.Println("Update Threat Indicator - Map = ", threatIndicator)
-	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true,false)
+	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true, false)
 	if err != nil || !updateThreatIndicatorRes.Success {
 		if updateThreatIndicatorRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatIndicatorRes.ErrorMsg)
@@ -499,7 +497,7 @@ func deleteManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	client := m.(*checkpoint.ApiClient)
 
 	threatIndicatorPayload := map[string]interface{}{
-		"name" : d.Get("name"),
+		"name": d.Get("name"),
 	}
 
 	deleteThreatIndicatorRes, err := client.ApiCall("delete-threat-indicator", threatIndicatorPayload, client.GetSessionID(), true, false)
@@ -513,5 +511,3 @@ func deleteManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 
 	return nil
 }
-
-

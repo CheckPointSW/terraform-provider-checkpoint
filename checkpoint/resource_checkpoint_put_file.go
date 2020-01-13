@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-
 func resourcePutFile() *schema.Resource {
 	return &schema.Resource{
 		Create: createPutFile,
@@ -15,18 +14,18 @@ func resourcePutFile() *schema.Resource {
 		Delete: deletePutFile,
 		Schema: map[string]*schema.Schema{
 			"file_name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Filename include the desired path. The file will be created in the user home directory if the full path wasn't provided",
 			},
 			"text_content": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "",
 			},
 			"override": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "comments",
 			},
 		},
@@ -52,7 +51,7 @@ func putFileParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 func createPutFile(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
-	setPIRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
+	setPIRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
 	}
@@ -70,7 +69,7 @@ func readPutFile(d *schema.ResourceData, m interface{}) error {
 func updatePutFile(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
-	setNetworkRes, _ := client.ApiCall("put-file",payload,client.GetSessionID(),true,false)
+	setNetworkRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}

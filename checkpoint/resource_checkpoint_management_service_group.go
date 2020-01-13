@@ -7,40 +7,39 @@ import (
 	"log"
 )
 
-
 func resourceManagementServiceGroup() *schema.Resource {
-	return &schema.Resource {
+	return &schema.Resource{
 		Create: createManagementServiceGroup,
 		Read:   readManagementServiceGroup,
 		Update: updateManagementServiceGroup,
 		Delete: deleteManagementServiceGroup,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"members": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of Network objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"color": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default:     "black",
 			},
 			"comments": {
 				Type:        schema.TypeString,
@@ -48,10 +47,10 @@ func resourceManagementServiceGroup() *schema.Resource {
 				Description: "Comments string.",
 			},
 			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of group name.",
-				Elem: &schema.Schema {
+				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
@@ -59,13 +58,13 @@ func resourceManagementServiceGroup() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 		},
 	}
@@ -103,7 +102,7 @@ func createManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Service Group - Map = ", serviceGroup)
 
-	addServiceGroupRes, err := client.ApiCall("add-service-group", serviceGroup, client.GetSessionID(),true,false)
+	addServiceGroupRes, err := client.ApiCall("add-service-group", serviceGroup, client.GetSessionID(), true, false)
 	if err != nil || !addServiceGroupRes.Success {
 		if addServiceGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceGroupRes.ErrorMsg)
@@ -124,7 +123,7 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(),true,false)
+	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -143,14 +142,13 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("name", v)
 	}
 
-		if v := serviceGroup["comments"]; v != nil {
-			_ = d.Set("comments", v)
-		}
+	if v := serviceGroup["comments"]; v != nil {
+		_ = d.Set("comments", v)
+	}
 
-
-		if v := serviceGroup["color"]; v != nil {
-			_ = d.Set("color", v)
-		}
+	if v := serviceGroup["color"]; v != nil {
+		_ = d.Set("color", v)
+	}
 
 	if serviceGroup["members"] != nil {
 		membersJson := serviceGroup["members"].([]interface{})
@@ -205,9 +203,8 @@ func updateManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	serviceGroup := make(map[string]interface{})
 
-
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
+		oldName, newName := d.GetChange("name")
 		serviceGroup["name"] = oldName.(string)
 		serviceGroup["new-name"] = newName.(string)
 	} else {
@@ -268,7 +265,7 @@ func deleteManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceGroupRes, _ := client.ApiCall("delete-service-group", payload, client.GetSessionID(),true,false)
+	deleteServiceGroupRes, _ := client.ApiCall("delete-service-group", payload, client.GetSessionID(), true, false)
 	if !deleteServiceGroupRes.Success {
 		return fmt.Errorf(deleteServiceGroupRes.ErrorMsg)
 	}
@@ -276,6 +273,3 @@ func deleteManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-
-

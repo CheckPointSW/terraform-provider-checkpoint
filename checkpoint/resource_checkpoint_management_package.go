@@ -16,25 +16,25 @@ func resourceManagementPackage() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"access": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True - enables, False - disables access & NAT policies, empty - nothing is changed.",
-				Default: true,
+				Default:     true,
 			},
 			"desktop_security": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True - enables, False - disables Desktop security policy, empty - nothing is changed.",
-				Default: false,
+				Default:     false,
 			},
 			"installation_targets": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Which Gateways identified by the name or UID to install the policy on.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -44,52 +44,52 @@ func resourceManagementPackage() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True - enables, False - disables QoS policy, empty - nothing is changed.",
-				Default: false,
+				Default:     false,
 			},
 			"qos_policy_type": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "QoS policy type.",
-				Default: "recommended",
+				Default:     "recommended",
 			},
 			"threat_prevention": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True - enables, False - disables Threat policy, empty - nothing is changed.",
-				Default: true,
+				Default:     true,
 			},
 			"vpn_traditional_mode": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "True - enables, False - disables VPN traditional mode, empty - nothing is changed.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 			"color": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -149,7 +149,7 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Package - Map = ", _package)
 
-	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true,false)
+	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true, false)
 	if err != nil || !addPackageRes.Success {
 		if addPackageRes.ErrorMsg != "" {
 			return fmt.Errorf(addPackageRes.ErrorMsg)
@@ -162,7 +162,7 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 	return readManagementPackage(d, m)
 }
 
-func readManagementPackage(d *schema.ResourceData, m interface{}) error{
+func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
 
@@ -170,7 +170,7 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error{
 		"uid": d.Id(),
 	}
 
-	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(),true,false)
+	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -224,7 +224,6 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error{
 		_ = d.Set("installation_targets", nil)
 	}
 
-
 	if v := _package["qos"]; v != nil {
 		_ = d.Set("qos", v)
 	}
@@ -266,7 +265,6 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error{
 
 	return nil
 
-
 }
 
 func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
@@ -301,7 +299,7 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 		_package["access"] = d.Get("access")
 	}
 	if ok := d.HasChange("desktop_security"); ok {
-		_package["desktop-security"] =  d.Get("desktop_security")
+		_package["desktop-security"] = d.Get("desktop_security")
 	}
 
 	if ok := d.HasChange("installation_targets"); ok {
@@ -338,7 +336,7 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Package - Map = ", _package)
-	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true,false)
+	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true, false)
 	if err != nil || !updatePackageRes.Success {
 		if updatePackageRes.ErrorMsg != "" {
 			return fmt.Errorf(updatePackageRes.ErrorMsg)
@@ -354,7 +352,7 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	packagePayload := map[string]interface{}{
-		"uid" : d.Id(),
+		"uid": d.Id(),
 	}
 
 	deletePackageRes, err := client.ApiCall("delete-package", packagePayload, client.GetSessionID(), true, false)
@@ -368,5 +366,3 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-

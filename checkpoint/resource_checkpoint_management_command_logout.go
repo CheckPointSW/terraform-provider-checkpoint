@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-
 func resourceManagementLogout() *schema.Resource {
 	return &schema.Resource{
 		Create: createManagementLogout,
@@ -14,9 +13,9 @@ func resourceManagementLogout() *schema.Resource {
 		Delete: deleteManagementLogout,
 		Schema: map[string]*schema.Schema{
 			"message": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Operation status.",
 			},
 		},
@@ -31,7 +30,7 @@ func createManagementLogout(d *schema.ResourceData, m interface{}) error {
 func readManagementLogout(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), "",true,false)
+	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), "", true, false)
 	if !logoutRes.Success {
 		return fmt.Errorf(logoutRes.ErrorMsg)
 	}

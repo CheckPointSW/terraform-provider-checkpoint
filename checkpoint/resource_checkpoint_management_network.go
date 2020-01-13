@@ -9,98 +9,96 @@ import (
 	"strconv"
 )
 
-
 func resourceManagementNetwork() *schema.Resource {
-	return &schema.Resource {
+	return &schema.Resource{
 		Create: createManagementNetwork,
 		Read:   readManagementNetwork,
 		Update: updateManagementNetwork,
 		Delete: deleteManagementNetwork,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"subnet4": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "IPv4 network address.",
 			},
 			"subnet6": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "IPv6 network address.",
 			},
 			"mask_length4": {
-				Type: schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
 				Description: "IPv4 network mask length.",
 			},
 			"mask_length6": {
-				Type: schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
 				Description: "IPv6 network mask length.",
 			},
-			"nat_settings" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"nat_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_rule": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "Whether to add automatic address translation rules.",
 						},
 						"ipv4_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv4 address.",
 						},
 						"ipv6_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv6 address.",
 						},
 						"hide_behind": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Hide behind method. This parameter is not required in case \"method\" parameter is \"static\".",
 						},
 						"install_on": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Which gateway should apply the NAT translation.",
 						},
 						"method": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "NAT translation method.",
 						},
 					},
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"broadcast": {
-				Type: schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Allow broadcast address inclusion.",
-				Default: "allow",
-
+				Default:     "allow",
 			},
 			"color": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Description:  "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default:     "black",
 			},
 			"comments": {
 				Type:        schema.TypeString,
@@ -108,10 +106,10 @@ func resourceManagementNetwork() *schema.Resource {
 				Description: "Comments string.",
 			},
 			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema {
+				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
@@ -119,13 +117,13 @@ func resourceManagementNetwork() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 		},
 	}
@@ -201,7 +199,7 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Network - Map = ", network)
 
-	addNetworkRes, err := client.ApiCall("add-network",network,client.GetSessionID(),true,false)
+	addNetworkRes, err := client.ApiCall("add-network", network, client.GetSessionID(), true, false)
 	if err != nil || !addNetworkRes.Success {
 		if addNetworkRes.ErrorMsg != "" {
 			return fmt.Errorf(addNetworkRes.ErrorMsg)
@@ -222,7 +220,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showNetworkRes, err := client.ApiCall("show-network",payload,client.GetSessionID(),true,false)
+	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -283,11 +281,11 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
 		}
 
-		if v, _ := natSettingsMap["ipv4-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
 		}
 
-		if v, _ := natSettingsMap["ipv6-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv6-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv6_address"] = v
 		}
 
@@ -354,9 +352,8 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	network := make(map[string]interface{})
 
-
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
+		oldName, newName := d.GetChange("name")
 		network["name"] = oldName.(string)
 		network["new-name"] = newName.(string)
 	} else {
@@ -394,7 +391,7 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			if d.HasChange("nat_settings.hide_behind") {
 				res["hide-behind"] = d.Get("nat_settings.hide_behind")
 			}
-			if d.HasChange("nat_settings.install_on"){
+			if d.HasChange("nat_settings.install_on") {
 				res["install-on"] = d.Get("nat_settings.install_on")
 			}
 			if d.HasChange("nat_settings.method") {
@@ -402,7 +399,7 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			}
 
 			network["nat-settings"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			network["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
 	}
@@ -455,7 +452,7 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteNetworkRes, _ := client.ApiCall("delete-network",payload,client.GetSessionID(),true,false)
+	deleteNetworkRes, _ := client.ApiCall("delete-network", payload, client.GetSessionID(), true, false)
 	if !deleteNetworkRes.Success {
 		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
 	}
@@ -463,6 +460,3 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-
-

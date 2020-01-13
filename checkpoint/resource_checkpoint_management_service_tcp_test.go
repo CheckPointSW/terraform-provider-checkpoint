@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementServiceTcp_basic(t *testing.T){
+func TestAccCheckpointManagementServiceTcp_basic(t *testing.T) {
 	var serviceTcp map[string]interface{}
 	resourceName := "checkpoint_management_service_tcp.test"
 	objName := "tfTestManagementServiceTcp_" + acctest.RandString(6)
@@ -24,14 +23,14 @@ func TestAccCheckpointManagementServiceTcp_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckpointServiceTcpDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccManagementServiceTcpConfig(objName, "15214"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointServiceTcpExists(resourceName,&serviceTcp),
+					testAccCheckCheckpointServiceTcpExists(resourceName, &serviceTcp),
 					testAccCheckCheckpointServiceTcpAttributes(&serviceTcp, objName, "15214"),
 				),
 			},
@@ -46,7 +45,7 @@ func testAccCheckpointServiceTcpDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID,}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("service tcp object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +68,7 @@ func testAccCheckCheckpointServiceTcpExists(resourceTfName string, res *map[stri
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

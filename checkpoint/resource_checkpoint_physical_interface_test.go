@@ -15,7 +15,7 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccCheckpointPhysicalInterface_basic(t *testing.T){
+func TestAccCheckpointPhysicalInterface_basic(t *testing.T) {
 	var physical_inter map[string]interface{}
 	resourceName := "checkpoint_physical_interface.test"
 	objName := "eth0"
@@ -27,15 +27,15 @@ func TestAccCheckpointPhysicalInterface_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 
 			{
 				Config: testAccPhysicalInterfaceConfig(objName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointPhysicalInterfaceExists(resourceName,&physical_inter),
-					testAccCheckCheckpointPhysicalInterfaceAttributes(&physical_inter,objName),
+					testAccCheckCheckpointPhysicalInterfaceExists(resourceName, &physical_inter),
+					testAccCheckCheckpointPhysicalInterfaceAttributes(&physical_inter, objName),
 				),
 			},
 		},
@@ -62,7 +62,7 @@ func testAccCheckCheckpointPhysicalInterfaceExists(resourceTfName string, res *m
 
 		payload["name"] = rs.Primary.Attributes["name"]
 
-		response, _ := client.ApiCall("show-physical-interface",payload,client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -74,7 +74,7 @@ func testAccCheckCheckpointPhysicalInterfaceExists(resourceTfName string, res *m
 }
 
 // verifies resource attributes are same as in configure
-func testAccCheckCheckpointPhysicalInterfaceAttributes(piRes *map[string]interface{},name string) resource.TestCheckFunc {
+func testAccCheckCheckpointPhysicalInterfaceAttributes(piRes *map[string]interface{}, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		log.Println("Enter testAccCheckCheckpointPhysicalInterfaceAttributes")
 		PIMap := *piRes
@@ -92,7 +92,6 @@ func testAccCheckCheckpointPhysicalInterfaceAttributes(piRes *map[string]interfa
 			return fmt.Errorf("enabled is %t, expected true", enabled)
 		}
 
-
 		log.Println("Exit testAccCheckCheckpointPhysicalInterfaceAttributes")
 		return nil
 	}
@@ -105,5 +104,5 @@ resource "checkpoint_physical_interface" "test" {
       name = "%s"
       enabled = "true"
 }
-`,name)
+`, name)
 }

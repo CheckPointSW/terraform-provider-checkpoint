@@ -8,70 +8,69 @@ import (
 	"reflect"
 )
 
-
 func resourceManagementServiceUdp() *schema.Resource {
-	return &schema.Resource {
+	return &schema.Resource{
 		Create: createManagementServiceUdp,
 		Read:   readManagementServiceUdp,
 		Update: updateManagementServiceUdp,
 		Delete: deleteManagementServiceUdp,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type: schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"accept_replies": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "N/A",
-				Default: true,
+				Default:     true,
 			},
-			"aggressive_aging" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"aggressive_aging": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Sets short (aggressive) timeouts for idle connections.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"default_timeout": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "Default aggressive aging timeout in seconds.",
 						},
 						"enable": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "N/A",
 						},
 						"timeout": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
 							Description: "Aggressive aging timeout in seconds.",
 						},
 						"use_default_timeout": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
 							Description: "N/A",
 						},
 					},
 				},
 			},
 			"keep_connections_open_after_policy_installation": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "Keep connections open after policy has been installed even if they are not allowed under the new policy. This overrides the settings in the Connection Persistence page. If you change this property, the change will not affect open connections, but only future connections.",
 			},
 			"match_by_protocol_signature": {
-				Type: schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
 				Description: "A value of true enables matching by the selected protocol's signature - the signature identifies the protocol as genuine. Select this option to limit the port to the specified protocol. If the selected protocol does not support matching by signature, this field cannot be set to true.",
-				Default: false,
+				Default:     false,
 			},
 			"match_for_any": {
-				Type:         schema.TypeBool,
-				Optional:     true,
-				Description:  "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
-				Default: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
+				Default:     true,
 			},
 			"override_default_settings": {
 				Type:        schema.TypeBool,
@@ -92,7 +91,7 @@ func resourceManagementServiceUdp() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Time (in seconds) before the session times out.",
-				Default: 40,
+				Default:     40,
 			},
 			"source_port": {
 				Type:        schema.TypeString,
@@ -103,25 +102,25 @@ func resourceManagementServiceUdp() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Enables state-synchronized High Availability or Load Sharing on a ClusterXL or OPSEC-certified cluster.",
-				Default: true,
+				Default:     true,
 			},
 			"use_default_session_timeout": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Use default virtual session timeout.",
-				Default: true,
+				Default:     true,
 			},
 			"groups": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of group name.",
-				Elem: &schema.Schema {
+				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -131,24 +130,24 @@ func resourceManagementServiceUdp() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 		},
 	}
@@ -184,7 +183,6 @@ func createManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		}
 		serviceUdp["aggressive-aging"] = res
 	}
-
 
 	if val, ok := d.GetOkExists("keep_connections_open_after_policy_installation"); ok {
 		serviceUdp["keep-connections-open-after-policy-installation"] = val.(bool)
@@ -235,10 +233,9 @@ func createManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		serviceUdp["ignore-warnings"] = val.(bool)
 	}
 
-
 	log.Println("Create Service Udp - Map = ", serviceUdp)
 
-	addServiceUdpRes, err := client.ApiCall("add-service-udp", serviceUdp, client.GetSessionID(),true,false)
+	addServiceUdpRes, err := client.ApiCall("add-service-udp", serviceUdp, client.GetSessionID(), true, false)
 	if err != nil || !addServiceUdpRes.Success {
 		if addServiceUdpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceUdpRes.ErrorMsg)
@@ -259,7 +256,7 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(),true,false)
+	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -347,10 +344,10 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")
 		defaultAggressiveAging := map[string]interface{}{
-			"enable": true,
-			"timeout": 600,
+			"enable":              true,
+			"timeout":             600,
 			"use_default_timeout": true,
-			"default_timeout": 0,
+			"default_timeout":     0,
 		}
 		if reflect.DeepEqual(defaultAggressiveAging, aggressiveAgingMapToReturn) && !aggressiveAgingInConf {
 			_ = d.Set("aggressive_aging", map[string]interface{}{})
@@ -399,9 +396,8 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	serviceUdp := make(map[string]interface{})
 
-
 	if d.HasChange("name") {
-		oldName , newName := d.GetChange("name")
+		oldName, newName := d.GetChange("name")
 		serviceUdp["name"] = oldName.(string)
 		serviceUdp["new-name"] = newName.(string)
 	} else {
@@ -427,12 +423,12 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 				res["use-default-timeout"] = d.Get("aggressive_aging.use_default_timeout")
 			}
 			serviceUdp["aggressive-aging"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			defaultAggressiveAging := map[string]interface{}{
-				"enable": true,
-				"timeout": 600,
+				"enable":              true,
+				"timeout":             600,
 				"use-default-timeout": true,
-				"default-timeout": 0,
+				"default-timeout":     0,
 			}
 			serviceUdp["aggressive-aging"] = defaultAggressiveAging
 		}
@@ -503,7 +499,6 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		serviceUdp["ignore-warnings"] = v.(bool)
 	}
 
-
 	log.Println("Update Service Udp - Map = ", serviceUdp)
 	setServiceUdpRes, _ := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, false)
 	if !setServiceUdpRes.Success {
@@ -518,7 +513,7 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(),true,false)
+	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(), true, false)
 	if !deleteServiceUdpRes.Success {
 		return fmt.Errorf(deleteServiceUdpRes.ErrorMsg)
 	}
@@ -526,6 +521,3 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-
-

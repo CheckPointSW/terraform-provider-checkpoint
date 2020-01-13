@@ -15,7 +15,7 @@ import (
 // 2. Check if resource exists
 // 3. Check resource attributes are the same as in configure
 // 4. Check resource destroy
-func TestAccCheckpointHostname_basic(t *testing.T){
+func TestAccCheckpointHostname_basic(t *testing.T) {
 	var hostname map[string]interface{}
 	resourceName := "checkpoint_hostname.test"
 	objName := "terratest"
@@ -27,15 +27,15 @@ func TestAccCheckpointHostname_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 
 			{
 				Config: testAccHostnameConfig(objName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointHostnameExists(resourceName,&hostname),
-					testAccCheckCheckpointHostnameAttributes(&hostname,objName),
+					testAccCheckCheckpointHostnameExists(resourceName, &hostname),
+					testAccCheckCheckpointHostnameAttributes(&hostname, objName),
 				),
 			},
 		},
@@ -57,7 +57,7 @@ func testAccCheckCheckpointHostnameExists(resourceTfName string, res *map[string
 
 		// retrieve the client from test provider. client is after providerConfigure()
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-hostname",map[string]interface{}{},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-hostname", map[string]interface{}{}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -69,7 +69,7 @@ func testAccCheckCheckpointHostnameExists(resourceTfName string, res *map[string
 }
 
 // verifies resource attributes are same as in configure
-func testAccCheckCheckpointHostnameAttributes(hostname *map[string]interface{},name string) resource.TestCheckFunc {
+func testAccCheckCheckpointHostnameAttributes(hostname *map[string]interface{}, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		log.Println("Enter testAccCheckCheckpointHostnameAttributes")
 		hostnameMap := *hostname
@@ -92,5 +92,5 @@ func testAccHostnameConfig(name string) string {
 resource "checkpoint_hostname" "test" {
     name = "%s"
 }
-`,name)
+`, name)
 }

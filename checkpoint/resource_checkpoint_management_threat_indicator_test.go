@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementThreatIndicator_basic(t *testing.T){
+func TestAccCheckpointManagementThreatIndicator_basic(t *testing.T) {
 	var threatIndicator map[string]interface{}
 	resourceName := "checkpoint_management_threat_indicator.test"
 	objName := "tfTestManagementThreatIndicator_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementThreatIndicator_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointThreatIndicatorDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementThreatIndicatorConfig(objName, "observable1","1.2.3.4"),
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointThreatIndicatorExists(resourceName,&threatIndicator),
-						testAccCheckCheckpointThreatIndicatorAttributes(&threatIndicator, objName),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointThreatIndicatorDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementThreatIndicatorConfig(objName, "observable1", "1.2.3.4"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointThreatIndicatorExists(resourceName, &threatIndicator),
+					testAccCheckCheckpointThreatIndicatorAttributes(&threatIndicator, objName),
+				),
 			},
+		},
 	})
 }
 
@@ -46,7 +45,7 @@ func testAccCheckpointThreatIndicatorDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-threat-indicator", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-threat-indicator", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("threat indicator object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +68,7 @@ func testAccCheckCheckpointThreatIndicatorExists(resourceTfName string, res *map
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-threat-indicator", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-threat-indicator", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -93,7 +92,6 @@ func testAccCheckCheckpointThreatIndicatorAttributes(threatIndicator *map[string
 			return fmt.Errorf("name is %s, expected %s", threatIndicatorName, name)
 		}
 
-
 		return nil
 	}
 }
@@ -108,5 +106,5 @@ resource "checkpoint_management_threat_indicator" "test" {
   	}
 	ignore_warnings = true
 }
-`,name, observableName, ipAddress)
+`, name, observableName, ipAddress)
 }

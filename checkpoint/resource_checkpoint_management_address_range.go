@@ -18,66 +18,66 @@ func resourceManagementAddressRange() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
 				Description: "Object name. Should be unique in the domain.",
 			},
 			"ipv4_address_first": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "First IPv4 address in the range.",
 			},
 			"ipv6_address_first": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "First IPv6 address in the range.",
 			},
 			"ipv4_address_last": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Last IPv4 address in the range.",
 			},
 			"ipv6_address_last": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Last IPv6 address in the range.",
 			},
-			"nat_settings" : {
-				Type: schema.TypeMap,
-				Optional: true,
+			"nat_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "NAT settings.",
 				//Default: map[string]interface{}{"auto_rule":false},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_rule": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default: false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
 							Description: "Whether to add automatic address translation rules.",
 						},
 						"ipv4_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv4 address.",
 						},
 						"ipv6_address": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "IPv6 address.",
 						},
 						"hide_behind": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Hide behind method. This parameter is not required in case \"method\" parameter is \"static\".",
 						},
 						"install_on": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "Which gateway should apply the NAT translation.",
 						},
 						"method": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
 							Description: "NAT translation method.",
 						},
 					},
@@ -87,23 +87,23 @@ func resourceManagementAddressRange() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default: false,
+				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default: false,
+				Default:     false,
 			},
 			"color": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default: "black",
+				Default:     "black",
 			},
 			"comments": &schema.Schema{
-				Type:	schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "Comments string.",
 			},
 			"groups": {
@@ -115,8 +115,8 @@ func resourceManagementAddressRange() *schema.Resource {
 				},
 			},
 			"tags": {
-				Type: schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -193,7 +193,7 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Address Range - Map = ", addressRange)
 
-	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true,false)
+	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true, false)
 	if err != nil || !addAddressRangeRes.Success {
 		if addAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(addAddressRangeRes.ErrorMsg)
@@ -206,7 +206,7 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	return readManagementAddressRange(d, m)
 }
 
-func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
+func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
 
@@ -214,7 +214,7 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 		"uid": d.Id(),
 	}
 
-	showAddressRangeRes, err := client.ApiCall("show-address-range",payload,client.GetSessionID(),true,false)
+	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -230,7 +230,6 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 	addressRange := showAddressRangeRes.GetData()
 
 	log.Println("Read Address Range - Show JSON = ", addressRange)
-
 
 	if v := addressRange["name"]; v != nil {
 		_ = d.Set("name", v)
@@ -248,21 +247,17 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 		_ = d.Set("ipv4_address_last", v)
 	}
 
-
 	if v := addressRange["ipv6-address-last"]; v != nil {
 		_ = d.Set("ipv6_address_last", v)
 	}
-
 
 	if v := addressRange["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
 
-
 	if v := addressRange["color"]; v != nil {
 		_ = d.Set("color", v)
 	}
-
 
 	if addressRange["nat-settings"] != nil {
 
@@ -274,11 +269,11 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
 		}
 
-		if v, _ := natSettingsMap["ipv4-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
 		}
 
-		if v, _ := natSettingsMap["ipv6-address"]; v != "" &&  v != nil {
+		if v, _ := natSettingsMap["ipv6-address"]; v != "" && v != nil {
 			natSettingsMapToReturn["ipv6_address"] = v
 		}
 
@@ -294,7 +289,6 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 			natSettingsMapToReturn["method"] = v
 		}
 
-
 		_, natSettingInConf := d.GetOk("nat_settings")
 		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
 		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
@@ -306,7 +300,6 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error{
 	} else {
 		_ = d.Set("nat_settings", nil)
 	}
-
 
 	if addressRange["groups"] != nil {
 		groupsJson := addressRange["groups"].([]interface{})
@@ -399,7 +392,7 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 			if d.HasChange("nat_settings.hide_behind") {
 				res["hide-behind"] = d.Get("nat_settings.hide_behind")
 			}
-			if d.HasChange("nat_settings.install_on"){
+			if d.HasChange("nat_settings.install_on") {
 				res["install-on"] = d.Get("nat_settings.install_on")
 			}
 			if d.HasChange("nat_settings.method") {
@@ -407,7 +400,7 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 			}
 
 			addressRange["nat-settings"] = res
-		} else {  //argument deleted - go back to defaults
+		} else { //argument deleted - go back to defaults
 			addressRange["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
 	}
@@ -431,7 +424,7 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Address Range - Map = ", addressRange)
-	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true,false)
+	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true, false)
 	if err != nil || !updateAddressRangeRes.Success {
 		if updateAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAddressRangeRes.ErrorMsg)
@@ -447,7 +440,7 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	addressRangePayload := map[string]interface{}{
-		"uid" : d.Id(),
+		"uid": d.Id(),
 	}
 
 	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, false)
@@ -461,5 +454,3 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	return nil
 }
-
-

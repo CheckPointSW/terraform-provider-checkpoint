@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementPackage_basic(t *testing.T){
+func TestAccCheckpointManagementPackage_basic(t *testing.T) {
 	var packageMap map[string]interface{}
 	resourceName := "checkpoint_management_package.test"
 	objName := "tfTestManagementPackage_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementPackage_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointManagementPackageDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementPackageConfig(objName), //runs "terraform apply"
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointManagementPackageExists(resourceName, &packageMap),
-						testAccCheckCheckpointManagementPackageAttributes(&packageMap, objName),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointManagementPackageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementPackageConfig(objName), //runs "terraform apply"
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointManagementPackageExists(resourceName, &packageMap),
+					testAccCheckCheckpointManagementPackageAttributes(&packageMap, objName),
+				),
 			},
+		},
 	})
 
 }
@@ -47,7 +46,7 @@ func testAccCheckpointManagementPackageDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-package", map[string]interface{}{"uid": rs.Primary.ID,}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-package", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 			if res.Success {
 				return fmt.Errorf("package object (%s) still exists", rs.Primary.ID)
 			}
@@ -56,7 +55,6 @@ func testAccCheckpointManagementPackageDestroy(s *terraform.State) error {
 	}
 	return nil
 }
-
 
 func testAccCheckCheckpointManagementPackageExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -71,7 +69,7 @@ func testAccCheckCheckpointManagementPackageExists(resourceTfName string, res *m
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-package", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(),true,false)
+		response, err := client.ApiCall("show-package", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return err
 		}
@@ -100,5 +98,5 @@ func testAccManagementPackageConfig(name string) string {
 resource "checkpoint_management_package" "test" {
     name = "%s"
 }
-`,name)
+`, name)
 }

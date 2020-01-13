@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-
 func resourceManagementRunIpsUpdate() *schema.Resource {
 	return &schema.Resource{
 		Create: createManagementRunIpsUpdate,
@@ -14,9 +13,9 @@ func resourceManagementRunIpsUpdate() *schema.Resource {
 		Delete: deleteManagementRunIpsUpdate,
 		Schema: map[string]*schema.Schema{
 			"package_path": {
-				Type: schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Description: "Offline update package path.",
 			},
 		},
@@ -36,7 +35,7 @@ func readManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 		payload["package-path"] = v.(string)
 	}
 
-	runIpsUpdateRes, _ := client.ApiCall("run-ips-update", payload, client.GetSessionID(),true,false)
+	runIpsUpdateRes, _ := client.ApiCall("run-ips-update", payload, client.GetSessionID(), true, false)
 	if !runIpsUpdateRes.Success {
 		return fmt.Errorf(runIpsUpdateRes.ErrorMsg)
 	}

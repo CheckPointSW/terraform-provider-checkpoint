@@ -9,51 +9,51 @@ import (
 )
 
 func Provider() terraform.ResourceProvider {
-	return &schema.Provider {
+	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"server":{
-				Type: schema.TypeString,
+			"server": {
+				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SERVER", nil),
 				Description: "Check Point Management server IP",
 			},
 			"username": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_USERNAME", nil),
 				Description: "Check Point Management admin name",
 			},
 			"password": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PASSWORD", nil),
 				Description: "Check Point Management admin password",
 			},
 			"context": {
-				Type: schema.TypeString,
+				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CONTEXT", checkpoint.WebContext),
 				Description: "Check Point access context - gaia_api or web_api",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"checkpoint_management_network": resourceManagementNetwork(),
-			"checkpoint_management_host": resourceManagementHost(),
-			"checkpoint_management_publish": resourceManagementPublish(),
-			"checkpoint_hostname": resourceHostname(),
-			"checkpoint_physical_interface": resourcePhysicalInterface(),
-			"checkpoint_put_file": resourcePutFile(),
-			"checkpoint_management_install_policy": resourceManagementInstallPolicy(),
-			"checkpoint_management_run_ips_update": resourceManagementRunIpsUpdate(),
-			"checkpoint_management_address_range": resourceManagementAddressRange(),
-			"checkpoint_management_group": resourceManagementGroup(),
-			"checkpoint_management_service_group": resourceManagementServiceGroup(),
-			"checkpoint_management_service_tcp": resourceManagementServiceTcp(),
-			"checkpoint_management_service_udp": resourceManagementServiceUdp(),
-			"checkpoint_management_package": resourceManagementPackage(),
-			"checkpoint_management_access_rule": resourceManagementAccessRule(),
-			"checkpoint_management_login": resourceManagementLogin(),
-			"checkpoint_management_logout": resourceManagementLogout(),
+			"checkpoint_management_network":          resourceManagementNetwork(),
+			"checkpoint_management_host":             resourceManagementHost(),
+			"checkpoint_management_publish":          resourceManagementPublish(),
+			"checkpoint_hostname":                    resourceHostname(),
+			"checkpoint_physical_interface":          resourcePhysicalInterface(),
+			"checkpoint_put_file":                    resourcePutFile(),
+			"checkpoint_management_install_policy":   resourceManagementInstallPolicy(),
+			"checkpoint_management_run_ips_update":   resourceManagementRunIpsUpdate(),
+			"checkpoint_management_address_range":    resourceManagementAddressRange(),
+			"checkpoint_management_group":            resourceManagementGroup(),
+			"checkpoint_management_service_group":    resourceManagementServiceGroup(),
+			"checkpoint_management_service_tcp":      resourceManagementServiceTcp(),
+			"checkpoint_management_service_udp":      resourceManagementServiceUdp(),
+			"checkpoint_management_package":          resourceManagementPackage(),
+			"checkpoint_management_access_rule":      resourceManagementAccessRule(),
+			"checkpoint_management_login":            resourceManagementLogin(),
+			"checkpoint_management_logout":           resourceManagementLogout(),
 			"checkpoint_management_threat_indicator": resourceManagementThreatIndicator(),
 		},
 		ConfigureFunc: providerConfigure,
@@ -71,7 +71,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
 	}
 
-	args := checkpoint.ApiClientArgs {
+	args := checkpoint.ApiClientArgs{
 		Port:                    checkpoint.DefaultPort,
 		Fingerprint:             "",
 		Sid:                     "",
@@ -88,43 +88,43 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 
 	switch context {
-		case checkpoint.WebContext:
-			s, err := GetSession()
+	case checkpoint.WebContext:
+		s, err := GetSession()
+		if err != nil {
+			return nil, err
+		}
+		if s.Sid != "" {
+			args.Sid = s.Sid
+		}
+		mgmt := checkpoint.APIClient(args)
+		if CheckSession(mgmt, s.Uid) {
+			log.Printf("Client connected with last session (SID = %s)", s.Sid)
+		} else {
+			s, err := login(mgmt, username, password)
 			if err != nil {
 				return nil, err
 			}
-			if s.Sid != "" {
-				args.Sid = s.Sid
-			}
-			mgmt := checkpoint.APIClient(args)
-			if CheckSession(mgmt, s.Uid) {
-				log.Printf("Client connected with last session (SID = %s)", s.Sid)
-			} else {
-				s, err := login(mgmt, username, password)
-				if err != nil {
-					return nil, err
-				}
-				if err := s.Save(); err != nil {
-					return nil, err
-				}
-			}
-			return mgmt, nil
-		case checkpoint.GaiaContext:
-			gaia := checkpoint.APIClient(args)
-			_, err := login(gaia, username, password)
-			if err != nil {
+			if err := s.Save(); err != nil {
 				return nil, err
 			}
-			return gaia, nil
-		default:
-			return nil, fmt.Errorf("Unsupported access context - gaia_api or web_api")
+		}
+		return mgmt, nil
+	case checkpoint.GaiaContext:
+		gaia := checkpoint.APIClient(args)
+		_, err := login(gaia, username, password)
+		if err != nil {
+			return nil, err
+		}
+		return gaia, nil
+	default:
+		return nil, fmt.Errorf("Unsupported access context - gaia_api or web_api")
 	}
 }
 
 // Perform login. Creating new session...
 func login(client *checkpoint.ApiClient, username string, pwd string) (Session, error) {
 	log.Printf("Perform login")
-	loginRes, err := client.Login(username, pwd,false,"",false,"")
+	loginRes, err := client.Login(username, pwd, false, "", false, "")
 	if err != nil {
 		log.Println("Failed to perform login")
 		return Session{}, err
@@ -134,7 +134,7 @@ func login(client *checkpoint.ApiClient, username string, pwd string) (Session, 
 		uid = val.(string)
 	}
 
-	s := Session {
+	s := Session{
 		Sid: client.GetSessionID(),
 		Uid: uid,
 	}

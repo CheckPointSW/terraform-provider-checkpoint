@@ -10,8 +10,7 @@ import (
 	"testing"
 )
 
-
-func TestAccCheckpointManagementAccessRule_basic(t *testing.T){
+func TestAccCheckpointManagementAccessRule_basic(t *testing.T) {
 	var accessRule map[string]interface{}
 	resourceName := "checkpoint_management_access_rule.test"
 	objName := "tfTestManagementAccessRule_" + acctest.RandString(6)
@@ -24,18 +23,18 @@ func TestAccCheckpointManagementAccessRule_basic(t *testing.T){
 	}
 
 	resource.Test(t, resource.TestCase{
-			PreCheck: func() { testAccPreCheck(t) },
-			Providers: testAccProviders,
-			CheckDestroy: testAccCheckpointAccessRuleDestroy,
-			Steps: []resource.TestStep{
-				{
-					Config: testAccManagementAccessRuleConfig(objName, "Network"),
-					Check: resource.ComposeTestCheckFunc(
-						testAccCheckCheckpointAccessRuleExists(resourceName,&accessRule),
-						testAccCheckCheckpointAccessRuleAttributes(&accessRule, objName, "Network",),
-					),
-				},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckpointAccessRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccManagementAccessRuleConfig(objName, "Network"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCheckpointAccessRuleExists(resourceName, &accessRule),
+					testAccCheckCheckpointAccessRuleAttributes(&accessRule, objName, "Network"),
+				),
 			},
+		},
 	})
 }
 
@@ -46,7 +45,7 @@ func testAccCheckpointAccessRuleDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer":"Network"}, client.GetSessionID(),true,false)
+			res, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, false)
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("access rule object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +68,7 @@ func testAccCheckCheckpointAccessRuleExists(resourceTfName string, res *map[stri
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -91,7 +90,7 @@ func testAccCheckCheckpointAccessRuleAttributes(accessRule *map[string]interface
 		accessRuleLayerUid := accessRule["layer"].(string)
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-access-layer", map[string]interface{}{"uid": accessRuleLayerUid},client.GetSessionID(),true,false)
+		response, _ := client.ApiCall("show-access-layer", map[string]interface{}{"uid": accessRuleLayerUid}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -105,7 +104,6 @@ func testAccCheckCheckpointAccessRuleAttributes(accessRule *map[string]interface
 			return fmt.Errorf("name is %s, expected %s", accessRuleName, name)
 		}
 
-
 		return nil
 	}
 }
@@ -117,5 +115,5 @@ resource "checkpoint_management_access_rule" "test" {
     layer = "%s"
 	position = {top = "top"}
 }
-`,name, layer)
+`, name, layer)
 }
