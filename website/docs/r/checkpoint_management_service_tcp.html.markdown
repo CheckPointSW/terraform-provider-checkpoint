@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_tcp"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-tcp"
 description: |-
-  Configure Service Tcp.
+  This resource allows you to add/update/delete Check Point Service Tcp.
 ---
 
 # checkpoint_management_service_tcp
 
-Configure Service Tcp.
+This resource allows you to add/update/delete Check Point Service Tcp.
 
 ## Example Usage
 

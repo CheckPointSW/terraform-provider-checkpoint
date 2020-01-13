@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_package "
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-package"
 description: |-
-  Configure Package Object.
+  This resource allows you to add/update/delete Check Point Package Object.
 ---
 
 # checkpoint_management_package
 
-Configure Package Object.
+This resource allows you to add/update/delete Check Point Package Object.
 
 ## Example Usage
 

@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_udp"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-udp"
 description: |-
-  Configure Service Udp.
+  This resource allows you to add/update/delete Check Point Service Udp.
 ---
 
 # checkpoint_management_service_udp
 
-Configure Service Udp.
+This resource allows you to add/update/delete Check Point Service Udp.
 
 ## Example Usage
 

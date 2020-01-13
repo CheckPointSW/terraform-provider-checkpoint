@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_access_rule"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-access-rule"
 description: |-
-  Configure Access Rule.
+  This resource allows you to add/update/delete Check Point Access Rule.
 ---
 
 # checkpoint_management_access_rule
 
-Configure Access Rule.
+This resource allows you to add/update/delete Check Point Access Rule.
 
 ## Example Usage
 

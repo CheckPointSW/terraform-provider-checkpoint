@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_host"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-host"
 description: |-
-  Configure Host.
+  This resource allows you to add/update/delete Check Point Host.
 ---
 
 # checkpoint_management_host
 
-Configure Host.
+This resource allows you to add/update/delete Check Point Host.
 
 ## Example Usage
 
