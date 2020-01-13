@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"encoding/json"
-	checkpoint "github.com/CheckpointSW/cp-mgmt-api-go-sdk/APIFiles"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
 	"os"
 )

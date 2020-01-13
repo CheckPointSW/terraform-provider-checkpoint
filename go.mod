@@ -1,8 +1,8 @@
 module terraform-provider-checkpoint/checkpoint
 
 require (
-	github.com/CheckpointSW/api-go-sdk v0.0.0-20200112133826-7eb14b75a7c1
-	github.com/CheckpointSW/cp-mgmt-api-go-sdk v0.0.0-20200112133826-7eb14b75a7c1
+	github.com/CheckPointSW/api-go-sdk v0.0.0-20200112133826-7eb14b75a7c1
+	github.com/CheckPointSW/cp-mgmt-api-go-sdk v0.0.0-20200112133826-7eb14b75a7c1
 	github.com/hashicorp/go-hclog v0.9.2 // indirect
 	github.com/hashicorp/go-plugin v1.0.1 // indirect
 	github.com/hashicorp/terraform v0.12.19
