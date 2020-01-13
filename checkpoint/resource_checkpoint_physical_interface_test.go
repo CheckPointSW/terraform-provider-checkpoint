@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 	"log"
 	"os"
-	"strconv"
 	"testing"
 )
 
