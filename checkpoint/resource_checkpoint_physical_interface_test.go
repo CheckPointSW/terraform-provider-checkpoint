@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/Checkpoint/api_go_sdk/APIFiles"
+	checkpoint "github.com/CheckpointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"log"
 	"os"
+	"strconv"
 	"testing"
 )
 
