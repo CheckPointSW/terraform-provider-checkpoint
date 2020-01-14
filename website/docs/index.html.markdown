@@ -10,7 +10,7 @@ description: |-
 
 The Check Point provider can be used to automate security responses to threats, provision both physical and virtualized next-generation firewalls and automate routine Security Management configuration tasks, saving time and reducing configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into DevSecOps workflows.
 
-##Example usage
+##Examples usage
 ```hcl
 # Configure the Check Point Provider
 provider "checkpoint" {
@@ -80,14 +80,7 @@ $ export CHECKPOINT_USERNAME="aa"
 $ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
  ```
-Or for GAIA API:
-```hcl
-$ export CHECKPOINT_SERVER=192.0.2.1
-$ export CHECKPOINT_USERNAME="gaia_user"
-$ export CHECKPOINT_PASSWORD="gaia_password"
-$ export CHECKPOINT_CONTEXT="gaia_api"
-```
-
+ 
 Then configure the Check Point Provider as following:
 
 ```hcl
@@ -99,5 +92,24 @@ resource "checkpoint_management_network" "test1" {
 	name = "network1"
 	subnet4 = "192.0.2.0"
 	# ...
+}
+```
+
+Or for GAIA API:
+```hcl
+$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_USERNAME="gaia_user"
+$ export CHECKPOINT_PASSWORD="gaia_password"
+$ export CHECKPOINT_CONTEXT="gaia_api"
+```
+Then configure the Check Point Provider as following:
+
+```hcl
+# Configure the Check Point Provider
+provider "checkpoint" { }
+
+# Set machine hostname
+resource "checkpoint_hostname" "hostname" {
+	name = "terrahost"
 }
 ```
