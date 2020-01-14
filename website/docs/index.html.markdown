@@ -27,6 +27,20 @@ resource "checkpoint_management_network" "test1" {
 	# ...
 }
 ```
+```hcl
+# Configure the Check Point Provider for GAIA API
+provider "checkpoint" {
+	server = "192.0.2.1"
+	username = "gaia_user"
+	password = "gaia_password"
+	context = "gaia_api"
+}
+
+# Set machine hostname
+resource "checkpoint_hostname" "hostname" {
+	name = "terrahost"
+}
+```
 ## Authentication
 
 The Check Point provider offers providing credentials for authentication. The following methods are supported:
@@ -45,6 +59,15 @@ provider "checkpoint" {
 	context = "web_api"
 }
 ```
+Or for GAIA API:
+```hcl
+provider "checkpoint" {
+	server = "192.0.2.1"
+	username = "gaia_user"
+	password = "gaia_password"
+	context = "gaia_api"
+}
+```
 
 ### Environment variables
 You can provide your credentials via environment variables. Note that setting your Check Point credentials using static credentials will override the environment variables.
@@ -56,6 +79,13 @@ $ export CHECKPOINT_SERVER=192.0.2.1
 $ export CHECKPOINT_USERNAME="aa"
 $ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
+ ```
+Or for GAIA API:
+```hcl
+$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_USERNAME="gaia_user"
+$ export CHECKPOINT_PASSWORD="gaia_password"
+$ export CHECKPOINT_CONTEXT="gaia_api"
 ```
 
 Then configure the Check Point Provider as following:
