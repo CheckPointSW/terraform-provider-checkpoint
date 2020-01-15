@@ -54,6 +54,7 @@ The following arguments are supported:
 * `tags` - (Optional) Collection of tag identifiers.
 
 `aggressive_aging` supports the following:
+
 * `default_timeout` - (Optional) Default aggressive aging timeout in seconds.
 * `enable` - (Optional) N/A
 * `timeout` - (Optional) Aggressive aging timeout in seconds.

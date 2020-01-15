@@ -96,21 +96,25 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string.
 
 `position` supports the following:
+
 * `top` - (Optional) Add rule at the top of the rulebase.
 * `above` - (Optional) Add rule above specific section/rule identified by uid or name.
 * `below` - (Optional) Add rule below specific section/rule identified by uid or name.
 * `bottom` - (Optional) Add rule at the bottom of the rulebase.
 
 `action_settings` supports the following:
+
 * `enable_identity_captive_portal` - (Optional) N/A.
 * `limit` - (Optional) N/A.
 
 `custom_fields` supports the following:
+
 * `field_1` - (Optional) First custom field.
 * `field_2` - (Optional) Second custom field.
 * `field_3` - (Optional) Third custom field.
 
 `track` supports the following:
+
 * `accounting` - (Optional) Turns accounting for track on and off.
 * `alert` - (Optional) Type of alert for the track.
 * `enable_firewall_session` - (Optional) Determine whether to generate session log to firewall only connections.
@@ -119,12 +123,14 @@ The following arguments are supported:
 * `type` - (Optional) \"Log\", \"Extended Log\", \"Detailed Log\", \"None\".
 
 `user_check` supports the following:
+
 * `confirm` - (Optional) N/A.
 * `custom_frequency` - (Optional) N/A. Custom Frequency blocks are documented below.
 * `frequency` - (Optional) N/A.
 * `interaction` - (Optional) N/A.
 
 `custom_frequency` supports the following:
+
 * `every` - (Optional) N/A.
 * `unit` - (Optional) N/A. 
 

@@ -49,6 +49,7 @@ The following arguments are supported:
 
 
 `observables` supports the following:
+
 * `name` - (Required) Object name. Should be unique in the domain.
 * `md5` - (Optional) A valid MD5 sequence.
 * `url` - (Optional) A valid URL.
@@ -66,6 +67,7 @@ The following arguments are supported:
 * `severity` - (Optional) The severity level of the threat.
 
 `profile_overrides` supports the following:
+
 * `action` - (Optional) The indicator's action in this profile.
 * `profile` - (Optional) The profile in which to override the indicator's action.
 

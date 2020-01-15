@@ -36,7 +36,8 @@ The following arguments are supported:
 
 
 ## How To Use
-Make sure this command resource will be executed by terraform when you meant it will run.  
+Make sure this command will be executed in the right execution order. 
+note: terraform execution is not sequential.  
 
 
 

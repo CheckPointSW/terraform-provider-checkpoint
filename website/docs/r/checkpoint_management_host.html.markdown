@@ -40,6 +40,7 @@ The following arguments are supported:
 
 
 `interfaces` supports the following:
+
 * `name` - (Required) Object name. Should be unique in the domain.
 * `subnet4` - (Optional) IPv4 network address.
 * `subnet6` - (Optional) IPv6 network address.
@@ -51,6 +52,7 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string.
 
 `nat_settings` supports the following:
+
 * `auto_rule` - (Optional) Whether to add automatic address translation rules.
 * `ipv4_address` - (Optional) IPv4 address.
 * `ipv6_address` - (Optional) IPv6 address.
@@ -59,12 +61,14 @@ The following arguments are supported:
 * `method` - (Optional) NAT translation method.
 
 `host_servers` supports the following:
+
 * `dns_server` - (Optional) Gets True if this server is a DNS Server.
 * `mail_server` - (Optional) Gets True if this server is a Mail Server.
 * `web_server` - (Optional) Gets True if this server is a Web Server.
 * `web_server_config` - (Optional) Web Server configuration. Web Server configuration blocks are documented below.
 
 `web_server_config` supports the following:
+
 * `additional_ports` - (Optional) Server additional ports.
 * `application_engines` - (Optional) Application engines of this web server.
 * `listen_standard_port` - (Optional) "Whether server listens to standard port.

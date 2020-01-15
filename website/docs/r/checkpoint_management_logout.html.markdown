@@ -21,7 +21,8 @@ resource "checkpoint_management_logout" "example" {}
 There are no arguments in this command.
 
 ## How To Use
-Make sure this command resource will be executed by terraform when you meant it will run.  
+Make sure this command will be executed in the right execution order. 
+note: terraform execution is not sequential.    
 
 
 

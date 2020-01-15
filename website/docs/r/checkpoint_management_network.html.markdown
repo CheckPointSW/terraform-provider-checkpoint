@@ -40,6 +40,7 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string.
 
 `nat_settings` supports the following:
+
 * `auto_rule` - (Optional) Whether to add automatic address translation rules.
 * `ipv4_address` - (Optional) IPv4 address.
 * `ipv6_address` - (Optional) IPv6 address.
