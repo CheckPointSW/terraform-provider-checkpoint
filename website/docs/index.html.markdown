@@ -121,7 +121,9 @@ resource "checkpoint_hostname" "hostname" {
 
 ## Post Apply/Destroy commands
 
-As of right now, Terraform does not provide native support for publish and install-policy, so both of them are handled out-of-band.
+As of right now, Terraform does not provide native support for publish and install-policy, so both of them are handled out-of-band. 
+
+In order to use post Apply/Destroy commands, the authentication method must be via environment variables.
 
 ### Publish
 
@@ -131,7 +133,7 @@ Please use the following for publish:
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/publish
 $ go build publish.go
 $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && publish
+$ terraform apply && ./publish
 ```
 
 ### Install-Policy
@@ -147,11 +149,11 @@ Please use the following for install-policy:
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
 $ go build install_policy.go
 $ mv install_policy $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && install_policy -policy-package <package name> -target <target name or uid>
+$ terraform apply && ./install_policy -policy-package <package name> -target <target name or uid>
 ```
 
 ### Example usage
 
 ```bash
-$ terraform apply && publish && install_policy -policy-package "Standard" -target "Firewall-harry-main-take-265"
+$ terraform apply && ./publish && ./install_policy -policy-package "Standard" -target "Firewall-harry-main-take-265"
 ```
