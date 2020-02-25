@@ -35,6 +35,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CONTEXT", checkpoint.WebContext),
 				Description: "Check Point access context - gaia_api or web_api",
 			},
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_DOMAIN", nil),
+				Description: "login to specific domain. Domain can be identified by name or UID.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_network":          resourceManagementNetwork(),
@@ -66,6 +72,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)
 	context := data.Get("context").(string)
+	domain := data.Get("domain").(string)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
@@ -100,7 +107,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		if CheckSession(mgmt, s.Uid) {
 			log.Printf("Client connected with last session (SID = %s)", s.Sid)
 		} else {
-			s, err := login(mgmt, username, password)
+			s, err := login(mgmt, username, password, domain)
 			if err != nil {
 				return nil, err
 			}
@@ -111,7 +118,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password)
+		_, err := login(gaia, username, password, "")
 		if err != nil {
 			return nil, err
 		}
@@ -122,9 +129,10 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 }
 
 // Perform login. Creating new session...
-func login(client *checkpoint.ApiClient, username string, pwd string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, domain string) (Session, error) {
 	log.Printf("Perform login")
-	loginRes, err := client.Login(username, pwd, false, "", false, "")
+
+	loginRes, err := client.Login(username, pwd, false, domain, false, "")
 	if err != nil {
 		log.Println("Failed to perform login")
 		return Session{}, err
