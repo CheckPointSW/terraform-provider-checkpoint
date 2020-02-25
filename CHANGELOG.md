@@ -2,6 +2,7 @@
 
 FEATURES:
 
+* **New Feature:** Added multi domain server support
 * **New Feature:** Added commands support - publish and install policy after execution
 
 ## 1.0.0 (January 13, 2020)
