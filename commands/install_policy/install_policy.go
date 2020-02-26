@@ -19,7 +19,6 @@ func (i *arrayFlags) Set(value string) error {
 
 var targets arrayFlags
 
-
 func main() {
 
 	var policyPackage string
@@ -35,10 +34,10 @@ func main() {
 
 	payload := map[string]interface{}{
 		"policy-package": policyPackage,
-		"targets": targets,
+		"targets":        targets,
 	}
 
-	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(),true,false)
+	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(), true, false)
 	if err != nil {
 		log.Fatalf("error: %s", err.Error())
 	}

@@ -53,7 +53,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 		}
 	}
 
-	args := checkpoint.ApiClientArgs {
+	args := checkpoint.ApiClientArgs{
 		Port:                    checkpoint.DefaultPort,
 		Fingerprint:             "",
 		Sid:                     "",

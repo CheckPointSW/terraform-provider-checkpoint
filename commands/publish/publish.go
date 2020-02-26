@@ -12,7 +12,7 @@ func main() {
 		log.Fatalf("error: %s", err)
 	}
 
-	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(),true,false)
+	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, false)
 	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
