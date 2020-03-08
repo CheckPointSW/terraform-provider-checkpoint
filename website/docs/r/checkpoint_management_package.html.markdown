@@ -13,7 +13,7 @@ This resource allows you to add/update/delete Check Point Package Object.
 ## Example Usage
 
 ```hcl
-resource "checkpoint_management_network" "example" {
+resource "checkpoint_management_package" "example" {
   name = "New_Standard_Package_1"
   comments = "My Comments"
   color = "green"

@@ -99,6 +99,7 @@ func Provider() terraform.ResourceProvider {
             "checkpoint_management_backup_domain":          resourceManagementBackupDomain(),
             "checkpoint_management_migrate_export_domain":          resourceManagementMigrateExportDomain(),
             "checkpoint_management_uninstall_software_package":          resourceManagementUninstallSoftwarePackage(),
+			"checkpoint_management_package":          resourceManagementPackage(),
             "checkpoint_management_verify_software_package":          resourceManagementVerifySoftwarePackage(),
             "checkpoint_management_install_software_package":          resourceManagementInstallSoftwarePackage(),
             "checkpoint_management_unlock_administrator":          resourceManagementUnlockAdministrator(),

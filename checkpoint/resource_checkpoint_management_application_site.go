@@ -201,8 +201,8 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 		_ = d.Set("name", v)
 	}
 
-    if applicationSite["additional_categories"] != nil {
-        additionalCategoriesJson, ok := applicationSite["additional_categories"].([]interface{})
+    if applicationSite["additional-categories"] != nil {
+        additionalCategoriesJson, ok := applicationSite["additional-categories"].([]interface{})
         if ok {
             additionalCategoriesIds := make([]string, 0)
             if len(additionalCategoriesJson) > 0 {
@@ -241,8 +241,8 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
         _ = d.Set("tags", nil)
     }
 
-    if applicationSite["url_list"] != nil {
-        urlListJson, ok := applicationSite["url_list"].([]interface{})
+    if applicationSite["url-list"] != nil {
+        urlListJson, ok := applicationSite["url-list"].([]interface{})
         if ok {
             urlListIds := make([]string, 0)
             if len(urlListJson) > 0 {

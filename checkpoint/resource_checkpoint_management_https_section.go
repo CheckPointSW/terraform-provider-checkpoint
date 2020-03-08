@@ -183,23 +183,6 @@ func updateManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	       httpsSection["ignore-errors"] = v.(bool)
     }
 
-    if ok := d.HasChange("position"); ok {
-		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
-                httpsSection["new-position"] = "top"
-            }
-            if v, ok := d.GetOk("position.above"); ok {
-                httpsSection["new-position"] = map[string]interface{}{"above": v.(string)}
-            }
-            if v, ok := d.GetOk("position.below"); ok {
-                httpsSection["new-position"] = map[string]interface{}{"below": v.(string)}
-            }
-            if _, ok := d.GetOk("position.bottom"); ok {
-                httpsSection["new-position"] = "bottom"
-            }
-        }
-    }
-
     log.Println("Update HttpsSection - Map = ", httpsSection)
 
     updateHttpsSectionRes, err := client.ApiCall("set-https-section", httpsSection, client.GetSessionID(), true, false)
