@@ -14,13 +14,13 @@ import (
             Schema: map[string]*schema.Schema{ 
             "admin_uid": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Administrator uid to generate API key for.",
             },
             "admin_name": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Administrator name to generate API key for.",
             },
