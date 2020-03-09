@@ -14,13 +14,13 @@ import (
             Schema: map[string]*schema.Schema{ 
             "uri": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "URI of the updatable object in the Updatable Objects Repository.",
             },
             "uid_in_updatable_objects_repository": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Unique identifier of the updatable object in the Updatable Objects Repository.",
             },

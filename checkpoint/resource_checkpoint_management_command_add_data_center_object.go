@@ -14,25 +14,25 @@ import (
             Schema: map[string]*schema.Schema{ 
             "data_center_name": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Name of the Data Center Server the object is in.",
             },
             "data_center_uid": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Unique identifier of the Data Center Server the object is in.",
             },
             "uri": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "URI of the object in the Data Center Server.",
             },
             "uid_in_data_center": {
                 Type:        schema.TypeString,
-                Required:    true,
+                Optional:    true,
                 ForceNew:    true,
                 Description: "Unique identifier of the object in the Data Center Server.",
             },
