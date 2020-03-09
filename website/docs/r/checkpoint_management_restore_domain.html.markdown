@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_restore_domain"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-restore-domain"
 description: |-
-This resource allows you to execute Check Point Restore Domain.
+  This resource allows you to execute Check Point Restore Domain.
 ---
 
 # checkpoint_management_restore_domain

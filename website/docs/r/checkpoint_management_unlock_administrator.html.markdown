@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_unlock_administrator"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-unlock-administrator"
 description: |-
-This resource allows you to execute Check Point Unlock Administrator.
+  This resource allows you to execute Check Point Unlock Administrator.
 ---
 
 # checkpoint_management_unlock_administrator

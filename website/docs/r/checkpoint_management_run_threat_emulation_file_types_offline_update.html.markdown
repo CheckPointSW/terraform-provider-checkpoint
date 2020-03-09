@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_run_threat_emulation_file_types_offline_update"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-run-threat-emulation-file-types-offline-update"
 description: |-
-This resource allows you to execute Check Point Run Threat Emulation File Types Offline Update.
+  This resource allows you to execute Check Point Run Threat Emulation File Types Offline Update.
 ---
 
 # checkpoint_management_run_threat_emulation_file_types_offline_update

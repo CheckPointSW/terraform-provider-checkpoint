@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_uninstall_software_package"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-uninstall-software-package"
 description: |-
-This resource allows you to execute Check Point Uninstall Software Package.
+  This resource allows you to execute Check Point Uninstall Software Package.
 ---
 
 # checkpoint_management_uninstall_software_package

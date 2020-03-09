@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_add_api_key"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-add-api-key"
 description: |-
-This resource allows you to execute Check Point Add Api Key.
+  This resource allows you to execute Check Point Add Api Key.
 ---
 
 # checkpoint_management_add_api_key

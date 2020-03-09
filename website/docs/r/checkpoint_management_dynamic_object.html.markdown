@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_dynamic_object"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-dynamic-object"
 description: |-
-This resource allows you to execute Check Point Dynamic Object.
+  This resource allows you to execute Check Point Dynamic Object.
 ---
 
 # checkpoint_management_dynamic_object

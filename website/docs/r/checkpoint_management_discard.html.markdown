@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_discard"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-discard"
 description: |-
-This resource allows you to execute Check Point Discard.
+  This resource allows you to execute Check Point Discard.
 ---
 
 # checkpoint_management_discard

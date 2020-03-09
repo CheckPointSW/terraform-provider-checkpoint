@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_application_site_group"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-application-site-group"
 description: |-
-This resource allows you to execute Check Point Application Site Group.
+  This resource allows you to execute Check Point Application Site Group.
 ---
 
 # checkpoint_management_application_site_group

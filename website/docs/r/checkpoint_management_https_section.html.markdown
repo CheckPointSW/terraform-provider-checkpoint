@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_https_section"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-https-section"
 description: |-
-This resource allows you to execute Check Point Https Section.
+  This resource allows you to execute Check Point Https Section.
 ---
 
 # checkpoint_management_https_section

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_other"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-other"
 description: |-
-This resource allows you to execute Check Point Service Other.
+  This resource allows you to execute Check Point Service Other.
 ---
 
 # checkpoint_management_service_other

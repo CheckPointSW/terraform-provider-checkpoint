@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_application_site_category"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-application-site-category"
 description: |-
-This resource allows you to execute Check Point Application Site Category.
+  This resource allows you to execute Check Point Application Site Category.
 ---
 
 # checkpoint_management_application_site_category

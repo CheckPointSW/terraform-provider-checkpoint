@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_time_group"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-time-group"
 description: |-
-This resource allows you to execute Check Point Time Group.
+  This resource allows you to execute Check Point Time Group.
 ---
 
 # checkpoint_management_time_group

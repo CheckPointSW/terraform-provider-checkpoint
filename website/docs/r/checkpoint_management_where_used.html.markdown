@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_where_used"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-where-used"
 description: |-
-This resource allows you to execute Check Point Where Used.
+  This resource allows you to execute Check Point Where Used.
 ---
 
 # checkpoint_management_where_used

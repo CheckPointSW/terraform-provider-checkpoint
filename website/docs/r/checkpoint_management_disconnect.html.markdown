@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_disconnect"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-disconnect"
 description: |-
-This resource allows you to execute Check Point Disconnect.
+  This resource allows you to execute Check Point Disconnect.
 ---
 
 # checkpoint_management_disconnect

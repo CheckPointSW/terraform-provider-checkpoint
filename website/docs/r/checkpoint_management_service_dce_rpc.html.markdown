@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_dce_rpc"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-dce-rpc"
 description: |-
-This resource allows you to execute Check Point Service Dce Rpc.
+  This resource allows you to execute Check Point Service Dce Rpc.
 ---
 
 # checkpoint_management_service_dce_rpc

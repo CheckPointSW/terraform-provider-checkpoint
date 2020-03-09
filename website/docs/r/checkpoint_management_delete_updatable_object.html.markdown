@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_delete_updatable_object"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-delete-updatable-object"
 description: |-
-This resource allows you to execute Check Point Delete Updatable Object.
+  This resource allows you to execute Check Point Delete Updatable Object.
 ---
 
 # checkpoint_management_delete_updatable_object

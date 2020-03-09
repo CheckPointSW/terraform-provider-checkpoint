@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_keepalive"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-keepalive"
 description: |-
-This resource allows you to execute Check Point Keepalive.
+  This resource allows you to execute Check Point Keepalive.
 ---
 
 # checkpoint_management_keepalive

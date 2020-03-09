@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_revert_to_revision"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-revert-to-revision"
 description: |-
-This resource allows you to execute Check Point Revert To Revision.
+  This resource allows you to execute Check Point Revert To Revision.
 ---
 
 # checkpoint_management_revert_to_revision

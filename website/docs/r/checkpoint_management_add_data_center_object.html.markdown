@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_add_data_center_object"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-add-data-center-object"
 description: |-
-This resource allows you to execute Check Point Add Data Center Object.
+  This resource allows you to execute Check Point Add Data Center Object.
 ---
 
 # checkpoint_management_add_data_center_object

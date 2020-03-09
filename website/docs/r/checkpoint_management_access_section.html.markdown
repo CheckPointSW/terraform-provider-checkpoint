@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_access_section"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-access-section"
 description: |-
-This resource allows you to execute Check Point Access Section.
+  This resource allows you to execute Check Point Access Section.
 ---
 
 # checkpoint_management_access_section

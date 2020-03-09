@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_multicast_address_range"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-multicast-address-range"
 description: |-
-This resource allows you to execute Check Point Multicast Address Range.
+  This resource allows you to execute Check Point Multicast Address Range.
 ---
 
 # checkpoint_management_multicast_address_range

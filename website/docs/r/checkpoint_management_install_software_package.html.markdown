@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_install_software_package"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-install-software-package"
 description: |-
-This resource allows you to execute Check Point Install Software Package.
+  This resource allows you to execute Check Point Install Software Package.
 ---
 
 # checkpoint_management_install_software_package

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4da5c493-2dc3-467d-b66d-7f0ddf3f0364" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="C:\Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1WQAomf9Bvu2hIMjiV3z1VG15DP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="go.vendoring.notification.had.been.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/commands" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint" />
+      <recent name="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint\commands\publish" />
+      <recent name="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint\commands\install_policy" />
+      <recent name="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint\commands" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\idoma\go\src\github.com\terraform-providers\terraform-provider-checkpoint\commands" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go Test.checkpoint">
+    <configuration name="TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="terraform-provider-checkpoint" />
+      <working_directory value="$PROJECT_DIR$/checkpoint" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestAccCheckpointManagementHttpsRule_basic$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="terraform-provider-checkpoint" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <go_parameters value="-i" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/terraform-providers/terraform-provider-checkpoint" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="-v" />
+      <method v="2" />
+    </configuration>
+    <configuration name="checkpoint" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="terraform-provider-checkpoint" />
+      <working_directory value="$PROJECT_DIR$/checkpoint/" />
+      <go_parameters value="-i" />
+      <envs>
+        <env name="CHECKPOINT_DOMAIN" value="" />
+        <env name="CHECKPOINT_SERVER" value="172.23.78.129" />
+      </envs>
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/terraform-providers/terraform-provider-checkpoint" />
+      <directory value="$PROJECT_DIR$/checkpoint/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Test.checkpoint" />
+      <item itemvalue="Go Test.TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+        <item itemvalue="Go Test.TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+        <item itemvalue="Go Test.TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+        <item itemvalue="Go Test.TestAccCheckpointManagementHttpsRule_basic in github.com/terraform-providers/terraform-provider-checkpoint/checkpoint" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <proxy>direct</proxy>
+  </component>
+</project>

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_policy_package"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-policy-package"
 description: |-
-This resource allows you to execute Check Point Policy Package.
+  This resource allows you to execute Check Point Policy Package.
 ---
 
 # checkpoint_management_policy_package

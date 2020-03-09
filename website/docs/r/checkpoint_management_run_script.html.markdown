@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_run_script"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-run-script"
 description: |-
-This resource allows you to execute Check Point Run Script.
+  This resource allows you to execute Check Point Run Script.
 ---
 
 # checkpoint_management_run_script

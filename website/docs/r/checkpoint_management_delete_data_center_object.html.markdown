@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_delete_data_center_object"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-delete-data-center-object"
 description: |-
-This resource allows you to execute Check Point Delete Data Center Object.
+  This resource allows you to execute Check Point Delete Data Center Object.
 ---
 
 # checkpoint_management_delete_data_center_object

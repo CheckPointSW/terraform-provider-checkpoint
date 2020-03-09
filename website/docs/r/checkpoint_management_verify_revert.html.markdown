@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_verify_revert"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-verify-revert"
 description: |-
-This resource allows you to execute Check Point Verify Revert.
+  This resource allows you to execute Check Point Verify Revert.
 ---
 
 # checkpoint_management_verify_revert

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_delete_api_key"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-delete-api-key"
 description: |-
-This resource allows you to execute Check Point Delete Api Key.
+  This resource allows you to execute Check Point Delete Api Key.
 ---
 
 # checkpoint_management_delete_api_key

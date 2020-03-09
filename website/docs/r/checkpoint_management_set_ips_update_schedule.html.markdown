@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_set_ips_update_schedule"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-ips-update-schedule"
 description: |-
-This resource allows you to execute Check Point Set Ips Update Schedule.
+  This resource allows you to execute Check Point Set Ips Update Schedule.
 ---
 
 # checkpoint_management_set_ips_update_schedule

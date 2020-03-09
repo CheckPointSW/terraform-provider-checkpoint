@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_vpn_community_meshed"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-vpn-community-meshed"
 description: |-
-This resource allows you to execute Check Point Vpn Community Meshed.
+  This resource allows you to execute Check Point Vpn Community Meshed.
 ---
 
 # checkpoint_management_vpn_community_meshed

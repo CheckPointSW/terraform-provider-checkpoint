@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_set_global_domain"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-global-domain"
 description: |-
-This resource allows you to execute Check Point Set Global Domain.
+  This resource allows you to execute Check Point Set Global Domain.
 ---
 
 # checkpoint_management_set_global_domain

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_delete_threat_protections"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-delete-threat-protections"
 description: |-
-This resource allows you to execute Check Point Delete Threat Protections.
+  This resource allows you to execute Check Point Delete Threat Protections.
 ---
 
 # checkpoint_management_delete_threat_protections

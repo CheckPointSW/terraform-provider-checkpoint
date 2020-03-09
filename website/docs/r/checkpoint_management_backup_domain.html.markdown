@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_backup_domain"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-backup-domain"
 description: |-
-This resource allows you to execute Check Point Backup Domain.
+  This resource allows you to execute Check Point Backup Domain.
 ---
 
 # checkpoint_management_backup_domain

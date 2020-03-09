@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_wildcard"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-wildcard"
 description: |-
-This resource allows you to execute Check Point Wildcard.
+  This resource allows you to execute Check Point Wildcard.
 ---
 
 # checkpoint_management_wildcard

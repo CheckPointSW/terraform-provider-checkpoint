@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_opsec_application"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-opsec-application"
 description: |-
-This resource allows you to execute Check Point Opsec Application.
+  This resource allows you to execute Check Point Opsec Application.
 ---
 
 # checkpoint_management_opsec_application

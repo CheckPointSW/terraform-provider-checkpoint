@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_assign_global_assignment"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-assign-global-assignment"
 description: |-
-This resource allows you to execute Check Point Assign Global Assignment.
+  This resource allows you to execute Check Point Assign Global Assignment.
 ---
 
 # checkpoint_management_assign_global_assignment

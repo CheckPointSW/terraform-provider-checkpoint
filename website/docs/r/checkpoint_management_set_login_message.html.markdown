@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_set_login_message"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-login-message"
 description: |-
-This resource allows you to execute Check Point Set Login Message.
+  This resource allows you to execute Check Point Set Login Message.
 ---
 
 # checkpoint_management_set_login_message

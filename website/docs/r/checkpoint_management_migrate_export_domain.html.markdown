@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_migrate_export_domain"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-migrate-export-domain"
 description: |-
-This resource allows you to execute Check Point Migrate Export Domain.
+  This resource allows you to execute Check Point Migrate Export Domain.
 ---
 
 # checkpoint_management_migrate_export_domain

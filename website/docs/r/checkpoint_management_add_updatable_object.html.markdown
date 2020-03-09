@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_add_updatable_object"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-add-updatable-object"
 description: |-
-This resource allows you to execute Check Point Add Updatable Object.
+  This resource allows you to execute Check Point Add Updatable Object.
 ---
 
 # checkpoint_management_add_updatable_object

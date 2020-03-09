@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_update_updatable_objects_repository_content"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-update-updatable-objects-repository-content"
 description: |-
-This resource allows you to execute Check Point Update Updatable Objects Repository Content.
+  This resource allows you to execute Check Point Update Updatable Objects Repository Content.
 ---
 
 # checkpoint_management_update_updatable_objects_repository_content

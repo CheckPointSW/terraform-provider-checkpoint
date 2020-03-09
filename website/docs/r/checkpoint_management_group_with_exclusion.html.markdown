@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_group_with_exclusion"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-group-with-exclusion"
 description: |-
-This resource allows you to execute Check Point Group With Exclusion.
+  This resource allows you to execute Check Point Group With Exclusion.
 ---
 
 # checkpoint_management_group_with_exclusion

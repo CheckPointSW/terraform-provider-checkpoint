@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_https_rule"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-https-rule"
 description: |-
-This resource allows you to execute Check Point Https Rule.
+  This resource allows you to execute Check Point Https Rule.
 ---
 
 # checkpoint_management_https_rule

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_access_role"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-access-role"
 description: |-
-This resource allows you to execute Check Point Access Role.
+  This resource allows you to execute Check Point Access Role.
 ---
 
 # checkpoint_management_access_role

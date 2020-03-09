@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_set_threat_protection"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-threat-protection"
 description: |-
-This resource allows you to execute Check Point Set Threat Protection.
+  This resource allows you to execute Check Point Set Threat Protection.
 ---
 
 # checkpoint_management_set_threat_protection

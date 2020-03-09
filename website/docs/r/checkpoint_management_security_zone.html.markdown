@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_security_zone"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-security-zone"
 description: |-
-This resource allows you to execute Check Point Security Zone.
+  This resource allows you to execute Check Point Security Zone.
 ---
 
 # checkpoint_management_security_zone

@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_exception_group"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-exception-group"
 description: |-
-This resource allows you to execute Check Point Exception Group.
+  This resource allows you to execute Check Point Exception Group.
 ---
 
 # checkpoint_management_exception_group

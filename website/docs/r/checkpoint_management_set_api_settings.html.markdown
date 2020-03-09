@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_set_api_settings"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-api-settings"
 description: |-
-This resource allows you to execute Check Point Set Api Settings.
+  This resource allows you to execute Check Point Set Api Settings.
 ---
 
 # checkpoint_management_set_api_settings

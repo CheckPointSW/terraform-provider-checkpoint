@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_verify_policy"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-verify-policy"
 description: |-
-This resource allows you to execute Check Point Verify Policy.
+  This resource allows you to execute Check Point Verify Policy.
 ---
 
 # checkpoint_management_verify_policy

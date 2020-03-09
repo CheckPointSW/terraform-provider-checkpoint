@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_dns_domain"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-dns-domain"
 description: |-
-This resource allows you to execute Check Point Dns Domain.
+  This resource allows you to execute Check Point Dns Domain.
 ---
 
 # checkpoint_management_dns_domain

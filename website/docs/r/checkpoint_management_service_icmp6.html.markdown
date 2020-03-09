@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_icmp6"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-icmp6"
 description: |-
-This resource allows you to execute Check Point Service Icmp6.
+  This resource allows you to execute Check Point Service Icmp6.
 ---
 
 # checkpoint_management_service_icmp6

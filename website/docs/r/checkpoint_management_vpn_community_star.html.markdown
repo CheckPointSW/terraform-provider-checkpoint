@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_vpn_community_star"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-vpn-community-star"
 description: |-
-This resource allows you to execute Check Point Vpn Community Star.
+  This resource allows you to execute Check Point Vpn Community Star.
 ---
 
 # checkpoint_management_vpn_community_star

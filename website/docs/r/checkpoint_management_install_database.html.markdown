@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_install_database"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-install-database"
 description: |-
-This resource allows you to execute Check Point Install Database.
+  This resource allows you to execute Check Point Install Database.
 ---
 
 # checkpoint_management_install_database

@@ -94,12 +94,6 @@ func resourceManagementAccessLayer() *schema.Resource {
                 Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
                 Default:     false,
             },
-            "add_default_rule": {
-                Type:        schema.TypeBool,
-                Optional:    true,
-                Description: "Indicates whether to include a cleanup rule in the new layer.",
-                Default:     true,
-            },
         },
     }
 }
@@ -159,10 +153,6 @@ func createManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
     if v, ok := d.GetOkExists("ignore_errors"); ok {
         accessLayer["ignore-errors"] = v.(bool)
-    }
-
-    if v, ok := d.GetOkExists("add_default_rule"); ok {
-        accessLayer["add-default-rule"] = v.(bool)
     }
 
     log.Println("Create AccessLayer - Map = ", accessLayer)
@@ -268,10 +258,6 @@ func readManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("ignore_errors", v)
 	}
 
-	if v := accessLayer["add-default-rule"]; v != nil {
-		_ = d.Set("add_default_rule", v)
-	}
-
 	return nil
 
 }
@@ -340,10 +326,6 @@ func updateManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
     if v, ok := d.GetOkExists("ignore_errors"); ok {
 	       accessLayer["ignore-errors"] = v.(bool)
-    }
-
-    if v, ok := d.GetOkExists("add_default_rule"); ok {
-	       accessLayer["add-default-rule"] = v.(bool)
     }
 
     log.Println("Update AccessLayer - Map = ", accessLayer)

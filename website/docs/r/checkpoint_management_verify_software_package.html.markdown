@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_verify_software_package"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-verify-software-package"
 description: |-
-This resource allows you to execute Check Point Verify Software Package.
+  This resource allows you to execute Check Point Verify Software Package.
 ---
 
 # checkpoint_management_verify_software_package

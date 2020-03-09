@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_sctp"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-sctp"
 description: |-
-This resource allows you to execute Check Point Service Sctp.
+  This resource allows you to execute Check Point Service Sctp.
 ---
 
 # checkpoint_management_service_sctp

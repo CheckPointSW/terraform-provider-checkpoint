@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_export"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-export"
 description: |-
-This resource allows you to execute Check Point Export.
+  This resource allows you to execute Check Point Export.
 ---
 
 # checkpoint_management_export

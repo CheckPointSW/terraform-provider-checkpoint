@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_https_layer"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-https-layer"
 description: |-
-This resource allows you to execute Check Point Https Layer.
+  This resource allows you to execute Check Point Https Layer.
 ---
 
 # checkpoint_management_https_layer

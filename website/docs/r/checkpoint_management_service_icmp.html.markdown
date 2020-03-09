@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_icmp"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-icmp"
 description: |-
-This resource allows you to execute Check Point Service Icmp.
+  This resource allows you to execute Check Point Service Icmp.
 ---
 
 # checkpoint_management_service_icmp

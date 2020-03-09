@@ -3,7 +3,7 @@ layout: "checkpoint"
 page_title: "checkpoint_management_service_rpc"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-service-rpc"
 description: |-
-This resource allows you to execute Check Point Service Rpc.
+  This resource allows you to execute Check Point Service Rpc.
 ---
 
 # checkpoint_management_service_rpc
