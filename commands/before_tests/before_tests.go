@@ -7,16 +7,13 @@ import (
 	"log"
 )
 
-
-
-
 func addApplicationSite(client checkpoint.ApiClient) error {
 
 	applicationSite := map[string]interface{}{
-		"name" : "New Application Site 1",
-		"primary-category" : "Social Networking",
-		"description" : "My Application Site",
-		"url-list" : []string{"www.cnet.com"},
+		"name":             "New Application Site 1",
+		"primary-category": "Social Networking",
+		"description":      "My Application Site",
+		"url-list":         []string{"www.cnet.com"},
 	}
 
 	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, false)
@@ -30,11 +27,10 @@ func addApplicationSite(client checkpoint.ApiClient) error {
 	return nil
 }
 
-
 func addApplicationSiteCategory(client checkpoint.ApiClient) error {
 
 	applicationSiteCategory := map[string]interface{}{
-		"name" : "New Application Site Category 1",
+		"name": "New Application Site Category 1",
 	}
 
 	addApplicationSiteRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, false)
@@ -51,7 +47,7 @@ func addApplicationSiteCategory(client checkpoint.ApiClient) error {
 func addHost(client checkpoint.ApiClient) error {
 
 	host := map[string]interface{}{
-		"name" : "My Test Host 3",
+		"name":         "My Test Host 3",
 		"ipv4-address": "10.0.0.1",
 	}
 
@@ -64,7 +60,7 @@ func addHost(client checkpoint.ApiClient) error {
 	}
 
 	host1 := map[string]interface{}{
-		"name" : "somehost",
+		"name":         "somehost",
 		"ipv4-address": "10.0.0.2",
 	}
 
@@ -77,7 +73,7 @@ func addHost(client checkpoint.ApiClient) error {
 	}
 
 	host2 := map[string]interface{}{
-		"name" : "New Host 1",
+		"name":         "New Host 1",
 		"ipv4-address": "10.0.0.3",
 	}
 
@@ -95,7 +91,7 @@ func addHost(client checkpoint.ApiClient) error {
 func addGroup(client checkpoint.ApiClient) error {
 
 	group := map[string]interface{}{
-		"name" : "new group 1",
+		"name": "new group 1",
 	}
 
 	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, false)
@@ -107,7 +103,7 @@ func addGroup(client checkpoint.ApiClient) error {
 	}
 
 	group1 := map[string]interface{}{
-		"name" : "new group 2",
+		"name": "new group 2",
 	}
 
 	addGroup1Res, err := client.ApiCall("add-group", group1, client.GetSessionID(), true, false)
@@ -124,7 +120,7 @@ func addGroup(client checkpoint.ApiClient) error {
 func addThreatLayer(client checkpoint.ApiClient) error {
 
 	threatLayer := map[string]interface{}{
-		"name" : "New Layer 1",
+		"name": "New Layer 1",
 	}
 
 	addThreatLayerRes, err := client.ApiCall("add-threat-layer", threatLayer, client.GetSessionID(), true, false)
@@ -141,9 +137,9 @@ func addThreatLayer(client checkpoint.ApiClient) error {
 func addThreatRule(client checkpoint.ApiClient) error {
 
 	threatRule := map[string]interface{}{
-		"layer" : "New Layer 1",
-		"position" : "top",
-		"name" : "First threat rule",
+		"layer":    "New Layer 1",
+		"position": "top",
+		"name":     "First threat rule",
 	}
 
 	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, false)
@@ -160,7 +156,7 @@ func addThreatRule(client checkpoint.ApiClient) error {
 func addExceptionGroup(client checkpoint.ApiClient) error {
 
 	exceptionGroup := map[string]interface{}{
-		"name" : "exception_group_2",
+		"name": "exception_group_2",
 	}
 
 	addExceptionGroupeRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, false)
@@ -177,7 +173,7 @@ func addExceptionGroup(client checkpoint.ApiClient) error {
 func addHTTPSLayer(client checkpoint.ApiClient) error {
 
 	HTTPSLayer := map[string]interface{}{
-		"name" : "New Layer 2",
+		"name": "New Layer 2",
 	}
 
 	addHTTPSLayerRes, err := client.ApiCall("add-https-layer", HTTPSLayer, client.GetSessionID(), true, false)
@@ -226,7 +222,6 @@ func addHTTPSLayer(client checkpoint.ApiClient) error {
 //	return nil
 //}
 
-
 func main() {
 
 	apiClient, err := commands.InitClient()
@@ -235,46 +230,44 @@ func main() {
 	}
 
 	err = addApplicationSite(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addApplicationSiteCategory(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addHost(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addGroup(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addThreatLayer(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addThreatRule(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addExceptionGroup(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
 
 	err = addHTTPSLayer(apiClient)
-	if err!= nil {
+	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
-
-
 
 	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, false)
 	if err != nil {
