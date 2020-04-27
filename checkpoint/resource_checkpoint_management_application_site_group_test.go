@@ -2,13 +2,14 @@ package checkpoint
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"testing"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"os"
-	"strings"
-	"testing"
 )
 
 func TestAccCheckpointManagementApplicationSiteGroup_basic(t *testing.T) {
@@ -30,10 +31,10 @@ func TestAccCheckpointManagementApplicationSiteGroup_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementApplicationSiteGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementApplicationSiteGroupConfig(objName, "New Application Site 1", "New Application Site Category 1", "Social Networking", "facebook"),
+				Config: testAccManagementApplicationSiteGroupConfig(objName, "New Application Site 1", "New Application Site Category 1", "Social Networking", "Facebook"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementApplicationSiteGroupExists(resourceName, &applicationSiteGroupMap),
-					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "New Application Site 1", "New Application Site Category 1", "Social Networking", "facebook"),
+					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "Social Networking", "New Application Site Category 1", "New Application Site 1", "Facebook"),
 				),
 			},
 		},

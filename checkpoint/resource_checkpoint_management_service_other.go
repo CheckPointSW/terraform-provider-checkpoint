@@ -2,11 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
-	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceManagementServiceOther() *schema.Resource {
@@ -42,7 +42,7 @@ func resourceManagementServiceOther() *schema.Resource {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Default aggressive aging timeout in seconds.",
-							Default:     0,
+							Default:     600,
 						},
 						"enable": {
 							Type:        schema.TypeBool,
@@ -54,7 +54,7 @@ func resourceManagementServiceOther() *schema.Resource {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Aggressive aging timeout in seconds.",
-							Default:     15,
+							Default:     600,
 						},
 						"use_default_timeout": {
 							Type:        schema.TypeBool,
@@ -303,17 +303,22 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 			aggressiveAgingMapToReturn["default_timeout"] = v
 		}
 		if v, _ := aggressiveAgingMap["enable"]; v != nil {
-			aggressiveAgingMapToReturn["enable"] = strconv.FormatBool(v.(bool))
+			aggressiveAgingMapToReturn["enable"] = v
 		}
 		if v, _ := aggressiveAgingMap["timeout"]; v != nil {
 			aggressiveAgingMapToReturn["timeout"] = v
 		}
 		if v, _ := aggressiveAgingMap["use-default-timeout"]; v != nil {
-			aggressiveAgingMapToReturn["use_default_timeout"] = strconv.FormatBool(v.(bool))
+			aggressiveAgingMapToReturn["use_default_timeout"] = v
 		}
 
 		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")
-		defaultAggressiveAging := map[string]interface{}{"enable": "true", "timeout": "15", "use_default_timeout": "true", "default_timeout": "0"}
+		defaultAggressiveAging := map[string]interface{}{
+			"enable":              true,
+			"timeout":             600,
+			"use_default_timeout": true,
+			"default_timeout":     600,
+		}
 		if reflect.DeepEqual(defaultAggressiveAging, aggressiveAgingMapToReturn) && !aggressiveAgingInConf {
 			_ = d.Set("aggressive_aging", map[string]interface{}{})
 		} else {
