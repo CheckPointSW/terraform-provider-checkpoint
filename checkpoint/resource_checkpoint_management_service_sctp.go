@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
-	"strconv"
 )
 
 func resourceManagementServiceSctp() *schema.Resource {
