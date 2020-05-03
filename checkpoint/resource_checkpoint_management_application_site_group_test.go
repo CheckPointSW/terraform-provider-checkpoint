@@ -31,10 +31,10 @@ func TestAccCheckpointManagementApplicationSiteGroup_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementApplicationSiteGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementApplicationSiteGroupConfig(objName, "New Application Site 1", "New Application Site Category 1", "Social Networking", "Facebook"),
+				Config: testAccManagementApplicationSiteGroupConfig(objName, "LinkedIn", "Facebook Apps", "Social Networking", "Facebook"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementApplicationSiteGroupExists(resourceName, &applicationSiteGroupMap),
-					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "Social Networking", "New Application Site Category 1", "New Application Site 1", "Facebook"),
+					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "Facebook Apps","Social Networking","LinkedIn","Facebook"),
 				),
 			},
 		},

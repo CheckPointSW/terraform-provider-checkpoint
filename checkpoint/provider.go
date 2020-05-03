@@ -46,7 +46,7 @@ func Provider() terraform.ResourceProvider {
 			"timeout": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_TIMEOUT", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_TIMEOUT", int(checkpoint.TimeOut)),
 				Description: "Timeout in seconds for the Go SDK to complete a transaction",
 			},
 			"port": {
@@ -149,16 +149,14 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	context := data.Get("context").(string)
 	domain := data.Get("domain").(string)
 	port := data.Get("port").(int)
-
-	var timeout time.Duration
-	if data.Get("timeout") == nil {
-		timeout = checkpoint.TimeOut
-	} else {
-		timeout = time.Duration(data.Get("timeout").(int)) * time.Second
-	}
+	timeout := time.Duration(data.Get("timeout").(int))
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
+	}
+
+	if timeout != checkpoint.TimeOut {
+		timeout = timeout * time.Second
 	}
 
 	args := checkpoint.ApiClientArgs{
