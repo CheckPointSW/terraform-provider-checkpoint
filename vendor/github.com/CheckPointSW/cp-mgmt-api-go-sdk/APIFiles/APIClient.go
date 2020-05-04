@@ -59,7 +59,6 @@ type ApiClient struct {
 	autoPublish 	 bool
 	timeout          time.Duration
 	sleep			 time.Duration
-	userAgent 		 string
 }
 
 // Api Client constructor
@@ -104,7 +103,6 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		autoPublish: apiCA.AutoPublish,
 		timeout: apiCA.Timeout,
 		sleep: apiCA.Sleep,
-		userAgent: apiCA.UserAgent,
 	}
 }
 
@@ -243,13 +241,8 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 	if err != nil {
 		return APIResponse{}, err
 	}
-
-	if c.userAgent == "" {
-		c.userAgent = "golang-api-wrapper"
-	}
-
 	headers := map[string]interface{}{
-		"User-Agent":     c.userAgent,
+		"User-Agent":     "golang-api-wrapper",
 		"Accept":         "*/*",
 		"Content-Type":   "application/json",
 		"Content-Length": len(_data),
@@ -291,7 +284,6 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", headers["User-Agent"].(string))
 	if command != "login" {
 		req.Header.Set("X-chkp-sid", c.sid)
 	}
