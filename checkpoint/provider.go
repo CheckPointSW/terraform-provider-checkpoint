@@ -173,6 +173,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		Context:                 context,
 		Timeout:                 timeout,
 		Sleep:                   checkpoint.SleepTime,
+		UserAgent:               "Terraform",
 	}
 
 	switch context {
