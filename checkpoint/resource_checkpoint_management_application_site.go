@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementApplicationSite() *schema.Resource {
@@ -202,11 +203,11 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 	if applicationSite["additional-categories"] != nil {
 		additionalCategoriesJson, ok := applicationSite["additional-categories"].([]interface{})
 		if ok {
-			additionalCategoriesIds := make([]string, 0)
+			additionalCategoriesIds := make([]string, 0, len(additionalCategoriesJson))
 			if len(additionalCategoriesJson) > 0 {
 				for _, additional_categories := range additionalCategoriesJson {
-					additional_categories := additional_categories.(map[string]interface{})
-					additionalCategoriesIds = append(additionalCategoriesIds, additional_categories["name"].(string))
+					additional_categories := additional_categories.(string)
+					additionalCategoriesIds = append(additionalCategoriesIds, additional_categories)
 				}
 			}
 			_ = d.Set("additional_categories", additionalCategoriesIds)
@@ -245,8 +246,8 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 			urlListIds := make([]string, 0)
 			if len(urlListJson) > 0 {
 				for _, url_list := range urlListJson {
-					url_list := url_list.(map[string]interface{})
-					urlListIds = append(urlListIds, url_list["name"].(string))
+					url_list := url_list.(string)
+					urlListIds = append(urlListIds, url_list)
 				}
 			}
 			_ = d.Set("url_list", urlListIds)
@@ -314,10 +315,10 @@ func updateManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 
 	if d.HasChange("additional_categories") {
 		if v, ok := d.GetOk("additional_categories"); ok {
-			applicationSite["additional_categories"] = v.(*schema.Set).List()
+			applicationSite["additional-categories"] = v.(*schema.Set).List()
 		} else {
 			oldAdditional_Categories, _ := d.GetChange("additional_categories")
-			applicationSite["additional_categories"] = map[string]interface{}{"remove": oldAdditional_Categories.(*schema.Set).List()}
+			applicationSite["additional-categories"] = map[string]interface{}{"remove": oldAdditional_Categories.(*schema.Set).List()}
 		}
 	}
 
@@ -340,10 +341,10 @@ func updateManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 
 	if d.HasChange("url_list") {
 		if v, ok := d.GetOk("url_list"); ok {
-			applicationSite["url_list"] = v.(*schema.Set).List()
+			applicationSite["url-list"] = v.(*schema.Set).List()
 		} else {
 			oldUrl_List, _ := d.GetChange("url_list")
-			applicationSite["url_list"] = map[string]interface{}{"remove": oldUrl_List.(*schema.Set).List()}
+			applicationSite["url-list"] = map[string]interface{}{"remove": oldUrl_List.(*schema.Set).List()}
 		}
 	}
 

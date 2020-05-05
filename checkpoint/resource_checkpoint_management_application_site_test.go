@@ -2,13 +2,14 @@ package checkpoint
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"testing"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"os"
-	"strings"
-	"testing"
 )
 
 func TestAccCheckpointManagementApplicationSite_basic(t *testing.T) {
@@ -30,10 +31,10 @@ func TestAccCheckpointManagementApplicationSite_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementApplicationSiteDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementApplicationSiteConfig(objName, "social networking", "my application site", "Instant Chat", "New Application Site Category 1", "Supports Streaming", "www.cnet.com", "www.stackoverflow.com", false),
+				Config: testAccManagementApplicationSiteConfig(objName, "Social Networking", "my application site", "Instant Chat", "Instant Messaging", "Shopping", "www.cnet.com", "www.stackoverflow.com", false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementApplicationSiteExists(resourceName, &applicationSiteMap),
-					testAccCheckCheckpointManagementApplicationSiteAttributes(&applicationSiteMap, objName, "social networking", "my application site", "Instant Chat", "New Application Site Category 1", "Supports Streaming", "www.cnet.com", "www.stackoverflow.com", false),
+					testAccCheckCheckpointManagementApplicationSiteAttributes(&applicationSiteMap, objName, "Social Networking", "my application site", "Instant Messaging","Shopping", "Instant Chat", "www.cnet.com", "www.stackoverflow.com", false),
 				),
 			},
 		},

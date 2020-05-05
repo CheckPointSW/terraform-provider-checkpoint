@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
-	"strconv"
 )
 
 func resourceManagementServiceSctp() *schema.Resource {
@@ -266,13 +265,13 @@ func readManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 			aggressiveAgingMapToReturn["default_timeout"] = v
 		}
 		if v, _ := aggressiveAgingMap["enable"]; v != nil {
-			aggressiveAgingMapToReturn["enable"] = strconv.FormatBool(v.(bool))
+			aggressiveAgingMapToReturn["enable"] = v
 		}
 		if v, _ := aggressiveAgingMap["timeout"]; v != nil {
 			aggressiveAgingMapToReturn["timeout"] = v
 		}
 		if v, _ := aggressiveAgingMap["use-default-timeout"]; v != nil {
-			aggressiveAgingMapToReturn["use_default_timeout"] = strconv.FormatBool(v.(bool))
+			aggressiveAgingMapToReturn["use_default_timeout"] = v
 		}
 
 		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")

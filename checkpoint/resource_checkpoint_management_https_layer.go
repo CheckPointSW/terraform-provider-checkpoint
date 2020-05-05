@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementHttpsLayer() *schema.Resource {
@@ -23,7 +24,6 @@ func resourceManagementHttpsLayer() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Define the Layer as Shared (TRUE/FALSE).",
-				Default:     false,
 			},
 			"tags": {
 				Type:        schema.TypeSet,
