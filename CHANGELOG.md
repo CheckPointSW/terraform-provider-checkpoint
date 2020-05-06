@@ -1,4 +1,13 @@
-## 1.0.2 (Unreleased)
+## 1.0.3 (Unreleased)
+
+## 1.0.2 (May 6, 2020)
+
+FEATURES:
+
+* Add support to configure timeout and port of provider
+* Add support to user agent
+* Fix resources: `checkpoint_management_application_site`, `checkpoint_management_application_site_group`, `checkpoint_management_https_layer`, `checkpoint_management_service_sctp` and `checkpoint_management_service_other`
+
 ## 1.0.1 (March 17, 2020)
 
 FEATURES:
