@@ -34,7 +34,7 @@ func TestAccCheckpointManagementApplicationSite_basic(t *testing.T) {
 				Config: testAccManagementApplicationSiteConfig(objName, "Social Networking", "my application site", "Instant Chat", "Instant Messaging", "Shopping", "www.cnet.com", "www.stackoverflow.com", false),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementApplicationSiteExists(resourceName, &applicationSiteMap),
-					testAccCheckCheckpointManagementApplicationSiteAttributes(&applicationSiteMap, objName, "Social Networking", "my application site", "Instant Messaging","Shopping", "Instant Chat", "www.cnet.com", "www.stackoverflow.com", false),
+					testAccCheckCheckpointManagementApplicationSiteAttributes(&applicationSiteMap, objName, "Social Networking", "my application site", "Instant Messaging", "Shopping", "Instant Chat", "www.cnet.com", "www.stackoverflow.com", false),
 				),
 			},
 		},
