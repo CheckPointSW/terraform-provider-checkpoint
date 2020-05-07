@@ -8,11 +8,6 @@ Terraform Provider for CHECK POINT SOFTWARE TECHNOLOGIES
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
-Maintainers
------------
-
-This provider plugin is maintained by the Terraform team at [HashiCorp](https://www.hashicorp.com/).
-
 Requirements
 ------------
 
