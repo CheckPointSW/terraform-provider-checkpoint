@@ -34,7 +34,7 @@ func TestAccCheckpointManagementApplicationSiteGroup_basic(t *testing.T) {
 				Config: testAccManagementApplicationSiteGroupConfig(objName, "LinkedIn", "Facebook Apps", "Social Networking", "Facebook"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementApplicationSiteGroupExists(resourceName, &applicationSiteGroupMap),
-					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "Facebook Apps","Social Networking","LinkedIn","Facebook"),
+					testAccCheckCheckpointManagementApplicationSiteGroupAttributes(&applicationSiteGroupMap, objName, "Facebook Apps", "Social Networking", "LinkedIn", "Facebook"),
 				),
 			},
 		},
