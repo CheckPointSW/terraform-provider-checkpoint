@@ -2,12 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"time"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"log"
+	"time"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -46,7 +45,7 @@ func Provider() terraform.ResourceProvider {
 			"timeout": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_TIMEOUT", int(checkpoint.TimeOut)),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_TIMEOUT", -1),
 				Description: "Timeout in seconds for the Go SDK to complete a transaction",
 			},
 			"port": {
@@ -149,14 +148,10 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	context := data.Get("context").(string)
 	domain := data.Get("domain").(string)
 	port := data.Get("port").(int)
-	timeout := time.Duration(data.Get("timeout").(int))
+	timeout := data.Get("timeout").(int)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
-	}
-
-	if timeout != checkpoint.TimeOut {
-		timeout = timeout * time.Second
 	}
 
 	args := checkpoint.ApiClientArgs{
@@ -171,7 +166,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 context,
-		Timeout:                 timeout,
+		Timeout:                 time.Duration(timeout),
 		Sleep:                   checkpoint.SleepTime,
 		UserAgent:               "Terraform",
 	}

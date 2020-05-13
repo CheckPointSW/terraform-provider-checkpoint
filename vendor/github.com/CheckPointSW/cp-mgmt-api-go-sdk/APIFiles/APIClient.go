@@ -80,6 +80,8 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 
 	if apiCA.Timeout == -1 {
 		apiCA.Timeout =	TimeOut
+	}else{
+		apiCA.Timeout = apiCA.Timeout * time.Second
 	}
 
 	if apiCA.Sleep == -1 {
