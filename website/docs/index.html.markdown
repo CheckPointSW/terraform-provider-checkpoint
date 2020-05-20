@@ -10,7 +10,7 @@ description: |-
 
 The Check Point provider can be used to automate security responses to threats, provision both physical and virtualized next-generation firewalls and automate routine Security Management configuration tasks, saving time and reducing configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into DevSecOps workflows.
 
-##Examples usage
+## Examples usage
 ```hcl
 # Configure the Check Point Provider
 provider "checkpoint" {
@@ -41,6 +41,18 @@ resource "checkpoint_hostname" "hostname" {
 	name = "terrahost"
 }
 ```
+## Argument Reference
+
+The following arguments are supported:
+
+* `server` - (Optional) Check Point Management server IP. It must be provided, but can also be defined via the `CHECKPOINT_SERVER` environment variable.
+* `username` - (Optional) Check Point Management admin name. It must be provided, but can also be defined via the `CHECKPOINT_USERNAME` environment variable.
+* `password` - (Optional) Check Point Management admin password. It must be provided, but can also be defined via the `CHECKPOINT_PASSWORD` environment variable.
+* `context` - (Optional) Check Point access context - `gaia_api` or `web_api`. This can also be defined via the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
+* `domain` - (Optional) Login to specific domain. Domain can be identified by name or UID. This can also be defined via the `CHECKPOINT_DOMAIN` environment variable.
+* `timeout` - (Optional) Timeout in seconds for the Go SDK to complete a transaction. This can also be defined via the `CHECKPOINT_TIMEOUT` environment variable. Default value is `10` seconds.
+* `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT` environment variable. Default value is `443`.
+
 ## Authentication
 
 The Check Point provider offers providing credentials for authentication. The following methods are supported:
@@ -58,6 +70,7 @@ provider "checkpoint" {
 	username = "aa"
 	password = "aaaa"
 	context = "web_api"
+	domain = "Domain Name"
 }
 ```
 
@@ -82,6 +95,9 @@ $ export CHECKPOINT_SERVER=192.0.2.1
 $ export CHECKPOINT_USERNAME="aa"
 $ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
+$ export CHECKPOINT_DOMAIN="Domain Name"
+$ export CHECKPOINT_TIMEOUT=10
+$ export CHECKPOINT_PORT=443
  ```
  
 Then configure the Check Point Provider as following:
@@ -105,6 +121,8 @@ $ export CHECKPOINT_SERVER=192.0.2.1
 $ export CHECKPOINT_USERNAME="gaia_user"
 $ export CHECKPOINT_PASSWORD="gaia_password"
 $ export CHECKPOINT_CONTEXT="gaia_api"
+$ export CHECKPOINT_TIMEOUT=10
+$ export CHECKPOINT_PORT=443
 ```
 
 Then configure the Check Point Provider as following:
@@ -136,14 +154,14 @@ $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ terraform apply && ./publish
 ```
 
-### Install-Policy
+### Install Policy
 
 The following arguments are supported:
 
 * `policy-package` - (Required) The name of the Policy Package to be installed.
 * `target` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier. Multiple targets can be added.
 
-Please use the following for install-policy:
+Please use the following for install policy:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
