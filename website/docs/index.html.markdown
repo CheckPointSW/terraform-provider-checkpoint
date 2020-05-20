@@ -10,7 +10,7 @@ description: |-
 
 The Check Point provider can be used to automate security responses to threats, provision both physical and virtualized next-generation firewalls and automate routine Security Management configuration tasks, saving time and reducing configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into DevSecOps workflows.
 
-##Examples usage
+## Examples usage
 ```hcl
 # Configure the Check Point Provider
 provider "checkpoint" {
