@@ -173,5 +173,5 @@ $ terraform apply && ./install_policy -policy-package <package name> -target <ta
 ### Example usage
 
 ```bash
-$ terraform apply && ./publish && ./install_policy -policy-package "Standard" -target "Firewall-harry-main-take-265"
+$ terraform apply && ./publish && ./install_policy -policy-package "standard" -target "corporate-gateway"
 ```
