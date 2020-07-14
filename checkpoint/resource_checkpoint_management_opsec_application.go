@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 
 	"strconv"
 )
@@ -15,6 +16,11 @@ func resourceManagementOpsecApplication() *schema.Resource {
 		Read:   readManagementOpsecApplication,
 		Update: updateManagementOpsecApplication,
 		Delete: deleteManagementOpsecApplication,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

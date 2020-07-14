@@ -14,6 +14,11 @@ func resourceManagementApplicationSite() *schema.Resource {
 		Read:   readManagementApplicationSite,
 		Update: updateManagementApplicationSite,
 		Delete: deleteManagementApplicationSite,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

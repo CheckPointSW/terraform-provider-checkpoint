@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementApplicationSiteGroup() *schema.Resource {
@@ -13,6 +14,11 @@ func resourceManagementApplicationSiteGroup() *schema.Resource {
 		Read:   readManagementApplicationSiteGroup,
 		Update: updateManagementApplicationSiteGroup,
 		Delete: deleteManagementApplicationSiteGroup,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

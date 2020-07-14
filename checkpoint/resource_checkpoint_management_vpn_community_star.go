@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceManagementVpnCommunityStar() *schema.Resource {
@@ -15,6 +16,11 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 		Read:   readManagementVpnCommunityStar,
 		Update: updateManagementVpnCommunityStar,
 		Delete: deleteManagementVpnCommunityStar,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

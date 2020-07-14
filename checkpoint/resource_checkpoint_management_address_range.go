@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceManagementAddressRange() *schema.Resource {
@@ -15,6 +16,10 @@ func resourceManagementAddressRange() *schema.Resource {
 		Read:   readManagementAddressRange,
 		Update: updateManagementAddressRange,
 		Delete: deleteManagementAddressRange,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementHttpsRule() *schema.Resource {
@@ -13,6 +14,11 @@ func resourceManagementHttpsRule() *schema.Resource {
 		Read:   readManagementHttpsRule,
 		Update: updateManagementHttpsRule,
 		Delete: deleteManagementHttpsRule,
+
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,
