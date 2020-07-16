@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceManagementAccessRule() *schema.Resource {
@@ -321,8 +322,11 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		accessRule["layer"] = v.(string)
 	}
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
-			accessRule["position"] = "top"
+		if v, ok := d.GetOk("position.top"); ok {
+			accessRule["position"] = map[string]interface{}{"top": v.(string)}
+			if v == "top" {
+				accessRule["position"] = "top"
+			}
 		}
 		if v, ok := d.GetOk("position.above"); ok {
 			accessRule["position"] = map[string]interface{}{"above": v.(string)}
@@ -330,8 +334,11 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		if v, ok := d.GetOk("position.below"); ok {
 			accessRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
-			accessRule["position"] = "bottom"
+		if v, ok := d.GetOk("position.bottom"); ok {
+			accessRule["position"] = map[string]interface{}{"bottom": v.(string)}
+			if v == "bottom" {
+				accessRule["position"] = "bottom"
+			}
 		}
 
 	}
@@ -813,8 +820,11 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
-				accessRule["new-position"] = "top"
+			if v, ok := d.GetOk("position.top"); ok {
+				accessRule["new-position"] = map[string]interface{}{"top": v.(string)}
+				if v == "top" {
+					accessRule["new-position"] = "top"
+				}
 			}
 			if v, ok := d.GetOk("position.above"); ok {
 				accessRule["new-position"] = map[string]interface{}{"above": v.(string)}
@@ -822,8 +832,11 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("position.below"); ok {
 				accessRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
-				accessRule["new-position"] = "bottom"
+			if v, ok := d.GetOk("position.bottom"); ok {
+				accessRule["new-position"] = map[string]interface{}{"bottom": v.(string)}
+				if v == "bottom" {
+					accessRule["new-position"] = "bottom"
+				}
 			}
 		}
 	}
