@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementServiceIcmp() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceIcmpRead,
+		Read: dataSourceManagementServiceIcmpRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -76,7 +76,7 @@ func dataSourceManagementServiceIcmpRead(d *schema.ResourceData, m interface{}) 
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

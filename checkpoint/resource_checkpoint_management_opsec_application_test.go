@@ -119,5 +119,5 @@ resource "checkpoint_management_opsec_application" "test" {
         access_permissions = "show all"
       }
 }
-`,host, name, oneTimePassword)
+`, host, name, oneTimePassword)
 }

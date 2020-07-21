@@ -20,11 +20,11 @@ func TestAccDataSourceCheckpointManagementExceptionGroup_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementExceptionGroupConfig(objName,"manually-select-threat-rules"),
+				Config: testAccDataSourceManagementExceptionGroupConfig(objName, "manually-select-threat-rules"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "apply_on", resourceName, "apply_on"),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementExceptionGroup_basic(t *testing.T) {
 		},
 	})
 }
-
 
 func testAccDataSourceManagementExceptionGroupConfig(name string, applyOn string) string {
 	return fmt.Sprintf(`

@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementAccessLayer() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementAccessLayerRead,
+		Read: dataSourceManagementAccessLayerRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -78,7 +78,6 @@ func dataSourceManagementAccessLayer() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementAccessLayerRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -90,7 +89,7 @@ func dataSourceManagementAccessLayerRead(d *schema.ResourceData, m interface{}) 
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

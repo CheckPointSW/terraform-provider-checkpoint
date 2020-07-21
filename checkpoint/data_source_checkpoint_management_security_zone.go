@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementSecurityZone() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementSecurityZoneRead,
+		Read: dataSourceManagementSecurityZoneRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -54,7 +54,7 @@ func dataSourceManagementSecurityZoneRead(d *schema.ResourceData, m interface{})
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

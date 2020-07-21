@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementPackage() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementPackageRead,
+		Read: dataSourceManagementPackageRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -92,7 +92,7 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementServiceRpc() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceRpcRead,
+		Read: dataSourceManagementServiceRpcRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -71,7 +71,7 @@ func dataSourceManagementServiceRpcRead(d *schema.ResourceData, m interface{}) e
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

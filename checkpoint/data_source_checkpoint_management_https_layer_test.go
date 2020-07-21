@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementHttpsLayer_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementHttpsLayerConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementHttpsLayer_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementHttpsLayerConfig(name string) string {
 	return fmt.Sprintf(`

@@ -11,7 +11,7 @@ import (
 
 func dataSourceManagementServiceOther() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceOtherRead,
+		Read: dataSourceManagementServiceOtherRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -143,7 +143,7 @@ func dataSourceManagementServiceOtherRead(d *schema.ResourceData, m interface{})
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
@@ -283,7 +283,6 @@ func dataSourceManagementServiceOtherRead(d *schema.ResourceData, m interface{})
 	} else {
 		_ = d.Set("groups", nil)
 	}
-
 
 	return nil
 }

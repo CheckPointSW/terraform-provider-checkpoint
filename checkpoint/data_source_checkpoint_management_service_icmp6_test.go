@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementServiceIcmp6_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementServiceIcmp6Config(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementServiceIcmp6_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementServiceIcmp6Config(name string) string {
 	return fmt.Sprintf(`

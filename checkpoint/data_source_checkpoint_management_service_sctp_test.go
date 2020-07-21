@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementServiceSctp_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementServiceSctpConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementServiceSctp_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementServiceSctpConfig(name string) string {
 	return fmt.Sprintf(`
@@ -49,5 +48,3 @@ data "checkpoint_management_data_service_sctp" "data_service_sctp" {
 }
 `, name)
 }
-
-

@@ -19,7 +19,7 @@ func (i *arrayFlags) Set(value string) error {
 
 var targets arrayFlags
 
-func log(msg string){
+func log(msg string) {
 	_ = commands.LogToFile("install_policy.txt", msg)
 }
 

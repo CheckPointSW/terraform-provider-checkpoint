@@ -1,11 +1,11 @@
 package checkpoint
 
 import (
-"fmt"
-"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-"github.com/hashicorp/terraform/helper/acctest"
-"os"
-"testing"
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform/helper/acctest"
+	"os"
+	"testing"
 )
 
 func TestAccDataSourceCheckpointManagementNetwork_basic(t *testing.T) {
@@ -20,11 +20,11 @@ func TestAccDataSourceCheckpointManagementNetwork_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementNetworkConfig(objName,"10.0.0.0", 24),
+				Config: testAccDataSourceManagementNetworkConfig(objName, "10.0.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "subnet4", resourceName, "subnet4"),
@@ -35,7 +35,6 @@ func TestAccDataSourceCheckpointManagementNetwork_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementNetworkConfig(name string, subnet4 string, masklen4 int) string {
 	return fmt.Sprintf(`
@@ -50,5 +49,3 @@ data "checkpoint_management_data_network" "data_network" {
 }
 `, name, subnet4, masklen4)
 }
-
-
