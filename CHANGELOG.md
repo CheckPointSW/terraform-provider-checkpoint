@@ -1,3 +1,4 @@
+## 1.1.0 (Unreleased)
 ## 1.0.3 (July 21, 2020)
 
 FEATURES
