@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementGroupWithExclusion_basic(t *testing.T)
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementGroupWithExclusionConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementGroupWithExclusion_basic(t *testing.T)
 	})
 
 }
-
 
 func testAccDataSourceManagementGroupWithExclusionConfig(name string) string {
 	return fmt.Sprintf(`

@@ -8,7 +8,7 @@ import (
 
 func dataSourceManagementGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementGroupRead,
+		Read: dataSourceManagementGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -69,7 +69,7 @@ func dataSourceManagementGroupRead(d *schema.ResourceData, m interface{}) error 
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
@@ -147,5 +147,3 @@ func dataSourceManagementGroupRead(d *schema.ResourceData, m interface{}) error 
 
 	return nil
 }
-
-

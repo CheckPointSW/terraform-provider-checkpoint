@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementDynamicObject() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementDynamicObjectRead,
+		Read: dataSourceManagementDynamicObjectRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -54,7 +54,7 @@ func dataSourceManagementDynamicObjectRead(d *schema.ResourceData, m interface{}
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

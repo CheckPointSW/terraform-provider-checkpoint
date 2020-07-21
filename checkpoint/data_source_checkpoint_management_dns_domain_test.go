@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementDnsDomain_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementDnsDomainConfig(objName, true),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementDnsDomain_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementDnsDomainConfig(name string, isSubDomain bool) string {
 	return fmt.Sprintf(`

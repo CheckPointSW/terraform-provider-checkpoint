@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementHttpsRule() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementHttpsRuleRead,
+		Read: dataSourceManagementHttpsRuleRead,
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,
@@ -141,7 +141,7 @@ func dataSourceManagementHttpsRuleRead(d *schema.ResourceData, m interface{}) er
 
 	if ruleNumber != "" {
 		payload["rule-number"] = ruleNumber
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

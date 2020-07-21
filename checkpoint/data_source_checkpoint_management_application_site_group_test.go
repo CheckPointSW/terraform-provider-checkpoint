@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementApplicationSiteGroup_basic(t *testing.
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementApplicationSiteGroupConfig(objName),
@@ -32,7 +32,6 @@ func TestAccDataSourceCheckpointManagementApplicationSiteGroup_basic(t *testing.
 		},
 	})
 }
-
 
 func testAccDataSourceManagementApplicationSiteGroupConfig(name string) string {
 	return fmt.Sprintf(`
@@ -45,4 +44,3 @@ data "checkpoint_management_data_application_site_group" "data_application_site_
 }
 `, name)
 }
-

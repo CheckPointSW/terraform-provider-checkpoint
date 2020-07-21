@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementAccessRule_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementAccessRuleConfig(objName, "Network"),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementAccessRule_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementAccessRuleConfig(name string, layer string) string {
 	return fmt.Sprintf(`
@@ -49,7 +48,3 @@ data "checkpoint_management_data_access_rule" "data_access_rule" {
 }
 `, name, layer)
 }
-
-
-
-

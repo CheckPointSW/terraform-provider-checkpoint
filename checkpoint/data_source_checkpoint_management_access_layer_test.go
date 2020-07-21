@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementAccessLayer_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementAccessLayerConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementAccessLayer_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementAccessLayerConfig(name string) string {
 	return fmt.Sprintf(`
@@ -48,5 +47,3 @@ data "checkpoint_management_data_access_layer" "data_access_layer" {
 }
 `, name)
 }
-
-

@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementHttpsSection() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementHttpsSectionRead,
+		Read: dataSourceManagementHttpsSectionRead,
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,
@@ -43,7 +43,7 @@ func dataSourceManagementHttpsSectionRead(d *schema.ResourceData, m interface{})
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

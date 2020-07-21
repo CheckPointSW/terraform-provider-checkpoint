@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementHttpsRule_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementHttpsRuleConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementHttpsRule_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementHttpsRuleConfig(name string) string {
 	return fmt.Sprintf(`

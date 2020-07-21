@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementServiceDceRpc_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementServiceDceRpcConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementServiceDceRpc_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementServiceDceRpcConfig(name string) string {
 	return fmt.Sprintf(`

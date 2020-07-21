@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementGroupWithExclusion() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementGroupWithExclusionRead,
+		Read: dataSourceManagementGroupWithExclusionRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -72,7 +72,7 @@ func dataSourceManagementGroupWithExclusionRead(d *schema.ResourceData, m interf
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
