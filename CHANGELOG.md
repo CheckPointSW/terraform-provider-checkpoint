@@ -52,7 +52,7 @@ BUG FIXES
 * Fix groups circular dependency
 * Fix internal test of few resources
 
-## 1.0.2 (May 6, 2020)
+## 1.0.2 (May 13, 2020)
 
 FEATURES:
 
