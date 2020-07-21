@@ -13,6 +13,9 @@ func resourceManagementHttpsRule() *schema.Resource {
 		Read:   readManagementHttpsRule,
 		Update: updateManagementHttpsRule,
 		Delete: deleteManagementHttpsRule,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,
@@ -389,8 +392,8 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("enabled", v)
 	}
 
-	if httpsRule["install_on"] != nil {
-		installOnJson, ok := httpsRule["install_on"].([]interface{})
+	if httpsRule["install-on"] != nil {
+		installOnJson, ok := httpsRule["install-on"].([]interface{})
 		if ok {
 			installOnIds := make([]string, 0)
 			if len(installOnJson) > 0 {
@@ -409,8 +412,8 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("service_negate", v)
 	}
 
-	if httpsRule["site_category"] != nil {
-		siteCategoryJson, ok := httpsRule["site_category"].([]interface{})
+	if httpsRule["site-category"] != nil {
+		siteCategoryJson, ok := httpsRule["site-category"].([]interface{})
 		if ok {
 			siteCategoryIds := make([]string, 0)
 			if len(siteCategoryJson) > 0 {
@@ -450,7 +453,6 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	return nil
-
 }
 
 func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {

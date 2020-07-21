@@ -13,6 +13,9 @@ func resourceManagementMulticastAddressRange() *schema.Resource {
 		Read:   readManagementMulticastAddressRange,
 		Update: updateManagementMulticastAddressRange,
 		Delete: deleteManagementMulticastAddressRange,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -67,14 +70,6 @@ func resourceManagementMulticastAddressRange() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
@@ -135,10 +130,6 @@ func createManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 
 	if v, ok := d.GetOk("comments"); ok {
 		multicastAddressRange["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		multicastAddressRange["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -240,22 +231,6 @@ func readManagementMulticastAddressRange(d *schema.ResourceData, m interface{}) 
 		_ = d.Set("comments", v)
 	}
 
-	if multicastAddressRange["groups"] != nil {
-		groupsJson, ok := multicastAddressRange["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := multicastAddressRange["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -320,15 +295,6 @@ func updateManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 
 	if ok := d.HasChange("comments"); ok {
 		multicastAddressRange["comments"] = d.Get("comments")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			multicastAddressRange["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			multicastAddressRange["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

@@ -78,7 +78,7 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		apiCA.Context = WebContext
 	}
 
-	if apiCA.Timeout == -1 {
+	if apiCA.Timeout == -1 || apiCA.Timeout == TimeOut {
 		apiCA.Timeout =	TimeOut
 	}else{
 		apiCA.Timeout = apiCA.Timeout * time.Second
@@ -339,6 +339,20 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 				}
 			}
    		}
+
+   		if blockingError := res.data["blocking-errors"]; blockingError != nil {
+			fullErrorMsg += "\nBlocking errors: "
+			warningMsgType := reflect.TypeOf(blockingError).Kind()
+			if warningMsgType == reflect.String {
+				fullErrorMsg += blockingError.(string) + "\n"
+			} else {
+				blockingErrorsList := res.data["blocking-errors"].([]interface{})
+				for i := range blockingErrorsList {
+					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
+				}
+			}
+		}
+
    		res.ErrorMsg = fullErrorMsg
    	}
 

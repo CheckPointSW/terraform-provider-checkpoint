@@ -100,9 +100,14 @@ func testAccCheckCheckpointManagementOpsecApplicationAttributes(opsecApplication
 
 func testAccManagementOpsecApplicationConfig(name string, host string, oneTimePassword string) string {
 	return fmt.Sprintf(`
+resource "checkpoint_management_host" "myhost" {
+    name = "%s"
+    ipv4_address = "2.1.7.4" 
+}
+
 resource "checkpoint_management_opsec_application" "test" {
         name = "%s"
-        host = "%s"
+        host = "${checkpoint_management_host.myhost.name}"
         one_time_password = "%s"
       cpmi = {
         enabled = true
@@ -114,5 +119,5 @@ resource "checkpoint_management_opsec_application" "test" {
         access_permissions = "show all"
       }
 }
-`, name, host, oneTimePassword)
+`,host, name, oneTimePassword)
 }

@@ -13,6 +13,9 @@ func resourceManagementServiceDceRpc() *schema.Resource {
 		Read:   readManagementServiceDceRpc,
 		Update: updateManagementServiceDceRpc,
 		Delete: deleteManagementServiceDceRpc,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -47,14 +50,6 @@ func resourceManagementServiceDceRpc() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
@@ -99,10 +94,6 @@ func createManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 
 	if v, ok := d.GetOk("comments"); ok {
 		serviceDceRpc["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		serviceDceRpc["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -188,22 +179,6 @@ func readManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("comments", v)
 	}
 
-	if serviceDceRpc["groups"] != nil {
-		groupsJson, ok := serviceDceRpc["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := serviceDceRpc["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -252,15 +227,6 @@ func updateManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 
 	if ok := d.HasChange("comments"); ok {
 		serviceDceRpc["comments"] = d.Get("comments")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			serviceDceRpc["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			serviceDceRpc["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

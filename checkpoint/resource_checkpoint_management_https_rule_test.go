@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementHttpsRuleExists(resourceTfName string, res 
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-https-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "New Layer 2"}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-https-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Default Layer"}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return err
 		}
@@ -97,14 +97,16 @@ func testAccCheckCheckpointManagementHttpsRuleAttributes(httpsRuleMap *map[strin
 func testAccManagementHttpsRuleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_https_rule" "test" {
-        name = "%s"
-        position = {top = "top"}
-        layer = "New Layer 2"
-        blade = ["IPS"]
-        destination = ["Internet"]
-        enabled = true
-        service = ["HTTPS default services"]
-        source = ["DMZNet"]
+	name = "%s"
+	position = {top = "top"}
+	layer = "Default Layer"
+	blade = ["IPS"]
+	destination = ["Internet"]
+	enabled = true
+	service = ["HTTPS default services"]
+	source = ["DMZNet"]
+	install_on = ["Policy HTTPS Targets"]
+	site_category = ["Any"]
 }
 `, name)
 }

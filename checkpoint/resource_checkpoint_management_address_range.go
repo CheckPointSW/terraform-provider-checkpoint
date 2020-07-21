@@ -15,7 +15,9 @@ func resourceManagementAddressRange() *schema.Resource {
 		Read:   readManagementAddressRange,
 		Update: updateManagementAddressRange,
 		Delete: deleteManagementAddressRange,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:        schema.TypeString,
@@ -106,14 +108,6 @@ func resourceManagementAddressRange() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -178,9 +172,7 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		addressRange["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		addressRange["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("color"); ok {
 		addressRange["color"] = val.(string)
 	}
@@ -301,21 +293,6 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("nat_settings", nil)
 	}
 
-	if addressRange["groups"] != nil {
-		groupsJson := addressRange["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group := range groupsJson {
-				group := group.(map[string]interface{})
-				groupsIds = append(groupsIds, group["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if addressRange["tags"] != nil {
 		tagsJson := addressRange["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -411,15 +388,6 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		} else {
 			oldTags, _ := d.GetChange("tags")
 			addressRange["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
-		}
-	}
-
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			addressRange["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			addressRange["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
 		}
 	}
 

@@ -28,10 +28,10 @@ func TestAccCheckpointManagementGroup_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementGroupConfig(objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
+				Config: testAccManagementGroupConfig(objName, "CP_default_Office_Mode_addresses_pool"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointGroupExists(resourceName, &group),
-					testAccCheckCheckpointGroupAttributes(&group, objName, "CP_default_Office_Mode_addresses_pool", "IPv6_Link_Local_Hosts"),
+					testAccCheckCheckpointGroupAttributes(&group, objName, "CP_default_Office_Mode_addresses_pool"),
 				),
 			},
 		},
@@ -79,7 +79,7 @@ func testAccCheckCheckpointGroupExists(resourceTfName string, res *map[string]in
 	}
 }
 
-func testAccCheckCheckpointGroupAttributes(group *map[string]interface{}, name string, member1 string, member2 string) resource.TestCheckFunc {
+func testAccCheckCheckpointGroupAttributes(group *map[string]interface{}, name string, member1 string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		group := *group
@@ -105,20 +105,16 @@ func testAccCheckCheckpointGroupAttributes(group *map[string]interface{}, name s
 		if groupMember1 != member1 {
 			return fmt.Errorf("member1 is %s, expected %s", groupMember1, member1)
 		}
-		groupMember2 := membersIds[1]
-		if groupMember2 != member2 {
-			return fmt.Errorf("member2 is %s, expected %s", groupMember2, member2)
-		}
 
 		return nil
 	}
 }
 
-func testAccManagementGroupConfig(name string, member1 string, member2 string) string {
+func testAccManagementGroupConfig(name string, member1 string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_group" "test" {
     name = "%s"
-	members = ["%s","%s"]
+	members = ["%s"]
 }
-`, name, member1, member2)
+`, name, member1)
 }

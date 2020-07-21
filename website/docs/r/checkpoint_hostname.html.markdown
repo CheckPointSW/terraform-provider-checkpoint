@@ -1,7 +1,7 @@
 ---
 layout: "checkpoint"
 page_title: "checkpoint_hostname"
-sidebar_current: "docs-checkpoint-resource-checkpoint-hostname"
+sidebar_current: "docs-checkpoint-gaia-resource-checkpoint-hostname"
 description: |-
   This resource allows you to set the hostname of a Check Point machine.
 ---

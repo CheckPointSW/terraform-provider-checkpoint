@@ -2,24 +2,30 @@ package main
 
 import (
 	"github.com/terraform-providers/terraform-provider-checkpoint/commands"
-	"log"
+	"os"
 )
+
+func log(msg string){
+	_ = commands.LogToFile("publish.txt", msg)
+}
 
 func main() {
 
 	apiClient, err := commands.InitClient()
 	if err != nil {
-		log.Fatalf("error: %s", err)
+		log("Publish error: " + err.Error())
+		os.Exit(1)
 	}
 
 	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, false)
 	if err != nil {
-		log.Fatalf("error: %s", err)
+		log("Publish error: " + err.Error())
+		os.Exit(1)
 	}
 	if !publishRes.Success {
-		log.Fatalf("error: %s", publishRes.ErrorMsg)
+		log("Publish failed: " + publishRes.ErrorMsg)
+		os.Exit(1)
 	}
 
-	log.Printf("published successfully")
-
+	log("Publish finished successfully")
 }

@@ -1,7 +1,7 @@
 ---
 layout: "checkpoint"
 page_title: "checkpoint_put_file"
-sidebar_current: "docs-checkpoint-resource-checkpoint-put-file"
+sidebar_current: "docs-checkpoint-gaia-resource-checkpoint-put-file"
 description: |-
   This resource allows you to add a new file to a Check Point machine.
 ---

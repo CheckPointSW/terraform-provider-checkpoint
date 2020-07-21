@@ -13,6 +13,9 @@ func resourceManagementGroup() *schema.Resource {
 		Read:   readManagementGroup,
 		Update: updateManagementGroup,
 		Delete: deleteManagementGroup,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -46,14 +49,6 @@ func resourceManagementGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group name.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -84,9 +79,7 @@ func createManagementGroup(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		group["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		group["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("comments"); ok {
 		group["comments"] = val.(string)
 	}
@@ -165,21 +158,6 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("members", nil)
 	}
 
-	if group["groups"] != nil {
-		groupsJson := group["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group_ := range groupsJson {
-				group_ := group_.(map[string]interface{})
-				groupsIds = append(groupsIds, group_["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if group["tags"] != nil {
 		tagsJson := group["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -228,14 +206,6 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			group["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			group["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
-	}
 	if ok := d.HasChange("comments"); ok {
 		group["comments"] = d.Get("comments")
 	}

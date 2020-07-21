@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/terraform-providers/terraform-provider-checkpoint/commands"
-	"log"
+	"os"
 )
 
 type arrayFlags []string
@@ -19,6 +19,10 @@ func (i *arrayFlags) Set(value string) error {
 
 var targets arrayFlags
 
+func log(msg string){
+	_ = commands.LogToFile("install_policy.txt", msg)
+}
+
 func main() {
 
 	var policyPackage string
@@ -29,7 +33,8 @@ func main() {
 
 	apiClient, err := commands.InitClient()
 	if err != nil {
-		log.Fatalf("error: %s", err)
+		log("Install policy error: " + err.Error())
+		os.Exit(1)
 	}
 
 	payload := map[string]interface{}{
@@ -39,12 +44,13 @@ func main() {
 
 	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(), true, false)
 	if err != nil {
-		log.Fatalf("error: %s", err.Error())
+		log("Install policy error: " + err.Error())
+		os.Exit(1)
 	}
 	if !installPolicyRes.Success {
-		log.Fatalf("error: %s", installPolicyRes.ErrorMsg)
+		log("Install policy failed: " + installPolicyRes.ErrorMsg)
+		os.Exit(1)
 	}
 
-	log.Printf("policy installed successfully")
-
+	log("Policy installed successfully")
 }

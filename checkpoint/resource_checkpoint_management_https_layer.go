@@ -14,6 +14,9 @@ func resourceManagementHttpsLayer() *schema.Resource {
 		Read:   readManagementHttpsLayer,
 		Update: updateManagementHttpsLayer,
 		Delete: deleteManagementHttpsLayer,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

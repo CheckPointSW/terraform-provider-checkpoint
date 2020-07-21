@@ -32,7 +32,6 @@ The following arguments are supported:
 * `mask_length6` - (Optional) IPv6 network mask length.
 * `nat_settings` - (Optional) NAT settings. NAT settings blocks are documented below.
 * `tags` - (Optional) Collection of tag identifiers.
-* `groups` - (Optional) Collection of group identifiers.
 * `broadcast` - (Optional) "Allow broadcast address inclusion.
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.

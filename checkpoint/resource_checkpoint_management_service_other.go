@@ -15,6 +15,9 @@ func resourceManagementServiceOther() *schema.Resource {
 		Read:   readManagementServiceOther,
 		Update: updateManagementServiceOther,
 		Delete: deleteManagementServiceOther,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -126,14 +129,6 @@ func resourceManagementServiceOther() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -228,10 +223,6 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("comments"); ok {
 		serviceOther["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		serviceOther["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -385,22 +376,6 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("comments", v)
 	}
 
-	if serviceOther["groups"] != nil {
-		groupsJson, ok := serviceOther["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := serviceOther["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -505,15 +480,6 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("comments"); ok {
 		serviceOther["comments"] = d.Get("comments")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			serviceOther["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			serviceOther["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
