@@ -13,6 +13,9 @@ func resourceManagementApplicationSiteGroup() *schema.Resource {
 		Read:   readManagementApplicationSiteGroup,
 		Update: updateManagementApplicationSiteGroup,
 		Delete: deleteManagementApplicationSiteGroup,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -45,14 +48,6 @@ func resourceManagementApplicationSiteGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
@@ -93,10 +88,6 @@ func createManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 
 	if v, ok := d.GetOk("comments"); ok {
 		applicationSiteGroup["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		applicationSiteGroup["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -190,22 +181,6 @@ func readManagementApplicationSiteGroup(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("comments", v)
 	}
 
-	if applicationSiteGroup["groups"] != nil {
-		groupsJson, ok := applicationSiteGroup["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := applicationSiteGroup["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -255,15 +230,6 @@ func updateManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 
 	if ok := d.HasChange("comments"); ok {
 		applicationSiteGroup["comments"] = d.Get("comments")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			applicationSiteGroup["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			applicationSiteGroup["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

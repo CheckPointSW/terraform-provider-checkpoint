@@ -13,6 +13,9 @@ func resourceManagementDynamicObject() *schema.Resource {
 		Read:   readManagementDynamicObject,
 		Update: updateManagementDynamicObject,
 		Delete: deleteManagementDynamicObject,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

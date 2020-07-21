@@ -13,6 +13,9 @@ func resourceManagementAccessLayer() *schema.Resource {
 		Read:   readManagementAccessLayer,
 		Update: updateManagementAccessLayer,
 		Delete: deleteManagementAccessLayer,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

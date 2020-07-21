@@ -14,6 +14,9 @@ func resourceManagementServiceTcp() *schema.Resource {
 		Read:   readManagementServiceTcp,
 		Update: updateManagementServiceTcp,
 		Delete: deleteManagementServiceTcp,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -103,14 +106,6 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Optional:    true,
 				Description: "Use default virtual session timeout.",
 				Default:     true,
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group name.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
 			},
 			"tags": {
 				Type:        schema.TypeSet,
@@ -205,9 +200,7 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOkExists("use_default_session_timeout"); ok {
 		serviceTcp["use-default-session-timeout"] = val.(bool)
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		serviceTcp["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("tags"); ok {
 		serviceTcp["tags"] = val.(*schema.Set).List()
 	}
@@ -345,21 +338,6 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("aggressive_aging", nil)
 	}
 
-	if serviceTcp["groups"] != nil {
-		groupsJson := serviceTcp["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group_ := range groupsJson {
-				group_ := group_.(map[string]interface{})
-				groupsIds = append(groupsIds, group_["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if serviceTcp["tags"] != nil {
 		tagsJson := serviceTcp["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -430,14 +408,6 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			serviceTcp["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			serviceTcp["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
-	}
 	if ok := d.HasChange("comments"); ok {
 		serviceTcp["comments"] = d.Get("comments")
 	}

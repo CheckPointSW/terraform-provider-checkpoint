@@ -14,6 +14,9 @@ func resourcePhysicalInterface() *schema.Resource {
 		Read:   readPhysicalInterface,
 		Update: updatePhysicalInterface,
 		Delete: deletePhysicalInterface,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

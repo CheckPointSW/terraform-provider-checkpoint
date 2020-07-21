@@ -6,6 +6,8 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"time"
 )
 
 const (
@@ -35,26 +37,56 @@ func GetSession() (Session, error) {
 	return s, nil
 }
 
-func InitClient() (checkpoint.ApiClient, error) {
+func LogToFile(filename string, msg string) error {
+	fullMsg := "[" + time.Now().String() + "] " + msg
+	err := ioutil.WriteFile(filename, []byte(fullMsg), 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
-	//get credentials from Environment variables
+func InitClient() (checkpoint.ApiClient, error) {
+	// Default values
+	port := checkpoint.DefaultPort
+	timeout := checkpoint.TimeOut
+
+	// Get credentials from Environment variables
 	server := os.Getenv("CHECKPOINT_SERVER")
 	username := os.Getenv("CHECKPOINT_USERNAME")
 	password := os.Getenv("CHECKPOINT_PASSWORD")
+	portVal := os.Getenv("CHECKPOINT_PORT")
+	timeoutVal := os.Getenv("CHECKPOINT_TIMEOUT")
 
-	if server == "" || username == "" || password == "" {
-		return checkpoint.ApiClient{}, fmt.Errorf("missing parameters to initialize api client - (server, username, password)")
-	}
-
-	//install policy - only on management api
-	if val, ok := os.LookupEnv("CHECKPOINT_CONTEXT"); ok {
-		if val == "gaia_api" {
-			return checkpoint.ApiClient{}, fmt.Errorf("install-policy is valid only to management api")
+	var err error
+	if portVal != "" {
+		port, err = strconv.Atoi(portVal)
+		if err != nil {
+			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_PORT to integer")
 		}
 	}
 
-	args := checkpoint.ApiClientArgs{
-		Port:                    checkpoint.DefaultPort,
+	if timeoutVal != "" {
+		timeoutInteger, err := strconv.Atoi(timeoutVal)
+		if err != nil {
+			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_TIMEOUT to integer")
+		}
+		timeout = time.Duration(timeoutInteger)
+	}
+
+	if server == "" || username == "" || password == "" {
+		return checkpoint.ApiClient{}, fmt.Errorf("missing at least one required parameter to initialize API client (CHECKPOINT_SERVER, CHECKPOINT_USERNAME, CHECKPOINT_PASSWORD)")
+	}
+
+	// install policy/publish - only on management api
+	if val, ok := os.LookupEnv("CHECKPOINT_CONTEXT"); ok {
+		if val == "gaia_api" {
+			return checkpoint.ApiClient{}, fmt.Errorf("install-policy/publish is valid only on management api (CHECKPOINT_CONTEXT = gaia_api)")
+		}
+	}
+
+	args := checkpoint.ApiClientArgs {
+		Port:                    port,
 		Fingerprint:             "",
 		Sid:                     "",
 		Server:                  server,
@@ -65,7 +97,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 "web_api",
-		Timeout:                 checkpoint.TimeOut,
+		Timeout:                 timeout,
 		Sleep:                   checkpoint.SleepTime,
 	}
 
@@ -76,11 +108,10 @@ func InitClient() (checkpoint.ApiClient, error) {
 	if s.Sid != "" {
 		args.Sid = s.Sid
 	} else {
-		return checkpoint.ApiClient{}, fmt.Errorf("session id can't be empty")
+		return checkpoint.ApiClient{}, fmt.Errorf("session id not found. Verify 'sid.json' file exists in working directory")
 	}
 
 	mgmt := checkpoint.APIClient(args)
 
 	return *mgmt, nil
-
 }

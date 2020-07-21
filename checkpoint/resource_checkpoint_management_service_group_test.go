@@ -31,7 +31,7 @@ func TestAccCheckpointManagementServiceGroup_basic(t *testing.T) {
 				Config: testAccManagementServiceGroupConfig(objName, "domain-tcp", "domain-udp"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointServiceGroupExists(resourceName, &serviceGroup),
-					testAccCheckCheckpointServiceGroupAttributes(&serviceGroup, objName, "domain-tcp", "domain-udp"),
+					testAccCheckCheckpointServiceGroupAttributes(&serviceGroup, objName,"domain-udp", "domain-tcp"),
 				),
 			},
 		},

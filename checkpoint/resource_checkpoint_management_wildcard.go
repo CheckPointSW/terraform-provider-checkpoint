@@ -13,6 +13,9 @@ func resourceManagementWildcard() *schema.Resource {
 		Read:   readManagementWildcard,
 		Update: updateManagementWildcard,
 		Delete: deleteManagementWildcard,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -57,14 +60,6 @@ func resourceManagementWildcard() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
@@ -117,10 +112,6 @@ func createManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("comments"); ok {
 		wildcard["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		wildcard["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -214,22 +205,6 @@ func readManagementWildcard(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("comments", v)
 	}
 
-	if wildcard["groups"] != nil {
-		groupsJson, ok := wildcard["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := wildcard["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -286,15 +261,6 @@ func updateManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("comments"); ok {
 		wildcard["comments"] = d.Get("comments")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			wildcard["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			wildcard["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

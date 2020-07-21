@@ -13,6 +13,9 @@ func resourceManagementAccessSection() *schema.Resource {
 		Read:   readManagementAccessSection,
 		Update: updateManagementAccessSection,
 		Delete: deleteManagementAccessSection,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

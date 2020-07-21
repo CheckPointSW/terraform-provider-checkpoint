@@ -15,7 +15,9 @@ func resourceManagementAccessRule() *schema.Resource {
 		Read:   readManagementAccessRule,
 		Update: updateManagementAccessRule,
 		Delete: deleteManagementAccessRule,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"layer": &schema.Schema{
 				Type:        schema.TypeString,

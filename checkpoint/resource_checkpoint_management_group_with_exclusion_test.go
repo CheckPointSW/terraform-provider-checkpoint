@@ -104,10 +104,18 @@ func testAccCheckCheckpointManagementGroupWithExclusionAttributes(groupWithExclu
 
 func testAccManagementGroupWithExclusionConfig(name string, include string, except string) string {
 	return fmt.Sprintf(`
-resource "checkpoint_management_group_with_exclusion" "test" {
-        name = "%s"
-        include = "%s"
-        except = "%s"
+resource "checkpoint_management_group" "group123" {
+    name = "%s"
 }
-`, name, include, except)
+
+resource "checkpoint_management_group" "group321" {
+    name = "%s"
+}
+
+resource "checkpoint_management_group_with_exclusion" "test" {
+    name = "%s"
+    include = "${checkpoint_management_group.group123.name}"
+    except = "${checkpoint_management_group.group321.name}"
+}
+`, include, except, name)
 }

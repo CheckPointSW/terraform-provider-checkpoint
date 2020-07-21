@@ -13,7 +13,9 @@ func resourceManagementPackage() *schema.Resource {
 		Read:   readManagementPackage,
 		Update: updateManagementPackage,
 		Delete: deleteManagementPackage,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -134,9 +136,7 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		_package["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		_package["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("color"); ok {
 		_package["color"] = val.(string)
 	}

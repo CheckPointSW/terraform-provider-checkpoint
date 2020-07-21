@@ -14,31 +14,32 @@ The Check Point provider can be used to automate security responses to threats, 
 ```hcl
 # Configure the Check Point Provider
 provider "checkpoint" {
-	server = "192.0.2.1"
-	username = "aa"
-	password = "aaaa"
-	context = "web_api"
+    server = "192.0.2.1"
+    username = "aa"
+    password = "aaaa"
+    context = "web_api"
 }
 
-# Create a Network Object
-resource "checkpoint_management_network" "test1" {
-	name = "network1"
-	subnet4 = "192.0.2.0"
-	# ...
+# Create network object
+resource "checkpoint_management_network" "network" {
+    name = "network"
+    subnet4 = "192.0.2.0"	
+    mask_length4 = "24"
+    # ...   
 }
 ```
 ```hcl
 # Configure the Check Point Provider for GAIA API
 provider "checkpoint" {
-	server = "192.0.2.1"
-	username = "gaia_user"
-	password = "gaia_password"
-	context = "gaia_api"
+    server = "192.0.2.1"
+    username = "gaia_user"
+    password = "gaia_password"
+    context = "gaia_api"
 }
 
 # Set machine hostname
 resource "checkpoint_hostname" "hostname" {
-	name = "terrahost"
+    name = "terrahost"
 }
 ```
 ## Argument Reference
@@ -48,7 +49,7 @@ The following arguments are supported:
 * `server` - (Optional) Check Point Management server IP. It must be provided, but can also be defined via the `CHECKPOINT_SERVER` environment variable.
 * `username` - (Optional) Check Point Management admin name. It must be provided, but can also be defined via the `CHECKPOINT_USERNAME` environment variable.
 * `password` - (Optional) Check Point Management admin password. It must be provided, but can also be defined via the `CHECKPOINT_PASSWORD` environment variable.
-* `context` - (Optional) Check Point access context - `gaia_api` or `web_api`. This can also be defined via the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
+* `context` - (Optional) Check Point access context - `web_api` or `gaia_api`. This can also be defined via the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
 * `domain` - (Optional) Login to specific domain. Domain can be identified by name or UID. This can also be defined via the `CHECKPOINT_DOMAIN` environment variable.
 * `timeout` - (Optional) Timeout in seconds for the Go SDK to complete a transaction. This can also be defined via the `CHECKPOINT_TIMEOUT` environment variable. Default value is `10` seconds.
 * `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT` environment variable. Default value is `443`.
@@ -66,11 +67,11 @@ Usage:
 
 ```hcl
 provider "checkpoint" {
-	server = "192.0.2.1"
-	username = "aa"
-	password = "aaaa"
-	context = "web_api"
-	domain = "Domain Name"
+    server = "192.0.2.1"
+    username = "aa"
+    password = "aaaa"
+    context = "web_api"
+    domain = "Domain Name"
 }
 ```
 
@@ -78,10 +79,10 @@ Or for GAIA API:
 
 ```hcl
 provider "checkpoint" {
-	server = "192.0.2.1"
-	username = "gaia_user"
-	password = "gaia_password"
-	context = "gaia_api"
+    server = "192.0.2.1"
+    username = "gaia_user"
+    password = "gaia_password"
+    context = "gaia_api"
 }
 ```
 
@@ -106,11 +107,12 @@ Then configure the Check Point Provider as following:
 # Configure the Check Point Provider
 provider "checkpoint" { }
 
-# Create a Network Object
-resource "checkpoint_management_network" "test1" {
-	name = "network1"
-	subnet4 = "192.0.2.0"
-	# ...
+# Create network object
+resource "checkpoint_management_network" "network" {
+    name = "network"
+    subnet4 = "192.0.2.0"	
+    mask_length4 = "24"
+    # ...   
 }
 ```
 
@@ -133,7 +135,7 @@ provider "checkpoint" { }
 
 # Set machine hostname
 resource "checkpoint_hostname" "hostname" {
-	name = "terrahost"
+    name = "terrahost"
 }
 ```
 
@@ -151,7 +153,7 @@ Please use the following for publish:
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/publish
 $ go build publish.go
 $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && ./publish
+$ terraform apply && publish
 ```
 
 ### Install Policy
@@ -167,11 +169,11 @@ Please use the following for install policy:
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
 $ go build install_policy.go
 $ mv install_policy $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && ./install_policy -policy-package <package name> -target <target name or uid>
+$ terraform apply && install_policy -policy-package <package name> -target <target name or uid>
 ```
 
 ### Example usage
 
 ```bash
-$ terraform apply && ./publish && ./install_policy -policy-package "standard" -target "corporate-gateway"
+$ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway"
 ```

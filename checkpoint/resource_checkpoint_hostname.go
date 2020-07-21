@@ -12,6 +12,9 @@ func resourceHostname() *schema.Resource {
 		Read:   readHostname,
 		Update: updateHostname,
 		Delete: deleteHostname,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
