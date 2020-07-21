@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementHttpsLayer() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementHttpsLayerRead,
+		Read: dataSourceManagementHttpsLayerRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -49,7 +49,6 @@ func dataSourceManagementHttpsLayer() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementHttpsLayerRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -61,7 +60,7 @@ func dataSourceManagementHttpsLayerRead(d *schema.ResourceData, m interface{}) e
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementServiceSctp() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceSctpRead,
+		Read: dataSourceManagementServiceSctpRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -127,7 +127,7 @@ func dataSourceManagementServiceSctpRead(d *schema.ResourceData, m interface{}) 
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

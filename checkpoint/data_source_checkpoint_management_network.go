@@ -1,16 +1,16 @@
 package checkpoint
 
 import (
-"fmt"
-checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-"reflect"
-"strconv"
+	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"reflect"
+	"strconv"
 )
 
 func dataSourceManagementNetwork() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementNetworkRead,
+		Read: dataSourceManagementNetworkRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -116,7 +116,6 @@ func dataSourceManagementNetwork() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementNetworkRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -128,7 +127,7 @@ func dataSourceManagementNetworkRead(d *schema.ResourceData, m interface{}) erro
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

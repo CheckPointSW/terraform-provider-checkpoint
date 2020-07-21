@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform/helper/acctest"
 	"os"
 	"testing"
 )
@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementApplicationSiteCategory_basic(t *testi
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementApplicationSiteCategoryConfig(objName),
@@ -34,7 +34,6 @@ func TestAccDataSourceCheckpointManagementApplicationSiteCategory_basic(t *testi
 
 }
 
-
 func testAccDataSourceManagementApplicationSiteCategoryConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_application_site_category" "application_site_category" {
@@ -46,4 +45,3 @@ data "checkpoint_management_data_application_site_category" "data_application_si
 }
 `, name)
 }
-

@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform/helper/acctest"
 	"os"
 	"testing"
 )
@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementHttpsSection_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementHttpsSectionConfig(objName),
@@ -33,7 +33,6 @@ func TestAccDataSourceCheckpointManagementHttpsSection_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementHttpsSectionConfig(name string) string {
 	return fmt.Sprintf(`
@@ -49,4 +48,3 @@ data "checkpoint_management_data_https_section" "data_https_section" {
 }
 `, name)
 }
-

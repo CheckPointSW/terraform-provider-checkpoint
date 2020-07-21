@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementMulticastAddressRange() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementMulticastAddressRangeRead,
+		Read: dataSourceManagementMulticastAddressRangeRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -92,7 +92,7 @@ func dataSourceManagementMulticastAddressRangeRead(d *schema.ResourceData, m int
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

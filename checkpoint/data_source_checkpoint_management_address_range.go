@@ -10,8 +10,8 @@ import (
 )
 
 func dataSourceManagementAddressRange() *schema.Resource {
-	return &schema.Resource {
-		Read:   dataSourceManagementAddressRangeRead,
+	return &schema.Resource{
+		Read: dataSourceManagementAddressRangeRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -123,7 +123,7 @@ func dataSourceManagementAddressRangeRead(d *schema.ResourceData, m interface{})
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

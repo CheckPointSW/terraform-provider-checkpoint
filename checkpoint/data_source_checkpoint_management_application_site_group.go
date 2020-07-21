@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementApplicationSiteGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementApplicationSiteGroupRead,
+		Read: dataSourceManagementApplicationSiteGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -70,7 +70,7 @@ func dataSourceManagementApplicationSiteGroupRead(d *schema.ResourceData, m inte
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementWildcard() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementWildcardRead,
+		Read: dataSourceManagementWildcardRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -82,7 +82,7 @@ func dataSourceManagementWildcardRead(d *schema.ResourceData, m interface{}) err
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

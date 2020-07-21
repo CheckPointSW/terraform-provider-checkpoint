@@ -11,7 +11,7 @@ import (
 
 func dataSourceManagementOpsecApplication() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementOpsecApplicationRead,
+		Read: dataSourceManagementOpsecApplicationRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -104,7 +104,7 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

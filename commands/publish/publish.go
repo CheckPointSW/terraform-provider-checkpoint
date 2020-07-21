@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func log(msg string){
+func log(msg string) {
 	_ = commands.LogToFile("publish.txt", msg)
 }
 

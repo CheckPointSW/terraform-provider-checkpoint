@@ -8,7 +8,7 @@ import (
 
 func dataSourceManagementServiceGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceGroupRead,
+		Read: dataSourceManagementServiceGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -69,7 +69,7 @@ func dataSourceManagementServiceGroupRead(d *schema.ResourceData, m interface{})
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

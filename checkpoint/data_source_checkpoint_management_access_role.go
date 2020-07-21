@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementAccessRole() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementAccessRoleRead,
+		Read: dataSourceManagementAccessRoleRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -110,7 +110,6 @@ func dataSourceManagementAccessRole() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -122,7 +121,7 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
@@ -255,4 +254,3 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 	return nil
 }
-

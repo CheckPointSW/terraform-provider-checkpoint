@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementDnsDomain() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementDnsDomainRead,
+		Read: dataSourceManagementDnsDomainRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -58,7 +58,7 @@ func dataSourceManagementDnsDomainRead(d *schema.ResourceData, m interface{}) er
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

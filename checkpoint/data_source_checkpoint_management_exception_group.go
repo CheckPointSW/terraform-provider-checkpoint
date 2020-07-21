@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementExceptionGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementExceptionGroupRead,
+		Read: dataSourceManagementExceptionGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -64,7 +64,7 @@ func dataSourceManagementExceptionGroupRead(d *schema.ResourceData, m interface{
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
@@ -92,7 +92,6 @@ func dataSourceManagementExceptionGroupRead(d *schema.ResourceData, m interface{
 	if v := exceptionGroup["applied-profile"]; v != nil {
 		_ = d.Set("applied_profile", v)
 	}
-
 
 	if v := exceptionGroup["apply-on"]; v != nil {
 		_ = d.Set("apply_on", v)

@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementVpnCommunityStar() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementVpnCommunityStarRead,
+		Read: dataSourceManagementVpnCommunityStarRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -171,7 +171,7 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

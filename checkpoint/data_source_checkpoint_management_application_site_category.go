@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementApplicationSiteCategory() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementApplicationSiteCategoryRead,
+		Read: dataSourceManagementApplicationSiteCategoryRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -56,7 +56,6 @@ func dataSourceManagementApplicationSiteCategory() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementApplicationSiteCategoryRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -68,7 +67,7 @@ func dataSourceManagementApplicationSiteCategoryRead(d *schema.ResourceData, m i
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

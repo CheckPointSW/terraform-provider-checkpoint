@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementVpnCommunityMeshed() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementVpnCommunityMeshedRead,
+		Read: dataSourceManagementVpnCommunityMeshedRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -148,7 +148,6 @@ func dataSourceManagementVpnCommunityMeshed() *schema.Resource {
 	}
 }
 
-
 func dataSourceManagementVpnCommunityMeshedRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*checkpoint.ApiClient)
@@ -160,7 +159,7 @@ func dataSourceManagementVpnCommunityMeshedRead(d *schema.ResourceData, m interf
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 

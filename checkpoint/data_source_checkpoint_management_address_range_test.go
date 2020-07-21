@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform/helper/acctest"
 	"os"
 	"testing"
 )
@@ -20,11 +20,11 @@ func TestAccDataSourceCheckpointManagementAddressRange_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementAddressRangeConfig(objName,"1.1.1.1","2.2.2.2"),
+				Config: testAccDataSourceManagementAddressRangeConfig(objName, "1.1.1.1", "2.2.2.2"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "ipv4_address_first", resourceName, "ipv4_address_first"),
@@ -35,7 +35,6 @@ func TestAccDataSourceCheckpointManagementAddressRange_basic(t *testing.T) {
 	})
 
 }
-
 
 func testAccDataSourceManagementAddressRangeConfig(name string, ipv4First string, ipv4Last string) string {
 	return fmt.Sprintf(`
@@ -50,4 +49,3 @@ data "checkpoint_management_data_address_range" "data_address_range" {
 }
 `, name, ipv4First, ipv4Last)
 }
-

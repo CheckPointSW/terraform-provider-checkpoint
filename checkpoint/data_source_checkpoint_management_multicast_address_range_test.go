@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform/helper/acctest"
 	"os"
 	"testing"
 )
@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementMulticastAddressRange_basic(t *testing
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementMulticastAddressRangeConfig(objName, "224.0.0.1", "224.0.0.4"),
@@ -35,7 +35,6 @@ func TestAccDataSourceCheckpointManagementMulticastAddressRange_basic(t *testing
 	})
 
 }
-
 
 func testAccDataSourceManagementMulticastAddressRangeConfig(name string, ipv4First string, ipv4Last string) string {
 	return fmt.Sprintf(`

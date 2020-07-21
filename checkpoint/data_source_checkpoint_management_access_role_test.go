@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform/helper/acctest"
 	"os"
 	"testing"
 )
@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementAccessRole_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementAccessRoleConfig(objName),
@@ -34,7 +34,6 @@ func TestAccDataSourceCheckpointManagementAccessRole_basic(t *testing.T) {
 
 }
 
-
 func testAccDataSourceManagementAccessRoleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_access_role" "access_role" {
@@ -46,6 +45,3 @@ data "checkpoint_management_data_access_role" "data_access_role" {
 }
 `, name)
 }
-
-
-

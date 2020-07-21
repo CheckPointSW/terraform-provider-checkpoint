@@ -11,7 +11,7 @@ import (
 
 func dataSourceManagementAccessRule() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementAccessRuleRead,
+		Read: dataSourceManagementAccessRuleRead,
 
 		Schema: map[string]*schema.Schema{
 			"layer": {
@@ -271,7 +271,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 	if name != "" {
 		payload["name"] = name
-	}else if uid != "" {
+	} else if uid != "" {
 		payload["uid"] = uid
 	}
 
@@ -576,5 +576,3 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 	return nil
 }
-
-
