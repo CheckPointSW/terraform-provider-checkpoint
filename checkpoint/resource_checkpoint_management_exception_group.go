@@ -15,6 +15,9 @@ func resourceManagementExceptionGroup() *schema.Resource {
 		Read:   readManagementExceptionGroup,
 		Update: updateManagementExceptionGroup,
 		Delete: deleteManagementExceptionGroup,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

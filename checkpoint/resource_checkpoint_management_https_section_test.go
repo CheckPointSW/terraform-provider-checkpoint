@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementHttpsSectionExists(resourceTfName string, r
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "New Layer 2"}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Default Layer"}, client.GetSessionID(), true, false)
 		if !response.Success {
 			return err
 		}
@@ -99,7 +99,7 @@ func testAccManagementHttpsSectionConfig(name string) string {
 resource "checkpoint_management_https_section" "test" {
         name = "%s"
         position = {top = "top"}
-        layer = "New Layer 2"
+        layer = "Default Layer"
 }
 `, name)
 }

@@ -13,6 +13,9 @@ func resourceManagementServiceGroup() *schema.Resource {
 		Read:   readManagementServiceGroup,
 		Update: updateManagementServiceGroup,
 		Delete: deleteManagementServiceGroup,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -46,14 +49,6 @@ func resourceManagementServiceGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group name.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -84,9 +79,7 @@ func createManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		serviceGroup["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		serviceGroup["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("comments"); ok {
 		serviceGroup["comments"] = val.(string)
 	}
@@ -165,21 +158,6 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("members", nil)
 	}
 
-	if serviceGroup["groups"] != nil {
-		groupsJson := serviceGroup["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group_ := range groupsJson {
-				group_ := group_.(map[string]interface{})
-				groupsIds = append(groupsIds, group_["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if serviceGroup["tags"] != nil {
 		tagsJson := serviceGroup["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -225,15 +203,6 @@ func updateManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 		} else {
 			oldTags, _ := d.GetChange("tags")
 			serviceGroup["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
-		}
-	}
-
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			serviceGroup["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			serviceGroup["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
 		}
 	}
 

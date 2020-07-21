@@ -14,7 +14,9 @@ func resourceManagementThreatIndicator() *schema.Resource {
 		Read:   readManagementThreatIndicator,
 		Update: updateManagementThreatIndicator,
 		Delete: deleteManagementThreatIndicator,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:        schema.TypeString,
@@ -343,6 +345,10 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error 
 	threatIndicator := showThreatIndicatorRes.GetData()
 
 	log.Println("Read Threat Indicator - Show JSON = ", threatIndicator)
+
+	if v := threatIndicator["name"]; v != nil {
+		_ = d.Set("name", v)
+	}
 
 	if v := threatIndicator["action"]; v != nil {
 		_ = d.Set("action", v)

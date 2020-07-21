@@ -13,6 +13,9 @@ func resourceManagementHttpsSection() *schema.Resource {
 		Read:   readManagementHttpsSection,
 		Update: updateManagementHttpsSection,
 		Delete: deleteManagementHttpsSection,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

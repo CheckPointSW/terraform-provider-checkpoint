@@ -15,7 +15,9 @@ func resourceManagementHost() *schema.Resource {
 		Read:   readManagementHost,
 		Update: updateManagementHost,
 		Delete: deleteManagementHost,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:        schema.TypeString,
@@ -221,14 +223,6 @@ func resourceManagementHost() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -376,9 +370,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		host["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		host["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("color"); ok {
 		host["color"] = val.(string)
 	}
@@ -599,21 +591,6 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("host_servers", nil)
 	}
 
-	if host["groups"] != nil {
-		groupsJson := host["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group := range groupsJson {
-				group := group.(map[string]interface{})
-				groupsIds = append(groupsIds, group["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if host["tags"] != nil {
 		tagsJson := host["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -761,15 +738,6 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 		} else {
 			oldTags, _ := d.GetChange("tags")
 			host["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
-		}
-	}
-
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			host["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			host["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
 		}
 	}
 

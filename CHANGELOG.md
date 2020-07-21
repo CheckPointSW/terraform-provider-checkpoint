@@ -1,3 +1,57 @@
+## 1.0.4 (Unreleased)
+
+## 1.0.3 (Unreleased)
+
+FEATURES
+
+* **New Data Source:** `checkpoint_management_data_wildcard`       
+* **New Data Source:** `checkpoint_management_data_security_zone`       
+* **New Data Source:** `checkpoint_management_data_time_group` 
+* **New Data Source:** `checkpoint_management_data_group`
+* **New Data Source:** `checkpoint_management_data_exception_group` 
+* **New Data Source:** `checkpoint_management_data_group_with_exclusion`        
+* **New Data Source:** `checkpoint_management_data_dynamic_object`
+* **New Data Source:** `checkpoint_management_data_dns_domain`    
+* **New Data Source:** `checkpoint_management_data_opsec_application`   
+* **New Data Source:** `checkpoint_management_data_service_icmp`    
+* **New Data Source:** `checkpoint_management_data_service_icmp6` 
+* **New Data Source:** `checkpoint_management_data_service_sctp`     
+* **New Data Source:** `checkpoint_management_data_service_other`  
+* **New Data Source:** `checkpoint_management_data_service_group`
+* **New Data Source:** `checkpoint_management_data_service_tcp`
+* **New Data Source:** `checkpoint_management_data_service_udp` 
+* **New Data Source:** `checkpoint_management_data_service_dce_rpc`  
+* **New Data Source:** `checkpoint_management_data_service_rpc`    
+* **New Data Source:** `checkpoint_management_data_application_site`    
+* **New Data Source:** `checkpoint_management_data_application_site_category`      
+* **New Data Source:** `checkpoint_management_data_application_site_group`     
+* **New Data Source:** `checkpoint_management_data_access_section` 
+* **New Data Source:** `checkpoint_management_data_access_role`    
+* **New Data Source:** `checkpoint_management_data_access_layer`
+* **New Data Source:** `checkpoint_management_data_access_rule`  
+* **New Data Source:** `checkpoint_management_data_package`      
+* **New Data Source:** `checkpoint_management_data_vpn_community_meshed`    
+* **New Data Source:** `checkpoint_management_data_vpn_community_star`                      
+* **New Data Source:** `checkpoint_management_data_https_rule`  
+* **New Data Source:** `checkpoint_management_data_https_section`       
+* **New Data Source:** `checkpoint_management_data_https_layer`  
+* **New Data Source:** `checkpoint_management_data_network`
+* **New Data Source:** `checkpoint_management_data_host`
+* **New Data Source:** `checkpoint_management_data_address_range`
+* **New Data Source:** `checkpoint_management_data_multicast_address_range`      
+* **New Data Source:** `checkpoint_management_data_threat_indicator`
+
+ENHANCEMENTS
+
+* Use port and timeout via environment variable in publish and install-policy script
+* Save publish and install-policy scripts output to dedicated log file
+* Add support for import resources
+
+BUG FIXES
+
+* Fix groups circular dependency
+* Fix internal test of few resources
+
 ## 1.0.2 (May 13, 2020)
 
 FEATURES:

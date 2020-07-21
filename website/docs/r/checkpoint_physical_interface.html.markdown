@@ -1,7 +1,7 @@
 ---
 layout: "checkpoint"
 page_title: "checkpoint_physical_interface"
-sidebar_current: "docs-checkpoint-resource-checkpoint-physical-interface"
+sidebar_current: "docs-checkpoint-gaia-resource-checkpoint-physical-interface"
 description: |-
   This resource allows you to set a Physical interface.
 ---

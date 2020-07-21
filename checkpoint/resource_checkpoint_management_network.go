@@ -15,6 +15,9 @@ func resourceManagementNetwork() *schema.Resource {
 		Read:   readManagementNetwork,
 		Update: updateManagementNetwork,
 		Delete: deleteManagementNetwork,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -105,14 +108,6 @@ func resourceManagementNetwork() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -178,9 +173,7 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	if val, ok := d.GetOk("tags"); ok {
 		network["tags"] = val.(*schema.Set).List()
 	}
-	if val, ok := d.GetOk("groups"); ok {
-		network["groups"] = val.(*schema.Set).List()
-	}
+
 	if val, ok := d.GetOk("broadcast"); ok {
 		network["broadcast"] = val.(string)
 	}
@@ -314,21 +307,6 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("nat_settings", nil)
 	}
 
-	if network["groups"] != nil {
-		groupsJson := network["groups"].([]interface{})
-		groupsIds := make([]string, 0)
-		if len(groupsJson) > 0 {
-			// Create slice of group names
-			for _, group := range groupsJson {
-				group := group.(map[string]interface{})
-				groupsIds = append(groupsIds, group["name"].(string))
-			}
-		}
-		_ = d.Set("groups", groupsIds)
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if network["tags"] != nil {
 		tagsJson := network["tags"].([]interface{})
 		var tagsIds = make([]string, 0)
@@ -410,15 +388,6 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		} else {
 			oldTags, _ := d.GetChange("tags")
 			network["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
-		}
-	}
-
-	if ok := d.HasChange("groups"); ok {
-		if v, ok := d.GetOk("groups"); ok {
-			network["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			network["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
 		}
 	}
 
