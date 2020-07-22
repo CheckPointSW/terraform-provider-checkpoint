@@ -177,3 +177,28 @@ $ terraform apply && install_policy -policy-package <package name> -target <targ
 ```bash
 $ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway"
 ```
+
+## Import Resources
+
+In order to import resource, use the `terraform import` command with object unique identifier.
+
+Example:
+
+Host object with UID `9423d36f-2d66-4754-b9e2-e7f4493756d4`
+
+Write resource block in your configuration
+
+```hcl
+resource "checkpoint_management_host" "host" {
+    name = "myhost"
+    ipv4_address = "1.1.1.1"
+}
+```
+
+Run the following command
+
+```bash
+$ terraform import checkpoint_management_host.host 9423d36f-2d66-4754-b9e2-e7f4493756d4
+```
+
+For more information about `terraform import` command, please refer [here](https://www.terraform.io/docs/import/usage.html).
