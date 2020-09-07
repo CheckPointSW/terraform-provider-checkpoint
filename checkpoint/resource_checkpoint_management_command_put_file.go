@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -25,19 +26,19 @@ func resourceManagementPutFile() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "N/A",
+				Description: "Text file content.",
 			},
 			"file_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "N/A",
+				Description: "Text file name.",
 			},
 			"file_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "N/A",
+				Description: "Text file target path.",
 			},
 			"comments": {
 				Type:        schema.TypeString,
@@ -50,11 +51,6 @@ func resourceManagementPutFile() *schema.Resource {
 }
 
 func createManagementPutFile(d *schema.ResourceData, m interface{}) error {
-	return readManagementPutFile(d, m)
-}
-
-func readManagementPutFile(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -83,7 +79,11 @@ func readManagementPutFile(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(PutFileRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("put-file-" + acctest.RandString(10))
+	return readManagementPutFile(d, m)
+}
+
+func readManagementPutFile(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
