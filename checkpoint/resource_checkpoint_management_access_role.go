@@ -151,7 +151,7 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 					Payload["source"] = v.(string)
 				}
 				if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".selection"); ok {
-					Payload["selection"] = v
+					Payload["selection"] = v.(*schema.Set).List()
 				}
 				if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".base_dn"); ok {
 					Payload["base-dn"] = v.(string)
@@ -190,7 +190,7 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 					Payload["source"] = v.(string)
 				}
 				if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".selection"); ok {
-					Payload["selection"] = v
+					Payload["selection"] = v.(*schema.Set).List()
 				}
 				if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".base_dn"); ok {
 					Payload["base-dn"] = v.(string)
@@ -405,12 +405,24 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 				if d.HasChange("machines." + strconv.Itoa(i) + ".source") {
 					Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
+					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List() // Required
 				}
 				if d.HasChange("machines." + strconv.Itoa(i) + ".selection") {
-					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection")
+					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					if _, found := Payload["source"]; !found { // Required
+						Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
+					}
 				}
 				if d.HasChange("machines." + strconv.Itoa(i) + ".base_dn") {
 					Payload["base-dn"] = d.Get("machines." + strconv.Itoa(i) + ".base_dn")
+
+					if _, found := Payload["source"]; !found { // Required
+						Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
+					}
+
+					if _, found := Payload["selection"]; !found { // Required
+						Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					}
 				}
 				machinesPayload = append(machinesPayload, Payload)
 			}
@@ -461,12 +473,24 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 				if d.HasChange("users." + strconv.Itoa(i) + ".source") {
 					Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
+					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List() // Required
 				}
 				if d.HasChange("users." + strconv.Itoa(i) + ".selection") {
-					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection")
+					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					if _, found := Payload["source"]; !found { // Required
+						Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
+					}
 				}
 				if d.HasChange("users." + strconv.Itoa(i) + ".base_dn") {
 					Payload["base-dn"] = d.Get("users." + strconv.Itoa(i) + ".base_dn")
+
+					if _, found := Payload["source"]; !found { // Required
+						Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
+					}
+
+					if _, found := Payload["selection"]; !found { // Required
+						Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					}
 				}
 				usersPayload = append(usersPayload, Payload)
 			}

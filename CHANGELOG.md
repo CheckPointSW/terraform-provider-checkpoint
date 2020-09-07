@@ -1,4 +1,26 @@
 ## 1.1.0 (Unreleased)
+
+
+## 1.0.5 (September 7, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_put_file`       
+
+ENHANCEMENTS
+
+* Resource `checkpoint_management_access_rule`: Add rule in position relative to specific section
+* Print login error message to console and exit
+
+BUG FIXES
+
+* Fix resource `checkpoint_management_access_role`
+* Fix import access rule. Use the following UID format: <LAYER_NAME>;<RULE_UID>
+
+## 1.0.4 (September 3, 2020)
+
+* Terraform registry first release
+    
 ## 1.0.3 (July 21, 2020)
 
 FEATURES

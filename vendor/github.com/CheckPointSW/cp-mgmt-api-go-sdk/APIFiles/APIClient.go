@@ -363,7 +363,10 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 				return APIResponse{}, err
 			}
 		} else if _, ok := res.data["tasks"]; ok {
-			res = c.waitForTasks(res.data["tasks"].([]map[string]interface{}))
+			tasks := res.data["tasks"].([]interface{})
+			if len(tasks) > 0 {
+				res = c.waitForTasks(tasks)
+			}
 		}
 	}
 	return res, nil
@@ -606,11 +609,11 @@ The version of waitForTask function for the collection of tasks
 task_objects: A list of task objects
 return: APIResponse object (response of show-task command).
 */
-func (c *ApiClient) waitForTasks(taskObjects []map[string]interface{}) APIResponse {
+func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 
 	var tasks []string
 	for _, taskObj := range taskObjects {
-		taskId := taskObj["task-id"]
+		taskId := taskObj.(map[string]interface{})["task-id"]
 		tasks = append(tasks, taskId.(string))
 		c.waitForTask(taskId.(string))
 	}
@@ -623,18 +626,24 @@ func (c *ApiClient) waitForTasks(taskObjects []map[string]interface{}) APIRespon
 
 	if err != nil {
 		fmt.Println("Problem showing tasks, try again")
-
 	}
-	var task map[string]interface{}
-	for _, task = range taskRes.GetData()["tasks"].([]map[string]interface{}) {
-		if task["status"].(string) == "failed" || task["status"] == "partially succeeded" {
-			taskRes.Success = false
-			break
+
+	if taskRes.Success {
+		if v, ok := taskRes.GetData()["tasks"]; ok {
+			tasks := v.([]interface{})
+			if len(tasks) > 0 {
+				for _, task := range tasks {
+					status := task.(map[string]interface{})["status"].(string)
+					if status == "failed" || status == "partially succeeded" {
+						taskRes.Success = false
+						break
+					}
+				}
+			}
 		}
 	}
 
 	return taskRes
-
 }
 
 /**
