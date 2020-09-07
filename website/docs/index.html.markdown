@@ -186,7 +186,7 @@ Example:
 
 Host object with UID `9423d36f-2d66-4754-b9e2-e7f4493756d4`
 
-Write resource block in your configuration
+Write resource configuration block
 
 ```hcl
 resource "checkpoint_management_host" "host" {

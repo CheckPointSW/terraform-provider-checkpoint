@@ -7,6 +7,7 @@ import (
 	"log"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func resourceManagementAccessRule() *schema.Resource {
@@ -16,7 +17,15 @@ func resourceManagementAccessRule() *schema.Resource {
 		Update: updateManagementAccessRule,
 		Delete: deleteManagementAccessRule,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+				arr := strings.Split(d.Id(), ";")
+				if len(arr) != 2 {
+					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_NAME>;<RULE_UID>")
+				}
+				_ = d.Set("layer", arr[0])
+				d.SetId(arr[1])
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"layer": &schema.Schema{
@@ -33,22 +42,22 @@ func resourceManagementAccessRule() *schema.Resource {
 						"top": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "N/A",
+							Description: "Add rule on top of specific section identified by uid or name. Select value 'top' for entire rule base.",
 						},
 						"above": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "N/A",
+							Description: "Add rule above specific section/rule identified by uid or name.",
 						},
 						"below": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "N/A",
+							Description: "Add rule below specific section/rule identified by uid or name.",
 						},
 						"bottom": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "N/A",
+							Description: "Add rule in the bottom of specific section identified by uid or name. Select value 'bottom' for entire rule base.",
 						},
 					},
 				},
@@ -323,20 +332,32 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		accessRule["layer"] = v.(string)
 	}
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
-			accessRule["position"] = "top"
+
+		if v, ok := d.GetOk("position.top"); ok {
+			if v.(string) == "top" {
+				accessRule["position"] = "top" // entire rule-base
+			} else {
+				accessRule["position"] = map[string]interface{}{"top": v.(string)} // section-name
+			}
 		}
+
 		if v, ok := d.GetOk("position.above"); ok {
 			accessRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
+
 		if v, ok := d.GetOk("position.below"); ok {
 			accessRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
-			accessRule["position"] = "bottom"
-		}
 
+		if v, ok := d.GetOk("position.bottom"); ok {
+			if v.(string) == "bottom" {
+				accessRule["position"] = "bottom" // entire rule-base
+			} else {
+				accessRule["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+			}
+		}
 	}
+
 	if v, ok := d.GetOk("name"); ok {
 		accessRule["name"] = v.(string)
 	}
@@ -815,17 +836,29 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
-				accessRule["new-position"] = "top"
+
+			if v, ok := d.GetOk("position.top"); ok {
+				if v.(string) == "top" {
+					accessRule["new-position"] = "top" // entire rule-base
+				} else{
+					accessRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
+				}
 			}
+
 			if v, ok := d.GetOk("position.above"); ok {
 				accessRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
+
 			if v, ok := d.GetOk("position.below"); ok {
 				accessRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
-				accessRule["new-position"] = "bottom"
+
+			if v, ok := d.GetOk("position.bottom"); ok {
+				if v.(string) == "bottom" {
+					accessRule["new-position"] = "bottom" // entire rule-base
+				} else {
+					accessRule["new-position"] = map[string]interface{}{"bottom": v.(string)} // specific section-name
+				}
 			}
 		}
 	}

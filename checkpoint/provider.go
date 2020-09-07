@@ -211,7 +211,9 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 
 	switch context {
 	case checkpoint.WebContext:
-		s, err := GetSession()
+		var s Session
+		var err error
+		s, err = GetSession()
 		if err != nil {
 			return nil, err
 		}
@@ -219,38 +221,41 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 			args.Sid = s.Sid
 		}
 		mgmt := checkpoint.APIClient(args)
-		if CheckSession(mgmt, s.Uid) {
-			log.Printf("Client connected with last session (SID = %s)", s.Sid)
-		} else {
-			s, err := login(mgmt, username, password, domain)
+		if ok := CheckSession(mgmt, s.Uid); !ok {
+			// session is not valid, need to perform login
+			s, err = login(mgmt, username, password, domain)
 			if err != nil {
+				log.Println("Failed to perform login")
 				return nil, err
 			}
 			if err := s.Save(); err != nil {
 				return nil, err
 			}
 		}
+		log.Printf("Check Point provider connected with session uid [%s]", s.Uid)
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
 		_, err := login(gaia, username, password, "")
 		if err != nil {
+			log.Println("Failed to perform login")
 			return nil, err
 		}
 		return gaia, nil
 	default:
-		return nil, fmt.Errorf("Unsupported access context - gaia_api or web_api")
+		return nil, fmt.Errorf("unsupported access context - gaia_api or web_api")
 	}
 }
 
-// Perform login. Creating new session...
 func login(client *checkpoint.ApiClient, username string, pwd string, domain string) (Session, error) {
 	log.Printf("Perform login")
 
 	loginRes, err := client.Login(username, pwd, false, domain, false, "")
 	if err != nil {
-		log.Println("Failed to perform login")
 		return Session{}, err
+	}
+	if !loginRes.Success {
+		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
 	}
 	uid := ""
 	if val, ok := loginRes.GetData()["uid"]; ok {
@@ -261,6 +266,6 @@ func login(client *checkpoint.ApiClient, username string, pwd string, domain str
 		Sid: client.GetSessionID(),
 		Uid: uid,
 	}
-	log.Printf("Client connected with new session (SID = %s)", s.Sid)
+
 	return s, nil
 }
