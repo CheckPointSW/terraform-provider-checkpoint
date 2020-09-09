@@ -1,7 +1,7 @@
 ## 1.1.0 (Unreleased)
 
 
-## 1.0.5 (September 7, 2020)
+## 1.0.5 (September 9, 2020)
 
 FEATURES
 
@@ -19,7 +19,7 @@ BUG FIXES
 
 ## 1.0.4 (September 3, 2020)
 
-* Terraform registry first release
+* Release for Terraform Registry
     
 ## 1.0.3 (July 21, 2020)
 
