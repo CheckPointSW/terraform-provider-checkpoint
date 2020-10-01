@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Host.
 ---
 
-# checkpoint_management_host
+# Resource: checkpoint_management_host
 
 This resource allows you to add/update/delete Check Point Host.
 

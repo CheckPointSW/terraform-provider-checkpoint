@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Exception Group.
 ---
 
-# checkpoint_management_exception_group
+# Resource: checkpoint_management_exception_group
 
 This resource allows you to execute Check Point Exception Group.
 

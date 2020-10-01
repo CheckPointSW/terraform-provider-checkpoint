@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Add Threat Protections.
 ---
 
-# checkpoint_management_add_threat_protections
+# Resource: checkpoint_management_add_threat_protections
 
-This resource allows you to execute Check Point Add Threat Protections.
+This command resource allows you to execute Check Point Add Threat Protections.
 
 ## Example Usage
 
@@ -25,7 +25,8 @@ resource "checkpoint_management_add_threat_protections" "example" {
 The following arguments are supported:
 
 * `package_format` - (Optional) Protections package format. 
-* `package_path` - (Optional) Protections package path. 
+* `package_path` - (Optional) Protections package path.
+* `task_id` - (Computed) Asynchronous task unique identifier.
 
 
 ## How To Use

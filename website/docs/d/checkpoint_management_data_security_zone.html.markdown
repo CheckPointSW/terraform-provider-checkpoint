@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Security Zone.
 ---
 
-# checkpoint_management_data_security_zone
+# Data Source: checkpoint_management_data_security_zone
 
 Use this data source to get information on an existing Check Point Security Zone.
 

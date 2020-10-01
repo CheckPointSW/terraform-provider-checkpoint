@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Https Layer.
 ---
 
-# checkpoint_management_https_layer
+# Resource: checkpoint_management_https_layer
 
 This resource allows you to execute Check Point Https Layer.
 

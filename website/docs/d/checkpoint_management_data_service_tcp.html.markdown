@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Tcp.
 ---
 
-# checkpoint_management_data_service_tcp
+# Data Source: checkpoint_management_data_service_tcp
 
 Use this data source to get information on an existing Check Point Service Tcp.
 

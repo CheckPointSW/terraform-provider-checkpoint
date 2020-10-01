@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -23,19 +24,18 @@ func resourceManagementLogout() *schema.Resource {
 }
 
 func createManagementLogout(d *schema.ResourceData, m interface{}) error {
-
-	return readManagementLogout(d, m)
-}
-
-func readManagementLogout(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), "", true, false)
 	if !logoutRes.Success {
 		return fmt.Errorf(logoutRes.ErrorMsg)
 	}
-	// Set Schema UID = Session UID
-	d.SetId(logoutRes.GetData()["message"].(string))
+
+	d.SetId("logout-" + acctest.RandString(10))
+	return readManagementLogout(d, m)
+}
+
+func readManagementLogout(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 

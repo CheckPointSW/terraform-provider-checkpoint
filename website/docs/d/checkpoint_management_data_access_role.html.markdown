@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Access Role.
 ---
 
-# checkpoint_management_data_access_role
+# Data Source: checkpoint_management_data_access_role
 
 Use this data source to get information on an existing Check Point Access Role.
 

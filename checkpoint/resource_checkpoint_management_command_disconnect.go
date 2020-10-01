@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -23,11 +24,6 @@ func resourceManagementDisconnect() *schema.Resource {
 }
 
 func createManagementDisconnect(d *schema.ResourceData, m interface{}) error {
-	return readManagementDisconnect(d, m)
-}
-
-func readManagementDisconnect(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -40,12 +36,15 @@ func readManagementDisconnect(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(DisconnectRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("discard-" + acctest.RandString(10))
+	return readManagementDisconnect(d, m)
+}
+
+func readManagementDisconnect(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementDisconnect(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

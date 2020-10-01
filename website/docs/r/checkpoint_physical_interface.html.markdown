@@ -6,7 +6,7 @@ description: |-
   This resource allows you to set a Physical interface.
 ---
 
-# checkpoint_physical_interface
+# Resource: checkpoint_physical_interface
 
 This resource allows you to set a Physical interface.
 

@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Set Threat Protection.
 ---
 
-# checkpoint_management_set_threat_protection
+# Resource: checkpoint_management_set_threat_protection
 
-This resource allows you to execute Check Point Set Threat Protection.
+This command resource allows you to execute Check Point Set Threat Protection.
 
 ## Example Usage
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Dns Domain.
 ---
 
-# checkpoint_management_dns_domain
+# Resource: checkpoint_management_dns_domain
 
 This resource allows you to execute Check Point Dns Domain.
 

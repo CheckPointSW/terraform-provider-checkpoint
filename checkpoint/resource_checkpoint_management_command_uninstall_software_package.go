@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -55,16 +56,16 @@ func resourceManagementUninstallSoftwarePackage() *schema.Resource {
 				ForceNew:    true,
 				Description: "The number of targets, on which the same package is installed at the same time.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementUninstallSoftwarePackage(d *schema.ResourceData, m interface{}) error {
-	return readManagementUninstallSoftwarePackage(d, m)
-}
-
-func readManagementUninstallSoftwarePackage(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -98,12 +99,17 @@ func readManagementUninstallSoftwarePackage(d *schema.ResourceData, m interface{
 		return fmt.Errorf(UninstallSoftwarePackageRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("uninstall-software-package-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(UninstallSoftwarePackageRes.GetData()))
+
+	return readManagementUninstallSoftwarePackage(d, m)
+}
+
+func readManagementUninstallSoftwarePackage(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementUninstallSoftwarePackage(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

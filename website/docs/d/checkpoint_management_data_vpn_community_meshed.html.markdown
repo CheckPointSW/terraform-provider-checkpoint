@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Vpn Community Meshed.
 ---
 
-# checkpoint_management_data_vpn_community_meshed
+# Data Source: checkpoint_management_data_vpn_community_meshed
 
 Use this data source to get information on an existing Check Point Vpn Community Meshed.
 

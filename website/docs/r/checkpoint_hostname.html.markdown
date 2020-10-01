@@ -6,7 +6,7 @@ description: |-
   This resource allows you to set the hostname of a Check Point machine.
 ---
 
-# checkpoint_hostname
+# Resource: checkpoint_hostname
 
 This resource allows you to set the hostname of a Check Point machine.
 

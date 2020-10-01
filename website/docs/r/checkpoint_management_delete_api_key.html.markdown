@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Delete Api Key.
 ---
 
-# checkpoint_management_delete_api_key
+# Resource: checkpoint_management_delete_api_key
 
-This resource allows you to execute Check Point Delete Api Key.
+This command resource allows you to execute Check Point Delete Api Key.
 
 ## Example Usage
 

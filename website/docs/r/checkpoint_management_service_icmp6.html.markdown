@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Service Icmp6.
 ---
 
-# checkpoint_management_service_icmp6
+# Resource: checkpoint_management_service_icmp6
 
 This resource allows you to execute Check Point Service Icmp6.
 

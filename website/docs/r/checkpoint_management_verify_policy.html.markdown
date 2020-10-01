@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Verify Policy.
 ---
 
-# checkpoint_management_verify_policy
+# Resource: checkpoint_management_verify_policy
 
-This resource allows you to execute Check Point Verify Policy.
+This command resource allows you to execute Check Point Verify Policy.
 
 ## Example Usage
 
@@ -24,7 +24,7 @@ resource "checkpoint_management_verify_policy" "example" {
 The following arguments are supported:
 
 * `policy_package` - (Required) Policy package identified by the name or UID. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

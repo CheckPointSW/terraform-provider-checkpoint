@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -35,11 +36,6 @@ func resourceManagementDeleteUpdatableObject() *schema.Resource {
 }
 
 func createManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}) error {
-	return readManagementDeleteUpdatableObject(d, m)
-}
-
-func readManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -60,12 +56,15 @@ func readManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}) 
 		return fmt.Errorf(DeleteUpdatableObjectRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("delete-updatable-object-" + acctest.RandString(10))
+	return readManagementDeleteUpdatableObject(d, m)
+}
+
+func readManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

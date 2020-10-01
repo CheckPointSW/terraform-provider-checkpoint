@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Assign Global Assignment.
 ---
 
-# checkpoint_management_assign_global_assignment
+# Resource: checkpoint_management_assign_global_assignment
 
-This resource allows you to execute Check Point Assign Global Assignment.
+This command resource allows you to execute Check Point Assign Global Assignment.
 
 ## Example Usage
 

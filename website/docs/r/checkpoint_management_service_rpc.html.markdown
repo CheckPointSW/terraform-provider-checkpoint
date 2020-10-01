@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Service Rpc.
 ---
 
-# checkpoint_management_service_rpc
+# Resource: checkpoint_management_service_rpc
 
 This resource allows you to execute Check Point Service Rpc.
 

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -16,11 +17,6 @@ func resourceManagementKeepalive() *schema.Resource {
 }
 
 func createManagementKeepalive(d *schema.ResourceData, m interface{}) error {
-	return readManagementKeepalive(d, m)
-}
-
-func readManagementKeepalive(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -29,12 +25,15 @@ func readManagementKeepalive(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(KeepaliveRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("keepalive-" + acctest.RandString(10))
+	return readManagementKeepalive(d, m)
+}
+
+func readManagementKeepalive(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementKeepalive(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

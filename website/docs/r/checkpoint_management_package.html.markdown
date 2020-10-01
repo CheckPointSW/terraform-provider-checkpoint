@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Package Object.
 ---
 
-# checkpoint_management_package
+# Resource: checkpoint_management_package
 
 This resource allows you to add/update/delete Check Point Package Object.
 

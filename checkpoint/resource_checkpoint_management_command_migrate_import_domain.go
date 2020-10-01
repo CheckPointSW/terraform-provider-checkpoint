@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -42,16 +43,16 @@ func resourceManagementMigrateImportDomain() *schema.Resource {
 				ForceNew:    true,
 				Description: "Import logs from the input package.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) error {
-	return readManagementMigrateImportDomain(d, m)
-}
-
-func readManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -80,12 +81,17 @@ func readManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) er
 		return fmt.Errorf(MigrateImportDomainRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("migrate-import-domain-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(MigrateImportDomainRes.GetData()))
+
+	return readManagementMigrateImportDomain(d, m)
+}
+
+func readManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

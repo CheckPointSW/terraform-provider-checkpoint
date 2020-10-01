@@ -70,3 +70,30 @@ func Compare(a, b []string) []string {
 	}
 	return a
 }
+
+func resolveTaskId(data map[string]interface{}) interface{} {
+	if data["tasks"] != nil {
+		if v, ok := data["tasks"].([]interface{}); ok {
+			if len(v) == 1 {
+				return v[0].(map[string]interface{})["task-id"]
+			}
+		}
+	}
+	return nil
+}
+
+func resolveTaskIds(data map[string]interface{}) []interface{} {
+	if data["tasks"] != nil {
+		if tasksJson, ok := data["tasks"].([]interface{}); ok {
+			tasksIds := make([]interface{}, 0)
+			if len(tasksJson) > 0 {
+				for _, task := range tasksJson {
+					taskJson := task.(map[string]interface{})
+					tasksIds = append(tasksIds, taskJson["task-id"])
+				}
+			}
+			return tasksIds
+		}
+	}
+	return nil
+}

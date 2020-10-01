@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Udp.
 ---
 
-# checkpoint_management_data_service_udp
+# Data Source: checkpoint_management_data_service_udp
 
 Use this data source to get information on an existing Check Point Service Udp.
 

@@ -6,9 +6,9 @@ description: |-
   Install the published policy.
 ---
 
-# checkpoint_management_install_policy
+# Resource: checkpoint_management_install_policy
 
-Install the published policy.
+This command resource allows you to install the published policy.
 
 ## Example Usage
 
@@ -32,7 +32,7 @@ The following arguments are supported:
 * `install_on_all_cluster_members_or_fail` - (Optional) Relevant for the gateway clusters. If true, the policy is installed on all the cluster members. If the installation on a cluster member fails, don't install on that cluster.
 * `prepare_only` - (Optional) If true, prepares the policy for the installation, but doesn't install it on an installation target.
 * `revision` - (Optional) The UID of the revision of the policy to install.
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

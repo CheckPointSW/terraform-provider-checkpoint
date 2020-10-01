@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -30,16 +31,19 @@ func resourceManagementAssignGlobalAssignment() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"tasks": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifiers",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
 func createManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{}) error {
-	return readManagementAssignGlobalAssignment(d, m)
-}
-
-func readManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -56,12 +60,17 @@ func readManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{})
 		return fmt.Errorf(AssignGlobalAssignmentRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("assign-global-assignment-" + acctest.RandString(10))
+	_ = d.Set("tasks", resolveTaskIds(AssignGlobalAssignmentRes.GetData()))
+
+	return readManagementAssignGlobalAssignment(d, m)
+}
+
+func readManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

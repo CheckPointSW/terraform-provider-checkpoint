@@ -19,15 +19,16 @@ func resourceManagementPublish() *schema.Resource {
 				ForceNew:    true,
 				Description: "Session unique identifier. Specify it to publish a different session than the one you currently use.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementPublish(d *schema.ResourceData, m interface{}) error {
-	return readManagementPublish(d, m)
-}
-
-func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	var uid string
 	var payload = make(map[string]interface{})
@@ -49,12 +50,18 @@ func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	if !publishRes.Success {
 		return fmt.Errorf(publishRes.ErrorMsg)
 	}
-	// Set Schema UID = Session UID
+
 	d.SetId(uid)
+	_ = d.Set("task_id", resolveTaskId(publishRes.GetData()))
+
+	return readManagementPublish(d, m)
+}
+
+func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementPublish(d *schema.ResourceData, m interface{}) error {
-	d.SetId("") // Destroy resource
+	d.SetId("")
 	return nil
 }

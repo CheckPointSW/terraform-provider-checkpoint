@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Https Layer.
 ---
 
-# checkpoint_management_data_https_layer
+# Data Source: checkpoint_management_data_https_layer
 
 Use this data source to get information on an existing Check Point Https Layer.
 

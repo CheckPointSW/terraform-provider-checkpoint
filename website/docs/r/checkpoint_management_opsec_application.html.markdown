@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Opsec Application.
 ---
 
-# checkpoint_management_opsec_application
+# Resource: checkpoint_management_opsec_application
 
 This resource allows you to execute Check Point Opsec Application.
 

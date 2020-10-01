@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Sctp.
 ---
 
-# checkpoint_management_data_service_sctp
+# Data Source: checkpoint_management_data_service_sctp
 
 Use this data source to get information on an existing Check Point Service Sctp.
 

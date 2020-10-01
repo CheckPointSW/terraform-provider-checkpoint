@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Https Section.
 ---
 
-# checkpoint_management_data_https_section
+# Data Source: checkpoint_management_data_https_section
 
 Use this data source to get information on an existing Check Point Https Section.
 

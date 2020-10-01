@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Access Rule.
 ---
 
-# checkpoint_management_data_access_rule
+# Data Source: checkpoint_management_data_access_rule
 
 Use this data source to get information on an existing Check Point Access Rule.
 

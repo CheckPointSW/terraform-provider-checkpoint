@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Exception Group.
 ---
 
-# checkpoint_management_data_exception_group
+# Data Source: checkpoint_management_data_exception_group
 
 Use this data source to get information on an existing Check Point Exception Group.
 

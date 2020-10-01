@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Package Object.
 ---
 
-# checkpoint_management_data_package
+# Data Source: checkpoint_management_data_package
 
 Use this data source to get information on an existing Check Point Package Object.
 

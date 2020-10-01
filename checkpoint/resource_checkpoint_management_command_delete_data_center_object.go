@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -35,11 +36,6 @@ func resourceManagementDeleteDataCenterObject() *schema.Resource {
 }
 
 func createManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{}) error {
-	return readManagementDeleteDataCenterObject(d, m)
-}
-
-func readManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -60,12 +56,15 @@ func readManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{})
 		return fmt.Errorf(DeleteDataCenterObjectRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("delete-data-center-object-" + acctest.RandString(10))
+	return readManagementDeleteDataCenterObject(d, m)
+}
+
+func readManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -65,11 +66,6 @@ func resourceManagementSetIpsUpdateSchedule() *schema.Resource {
 }
 
 func createManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{}) error {
-	return readManagementSetIpsUpdateSchedule(d, m)
-}
-
-func readManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -105,12 +101,15 @@ func readManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{}) e
 		return fmt.Errorf(SetIpsUpdateScheduleRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("set-ips-update-schedule-" + acctest.RandString(10))
+	return readManagementSetIpsUpdateSchedule(d, m)
+}
+
+func readManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

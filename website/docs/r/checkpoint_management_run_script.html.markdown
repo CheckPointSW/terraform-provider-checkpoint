@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Run Script.
 ---
 
-# checkpoint_management_run_script
+# Resource: checkpoint_management_run_script
 
-This resource allows you to execute Check Point Run Script.
+This command resource allows you to execute Check Point Run Script.
 
 ## Example Usage
 
@@ -30,7 +30,7 @@ The following arguments are supported:
 * `targets` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.targets blocks are documented below.
 * `args` - (Optional) Script arguments. 
 * `comments` - (Optional) Comments string. 
-
+* `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

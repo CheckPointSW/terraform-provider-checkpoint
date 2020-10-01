@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -69,16 +70,19 @@ func resourceManagementSetGlobalDomain() *schema.Resource {
 				ForceNew:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 			},
+			"tasks": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifiers",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
 func createManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) error {
-	return readManagementSetGlobalDomain(d, m)
-}
-
-func readManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -121,12 +125,17 @@ func readManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) error 
 		return fmt.Errorf(SetGlobalDomainRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("set-global-domain-" + acctest.RandString(10))
+	_ = d.Set("tasks", resolveTaskIds(SetGlobalDomainRes.GetData()))
+
+	return readManagementSetGlobalDomain(d, m)
+}
+
+func readManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

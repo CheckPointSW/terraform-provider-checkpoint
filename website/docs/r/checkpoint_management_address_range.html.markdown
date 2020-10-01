@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Address Range.
 ---
 
-# checkpoint_management_address_range
+# Resource: checkpoint_management_address_range
 
 This resource allows you to add/update/delete Check Point Address Range.
 

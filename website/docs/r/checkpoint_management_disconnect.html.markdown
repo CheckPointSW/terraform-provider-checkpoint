@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Disconnect.
 ---
 
-# checkpoint_management_disconnect
+# Resource: checkpoint_management_disconnect
 
-This resource allows you to execute Check Point Disconnect.
+This command resource allows you to execute Check Point Disconnect.
 
 ## Example Usage
 

@@ -1,4 +1,43 @@
-## 1.1.0 (Unreleased)
+## 1.2.0 (Unreleased)
+
+## 1.1.0 (October 1, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_access_point_name`
+* **New Resource:** `checkpoint_management_checkpoint_host`
+* **New Resource:** `checkpoint_management_gsn_handover_group`       
+* **New Resource:** `checkpoint_management_identity_tag`
+* **New Resource:** `checkpoint_management_mds`
+* **New Resource:** `checkpoint_management_service_citrix_tcp`
+* **New Resource:** `checkpoint_management_service_compound_tcp`
+* **New Resource:** `checkpoint_management_user`   
+* **New Resource:** `checkpoint_management_user_group` 
+* **New Resource:** `checkpoint_management_user_template`
+* **New Resource:** `checkpoint_management_vpn_community_remote_access`       
+* **New Resource:** `checkpoint_management_ha_full_sync`       
+* **New Resource:** `checkpoint_management_set_automatic_purge`       
+* **New Resource:** `checkpoint_management_set_ha_state`
+* **New Resource:** `checkpoint_management_get_attachment`      
+* **New Data Source:** `checkpoint_management_access_point_name`
+* **New Data Source:** `checkpoint_management_checkpoint_host`
+* **New Data Source:** `checkpoint_management_mds`
+* **New Data Source:** `checkpoint_management_gsn_handover_group`
+* **New Data Source:** `checkpoint_management_identity_tag`
+* **New Data Source:** `checkpoint_management_service_citrix_tcp`
+* **New Data Source:** `checkpoint_management_service_compound_tcp`
+* **New Data Source:** `checkpoint_management_user`   
+* **New Data Source:** `checkpoint_management_user_group` 
+* **New Data Source:** `checkpoint_management_user_template`
+* **New Data Source:** `checkpoint_management_vpn_community_remote_access`         
+            
+ENHANCEMENTS
+
+* Resources of type command that returns asynchronous task-id(s), will save task-id(s) in state.
+
+BUG FIXES
+
+* Resources of type command are execute as part of 'add' method and are one-use only.
 
 
 ## 1.0.5 (September 9, 2020)

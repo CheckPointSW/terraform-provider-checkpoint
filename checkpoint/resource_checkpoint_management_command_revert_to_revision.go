@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -18,16 +19,16 @@ func resourceManagementRevertToRevision() *schema.Resource {
 				ForceNew:    true,
 				Description: "Session unique identifier. Specify the session  id you would like to revert your database to.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementRevertToRevision(d *schema.ResourceData, m interface{}) error {
-	return readManagementRevertToRevision(d, m)
-}
-
-func readManagementRevertToRevision(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -40,12 +41,17 @@ func readManagementRevertToRevision(d *schema.ResourceData, m interface{}) error
 		return fmt.Errorf(RevertToRevisionRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("revert-to-revision-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(RevertToRevisionRes.GetData()))
+
+	return readManagementRevertToRevision(d, m)
+}
+
+func readManagementRevertToRevision(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementRevertToRevision(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

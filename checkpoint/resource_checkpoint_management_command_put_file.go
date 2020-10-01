@@ -46,6 +46,14 @@ func resourceManagementPutFile() *schema.Resource {
 				ForceNew:    true,
 				Description: "Comments string.",
 			},
+			"tasks": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifiers",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -80,6 +88,10 @@ func createManagementPutFile(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId("put-file-" + acctest.RandString(10))
+
+	_ = d.Set("tasks", resolveTaskIds(PutFileRes.GetData()))
+
+
 	return readManagementPutFile(d, m)
 }
 
@@ -88,7 +100,6 @@ func readManagementPutFile(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteManagementPutFile(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Migrate Export Domain.
 ---
 
-# checkpoint_management_migrate_export_domain
+# Resource: checkpoint_management_migrate_export_domain
 
-This resource allows you to execute Check Point Migrate Export Domain.
+This command resource allows you to execute Check Point Migrate Export Domain.
 
 ## Example Usage
 
@@ -27,7 +27,7 @@ The following arguments are supported:
 * `domain` - (Required) Domain can be identified by name or UID.<br><font color="red">Required only for</font> exporting domain from Multi-Domain Server. 
 * `file_path` - (Optional) Path in which the exported domain data will be saved. <br>Should be the directory path or the full file path with ".tgz" <br>If no path was inserted the default will be: "/var/log/&lt;domain name&gt;_&lt;date&gt;.tgz". 
 * `include_logs` - (Optional) Export logs. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

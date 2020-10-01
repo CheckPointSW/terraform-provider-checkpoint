@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Dns Domain.
 ---
 
-# checkpoint_management_data_dns_domain
+# Data Source: checkpoint_management_data_dns_domain
 
 Use this data source to get information on an existing Check Point Dns Domain.
 

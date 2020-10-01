@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Vpn Community Star.
 ---
 
-# checkpoint_management_data_vpn_community_star
+# Data Source: checkpoint_management_data_vpn_community_star
 
 Use this data source to get information on an existing Check Point Vpn Community Star.
 

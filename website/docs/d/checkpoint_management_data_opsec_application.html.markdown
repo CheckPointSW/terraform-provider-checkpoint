@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Opsec Application.
 ---
 
-# checkpoint_management_data_opsec_application
+# Data Source: checkpoint_management_data_opsec_application
 
 Use this data source to get information on an existing Check Point Opsec Application.
 

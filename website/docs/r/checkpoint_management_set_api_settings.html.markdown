@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Set Api Settings.
 ---
 
-# checkpoint_management_set_api_settings
+# Resource: checkpoint_management_set_api_settings
 
-This resource allows you to execute Check Point Set Api Settings.
+This command resource allows you to execute Check Point Set Api Settings.
 
 ## Example Usage
 

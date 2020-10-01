@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Rpc.
 ---
 
-# checkpoint_management_data_service_rpc
+# Data Source: checkpoint_management_data_service_rpc
 
 Use this data source to get information on an existing Check Point Service Rpc.
 

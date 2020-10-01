@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Other.
 ---
 
-# checkpoint_management_data_service_other
+# Data Source: checkpoint_management_data_service_other
 
 Use this data source to get information on an existing Check Point Service Other.
 

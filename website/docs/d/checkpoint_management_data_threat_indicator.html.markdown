@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Threat Indicator.
 ---
 
-# checkpoint_management_data_threat_indicator
+# Data Source: checkpoint_management_data_threat_indicator
 
 Use this data source to get information on an existing Check Point Threat Indicator.
 

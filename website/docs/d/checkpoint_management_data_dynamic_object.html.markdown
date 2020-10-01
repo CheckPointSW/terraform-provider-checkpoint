@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Dynamic Object.
 ---
 
-# checkpoint_management_data_dynamic_object
+# Data Source: checkpoint_management_data_dynamic_object
 
 Use this data source to get information on an existing Check Point Dynamic Object.
 

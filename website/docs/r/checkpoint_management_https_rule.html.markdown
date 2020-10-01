@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Https Rule.
 ---
 
-# checkpoint_management_https_rule
+# Resource: checkpoint_management_https_rule
 
 This resource allows you to execute Check Point Https Rule.
 

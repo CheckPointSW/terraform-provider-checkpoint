@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Run Threat Emulation File Types Offline Update.
 ---
 
-# checkpoint_management_run_threat_emulation_file_types_offline_update
+# Resource: checkpoint_management_run_threat_emulation_file_types_offline_update
 
-This resource allows you to execute Check Point Run Threat Emulation File Types Offline Update.
+This command resource allows you to execute Check Point Run Threat Emulation File Types Offline Update.
 
 ## Example Usage
 

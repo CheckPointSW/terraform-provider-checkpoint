@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -21,16 +22,19 @@ func resourceManagementInstallDatabase() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"tasks": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifiers",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
 func createManagementInstallDatabase(d *schema.ResourceData, m interface{}) error {
-	return readManagementInstallDatabase(d, m)
-}
-
-func readManagementInstallDatabase(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -43,12 +47,18 @@ func readManagementInstallDatabase(d *schema.ResourceData, m interface{}) error 
 		return fmt.Errorf(InstallDatabaseRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("install-database-" + acctest.RandString(10))
+
+	_ = d.Set("tasks", resolveTaskIds(InstallDatabaseRes.GetData()))
+
+	return readManagementInstallDatabase(d, m)
+}
+
+func readManagementInstallDatabase(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementInstallDatabase(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

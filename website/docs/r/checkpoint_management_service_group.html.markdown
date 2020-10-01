@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Service Group.
 ---
 
-# checkpoint_management_service_group
+# Resource: checkpoint_management_service_group
 
 This resource allows you to add/update/delete Check Point Service Group.
 

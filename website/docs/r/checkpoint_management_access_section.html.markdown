@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Access Section.
 ---
 
-# checkpoint_management_access_section
+# Resource: checkpoint_management_access_section
 
 This resource allows you to execute Check Point Access Section.
 

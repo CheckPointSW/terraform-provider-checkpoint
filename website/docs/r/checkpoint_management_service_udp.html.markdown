@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Service Udp.
 ---
 
-# checkpoint_management_service_udp
+# Resource: checkpoint_management_service_udp
 
 This resource allows you to add/update/delete Check Point Service Udp.
 

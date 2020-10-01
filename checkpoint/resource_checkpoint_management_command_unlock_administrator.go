@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -23,11 +24,6 @@ func resourceManagementUnlockAdministrator() *schema.Resource {
 }
 
 func createManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) error {
-	return readManagementUnlockAdministrator(d, m)
-}
-
-func readManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -40,12 +36,15 @@ func readManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) er
 		return fmt.Errorf(UnlockAdministratorRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("unlock-administrator-" + acctest.RandString(10))
+	return readManagementUnlockAdministrator(d, m)
+}
+
+func readManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

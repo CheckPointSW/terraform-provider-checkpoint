@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Add Api Key.
 ---
 
-# checkpoint_management_add_api_key
+# Resource: checkpoint_management_add_api_key
 
-This resource allows you to execute Check Point Add Api Key.
+This command resource allows you to execute Check Point Add Api Key.
 
 ## Example Usage
 
@@ -24,7 +24,8 @@ resource "checkpoint_management_add_api_key" "example" {
 The following arguments are supported:
 
 * `admin_uid` - (Required) Administrator uid to generate API key for. 
-* `admin_name` - (Required) Administrator name to generate API key for. 
+* `admin_name` - (Required) Administrator name to generate API key for.
+* `api_key` - (Computed) Represents the API Key to be used for Login. 
 
 
 ## How To Use

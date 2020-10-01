@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Export.
 ---
 
-# checkpoint_management_export
+# Resource: checkpoint_management_export
 
-This resource allows you to execute Check Point Export.
+This command resource allows you to execute Check Point Export.
 
 ## Example Usage
 
@@ -28,7 +28,8 @@ The following arguments are supported:
 * `export_files_by_class` - (Optional) N/A 
 * `include_classes` - (Optional) N/Ainclude_classes blocks are documented below.
 * `include_topics` - (Optional) N/Ainclude_topics blocks are documented below.
-* `query_limit` - (Optional) N/A 
+* `query_limit` - (Optional) N/A
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 
 ## How To Use

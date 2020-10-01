@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Set Ips Update Schedule.
 ---
 
-# checkpoint_management_set_ips_update_schedule
+# Resource: checkpoint_management_set_ips_update_schedule
 
-This resource allows you to execute Check Point Set Ips Update Schedule.
+This command resource allows you to execute Check Point Set Ips Update Schedule.
 
 ## Example Usage
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Security Zone.
 ---
 
-# checkpoint_management_security_zone
+# Resource: checkpoint_management_security_zone
 
 This resource allows you to execute Check Point Security Zone.
 

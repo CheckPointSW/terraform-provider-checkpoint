@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -47,11 +48,6 @@ func resourceManagementWhereUsed() *schema.Resource {
 }
 
 func createManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
-	return readManagementWhereUsed(d, m)
-}
-
-func readManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -80,12 +76,15 @@ func readManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(WhereUsedRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("where-used-" + acctest.RandString(10))
+	return readManagementWhereUsed(d, m)
+}
+
+func readManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

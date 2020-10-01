@@ -6,9 +6,9 @@ description: |-
   Log in to the server with username and password.
 ---
 
-# checkpoint_management_login
+# Resource: checkpoint_management_login
 
-Log in to the server with username and password.
+This command resource allows you to log in to the server with username and password.
 
 ## Example Usage
 

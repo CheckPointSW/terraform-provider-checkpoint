@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Multicast Address Range.
 ---
 
-# checkpoint_management_multicast_address_range
+# Resource: checkpoint_management_multicast_address_range
 
 This resource allows you to execute Check Point Multicast Address Range.
 

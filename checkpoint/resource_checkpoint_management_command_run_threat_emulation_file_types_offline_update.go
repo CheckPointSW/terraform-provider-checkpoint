@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -29,11 +30,6 @@ func resourceManagementRunThreatEmulationFileTypesOfflineUpdate() *schema.Resour
 }
 
 func createManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.ResourceData, m interface{}) error {
-	return readManagementRunThreatEmulationFileTypesOfflineUpdate(d, m)
-}
-
-func readManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -50,12 +46,15 @@ func readManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.ResourceDa
 		return fmt.Errorf(RunThreatEmulationFileTypesOfflineUpdateRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("run-threat-emulation-file-types-offline-update-" + acctest.RandString(10))
+	return readManagementRunThreatEmulationFileTypesOfflineUpdate(d, m)
+}
+
+func readManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

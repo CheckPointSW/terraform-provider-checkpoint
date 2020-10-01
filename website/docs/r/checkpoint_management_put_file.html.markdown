@@ -6,9 +6,9 @@ description: |-
 This resource allows you to execute Check Point Put File.
 ---
 
-# checkpoint_management_put_file
+# Resource: checkpoint_management_put_file
 
-This resource allows you to execute Check Point Put File.
+This command resource allows you to execute Check Point Put File.
 
 ## Example Usage
 
@@ -31,6 +31,7 @@ The following arguments are supported:
 * `file_name` - (Optional) Text file name.
 * `file_path` - (Optional) Text file target path. 
 * `comments` - (Optional) Comments string. 
+* `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 
 
 ## How To Use

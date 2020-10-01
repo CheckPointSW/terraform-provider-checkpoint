@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Discard.
 ---
 
-# checkpoint_management_discard
+# Resource: checkpoint_management_discard
 
-This resource allows you to execute Check Point Discard.
+This command resource allows you to execute Check Point Discard.
 
 ## Example Usage
 

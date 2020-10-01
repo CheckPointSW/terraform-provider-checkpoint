@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Where Used.
 ---
 
-# checkpoint_management_where_used
+# Resource: checkpoint_management_where_used
 
-This resource allows you to execute Check Point Where Used.
+This command resource allows you to execute Check Point Where Used.
 
 ## Example Usage
 

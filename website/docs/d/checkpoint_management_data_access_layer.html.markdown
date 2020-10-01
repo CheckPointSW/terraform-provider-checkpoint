@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Access Layer.
 ---
 
-# checkpoint_management_data_access_layer
+# Data Source: checkpoint_management_data_access_layer
 
 Use this data source to get information on an existing Check Point Access Layer.
 
@@ -16,8 +16,8 @@ Use this data source to get information on an existing Check Point Access Layer.
 ```hcl
 resource "checkpoint_management_access_layer" "access_layer" {
     name = "Access Layer 1"
-	detect_using_x_forward_for = false
-	applications_and_url_filtering = true
+    detect_using_x_forward_for = false
+    applications_and_url_filtering = true
 }
 
 data "checkpoint_management_data_access_layer" "data_access_layer" {

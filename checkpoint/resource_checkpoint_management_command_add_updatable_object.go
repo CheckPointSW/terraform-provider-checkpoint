@@ -62,11 +62,6 @@ func resourceManagementAddUpdatableObject() *schema.Resource {
 }
 
 func createManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) error {
-	return readManagementAddUpdatableObject(d, m)
-}
-
-func readManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -103,12 +98,15 @@ func readManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) err
 		return fmt.Errorf(AddUpdatableObjectRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId(AddUpdatableObjectRes.GetData()["uid"].(string))
+	return readManagementAddUpdatableObject(d, m)
+}
+
+func readManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

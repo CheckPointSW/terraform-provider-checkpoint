@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Group With Exclusion.
 ---
 
-# checkpoint_management_data_group_with_exclusion
+# Data Source: checkpoint_management_data_group_with_exclusion
 
 Use this data source to get information on an existing Check Point Group With Exclusion.
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Service Other.
 ---
 
-# checkpoint_management_service_other
+# Resource: checkpoint_management_service_other
 
 This resource allows you to execute Check Point Service Other.
 

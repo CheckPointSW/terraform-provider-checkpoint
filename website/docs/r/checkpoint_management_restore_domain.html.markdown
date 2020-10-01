@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Restore Domain.
 ---
 
-# checkpoint_management_restore_domain
+# Resource: checkpoint_management_restore_domain
 
-This resource allows you to execute Check Point Restore Domain.
+This command resource allows you to execute Check Point Restore Domain.
 
 ## Example Usage
 
@@ -28,7 +28,7 @@ The following arguments are supported:
 * `domain_name` - (Required) Domain name. Should be unique in the MDS.<br><font color="red">Required only for</font> importing Security Management Server into Multi-Domain Server. 
 * `domain_server_name` - (Required) Multi Domain server name.<br><font color="red">Required only for</font> importing Security Management Server into Multi-Domain Server. 
 * `verify_only` - (Optional) If true, verify that the import operation is valid for this input file and this environment <br>Note: Restore operation will not be executed. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

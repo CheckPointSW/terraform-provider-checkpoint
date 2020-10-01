@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Unlock Administrator.
 ---
 
-# checkpoint_management_unlock_administrator
+# Resource: checkpoint_management_unlock_administrator
 
-This resource allows you to execute Check Point Unlock Administrator.
+This command resource allows you to execute Check Point Unlock Administrator.
 
 ## Example Usage
 

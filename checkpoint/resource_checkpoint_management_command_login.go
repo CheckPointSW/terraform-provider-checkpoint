@@ -77,11 +77,6 @@ func resourceManagementLogin() *schema.Resource {
 }
 
 func createManagementLogin(d *schema.ResourceData, m interface{}) error {
-
-	return readManagementLogin(d, m)
-}
-
-func readManagementLogin(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = make(map[string]interface{})
@@ -121,8 +116,12 @@ func readManagementLogin(d *schema.ResourceData, m interface{}) error {
 	if !loginRes.Success {
 		return fmt.Errorf(loginRes.ErrorMsg)
 	}
-	// Set Schema UID = Session UID
+
 	d.SetId(loginRes.GetData()["sid"].(string))
+	return readManagementLogin(d, m)
+}
+
+func readManagementLogin(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Group.
 ---
 
-# checkpoint_management_group
+# Resource: checkpoint_management_group
 
 This resource allows you to add/update/delete Check Point Group.
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Dynamic Object.
 ---
 
-# checkpoint_management_dynamic_object
+# Resource: checkpoint_management_dynamic_object
 
 This resource allows you to execute Check Point Dynamic Object.
 

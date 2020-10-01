@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Add Updatable Object.
 ---
 
-# checkpoint_management_add_updatable_object
+# Resource: checkpoint_management_add_updatable_object
 
-This resource allows you to execute Check Point Add Updatable Object.
+This command resource allows you to execute Check Point Add Updatable Object.
 
 ## Example Usage
 

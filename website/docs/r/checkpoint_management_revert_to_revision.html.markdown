@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Revert To Revision.
 ---
 
-# checkpoint_management_revert_to_revision
+# Resource: checkpoint_management_revert_to_revision
 
-This resource allows you to execute Check Point Revert To Revision.
+This command resource allows you to execute Check Point Revert To Revision.
 
 ## Example Usage
 
@@ -24,7 +24,7 @@ resource "checkpoint_management_revert_to_revision" "example" {
 The following arguments are supported:
 
 * `to_session` - (Optional) Session unique identifier. Specify the session  id you would like to revert your database to. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

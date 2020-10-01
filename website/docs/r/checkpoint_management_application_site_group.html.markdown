@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Application Site Group.
 ---
 
-# checkpoint_management_application_site_group
+# Resource: checkpoint_management_application_site_group
 
 This resource allows you to execute Check Point Application Site Group.
 

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -60,16 +61,16 @@ func resourceManagementExport() *schema.Resource {
 				ForceNew:    true,
 				Description: "N/A",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementExport(d *schema.ResourceData, m interface{}) error {
-	return readManagementExport(d, m)
-}
-
-func readManagementExport(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -102,12 +103,16 @@ func readManagementExport(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(ExportRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("export-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(ExportRes.GetData()))
+	return readManagementExport(d, m)
+}
+
+func readManagementExport(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementExport(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

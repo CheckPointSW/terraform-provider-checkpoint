@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Group.
 ---
 
-# checkpoint_management_data_service_group
+# Data Source: checkpoint_management_data_service_group
 
 Use this data source to get information on an existing Check Point Service Group.
 

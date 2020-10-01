@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Time Group.
 ---
 
-# checkpoint_management_time_group
+# Resource: checkpoint_management_time_group
 
 This resource allows you to execute Check Point Time Group.
 

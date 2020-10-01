@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Migrate Import Domain.
 ---
 
-# checkpoint_management_migrate_import_domain
+# Resource: checkpoint_management_migrate_import_domain
 
-This resource allows you to execute Check Point Migrate Import Domain.
+This command resource allows you to execute Check Point Migrate Import Domain.
 
 ## Example Usage
 
@@ -28,7 +28,7 @@ The following arguments are supported:
 * `domain_name` - (Required) Domain name. Should be unique in the MDS.<br><font color="red">Required only for</font> importing Security Management Server into Multi-Domain Server. 
 * `domain_server_name` - (Required) Multi Domain server name.<br><font color="red">Required only for</font> importing Security Management Server into Multi-Domain Server. 
 * `include_logs` - (Optional) Import logs from the input package. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

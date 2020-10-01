@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Access Role.
 ---
 
-# checkpoint_management_access_role
+# Resource: checkpoint_management_access_role
 
 This resource allows you to execute Check Point Access Role.
 

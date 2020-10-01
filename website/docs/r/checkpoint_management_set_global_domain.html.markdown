@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Set Global Domain.
 ---
 
-# checkpoint_management_set_global_domain
+# Resource: checkpoint_management_set_global_domain
 
-This resource allows you to execute Check Point Set Global Domain.
+This command resource allows you to execute Check Point Set Global Domain.
 
 ## Example Usage
 
@@ -31,7 +31,7 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
-
+* `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 
 `servers` supports the following:
 

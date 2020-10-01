@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Vpn Community Meshed.
 ---
 
-# checkpoint_management_vpn_community_meshed
+# Resource: checkpoint_management_vpn_community_meshed
 
 This resource allows you to execute Check Point Vpn Community Meshed.
 

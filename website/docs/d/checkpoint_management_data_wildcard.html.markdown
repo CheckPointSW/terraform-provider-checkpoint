@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Wildcard.
 ---
 
-# checkpoint_management_data_wildcard
+# Data Source: checkpoint_management_data_wildcard
 
 Use this data source to get information on an existing Check Point Wildcard.
 

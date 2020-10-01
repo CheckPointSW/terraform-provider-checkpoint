@@ -6,9 +6,9 @@ description: |-
   Runs IPS database update. If "package-path" is not provided server will try to get the latest package from the User Center.
 ---
 
-# checkpoint_management_run_ips_update
+# Resource: checkpoint_management_run_ips_update
 
-Runs IPS database update. If "package-path" is not provided server will try to get the latest package from the User Center.
+This command resource allows you to Runs IPS database update. If "package-path" is not provided server will try to get the latest package from the User Center.
 
 ## Example Usage
 
@@ -21,6 +21,7 @@ resource "checkpoint_management_run_ips_update" "example" {}
 The following arguments are supported:
 
 * `package_path` - (Optional) Offline update package path.
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

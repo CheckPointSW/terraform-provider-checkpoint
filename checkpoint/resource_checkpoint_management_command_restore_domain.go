@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -42,16 +43,16 @@ func resourceManagementRestoreDomain() *schema.Resource {
 				ForceNew:    true,
 				Description: "If true, verify that the import operation is valid for this input file and this environment <br>Note: Restore operation will not be executed.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementRestoreDomain(d *schema.ResourceData, m interface{}) error {
-	return readManagementRestoreDomain(d, m)
-}
-
-func readManagementRestoreDomain(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -80,12 +81,17 @@ func readManagementRestoreDomain(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(RestoreDomainRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("restore-domain-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(RestoreDomainRes.GetData()))
+
+	return readManagementRestoreDomain(d, m)
+}
+
+func readManagementRestoreDomain(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementRestoreDomain(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

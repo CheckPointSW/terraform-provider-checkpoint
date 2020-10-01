@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Delete Threat Protections.
 ---
 
-# checkpoint_management_delete_threat_protections
+# Resource: checkpoint_management_delete_threat_protections
 
-This resource allows you to execute Check Point Delete Threat Protections.
+This command resource allows you to execute Check Point Delete Threat Protections.
 
 ## Example Usage
 

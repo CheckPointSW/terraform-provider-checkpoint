@@ -6,9 +6,9 @@ description: |-
   Publish Changes.
 ---
 
-# checkpoint_management_publish
+# Resource: checkpoint_management_publish
 
-Publish Changes.
+This command resource allows you to Publish Changes.
 
 ## Example Usage
 
@@ -21,9 +21,8 @@ resource "checkpoint_management_publish" "example" { }
 The following arguments are supported:
 
 * `uid` - (Optional) Session unique identifier. Specify it to publish a different session than the one you currently use.
+* `task_id` - (Computed) Asynchronous task unique identifier. 
+
 
 ## How To Use
 Make sure this command resource will be executed by terraform when you meant it will run.  
-
-
-

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add a new file to a Check Point machine.
 ---
 
-# checkpoint_put_file
+# Resource: checkpoint_put_file
 
 This resource allows you to add a new file to a Check Point machine.
 

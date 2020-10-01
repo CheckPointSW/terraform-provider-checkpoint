@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Threat Indicator.
 ---
 
-# checkpoint_management_threat_indicator
+# Resource: checkpoint_management_threat_indicator
 
 This resource allows you to add/update/delete Check Point Threat Indicator.
 

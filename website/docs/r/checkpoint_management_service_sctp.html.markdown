@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Service Sctp.
 ---
 
-# checkpoint_management_service_sctp
+# Resource: checkpoint_management_service_sctp
 
 This resource allows you to execute Check Point Service Sctp.
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Application Site Category.
 ---
 
-# checkpoint_management_application_site_category
+# Resource: checkpoint_management_application_site_category
 
 This resource allows you to execute Check Point Application Site Category.
 

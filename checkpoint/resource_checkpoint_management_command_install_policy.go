@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -69,6 +70,11 @@ func resourceManagementInstallPolicy() *schema.Resource {
 				ForceNew:    true,
 				Description: "The UID of the revision of the policy to install.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
@@ -107,8 +113,9 @@ func createManagementInstallPolicy(d *schema.ResourceData, m interface{}) error 
 	if !installPolicyRes.Success {
 		return fmt.Errorf(installPolicyRes.ErrorMsg)
 	}
-	// Set Schema UID = Session UID
-	d.SetId(installPolicyRes.GetData()["task-id"].(string))
+
+	d.SetId("install-policy-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(installPolicyRes.GetData()))
 	return readManagementInstallPolicy(d, m)
 }
 
@@ -117,6 +124,6 @@ func readManagementInstallPolicy(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteManagementInstallPolicy(d *schema.ResourceData, m interface{}) error {
-	d.SetId("") // Destroy resource
+	d.SetId("")
 	return nil
 }

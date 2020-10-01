@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -45,16 +46,19 @@ func resourceManagementRunScript() *schema.Resource {
 				ForceNew:    true,
 				Description: "Comments string.",
 			},
+			"tasks": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifiers",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
 func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
-	return readManagementRunScript(d, m)
-}
-
-func readManagementRunScript(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -83,12 +87,19 @@ func readManagementRunScript(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(RunScriptRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("run-script-" + acctest.RandString(10))
+
+	_ = d.Set("tasks", resolveTaskIds(RunScriptRes.GetData()))
+
+
+	return readManagementRunScript(d, m)
+}
+
+func readManagementRunScript(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementRunScript(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Service Icmp6.
 ---
 
-# checkpoint_management_data_service_icmp6
+# Data Source: checkpoint_management_data_service_icmp6
 
 Use this data source to get information on an existing Check Point Service Icmp6.
 

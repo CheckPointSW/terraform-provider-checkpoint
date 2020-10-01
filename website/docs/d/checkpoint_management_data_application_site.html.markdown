@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Application Site.
 ---
 
-# checkpoint_management_data_application_site
+# Data Source: checkpoint_management_data_application_site
 
 Use this data source to get information on an existing Check Point Application Site.
 

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"strconv"
 )
@@ -66,11 +67,6 @@ func resourceManagementSetThreatProtection() *schema.Resource {
 }
 
 func createManagementSetThreatProtection(d *schema.ResourceData, m interface{}) error {
-	return readManagementSetThreatProtection(d, m)
-}
-
-func readManagementSetThreatProtection(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -121,12 +117,15 @@ func readManagementSetThreatProtection(d *schema.ResourceData, m interface{}) er
 		return fmt.Errorf(SetThreatProtectionRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("set-threat-protection-" + acctest.RandString(10))
+	return readManagementSetThreatProtection(d, m)
+}
+
+func readManagementSetThreatProtection(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementSetThreatProtection(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

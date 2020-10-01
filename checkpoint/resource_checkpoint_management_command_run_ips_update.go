@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -18,15 +19,16 @@ func resourceManagementRunIpsUpdate() *schema.Resource {
 				ForceNew:    true,
 				Description: "Offline update package path.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
-	return readManagementPublish(d, m)
-}
-
-func readManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = make(map[string]interface{})
@@ -39,8 +41,14 @@ func readManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 	if !runIpsUpdateRes.Success {
 		return fmt.Errorf(runIpsUpdateRes.ErrorMsg)
 	}
-	// Set Schema UID = Session UID
-	d.SetId(runIpsUpdateRes.GetData()["task-id"].(string))
+
+	d.SetId("run-ips-update-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(runIpsUpdateRes.GetData()))
+
+	return readManagementPublish(d, m)
+}
+
+func readManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Access Layer.
 ---
 
-# checkpoint_management_access_layer
+# Resource: checkpoint_management_access_layer
 
 This resource allows you to execute Check Point Access Layer.
 

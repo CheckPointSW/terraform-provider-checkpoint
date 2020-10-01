@@ -89,11 +89,6 @@ func resourceManagementAddDataCenterObject() *schema.Resource {
 }
 
 func createManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) error {
-	return readManagementAddDataCenterObject(d, m)
-}
-
-func readManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -146,12 +141,15 @@ func readManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) er
 		return fmt.Errorf(AddDataCenterObjectRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId(AddDataCenterObjectRes.GetData()["uid"].(string))
+	return readManagementAddDataCenterObject(d, m)
+}
+
+func readManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

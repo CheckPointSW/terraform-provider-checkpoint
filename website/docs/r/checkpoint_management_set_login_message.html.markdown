@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Set Login Message.
 ---
 
-# checkpoint_management_set_login_message
+# Resource: checkpoint_management_set_login_message
 
-This resource allows you to execute Check Point Set Login Message.
+This command resource allows you to execute Check Point Set Login Message.
 
 ## Example Usage
 

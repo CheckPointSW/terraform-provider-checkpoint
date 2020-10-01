@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -29,11 +30,6 @@ func resourceManagementSetApiSettings() *schema.Resource {
 }
 
 func createManagementSetApiSettings(d *schema.ResourceData, m interface{}) error {
-	return readManagementSetApiSettings(d, m)
-}
-
-func readManagementSetApiSettings(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -50,12 +46,15 @@ func readManagementSetApiSettings(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(SetApiSettingsRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("set-api-settings-" + acctest.RandString(10))
+	return readManagementSetApiSettings(d, m)
+}
+
+func readManagementSetApiSettings(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementSetApiSettings(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

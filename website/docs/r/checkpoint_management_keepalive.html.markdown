@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Keepalive.
 ---
 
-# checkpoint_management_keepalive
+# Resource: checkpoint_management_keepalive
 
-This resource allows you to execute Check Point Keepalive.
+This command resource allows you to execute Check Point Keepalive.
 
 ## Example Usage
 

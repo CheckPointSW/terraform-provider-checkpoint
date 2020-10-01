@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -18,16 +19,16 @@ func resourceManagementDeleteThreatProtections() *schema.Resource {
 				ForceNew:    true,
 				Description: "Protections package format.",
 			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
 		},
 	}
 }
 
 func createManagementDeleteThreatProtections(d *schema.ResourceData, m interface{}) error {
-	return readManagementDeleteThreatProtections(d, m)
-}
-
-func readManagementDeleteThreatProtections(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -40,12 +41,16 @@ func readManagementDeleteThreatProtections(d *schema.ResourceData, m interface{}
 		return fmt.Errorf(DeleteThreatProtectionsRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("delete-threat-protections-" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(DeleteThreatProtectionsRes.GetData()))
+	return readManagementDeleteThreatProtections(d, m)
+}
+
+func readManagementDeleteThreatProtections(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementDeleteThreatProtections(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

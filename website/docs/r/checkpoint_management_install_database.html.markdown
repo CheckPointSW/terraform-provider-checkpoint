@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Install Database.
 ---
 
-# checkpoint_management_install_database
+# Resource: checkpoint_management_install_database
 
-This resource allows you to execute Check Point Install Database.
+This command resource allows you to execute Check Point Install Database.
 
 ## Example Usage
 
@@ -18,7 +18,7 @@ This resource allows you to execute Check Point Install Database.
 The following arguments are supported:
 
 * `targets` - (Required) Check Point host(s) with one or more Management Software Blades enabled. The targets can be identified by their name or unique identifier.targets blocks are documented below.
-
+* `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

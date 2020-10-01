@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Https Section.
 ---
 
-# checkpoint_management_https_section
+# Resource: checkpoint_management_https_section
 
 This resource allows you to execute Check Point Https Section.
 

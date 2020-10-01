@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Network Object.
 ---
 
-# checkpoint_management_data_network
+# Data Source: checkpoint_management_data_network
 
 Use this data source to get information on an existing Check Point Network Object.
 

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -41,11 +42,6 @@ func resourceManagementSetLoginMessage() *schema.Resource {
 }
 
 func createManagementSetLoginMessage(d *schema.ResourceData, m interface{}) error {
-	return readManagementSetLoginMessage(d, m)
-}
-
-func readManagementSetLoginMessage(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
@@ -70,12 +66,15 @@ func readManagementSetLoginMessage(d *schema.ResourceData, m interface{}) error 
 		return fmt.Errorf(SetLoginMessageRes.ErrorMsg)
 	}
 
-	d.SetId("ff")
+	d.SetId("set-login-message-" + acctest.RandString(10))
+	return readManagementSetLoginMessage(d, m)
+}
+
+func readManagementSetLoginMessage(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
 func deleteManagementSetLoginMessage(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }

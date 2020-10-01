@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Delete Updatable Object.
 ---
 
-# checkpoint_management_delete_updatable_object
+# Resource: checkpoint_management_delete_updatable_object
 
-This resource allows you to execute Check Point Delete Updatable Object.
+This command resource allows you to execute Check Point Delete Updatable Object.
 
 ## Example Usage
 

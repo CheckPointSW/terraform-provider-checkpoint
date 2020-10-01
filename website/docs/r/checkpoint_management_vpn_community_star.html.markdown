@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Vpn Community Star.
 ---
 
-# checkpoint_management_vpn_community_star
+# Resource: checkpoint_management_vpn_community_star
 
 This resource allows you to execute Check Point Vpn Community Star.
 

@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Verify Software Package.
 ---
 
-# checkpoint_management_verify_software_package
+# Resource: checkpoint_management_verify_software_package
 
-This resource allows you to execute Check Point Verify Software Package.
+This command resource allows you to execute Check Point Verify Software Package.
 
 ## Example Usage
 
@@ -26,7 +26,7 @@ The following arguments are supported:
 * `name` - (Required) The name of the software package. 
 * `targets` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.targets blocks are documented below.
 * `concurrency_limit` - (Optional) The number of targets, on which the same package is installed at the same time. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

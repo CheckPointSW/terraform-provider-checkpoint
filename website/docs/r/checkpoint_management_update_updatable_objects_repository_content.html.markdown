@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Update Updatable Objects Repository Content.
 ---
 
-# checkpoint_management_update_updatable_objects_repository_content
+# Resource: checkpoint_management_update_updatable_objects_repository_content
 
-This resource allows you to execute Check Point Update Updatable Objects Repository Content.
+This command resource allows you to execute Check Point Update Updatable Objects Repository Content.
 
 ## Example Usage
 
@@ -16,7 +16,7 @@ This resource allows you to execute Check Point Update Updatable Objects Reposit
 ## Argument Reference
 
 The following arguments are supported:
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 
 ## How To Use

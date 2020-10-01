@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Https Rule.
 ---
 
-# checkpoint_management_data_https_rule
+# Data Source: checkpoint_management_data_https_rule
 
 Use this data source to get information on an existing Check Point Https Rule.
 

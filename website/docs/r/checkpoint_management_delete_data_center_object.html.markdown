@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Delete Data Center Object.
 ---
 
-# checkpoint_management_delete_data_center_object
+# Resource: checkpoint_management_delete_data_center_object
 
-This resource allows you to execute Check Point Delete Data Center Object.
+This command resource allows you to execute Check Point Delete Data Center Object.
 
 ## Example Usage
 

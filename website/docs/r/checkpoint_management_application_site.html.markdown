@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Application Site.
 ---
 
-# checkpoint_management_application_site
+# Resource: checkpoint_management_application_site
 
 This resource allows you to execute Check Point Application Site.
 

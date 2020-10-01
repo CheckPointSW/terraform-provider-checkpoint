@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Access Rule.
 ---
 
-# checkpoint_management_access_rule
+# Resource: checkpoint_management_access_rule
 
 This resource allows you to add/update/delete Check Point Access Rule.
 
@@ -134,6 +134,13 @@ The following arguments are supported:
 * `every` - (Optional) N/A.
 * `unit` - (Optional) N/A. 
 
+## Import
+
+`checkpoint_management_access_rule` can be imported by using format: <LAYER_NAME>;<RULE_UID>
+
+```
+$ terraform import checkpoint_management_access_rule.example Layer_Name;9423d36f-2d66-4754-b9e2-e9f4493751d3
+```
 
 
 

@@ -6,9 +6,9 @@ description: |-
   Log out from the current session. After logging out the session id is not valid any more.
 ---
 
-# checkpoint_management_logout
+# Resource: checkpoint_management_logout
 
-Log out from the current session. After logging out the session id is not valid any more.
+This command resource allows you to log out from the current session. After logging out the session id is not valid any more.
 
 ## Example Usage
 

@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Uninstall Software Package.
 ---
 
-# checkpoint_management_uninstall_software_package
+# Resource: checkpoint_management_uninstall_software_package
 
-This resource allows you to execute Check Point Uninstall Software Package.
+This command resource allows you to execute Check Point Uninstall Software Package.
 
 ## Example Usage
 
@@ -27,7 +27,7 @@ The following arguments are supported:
 * `targets` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.targets blocks are documented below.
 * `cluster_installation_settings` - (Optional) Installation settings for cluster.cluster_installation_settings blocks are documented below.
 * `concurrency_limit` - (Optional) The number of targets, on which the same package is installed at the same time. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 `cluster_installation_settings` supports the following:
 

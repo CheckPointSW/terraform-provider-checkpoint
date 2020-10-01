@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Backup Domain.
 ---
 
-# checkpoint_management_backup_domain
+# Resource: checkpoint_management_backup_domain
 
-This resource allows you to execute Check Point Backup Domain.
+This command resource allows you to execute Check Point Backup Domain.
 
 ## Example Usage
 

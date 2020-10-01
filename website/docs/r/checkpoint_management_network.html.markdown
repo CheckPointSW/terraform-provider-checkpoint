@@ -6,7 +6,7 @@ description: |-
   This resource allows you to add/update/delete Check Point Network Object.
 ---
 
-# checkpoint_management_network
+# Resource: checkpoint_management_network
 
 This resource allows you to add/update/delete Check Point Network Object.
 

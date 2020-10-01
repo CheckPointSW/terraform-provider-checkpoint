@@ -6,9 +6,9 @@ description: |-
   This resource allows you to execute Check Point Verify Revert.
 ---
 
-# checkpoint_management_verify_revert
+# Resource: checkpoint_management_verify_revert
 
-This resource allows you to execute Check Point Verify Revert.
+This command resource allows you to execute Check Point Verify Revert.
 
 ## Example Usage
 
@@ -24,7 +24,7 @@ resource "checkpoint_management_verify_revert" "example" {
 The following arguments are supported:
 
 * `to_session` - (Required) Session unique identifier. Specify the session you would like to verify a revert operation to. 
-
+* `task_id` - (Computed) Asynchronous task unique identifier. 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

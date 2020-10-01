@@ -6,7 +6,7 @@ description: |-
   Use this data source to get information on an existing Check Point Multicast Address Range.
 ---
 
-# checkpoint_management_data_multicast_address_range
+# Data Source: checkpoint_management_data_multicast_address_range
 
 Use this data source to get information on an existing Check Point Multicast Address Range.
 

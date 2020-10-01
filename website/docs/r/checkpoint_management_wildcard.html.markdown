@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Wildcard.
 ---
 
-# checkpoint_management_wildcard
+# Resource: checkpoint_management_wildcard
 
 This resource allows you to execute Check Point Wildcard.
 

@@ -6,7 +6,7 @@ description: |-
   This resource allows you to execute Check Point Group With Exclusion.
 ---
 
-# checkpoint_management_group_with_exclusion
+# Resource: checkpoint_management_group_with_exclusion
 
 This resource allows you to execute Check Point Group With Exclusion.
 
