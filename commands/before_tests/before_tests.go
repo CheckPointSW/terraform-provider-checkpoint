@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/terraform-providers/terraform-provider-checkpoint/commands"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/commands"
 	"log"
 )
 
