@@ -1,4 +1,30 @@
-## 1.2.0 (Unreleased)
+## 1.3.0 (Unreleased)
+
+## 1.2.0 (December 17, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_nat_rule`
+* **New Resource:** `checkpoint_management_nat_section`
+* **New Resource:** `checkpoint_management_threat_exception`
+* **New Resource:** `checkpoint_management_threat_rule`
+* **New Data Source:** `checkpoint_management_nat_rule`
+* **New Data Source:** `checkpoint_management_nat_section`
+* **New Data Source:** `checkpoint_management_threat_exception`
+* **New Data Source:** `checkpoint_management_threat_rule`
+* **New Data Source:** `checkpoint_management_show_objects`
+* **New Data Source:** `checkpoint_management_show_updatable_objects_repository_content`
+              
+ENHANCEMENTS
+
+* Add `triggers` field to resource `checkpoint_management_install_policy`, `checkpoint_management_publish` and `checkpoint_management_logout` for re-execution if there are any changes in this list.
+* Print publish / install-policy script output to console include task-id.
+* Print error message if API server needs to be configured to accept requests from all IP addresses.
+
+BUG FIXES
+
+* `checkpoint_management_access_rule`: Use object UID in update call instead of name.
+
 
 ## 1.1.0 (October 1, 2020)
 

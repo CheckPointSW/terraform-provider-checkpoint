@@ -13,11 +13,14 @@ func resourceManagementLogout() *schema.Resource {
 		Read:   readManagementLogout,
 		Delete: deleteManagementLogout,
 		Schema: map[string]*schema.Schema{
-			"message": {
-				Type:        schema.TypeString,
+			"triggers": {
+				Type:        schema.TypeSet,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Operation status.",
+				Description: "Triggers a logout if there are any changes to objects in this list.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
@@ -26,7 +29,7 @@ func resourceManagementLogout() *schema.Resource {
 func createManagementLogout(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), "", true, false)
+	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), client.GetSessionID(), true, false)
 	if !logoutRes.Success {
 		return fmt.Errorf(logoutRes.ErrorMsg)
 	}

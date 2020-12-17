@@ -18,7 +18,7 @@ resource "checkpoint_management_logout" "example" {}
 
 ## Argument Reference
 
-There are no arguments in this command.
+* `triggers` - (Optional) Triggers a logout if there are any changes to objects in this list.
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

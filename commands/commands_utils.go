@@ -37,11 +37,18 @@ func GetSession() (Session, error) {
 	return s, nil
 }
 
-func LogToFile(filename string, msg string) error {
-	fullMsg := "[" + time.Now().String() + "] " + msg
-	err := ioutil.WriteFile(filename, []byte(fullMsg), 0644)
-	if err != nil {
-		return err
+func ResolveTaskId(data map[string]interface{}) interface{} {
+	if data != nil {
+		if v := data["tasks"]; v != nil {
+			tasks := v.([]interface{})
+			if len(tasks) > 0 {
+				return tasks[0].(map[string]interface{})["task-id"]
+			}
+		}
+
+		if v := data["task-id"]; v != nil {
+			return v
+		}
 	}
 	return nil
 }

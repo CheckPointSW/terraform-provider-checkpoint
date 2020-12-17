@@ -20,7 +20,7 @@ func resourceManagementAccessRule() *schema.Resource {
 			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 				arr := strings.Split(d.Id(), ";")
 				if len(arr) != 2 {
-					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_NAME>;<RULE_UID>")
+					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_IDENTIFIER>;<RULE_UID>")
 				}
 				_ = d.Set("layer", arr[0])
 				d.SetId(arr[1])
@@ -834,6 +834,9 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	accessRule := make(map[string]interface{})
 
+	accessRule["uid"] = d.Id()
+	accessRule["layer"] = d.Get("layer")
+
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
@@ -864,11 +867,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		accessRule["name"] = oldName
-		accessRule["new-name"] = newName
-	} else {
-		accessRule["name"] = d.Get("name")
+		accessRule["new-name"] = d.Get("name")
 	}
 
 	if d.HasChange("action") {
@@ -1091,8 +1090,6 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("comments") {
 		accessRule["comments"] = d.Get("comments")
 	}
-
-	accessRule["layer"] = d.Get("layer")
 
 	log.Println("Update Access Rule - Map = ", accessRule)
 

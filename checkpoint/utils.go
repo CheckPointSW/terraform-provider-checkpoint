@@ -72,12 +72,15 @@ func Compare(a, b []string) []string {
 }
 
 func resolveTaskId(data map[string]interface{}) interface{} {
-	if data["tasks"] != nil {
-		if v, ok := data["tasks"].([]interface{}); ok {
+	if v := data["tasks"]; v != nil {
+		if v, ok := v.([]interface{}); ok {
 			if len(v) == 1 {
 				return v[0].(map[string]interface{})["task-id"]
 			}
 		}
+	}
+	if v := data["task-id"]; v != nil {
+		return v
 	}
 	return nil
 }

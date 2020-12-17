@@ -136,7 +136,7 @@ The following arguments are supported:
 
 ## Import
 
-`checkpoint_management_access_rule` can be imported by using format: <LAYER_NAME>;<RULE_UID>
+`checkpoint_management_access_rule` can be imported by using the following format: LAYER_NAME;RULE_UID
 
 ```
 $ terraform import checkpoint_management_access_rule.example Layer_Name;9423d36f-2d66-4754-b9e2-e9f4493751d3

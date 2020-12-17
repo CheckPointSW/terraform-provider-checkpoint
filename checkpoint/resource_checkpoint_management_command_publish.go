@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementPublish() *schema.Resource {
@@ -24,34 +24,34 @@ func resourceManagementPublish() *schema.Resource {
 				Computed:    true,
 				Description: "Command asynchronous task unique identifier.",
 			},
+			"triggers": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Triggers a publish if there are any changes to objects in this list.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
 
 func createManagementPublish(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
-	var uid string
+
 	var payload = make(map[string]interface{})
 
 	if v, ok := d.GetOk("uid"); ok {
-		uid = v.(string)
-		payload["uid"] = uid
-		log.Println("publish other session uid - ", uid)
-	} else {
-		// Publish current session
-		s, err := GetSession()
-		if err != nil {
-			return err
-		}
-		uid = s.Uid
-		log.Println("publish current session uid - ", uid)
+		payload["uid"] = v.(string)
 	}
+
 	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(), true, false)
 	if !publishRes.Success {
 		return fmt.Errorf(publishRes.ErrorMsg)
 	}
 
-	d.SetId(uid)
+	d.SetId("publish-" + acctest.RandString(10))
 	_ = d.Set("task_id", resolveTaskId(publishRes.GetData()))
 
 	return readManagementPublish(d, m)

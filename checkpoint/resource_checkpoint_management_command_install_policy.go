@@ -75,6 +75,15 @@ func resourceManagementInstallPolicy() *schema.Resource {
 				Computed:    true,
 				Description: "Command asynchronous task unique identifier.",
 			},
+			"triggers": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Triggers a install-policy if there are any changes to objects in this list.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }

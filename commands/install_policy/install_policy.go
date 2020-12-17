@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/terraform-providers/terraform-provider-checkpoint/commands"
+	"fmt"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/commands"
 	"os"
 )
 
@@ -19,10 +20,6 @@ func (i *arrayFlags) Set(value string) error {
 
 var targets arrayFlags
 
-func log(msg string) {
-	_ = commands.LogToFile("install_policy.txt", msg)
-}
-
 func main() {
 
 	var policyPackage string
@@ -33,7 +30,7 @@ func main() {
 
 	apiClient, err := commands.InitClient()
 	if err != nil {
-		log("Install policy error: " + err.Error())
+		fmt.Println("Install policy error: " + err.Error())
 		os.Exit(1)
 	}
 
@@ -44,13 +41,20 @@ func main() {
 
 	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(), true, false)
 	if err != nil {
-		log("Install policy error: " + err.Error())
-		os.Exit(1)
-	}
-	if !installPolicyRes.Success {
-		log("Install policy failed: " + installPolicyRes.ErrorMsg)
+		fmt.Println("Install policy error: " + err.Error())
 		os.Exit(1)
 	}
 
-	log("Policy installed successfully")
+	taskId := commands.ResolveTaskId(installPolicyRes.GetData())
+
+	if !installPolicyRes.Success {
+		errMsg := fmt.Sprintf("Install policy failed: %s.", installPolicyRes.ErrorMsg)
+		if taskId != nil {
+			errMsg += fmt.Sprintf(" task-id [%s]", taskId)
+		}
+		fmt.Println(errMsg)
+		os.Exit(1)
+	}
+
+	fmt.Println(fmt.Sprintf("Policy installed successfully. task-id [%s]", taskId))
 }

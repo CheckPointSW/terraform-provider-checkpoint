@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -150,6 +151,11 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_set_ha_state": 									resourceManagementSetHaState(),
 			"checkpoint_management_checkpoint_host": 								resourceManagementCheckpointHost(),
 			"checkpoint_management_get_attachment": 								resourceManagementGetAttachment(),
+			"checkpoint_management_nat_section": 									resourceManagementNatSection(),
+			"checkpoint_management_nat_rule": 										resourceManagementNatRule(),
+			"checkpoint_management_threat_rule": 									resourceManagementThreatRule(),
+			"checkpoint_management_threat_exception": 								resourceManagementThreatException(),
+
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                      dataSourceManagementHost(),
@@ -199,6 +205,12 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_vpn_community_remote_access":    dataSourceManagementVpnCommunityRemoteAccess(),
 			"checkpoint_management_checkpoint_host":    			dataSourceManagementCheckpointHost(),
 			"checkpoint_management_mds":    						dataSourceManagementMds(),
+			"checkpoint_management_show_objects": 					dataSourceManagementShowObjects(),
+			"checkpoint_management_show_updatable_objects_repository_content":  dataSourceManagementShowUpdatableObjectsRepositoryContent(),
+			"checkpoint_management_nat_rule": 						dataSourceManagementNatRule(),
+			"checkpoint_management_nat_section": 					dataSourceManagementNatSection(),
+			"checkpoint_management_threat_rule": 					dataSourceManagementThreatRule(),
+			"checkpoint_management_threat_exception": 				dataSourceManagementThreatException(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -278,11 +290,16 @@ func login(client *checkpoint.ApiClient, username string, pwd string, domain str
 
 	loginRes, err := client.Login(username, pwd, false, domain, false, "")
 	if err != nil {
+		localRequestsError := "invalid character '<' looking for beginning of value"
+		if strings.Contains(err.Error(), localRequestsError){
+			return Session{}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
+		}
 		return Session{}, err
 	}
 	if !loginRes.Success {
 		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
 	}
+
 	uid := ""
 	if val, ok := loginRes.GetData()["uid"]; ok {
 		uid = val.(string)
