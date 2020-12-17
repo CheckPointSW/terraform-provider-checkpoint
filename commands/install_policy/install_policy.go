@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/CheckPointSW/terraform-provider-checkpoint/commands"
+	"github.com/terraform-providers/terraform-provider-checkpoint/commands"
 	"os"
 )
 
