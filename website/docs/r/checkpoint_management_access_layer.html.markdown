@@ -24,6 +24,7 @@ resource "checkpoint_management_access_layer" "example" {
 The following arguments are supported:
 
 * `name` - (Required) Object name. 
+* `add_default_rule` - (Optional) Indicates whether to include a cleanup rule in the new layer.
 * `applications_and_url_filtering` - (Optional) Whether to enable Applications & URL Filtering blade on the layer. 
 * `content_awareness` - (Optional) Whether to enable Content Awareness blade on the layer. 
 * `detect_using_x_forward_for` - (Optional) Whether to use X-Forward-For HTTP header, which is added by the  proxy server to keep track of the original source IP. 

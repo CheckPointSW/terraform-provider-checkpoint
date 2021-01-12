@@ -22,6 +22,12 @@ func resourceManagementAccessLayer() *schema.Resource {
 				Required:    true,
 				Description: "Object name.",
 			},
+			"add_default_rule": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to include a cleanup rule in the new layer.",
+				Default:     true,
+			},
 			"applications_and_url_filtering": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -106,6 +112,10 @@ func createManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("name"); ok {
 		accessLayer["name"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("add_default_rule"); ok {
+		accessLayer["add-default-rule"] = v.(bool)
 	}
 
 	if v, ok := d.GetOkExists("applications_and_url_filtering"); ok {

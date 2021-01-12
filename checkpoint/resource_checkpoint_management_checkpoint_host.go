@@ -243,6 +243,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable accept syslog messages.",
+                            Default: false,
                         },
                         "alert_when_free_disk_space_below": {
                             Type:        schema.TypeBool,
@@ -266,6 +267,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable before delete keep logs from the last days.",
+                            Default: false,
                         },
                         "before_delete_keep_logs_from_the_last_days_threshold": {
                             Type:        schema.TypeInt,
@@ -277,6 +279,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable Before delete run script.",
+                            Default: false,
                         },
                         "before_delete_run_script_command": {
                             Type:        schema.TypeString,
@@ -310,6 +313,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable detect new citrix ica application names.",
+                            Default: false,
                         },
                         "enable_log_indexing": {
                             Type:        schema.TypeBool,
@@ -321,6 +325,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable forward logs to log server.",
+                            Default: false,
                         },
                         "forward_logs_to_log_server_name": {
                             Type:        schema.TypeString,
@@ -346,6 +351,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable rotate log on schedule.",
+                            Default: false,
                         },
                         "rotate_log_schedule_name": {
                             Type:        schema.TypeString,
@@ -361,6 +367,7 @@ func resourceManagementCheckpointHost() *schema.Resource {
                             Type:        schema.TypeBool,
                             Optional:    true,
                             Description: "Enable stop logging when free disk space below.",
+                            Default: false,
                         },
                         "stop_logging_when_free_disk_space_below_threshold": {
                             Type:        schema.TypeInt,
@@ -551,26 +558,26 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 
         res := make(map[string]interface{})
 
-        if v, ok := d.GetOk("management_blades.network_policy_management"); ok {
-            res["network-policy-management"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.network_policy_management"); ok {
+            res["network-policy-management"] = v
         }
-        if v, ok := d.GetOk("management_blades.logging_and_status"); ok {
-            res["logging-and-status"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.logging_and_status"); ok {
+            res["logging-and-status"] = v
         }
-        if v, ok := d.GetOk("management_blades.smart_event_server"); ok {
-            res["smart-event-server"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.smart_event_server"); ok {
+            res["smart-event-server"] = v
         }
-        if v, ok := d.GetOk("management_blades.smart_event_correlation"); ok {
-            res["smart-event-correlation"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.smart_event_correlation"); ok {
+            res["smart-event-correlation"] = v
         }
-        if v, ok := d.GetOk("management_blades.endpoint_policy"); ok {
-            res["endpoint-policy"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.endpoint_policy"); ok {
+            res["endpoint-policy"] = v
         }
-        if v, ok := d.GetOk("management_blades.compliance"); ok {
-            res["compliance"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.compliance"); ok {
+            res["compliance"] = v
         }
-        if v, ok := d.GetOk("management_blades.user_directory"); ok {
-            res["user-directory"] = v.(bool)
+        if v, ok := d.GetOkExists("management_blades.user_directory"); ok {
+            res["user-directory"] = v
         }
         checkpointHost["management-blades"] = res
     }
@@ -866,35 +873,35 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
         managementBladesMapToReturn := make(map[string]interface{})
 
         if v, _ := managementBladesMap["network-policy-management"]; v != nil{
-            managementBladesMapToReturn["network_policy_management"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["network_policy_management"] = v.(bool)
         }
         if v, _ := managementBladesMap["logging-and-status"]; v != nil{
-            managementBladesMapToReturn["logging_and_status"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["logging_and_status"] = v.(bool)
         }
         if v, _ := managementBladesMap["smart-event-server"]; v != nil{
-            managementBladesMapToReturn["smart_event_server"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["smart_event_server"] = v.(bool)
         }
         if v, _ := managementBladesMap["smart-event-correlation"]; v != nil{
-            managementBladesMapToReturn["smart_event_correlation"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["smart_event_correlation"] = v.(bool)
         }
         if v, _ := managementBladesMap["endpoint-policy"]; v != nil{
-            managementBladesMapToReturn["endpoint_policy"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["endpoint_policy"] = v.(bool)
         }
         if v, _ := managementBladesMap["compliance"]; v != nil{
-            managementBladesMapToReturn["compliance"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["compliance"] = v.(bool)
         }
         if v, _ := managementBladesMap["user-directory"]; v != nil{
-            managementBladesMapToReturn["user_directory"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["user_directory"] = v.(bool)
         }
         if v, _ := managementBladesMap["secondary"]; v != nil{
-            managementBladesMapToReturn["secondary"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["secondary"] = v.(bool)
         }
         if v, _ := managementBladesMap["identity-logging"]; v != nil{
-            managementBladesMapToReturn["identity_logging"] = strconv.FormatBool(v.(bool))
+            managementBladesMapToReturn["identity_logging"] = v.(bool)
         }
 
         _, managementBladesInConf := d.GetOk("management_blades")
-        defaultManagementBlades := map[string]interface{}{"network_policy_management": "false", "logging_and_status": "false", "smart_event_server": "false", "smart_event_correlation": "false", "endpoint_policy": "false", "compliance": "false", "user_directory": "false", "secondary": "true", "identity_logging": "false"}
+        defaultManagementBlades := map[string]interface{}{"network_policy_management": false, "logging_and_status": false, "smart_event_server": false, "smart_event_correlation": false, "endpoint_policy": false, "compliance": false, "user_directory": false, "secondary": true, "identity_logging": false}
         if reflect.DeepEqual(defaultManagementBlades, managementBladesMapToReturn) && !managementBladesInConf {
             _ = d.Set("management_blades", map[string]interface{}{})
         } else {
@@ -915,10 +922,10 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
             logsSettingsMapToReturn["free_disk_space_metrics"] = v
         }
         if v, _ := logsSettingsMap["accept-syslog-messages"]; v != nil{
-            logsSettingsMapToReturn["accept_syslog_messages"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["accept_syslog_messages"] = v.(bool)
         }
         if v, _ := logsSettingsMap["alert-when-free-disk-space-below"]; v != nil{
-            logsSettingsMapToReturn["alert_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["alert_when_free_disk_space_below"] = v.(bool)
         }
         if v, _ := logsSettingsMap["alert-when-free-disk-space-below-threshold"]; v != nil{
             logsSettingsMapToReturn["alert_when_free_disk_space_below_threshold"] = v
@@ -927,37 +934,37 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
             logsSettingsMapToReturn["alert_when_free_disk_space_below_type"] = v
         }
         if v, _ := logsSettingsMap["before-delete-keep-logs-from-the-last-days"]; v != nil{
-            logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days"] = v.(bool)
         }
         if v, _ := logsSettingsMap["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil{
             logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days_threshold"] = v
         }
         if v, _ := logsSettingsMap["before-delete-run-script"]; v != nil{
-            logsSettingsMapToReturn["before_delete_run_script"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["before_delete_run_script"] = v.(bool)
         }
         if v, _ := logsSettingsMap["before-delete-run-script-command"]; v != nil{
             logsSettingsMapToReturn["before_delete_run_script_command"] = v
         }
         if v, _ := logsSettingsMap["delete-index-files-older-than-days"]; v != nil{
-            logsSettingsMapToReturn["delete_index_files_older_than_days"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["delete_index_files_older_than_days"] = v.(bool)
         }
         if v, _ := logsSettingsMap["delete-index-files-older-than-days-threshold"]; v != nil{
             logsSettingsMapToReturn["delete_index_files_older_than_days_threshold"] = v
         }
         if v, _ := logsSettingsMap["delete-when-free-disk-space-below"]; v != nil{
-            logsSettingsMapToReturn["delete_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["delete_when_free_disk_space_below"] = v.(bool)
         }
         if v, _ := logsSettingsMap["delete-when-free-disk-space-below-threshold"]; v != nil{
             logsSettingsMapToReturn["delete_when_free_disk_space_below_threshold"] = v
         }
         if v, _ := logsSettingsMap["detect-new-citrix-ica-application-names"]; v != nil{
-            logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = v.(bool)
         }
         if v, _ := logsSettingsMap["enable-log-indexing"]; v != nil{
-            logsSettingsMapToReturn["enable_log_indexing"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["enable_log_indexing"] = v.(bool)
         }
         if v, _ := logsSettingsMap["forward-logs-to-log-server"]; v != nil{
-            logsSettingsMapToReturn["forward_logs_to_log_server"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["forward_logs_to_log_server"] = v.(bool)
         }
         if v, _ := logsSettingsMap["forward-logs-to-log-server-name"]; v != nil{
             logsSettingsMapToReturn["forward_logs_to_log_server_name"] = v
@@ -966,28 +973,28 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
             logsSettingsMapToReturn["forward_logs_to_log_server_schedule_name"] = v
         }
         if v, _ := logsSettingsMap["rotate-log-by-file-size"]; v != nil{
-            logsSettingsMapToReturn["rotate_log_by_file_size"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["rotate_log_by_file_size"] = v.(bool)
         }
         if v, _ := logsSettingsMap["rotate-log-file-size-threshold"]; v != nil{
             logsSettingsMapToReturn["rotate_log_file_size_threshold"] = v
         }
         if v, _ := logsSettingsMap["rotate-log-on-schedule"]; v != nil{
-            logsSettingsMapToReturn["rotate_log_on_schedule"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["rotate_log_on_schedule"] = v.(bool)
         }
         if v, _ := logsSettingsMap["rotate-log-schedule-name"]; v != nil{
             logsSettingsMapToReturn["rotate_log_schedule_name"] = v
         }
         if v, _ := logsSettingsMap["smart-event-intro-correletion-unit"]; v != nil{
-            logsSettingsMapToReturn["smart_event_intro_correletion_unit"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["smart_event_intro_correletion_unit"] = v.(bool)
         }
         if v, _ := logsSettingsMap["stop-logging-when-free-disk-space-below"]; v != nil{
-            logsSettingsMapToReturn["stop_logging_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["stop_logging_when_free_disk_space_below"] = v.(bool)
         }
         if v, _ := logsSettingsMap["stop-logging-when-free-disk-space-below-threshold"]; v != nil{
             logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_threshold"] = v
         }
         if v, _ := logsSettingsMap["turn-on-qos-logging"]; v != nil{
-            logsSettingsMapToReturn["turn_on_qos_logging"] = strconv.FormatBool(v.(bool))
+            logsSettingsMapToReturn["turn_on_qos_logging"] = v.(bool)
         }
         if v, _ := logsSettingsMap["update-account-log-every"]; v != nil{
             logsSettingsMapToReturn["update_account_log_every"] = v

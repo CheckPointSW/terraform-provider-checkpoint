@@ -437,7 +437,7 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 		}
 		return fmt.Errorf(err.Error())
 	}
-	return readManagementAccessRule(d, m)
+	return readManagementNatRule(d, m)
 }
 
 func deleteManagementNatRule(d *schema.ResourceData, m interface{}) error {

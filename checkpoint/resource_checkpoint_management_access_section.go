@@ -94,19 +94,32 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	}
 
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
-			accessSection["position"] = "top"
+
+		if v, ok := d.GetOk("position.top"); ok {
+			if v.(string) == "top" {
+				accessSection["position"] = "top"
+			} else {
+				accessSection["position"] = map[string]interface{}{"top": v.(string)} // section
+			}
 		}
+
 		if v, ok := d.GetOk("position.above"); ok {
-			accessSection["position"] = map[string]interface{}{"above": v.(string)}
+			accessSection["position"] = map[string]interface{}{"above": v.(string)} // section or rule
 		}
+
+		if v, ok := d.GetOk("position.below"); ok {
+			accessSection["position"] = map[string]interface{}{"below": v.(string)} // section or rule
+		}
+
 		if v, ok := d.GetOk("position.bottom"); ok {
-			accessSection["position"] = map[string]interface{}{"bottom": v.(string)}
-		}
-		if _, ok := d.GetOk("position.bottom"); ok {
-			accessSection["position"] = "bottom"
+			if v.(string) == "bottom" {
+				accessSection["position"] = "bottom"
+			} else {
+				accessSection["position"] = map[string]interface{}{"bottom": v.(string)} // section
+			}
 		}
 	}
+
 	log.Println("Create AccessSection - Map = ", accessSection)
 
 	addAccessSectionRes, err := client.ApiCall("add-access-section", accessSection, client.GetSessionID(), true, false)

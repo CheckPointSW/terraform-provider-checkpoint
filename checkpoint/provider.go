@@ -155,6 +155,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_nat_rule": 										resourceManagementNatRule(),
 			"checkpoint_management_threat_rule": 									resourceManagementThreatRule(),
 			"checkpoint_management_threat_exception": 								resourceManagementThreatException(),
+			"checkpoint_management_simple_gateway":									resourceManagementSimpleGateway(),
+			"checkpoint_management_simple_cluster":									resourceManagementSimpleCluster(),
 
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -211,6 +213,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_nat_section": 					dataSourceManagementNatSection(),
 			"checkpoint_management_threat_rule": 					dataSourceManagementThreatRule(),
 			"checkpoint_management_threat_exception": 				dataSourceManagementThreatException(),
+			"checkpoint_management_simple_cluster": 				dataSourceManagementSimpleCluster(),
+			"checkpoint_management_simple_gateway": 				dataSourceManagementSimpleGateway(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

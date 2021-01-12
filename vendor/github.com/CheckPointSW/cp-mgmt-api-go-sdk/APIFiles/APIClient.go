@@ -590,7 +590,7 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 
 		}
 
-		if completedTasks == totalTasks {
+		if totalTasks > 0 && completedTasks == totalTasks {
 			taskComplete = true
 		} else {
 			time.Sleep(c.sleep)

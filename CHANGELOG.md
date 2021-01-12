@@ -1,4 +1,22 @@
-## 1.3.0 (Unreleased)
+## 1.4.0 (Unreleased)
+## 1.3.0 (January 12, 2021)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_simple_gateway`
+* **New Resource:** `checkpoint_management_simple_cluster`
+* **New Data Source:** `checkpoint_management_simple_gateway`
+* **New Data Source:** `checkpoint_management_simple_cluster`
+              
+ENHANCEMENTS
+
+* `checkpoint_management_access_section`: Add support for position below specific section or rule.
+* `checkpoint_management_access_layer`: Add `add_default_rule` flag indicates whether to include a cleanup rule in the new layer.
+
+BUG FIXES
+
+* `checkpoint_management_nat_rule`: Fix call to wrong read function after update resource.
+
 
 ## 1.2.0 (December 17, 2020)
 
