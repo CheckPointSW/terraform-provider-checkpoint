@@ -190,7 +190,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				},
 			},
 			"members": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Cluster members.",
 				Elem: &schema.Resource{
@@ -1216,18 +1216,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		if addClusterRes.ErrorMsg != "" {
 			return fmt.Errorf(addClusterRes.ErrorMsg)
 		}
-		msg := fmt.Sprintf("fail to add-simple-cluster.")
-		if v, ok := addClusterRes.GetData()["tasks"].([]interface{}); ok {
-			if len(v) > 0 {
-				task := v[0].(map[string]interface{})
-				msg += fmt.Sprintf(" task-id [%s]", task["task-id"])
-				if task["status"] != "succeeded" {
-					if len(task["task-details"].([]interface{})) > 0 {
-						msg += "\n" + task["task-details"].([]interface{})[0].(map[string]interface{})["fault-message"].(string)
-					}
-				}
-			}
-		}
+		msg := createTaskFailMessage("add-simple-cluster", addClusterRes.GetData())
 		return fmt.Errorf(msg)
 	}
 
@@ -2283,18 +2272,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		if updateSimpleClusterRes.ErrorMsg != "" {
 			return fmt.Errorf(updateSimpleClusterRes.ErrorMsg)
 		}
-		msg := fmt.Sprintf("fail to set-simple-cluster.")
-		if v, ok := updateSimpleClusterRes.GetData()["tasks"].([]interface{}); ok {
-			if len(v) > 0 {
-				task := v[0].(map[string]interface{})
-				msg += fmt.Sprintf(" task-id [%s]", task["task-id"])
-				if task["status"] != "succeeded" {
-					if len(task["task-details"].([]interface{})) > 0 {
-						msg += "\n" + task["task-details"].([]interface{})[0].(map[string]interface{})["fault-message"].(string)
-					}
-				}
-			}
-		}
+		msg := createTaskFailMessage("set-simple-cluster", updateSimpleClusterRes.GetData())
 		return fmt.Errorf(msg)
 	}
 

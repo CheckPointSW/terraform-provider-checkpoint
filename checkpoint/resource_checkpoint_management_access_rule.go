@@ -872,6 +872,9 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("action") {
 		accessRule["action"] = d.Get("action")
+		if val, ok := d.GetOk("inline_layer"); ok {
+			accessRule["inline-layer"] = val.(string)
+		}
 	}
 
 	if d.HasChange("action_settings") {

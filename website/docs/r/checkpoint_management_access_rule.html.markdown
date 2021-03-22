@@ -47,6 +47,11 @@ resource "checkpoint_management_access_rule" "rule4" {
   name = "test4"
   track = {
     type = "Log"
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = true
+    per_session = false
   }
   enabled = false
 }
@@ -56,6 +61,9 @@ resource "checkpoint_management_access_rule" "rule5" {
   position = {below = checkpoint_management_access_rule.rule4.name}
   name = "test5"
   action = "Accept"
+  action_settings = {
+    enable_identity_captive_portal = false
+  }
 }
 
 resource "checkpoint_management_access_rule" "rule6" {

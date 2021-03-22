@@ -114,6 +114,9 @@ resource "checkpoint_management_access_rule" "test" {
 	name = "%s"
     layer = "%s"
 	position = {top = "top"}
+	source = ["Any"]
+	destination = ["Any"]
+	service = ["Any"]
 }
 `, name, layer)
 }

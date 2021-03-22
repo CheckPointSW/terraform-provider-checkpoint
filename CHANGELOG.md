@@ -1,4 +1,21 @@
-## 1.4.0 (Unreleased)
+## 1.5.0 (Unreleased)
+
+## 1.4.0 (March 22, 2021)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_threat_profile`
+* **New Data Source:** `checkpoint_management_threat_profile`
+              
+ENHANCEMENTS
+
+* `checkpoint_management_simple_gateway`: Add support for default logs settings.
+
+BUG FIXES
+
+* `checkpoint_management_access_rule`: Add inline layer to payload if action field has changed.
+* `checkpoint_management_simple_cluster`: Change members field to type list.
+
 ## 1.3.0 (January 12, 2021)
 
 FEATURES

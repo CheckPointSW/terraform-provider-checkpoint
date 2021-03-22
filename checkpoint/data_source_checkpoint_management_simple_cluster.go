@@ -183,7 +183,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 				},
 			},
 			"members": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Cluster members.",
 				Elem: &schema.Resource{

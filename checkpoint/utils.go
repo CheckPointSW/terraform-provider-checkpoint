@@ -2,6 +2,7 @@ package checkpoint
 
 import (
 	"encoding/json"
+	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
 	"os"
@@ -99,4 +100,28 @@ func resolveTaskIds(data map[string]interface{}) []interface{} {
 		}
 	}
 	return nil
+}
+
+func createTaskFailMessage(command string, data map[string]interface{}) string {
+	msg := fmt.Sprintf("fail to %s.", command)
+	if data != nil {
+		if v, ok := data["tasks"].([]interface{}); ok {
+			if len(v) > 0 {
+				task := v[0].(map[string]interface{})
+				msg += fmt.Sprintf(" task-id [%s]", task["task-id"])
+				if task["status"] != "succeeded" {
+					if len(task["task-details"].([]interface{})) > 0 {
+						myTask := task["task-details"].([]interface{})[0].(map[string]interface{})
+						if v, ok := myTask["fault-message"]; ok {
+							msg += "\nMessage: " + v.(string)
+						}
+						if v, ok := myTask["statusDescription"]; ok {
+							msg += "\nDescription: " + v.(string)
+						}
+					}
+				}
+			}
+		}
+	}
+	return msg
 }

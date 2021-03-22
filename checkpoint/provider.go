@@ -157,7 +157,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_threat_exception": 								resourceManagementThreatException(),
 			"checkpoint_management_simple_gateway":									resourceManagementSimpleGateway(),
 			"checkpoint_management_simple_cluster":									resourceManagementSimpleCluster(),
-
+			"checkpoint_management_threat_profile":									resourceManagementThreatProfile(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                      dataSourceManagementHost(),
@@ -215,6 +215,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_threat_exception": 				dataSourceManagementThreatException(),
 			"checkpoint_management_simple_cluster": 				dataSourceManagementSimpleCluster(),
 			"checkpoint_management_simple_gateway": 				dataSourceManagementSimpleGateway(),
+			"checkpoint_management_threat_profile": 				dataSourceManagementThreatProfile(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

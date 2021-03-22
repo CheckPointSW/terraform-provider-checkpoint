@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+	"reflect"
 	"strconv"
 )
 
@@ -334,10 +335,25 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Optional:    true,
 							Description: "Enable alert when free disk space is below threshold.",
 						},
-						"alert_when_free_disk_space_below_metrics": {
+						"free_disk_space_metrics": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Free disk space metrics.",
+						},
+						"delete_index_files_when_index_size_above_metrics": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Alert when free disk space below metrics.",
+							Description: "Delete index files when index size above metrics",
+						},
+						"delete_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Delete when free disk space below metric.",
+						},
+						"stop_logging_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stop logging when free disk space below metrics",
 						},
 						"alert_when_free_disk_space_below_threshold": {
 							Type:        schema.TypeInt,
@@ -385,11 +401,6 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Optional:    true,
 							Description: "Enable delete index files when index size above.",
 						},
-						"delete_index_files_when_index_size_above_metrics": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "",
-						},
 						"delete_index_files_when_index_size_above_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
@@ -399,11 +410,6 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Enable delete when free disk space below.",
-						},
-						"delete_when_free_disk_space_below_metrics": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Delete when free disk space below metric.",
 						},
 						"delete_when_free_disk_space_below_threshold": {
 							Type:        schema.TypeInt,
@@ -429,11 +435,6 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Forward logs to log server schedule name.",
-						},
-						"free_disk_space_metrics": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Free disk space metrics.",
 						},
 						"perform_log_rotate_before_log_forwarding": {
 							Type:        schema.TypeBool,
@@ -1546,9 +1547,18 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			logSettingsState["alert_when_free_disk_space_below"] = v
 		}
 		if v := logSettingsJson["alert-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_metrics"] = v
+			logSettingsState["free_disk_space_metrics"] = v
 		}
-		if v := logSettingsJson["alert_when_free_disk_space_below_threshold"]; v != nil {
+		if v := logSettingsJson["delete-index-files-when-index-size-above-metrics"]; v != nil {
+			logSettingsState["delete_index_files_when_index_size_above_metrics"] = v
+		}
+		if v := logSettingsJson["delete-when-free-disk-space-below-metrics"]; v != nil {
+			logSettingsState["delete_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logSettingsJson["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
+			logSettingsState["stop_logging_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logSettingsJson["alert-when-free-disk-space-below-threshold"]; v != nil {
 			logSettingsState["alert_when_free_disk_space_below_threshold"] = v
 		}
 		if v := logSettingsJson["alert-when-free-disk-space-below-type"]; v != nil {
@@ -1575,17 +1585,11 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		if v := logSettingsJson["delete-index-files-when-index-size-above"]; v != nil {
 			logSettingsState["delete_index_files_when_index_size_above"] = v
 		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above-metrics"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above_metrics"] = v
-		}
 		if v := logSettingsJson["delete-index-files-when-index-size-above-threshold"]; v != nil {
 			logSettingsState["delete_index_files_when_index_size_above_threshold"] = v
 		}
 		if v := logSettingsJson["delete-when-free-disk-space-below"]; v != nil {
 			logSettingsState["delete_when_free_disk_space_below"] = v
-		}
-		if v := logSettingsJson["delete-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below_metrics"] = v
 		}
 		if v := logSettingsJson["delete-when-free-disk-space-below-threshold"]; v != nil {
 			logSettingsState["delete_when_free_disk_space_below_threshold"] = v
@@ -1629,9 +1633,6 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		if v := logSettingsJson["stop-logging-when-free-disk-space-below"]; v != nil {
 			logSettingsState["stop_logging_when_free_disk_space_below"] = v
 		}
-		if v := logSettingsJson["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below_metrics"] = v
-		}
 		if v := logSettingsJson["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
 			logSettingsState["stop_logging_when_free_disk_space_below_threshold"] = v
 		}
@@ -1642,48 +1643,44 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			logSettingsState["update_account_log_every"] = v
 		}
 
-		_ = d.Set("logs_settings", logSettingsState)
-
-		/*
 		_, logsSettingsInConf := d.GetOk("logs_settings")
 		defaultLogsSettings := map[string]interface{}{
-			"rotate_log_by_file_size": false,
-			"rotate_log_file_size_threshold": 1000,
-			"rotate_log_on_schedule": false,
-			"alert_when_free_disk_space_below_metrics": "mbytes",
 			"alert_when_free_disk_space_below": true,
-			"alert_when_free_disk_space_below_threshold": 20,
-			"alert_when_free_disk_space_below_type": "popup alert",
+			"free_disk_space_metrics": "mbytes",
+			"delete_index_files_when_index_size_above_metrics": "mbytes",
 			"delete_when_free_disk_space_below_metrics": "mbytes",
-			"delete_when_free_disk_space_below": true,
-			"delete_when_free_disk_space_below_threshold": 5000,
+			"stop_logging_when_free_disk_space_below_metrics": "mbytes",
+			"alert_when_free_disk_space_below_type": "popup alert",
+			"alert_when_free_disk_space_below_threshold": 20,
 			"before_delete_keep_logs_from_the_last_days": false,
 			"before_delete_keep_logs_from_the_last_days_threshold": 3664,
 			"before_delete_run_script": false,
 			"before_delete_run_script_command": "",
-			"stop_logging_when_free_disk_space_below_metrics": "mbytes",
-			"stop_logging_when_free_disk_space_below": true,
-			"stop_logging_when_free_disk_space_below_threshold": 100,
+			"delete_index_files_older_than_days": false,
+			"delete_index_files_older_than_days_threshold": 14,
+			"delete_index_files_when_index_size_above": false,
+			"delete_index_files_when_index_size_above_threshold": 100000,
+			"delete_when_free_disk_space_below": true,
+			"delete_when_free_disk_space_below_threshold": 5000,
+			"detect_new_citrix_ica_application_names": false,
+			"forward_logs_to_log_server": false,
+			"perform_log_rotate_before_log_forwarding": false,
 			"reject_connections_when_free_disk_space_below_threshold": false,
 			"reserve_for_packet_capture_metrics": "mbytes",
 			"reserve_for_packet_capture_threshold": 500,
-			"delete_index_files_when_index_size_above_metrics": "mbytes",
-			"delete_index_files_when_index_size_above": false,
-			"delete_index_files_when_index_size_above_threshold": 100000,
-			"delete_index_files_older_than_days": false,
-			"delete_index_files_older_than_days_threshold": 14,
-			"forward_logs_to_log_server": false,
-			"perform_log_rotate_before_log_forwarding": false,
-			"update_account_log_every": 3600,
-			"detect_new_citrix_ica_application_names": false,
+			"rotate_log_by_file_size": false,
+			"rotate_log_file_size_threshold": 1000,
+			"rotate_log_on_schedule": false,
+			"stop_logging_when_free_disk_space_below": true,
+			"stop_logging_when_free_disk_space_below_threshold": 100,
 			"turn_on_qos_logging": true,
+			"update_account_log_every": 3600,
 		}
 		if reflect.DeepEqual(defaultLogsSettings, logSettingsState) && !logsSettingsInConf {
 			_ = d.Set("logs_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("logs_settings", logSettingsState)
 		}
-	*/
 	}else{
 		_ = d.Set("logs_settings", nil)
 	}
@@ -2406,8 +2403,6 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				logsSettings["update-account-log-every"] = d.Get("logs_settings.update_account_log_every").(int)
 			}
 			gateway["logs-settings"] = logsSettings
-		}else{
-			// Set default ?
 		}
 	}
 
