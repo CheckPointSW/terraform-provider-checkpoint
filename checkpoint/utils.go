@@ -3,15 +3,16 @@ package checkpoint
 import (
 	"encoding/json"
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
 	"os"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 )
 
 //var lock sync.Mutex
 
 const (
-	FILENAME = "sid.json"
+	DefaultSessionFileName = "sid.json"
 )
 
 type Session struct {
@@ -19,26 +20,26 @@ type Session struct {
 	Uid string `json:"uid"`
 }
 
-func (s *Session) Save() error {
+func (s *Session) Save(sessionFileName string) error {
 	f, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(FILENAME, f, 0644)
+	err = ioutil.WriteFile(sessionFileName, f, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(sessionFileName string) (Session, error) {
+	if _, err := os.Stat(sessionFileName); os.IsNotExist(err) {
+		_, err := os.Create(sessionFileName)
 		if err != nil {
 			return Session{}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(sessionFileName)
 	if err != nil || len(b) == 0 {
 		return Session{}, err
 	}

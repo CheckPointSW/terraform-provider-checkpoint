@@ -3,15 +3,16 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"io/ioutil"
 	"os"
 	"strconv"
 	"time"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 )
 
 const (
-	FILENAME = "sid.json"
+	DefaultSessionFileName = "sid.json"
 )
 
 type Session struct {
@@ -19,14 +20,14 @@ type Session struct {
 	Uid string `json:"uid"`
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(sessionFileName string) (Session, error) {
+	if _, err := os.Stat(sessionFileName); os.IsNotExist(err) {
+		_, err := os.Create(sessionFileName)
 		if err != nil {
 			return Session{}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(sessionFileName)
 	if err != nil || len(b) == 0 {
 		return Session{}, err
 	}
@@ -108,7 +109,11 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Sleep:                   checkpoint.SleepTime,
 	}
 
-	s, err := GetSession()
+	sessionFileName := os.Getenv("CHECKPOINT_SESSIONFILENAME")
+	if sessionFileName == "" {
+		sessionFileName = DefaultSessionFileName
+	}
+	s, err := GetSession(sessionFileName)
 	if err != nil {
 		return checkpoint.ApiClient{}, err
 	}
