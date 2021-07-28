@@ -40,8 +40,11 @@ func GetSession(sessionFileName string) (Session, error) {
 		}
 	}
 	b, err := ioutil.ReadFile(sessionFileName)
-	if err != nil || len(b) == 0 {
+	if err != nil {
 		return Session{}, err
+	}
+	if len(b) == 0 {
+		return Session{}, nil
 	}
 	var s Session
 	if err = json.Unmarshal(b, &s); err != nil {
