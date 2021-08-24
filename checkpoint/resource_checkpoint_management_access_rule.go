@@ -31,6 +31,7 @@ func resourceManagementAccessRule() *schema.Resource {
 			"layer": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
 			"position": &schema.Schema{
