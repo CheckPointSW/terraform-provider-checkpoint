@@ -25,7 +25,7 @@ resource "checkpoint_management_dns_domain" "example" {
 The following arguments are supported:
 
 * `name` - (Required) Object name. 
-* `is_sub_domain` - (Optional) Whether to match sub-domains in addition to the domain itself. 
+* `is_sub_domain` - (Required) Whether to match sub-domains in addition to the domain itself. 
 * `tags` - (Optional) Collection of tag identifiers.tags blocks are documented below.
 * `color` - (Optional) Color of the object. Should be one of existing colors. 
 * `comments` - (Optional) Comments string. 
