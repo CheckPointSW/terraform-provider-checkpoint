@@ -127,7 +127,7 @@ func resourceManagementServiceUdp() *schema.Resource {
 				Description: "Color of the object. Should be one of existing colors.",
 				Default:     "black",
 			},
-			"comments": &schema.Schema{
+			"comments": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
@@ -314,6 +314,10 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 	if v := serviceUdp["use-default-session-timeout"]; v != nil {
 		_ = d.Set("use_default_session_timeout", v)
+	}
+
+	if v := serviceUdp["color"]; v != nil {
+		_ = d.Set("color", v)
 	}
 
 	if serviceUdp["aggressive-aging"] != nil {

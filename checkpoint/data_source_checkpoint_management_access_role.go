@@ -111,18 +111,16 @@ func dataSourceManagementAccessRole() *schema.Resource {
 }
 
 func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) error {
-
+	// TODO: Ask Roy
+	TYPE_TO_SOURCE := map[string]string{
+		"identity-tag":  "Identity Tag",
+		"user-group":    "Internal User Groups",
+		"CpmiAnyObject": "Guests",
+	}
 	client := m.(*checkpoint.ApiClient)
 
-	name := d.Get("name").(string)
-	uid := d.Get("uid").(string)
-
-	payload := make(map[string]interface{})
-
-	if name != "" {
-		payload["name"] = name
-	} else if uid != "" {
-		payload["uid"] = uid
+	payload := map[string]interface{}{
+		"uid": d.Id(),
 	}
 
 	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, false)
@@ -130,17 +128,16 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 		return fmt.Errorf(err.Error())
 	}
 	if !showAccessRoleRes.Success {
+		if objectNotFound(showAccessRoleRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
 		return fmt.Errorf(showAccessRoleRes.ErrorMsg)
 	}
 
 	accessRole := showAccessRoleRes.GetData()
 
 	log.Println("Read AccessRole - Show JSON = ", accessRole)
-
-	if v := accessRole["uid"]; v != nil {
-		_ = d.Set("uid", v)
-		d.SetId(v.(string))
-	}
 
 	if v := accessRole["name"]; v != nil {
 		_ = d.Set("name", v)
@@ -155,28 +152,38 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 			if len(machinesList) > 0 {
 
 				var machinesListToReturn []map[string]interface{}
-
+				machinesByType := make(map[string]map[string]interface{})
 				for i := range machinesList {
-
 					machinesMap := machinesList[i].(map[string]interface{})
-
 					machinesMapToAdd := make(map[string]interface{})
-
-					if v, _ := machinesMap["source"]; v != nil {
-						machinesMapToAdd["source"] = v
-					}
-					if v, _ := machinesMap["selection"]; v != nil {
-						machinesMapToAdd["selection"] = v
-					}
 					if v, _ := machinesMap["base-dn"]; v != nil {
 						machinesMapToAdd["base_dn"] = v
 					}
-					machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+					if v, _ := machinesMap["type"]; v != nil {
+						if value, ok := machinesByType[TYPE_TO_SOURCE[v.(string)]]; ok {
+							machinesMapToAdd = value
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = append(machinesMapToAdd["selection"].([]string), machinesMap["name"].(string))
+								machinesByType[TYPE_TO_SOURCE[v.(string)]] = machinesMapToAdd
+							}
+						} else {
+							machinesMapToAdd["source"] = TYPE_TO_SOURCE[v.(string)]
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = []string{machinesMap["name"].(string)}
+								machinesByType[TYPE_TO_SOURCE[v.(string)]] = machinesMapToAdd
+							}
+						}
+					}
 				}
+				for _, v := range machinesByType {
+					machinesListToReturn = append(machinesListToReturn, v)
+				}
+				_ = d.Set("machines", machinesListToReturn)
 			}
+		} else {
+			_ = d.Set("machines", nil)
 		}
 	}
-
 	if accessRole["networks"] != nil {
 		networksJson, ok := accessRole["networks"].([]interface{})
 		if ok {
@@ -188,12 +195,17 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 				}
 			}
 			_ = d.Set("networks", networksIds)
+		} else {
+			_ = d.Set("networks", nil)
 		}
 	} else {
 		_ = d.Set("networks", nil)
 	}
 
-	if v := accessRole["remote-access-clients"]; v != nil {
+	if v := accessRole["remote-access-client"]; v != nil {
+		//TODO: Ask Roy
+		_ = d.Set("remote_access_clients", v.(map[string]interface{})["name"])
+	} else {
 		_ = d.Set("remote_access_clients", v)
 	}
 
@@ -212,7 +224,9 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 	} else {
 		_ = d.Set("tags", nil)
 	}
-
+	log.Println("what is the user?")
+	log.Println(accessRole["users"])
+	log.Println("what is the user?")
 	if accessRole["users"] != nil {
 
 		usersList, ok := accessRole["users"].([]interface{})
@@ -222,25 +236,40 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 			if len(usersList) > 0 {
 
 				var usersListToReturn []map[string]interface{}
-
+				usersByType := make(map[string]map[string]interface{})
 				for i := range usersList {
-
 					usersMap := usersList[i].(map[string]interface{})
-
 					usersMapToAdd := make(map[string]interface{})
-
-					if v, _ := usersMap["source"]; v != nil {
-						usersMapToAdd["source"] = v
-					}
-					if v, _ := usersMap["selection"]; v != nil {
-						usersMapToAdd["selection"] = v
-					}
 					if v, _ := usersMap["base-dn"]; v != nil {
 						usersMapToAdd["base_dn"] = v
 					}
-					usersListToReturn = append(usersListToReturn, usersMapToAdd)
+					log.Println("typeeee")
+					log.Println(usersMap["type"])
+					log.Println("typeeee")
+					if v, _ := usersMap["type"]; v != nil {
+						if value, ok := usersByType[TYPE_TO_SOURCE[v.(string)]]; ok {
+							usersMapToAdd = value
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = append(usersMapToAdd["selection"].([]string), usersMap["name"].(string))
+								usersByType[TYPE_TO_SOURCE[v.(string)]] = usersMapToAdd
+							}
+						} else {
+							usersMapToAdd["source"] = TYPE_TO_SOURCE[v.(string)]
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = []string{usersMap["name"].(string)}
+								usersByType[TYPE_TO_SOURCE[v.(string)]] = usersMapToAdd
+							}
+						}
+
+					}
 				}
+				for _, v := range usersByType {
+					usersListToReturn = append(usersListToReturn, v)
+				}
+				_ = d.Set("users", usersListToReturn)
 			}
+		} else {
+			_ = d.Set("users", nil)
 		}
 	}
 
@@ -252,5 +281,14 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("comments", v)
 	}
 
+	if v := accessRole["ignore-warnings"]; v != nil {
+		_ = d.Set("ignore_warnings", v)
+	}
+
+	if v := accessRole["ignore-errors"]; v != nil {
+		_ = d.Set("ignore_errors", v)
+	}
+
 	return nil
+
 }
