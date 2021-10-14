@@ -26,7 +26,7 @@ func TestAccDataSourceCheckpointManagementShowObjects_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementShowObjectsConfig("service-tcp",1, objName),
+				Config: testAccDataSourceManagementShowObjectsConfig("service-tcp", 1, objName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointShowObjects(dataSourceShowObjects, &showObjectsQuery),
 					testAccCheckCheckpointShowObjectsAttributes(&showObjectsQuery, objName),
@@ -103,4 +103,3 @@ data "checkpoint_management_data_service_tcp" "data_service_tcp" {
 }
 `, objType, objName, limit)
 }
-

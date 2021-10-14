@@ -23,11 +23,10 @@ func TestAccDataSourceCheckpointManagementSimpleGateway_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementSimpleGatewayConfig(objName,"1.2.3.4"),
+				Config: testAccDataSourceManagementSimpleGatewayConfig(objName, "1.2.3.4"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "ipv4_address", resourceName, "ipv4_address"),
-
 				),
 			},
 		},

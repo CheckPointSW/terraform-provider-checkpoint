@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementThreatException() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementThreatExceptionRead,
+		Read: dataSourceManagementThreatExceptionRead,
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,

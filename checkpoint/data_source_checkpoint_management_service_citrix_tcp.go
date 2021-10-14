@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementServiceCitrixTcp() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceCitrixTcpRead,
+		Read: dataSourceManagementServiceCitrixTcpRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

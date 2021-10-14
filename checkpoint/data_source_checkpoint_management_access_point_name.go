@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementAccessPointName() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementAccessPointNameRead,
+		Read: dataSourceManagementAccessPointNameRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

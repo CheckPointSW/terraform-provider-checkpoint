@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementNatSection() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementNatSectionRead,
+		Read: dataSourceManagementNatSectionRead,
 		Schema: map[string]*schema.Schema{
 			"package": {
 				Type:        schema.TypeString,

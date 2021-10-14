@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementSimpleCluster() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementSimpleClusterRead,
+		Read: dataSourceManagementSimpleClusterRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -403,7 +403,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 				Computed:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema {
+					Schema: map[string]*schema.Schema{
 						"alert_when_free_disk_space_below": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -652,7 +652,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 									},
 									"allocate_ip_address_from": {
 										Type:        schema.TypeMap,
-										Computed: true,
+										Computed:    true,
 										Description: "Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -1097,7 +1097,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 		} else {
 			_ = d.Set("members", membersList)
 		}
-	}else{
+	} else {
 		_ = d.Set("members", nil)
 	}
 
@@ -1167,19 +1167,19 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 
 	if v := cluster["send_alerts_to_server"]; v != nil {
 		_ = d.Set("send_alerts_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_alerts_to_server", nil)
 	}
 
 	if v := cluster["send-logs-to-backup-server"]; v != nil {
 		_ = d.Set("send_logs_to_backup_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_backup_server", nil)
 	}
 
 	if v := cluster["send-logs-to-server"]; v != nil {
 		_ = d.Set("send_logs_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_server", nil)
 	}
 
@@ -1286,7 +1286,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			logSettingsState["update_account_log_every"] = v
 		}
 		_ = d.Set("logs_settings", logSettingsState)
-	}else{
+	} else {
 		_ = d.Set("logs_settings", nil)
 	}
 
@@ -1312,7 +1312,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			firewallSettingsState["memory_pool_size"] = v
 		}
 		_ = d.Set("firewall_settings", firewallSettingsState)
-	} else{
+	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
 
@@ -1488,7 +1488,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			vpnSettingsState["office_mode"] = officeModeState
 		}
 		_ = d.Set("vpn-settings", vpnSettingsState)
-	}else{
+	} else {
 		_ = d.Set("vpn-settings", nil)
 	}
 

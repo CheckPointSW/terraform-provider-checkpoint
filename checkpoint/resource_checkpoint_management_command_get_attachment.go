@@ -56,7 +56,6 @@ func createManagementGetAttachment(d *schema.ResourceData, m interface{}) error 
 
 	_ = d.Set("task_id", resolveTaskId(GetAttachmentRes.GetData()))
 
-
 	return readManagementGetAttachment(d, m)
 }
 

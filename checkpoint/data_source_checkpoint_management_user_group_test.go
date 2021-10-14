@@ -23,11 +23,10 @@ func TestAccDataSourceCheckpointManagementUserGroup_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementUserGroupConfig(objName,"myuser@email.com"),
+				Config: testAccDataSourceManagementUserGroupConfig(objName, "myuser@email.com"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "email", resourceName, "email"),
-
 				),
 			},
 		},

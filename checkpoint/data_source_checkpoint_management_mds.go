@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementMds() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementMdsRead,
+		Read: dataSourceManagementMdsRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

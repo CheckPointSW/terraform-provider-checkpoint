@@ -90,7 +90,7 @@ func testAccCheckCheckpointManagementSimpleClusterAttributes(simpleClusterJson *
 			return fmt.Errorf("name is %s, expected %s", simpleClusterName, name)
 		}
 
-		simpleClusterIpv4:= (*simpleClusterJson)["ipv4-address"].(string)
+		simpleClusterIpv4 := (*simpleClusterJson)["ipv4-address"].(string)
 		if !strings.EqualFold(simpleClusterIpv4, ipv4) {
 			return fmt.Errorf("ipv4 is %s, expected %s", simpleClusterIpv4, ipv4)
 		}

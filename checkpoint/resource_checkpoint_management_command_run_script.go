@@ -91,7 +91,6 @@ func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
 
 	_ = d.Set("tasks", resolveTaskIds(RunScriptRes.GetData()))
 
-
 	return readManagementRunScript(d, m)
 }
 

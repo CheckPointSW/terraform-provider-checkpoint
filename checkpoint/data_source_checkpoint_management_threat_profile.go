@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementThreatProfile() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementThreatProfileRead,
+		Read: dataSourceManagementThreatProfileRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -514,16 +514,16 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 		}
 		_, ipsSettingsInConf := d.GetOk("ips_settings")
 		defaultIpsSettings := map[string]interface{}{
-			"newly_updated_protections": "active",
+			"newly_updated_protections":                  "active",
 			"exclude_protection_with_performance_impact": false,
-			"exclude_protection_with_severity": false,
+			"exclude_protection_with_severity":           false,
 		}
 		if reflect.DeepEqual(defaultIpsSettings, ipsSettingsState) && !ipsSettingsInConf {
 			_ = d.Set("ips_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("ips_settings", ipsSettingsState)
 		}
-	}else{
+	} else {
 		_ = d.Set("ips_settings", nil)
 	}
 
@@ -569,24 +569,24 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 
 		_, maliciousMailPolicySettingsInConf := d.GetOk("malicious_mail_policy_settings")
 		defaultMaliciousMailPolicySettings := map[string]interface{}{
-			"email_action": "allow",
-			"remove_attachments_and_links": true,
-			"malicious_attachments_text": "Malicious email attachment '$filename$' removed by Check Point.",
-			"failed_to_scan_attachments_text": "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
-			"malicious_links_text": "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
-			"add_x_header_to_email": false,
-			"add_email_subject_prefix": false,
-			"email_subject_prefix_text": "Attachment was found malicious. It is recommended not to open this mail.",
+			"email_action":                      "allow",
+			"remove_attachments_and_links":      true,
+			"malicious_attachments_text":        "Malicious email attachment '$filename$' removed by Check Point.",
+			"failed_to_scan_attachments_text":   "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
+			"malicious_links_text":              "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
+			"add_x_header_to_email":             false,
+			"add_email_subject_prefix":          false,
+			"email_subject_prefix_text":         "Attachment was found malicious. It is recommended not to open this mail.",
 			"add_customized_text_to_email_body": false,
-			"email_body_customized_text": "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
-			"send_copy": false,
+			"email_body_customized_text":        "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
+			"send_copy":                         false,
 		}
 		if reflect.DeepEqual(defaultMaliciousMailPolicySettings, maliciousMailPolicySettingsState) && !maliciousMailPolicySettingsInConf {
 			_ = d.Set("malicious_mail_policy_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("malicious_mail_policy_settings", maliciousMailPolicySettingsState)
 		}
-	}else{
+	} else {
 		_ = d.Set("malicious_mail_policy_settings", nil)
 	}
 
@@ -668,7 +668,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 			scanMaliciousLinksState["max_links"] = v
 		}
 		_ = d.Set("scan_malicious_links", scanMaliciousLinksState)
-	}else{
+	} else {
 		_ = d.Set("scan_malicious_links", nil)
 	}
 
@@ -691,10 +691,10 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 				extendedAttributesToActivateState = append(extendedAttributesToActivateState, extendedAttributesToActivate)
 			}
 			_ = d.Set("activate_protections_by_extended_attributes", extendedAttributesToActivateState)
-		}else{
+		} else {
 			_ = d.Set("activate_protections_by_extended_attributes", extendedAttributesToActivateList)
 		}
-	}else{
+	} else {
 		_ = d.Set("activate_protections_by_extended_attributes", nil)
 	}
 
@@ -717,10 +717,10 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 				extendedAttributesToDeactivateState = append(extendedAttributesToDeactivateState, extendedAttributesToDeactivate)
 			}
 			_ = d.Set("deactivate_protections_by_extended_attributes", extendedAttributesToDeactivateState)
-		}else{
+		} else {
 			_ = d.Set("deactivate_protections_by_extended_attributes", extendedAttributesToDeactivateList)
 		}
-	}else{
+	} else {
 		_ = d.Set("deactivate_protections_by_extended_attributes", nil)
 	}
 

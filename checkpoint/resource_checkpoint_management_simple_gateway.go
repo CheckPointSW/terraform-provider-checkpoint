@@ -79,7 +79,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Anti spoofing.",
-							Default: true,
+							Default:     true,
 						},
 						"anti_spoofing_settings": {
 							Type:        schema.TypeMap,
@@ -99,7 +99,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Security zone.",
-							Default: false,
+							Default:     false,
 						},
 						"security_zone_settings": {
 							Type:        schema.TypeMap,
@@ -124,7 +124,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Topology.",
-							Default: "automatic",
+							Default:     "automatic",
 						},
 						"topology_settings": {
 							Type:        schema.TypeMap,
@@ -193,7 +193,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Firewall blade enabled.",
-				Default: true,
+				Default:     true,
 			},
 			"firewall_settings": {
 				Type:        schema.TypeMap,
@@ -268,7 +268,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "OS name.",
-				Default: "Gaia",
+				Default:     "Gaia",
 			},
 			"version": {
 				Type:        schema.TypeString,
@@ -329,7 +329,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Optional:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema {
+					Schema: map[string]*schema.Schema{
 						"alert_when_free_disk_space_below": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -364,7 +364,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Alert when free disk space below type.",
-							Default: "popup alert",
+							Default:     "popup alert",
 						},
 						"before_delete_keep_logs_from_the_last_days": {
 							Type:        schema.TypeBool,
@@ -537,7 +537,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "IP selection",
-										Default: "use-main-address",
+										Default:     "use-main-address",
 									},
 									"dns_resolving_hostname": {
 										Type:        schema.TypeString,
@@ -581,7 +581,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 									},
 									"allocate_ip_address_from": {
 										Type:        schema.TypeMap,
-										Optional: true,
+										Optional:    true,
 										Description: "Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -629,7 +629,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 													Optional:    true,
 													Description: "This configuration applies to all Office Mode methods except Automatic (using DHCP) and ipassignment.conf entries which contain this data.",
 													Elem: &schema.Resource{
-													Schema: map[string]*schema.Schema{
+														Schema: map[string]*schema.Schema{
 															"use_primary_dns_server": {
 																Type:        schema.TypeBool,
 																Optional:    true,
@@ -1524,19 +1524,19 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 
 	if v := gateway["send_alerts_to_server"]; v != nil {
 		_ = d.Set("send_alerts_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_alerts_to_server", nil)
 	}
 
 	if v := gateway["send-logs-to-backup-server"]; v != nil {
 		_ = d.Set("send_logs_to_backup_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_backup_server", nil)
 	}
 
 	if v := gateway["send-logs-to-server"]; v != nil {
 		_ = d.Set("send_logs_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_server", nil)
 	}
 
@@ -1645,43 +1645,43 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 
 		_, logsSettingsInConf := d.GetOk("logs_settings")
 		defaultLogsSettings := map[string]interface{}{
-			"alert_when_free_disk_space_below": true,
-			"free_disk_space_metrics": "mbytes",
-			"delete_index_files_when_index_size_above_metrics": "mbytes",
-			"delete_when_free_disk_space_below_metrics": "mbytes",
-			"stop_logging_when_free_disk_space_below_metrics": "mbytes",
-			"alert_when_free_disk_space_below_type": "popup alert",
-			"alert_when_free_disk_space_below_threshold": 20,
-			"before_delete_keep_logs_from_the_last_days": false,
-			"before_delete_keep_logs_from_the_last_days_threshold": 3664,
-			"before_delete_run_script": false,
-			"before_delete_run_script_command": "",
-			"delete_index_files_older_than_days": false,
-			"delete_index_files_older_than_days_threshold": 14,
-			"delete_index_files_when_index_size_above": false,
-			"delete_index_files_when_index_size_above_threshold": 100000,
-			"delete_when_free_disk_space_below": true,
-			"delete_when_free_disk_space_below_threshold": 5000,
-			"detect_new_citrix_ica_application_names": false,
-			"forward_logs_to_log_server": false,
-			"perform_log_rotate_before_log_forwarding": false,
+			"alert_when_free_disk_space_below":                        true,
+			"free_disk_space_metrics":                                 "mbytes",
+			"delete_index_files_when_index_size_above_metrics":        "mbytes",
+			"delete_when_free_disk_space_below_metrics":               "mbytes",
+			"stop_logging_when_free_disk_space_below_metrics":         "mbytes",
+			"alert_when_free_disk_space_below_type":                   "popup alert",
+			"alert_when_free_disk_space_below_threshold":              20,
+			"before_delete_keep_logs_from_the_last_days":              false,
+			"before_delete_keep_logs_from_the_last_days_threshold":    3664,
+			"before_delete_run_script":                                false,
+			"before_delete_run_script_command":                        "",
+			"delete_index_files_older_than_days":                      false,
+			"delete_index_files_older_than_days_threshold":            14,
+			"delete_index_files_when_index_size_above":                false,
+			"delete_index_files_when_index_size_above_threshold":      100000,
+			"delete_when_free_disk_space_below":                       true,
+			"delete_when_free_disk_space_below_threshold":             5000,
+			"detect_new_citrix_ica_application_names":                 false,
+			"forward_logs_to_log_server":                              false,
+			"perform_log_rotate_before_log_forwarding":                false,
 			"reject_connections_when_free_disk_space_below_threshold": false,
-			"reserve_for_packet_capture_metrics": "mbytes",
-			"reserve_for_packet_capture_threshold": 500,
-			"rotate_log_by_file_size": false,
-			"rotate_log_file_size_threshold": 1000,
-			"rotate_log_on_schedule": false,
-			"stop_logging_when_free_disk_space_below": true,
-			"stop_logging_when_free_disk_space_below_threshold": 100,
-			"turn_on_qos_logging": true,
-			"update_account_log_every": 3600,
+			"reserve_for_packet_capture_metrics":                      "mbytes",
+			"reserve_for_packet_capture_threshold":                    500,
+			"rotate_log_by_file_size":                                 false,
+			"rotate_log_file_size_threshold":                          1000,
+			"rotate_log_on_schedule":                                  false,
+			"stop_logging_when_free_disk_space_below":                 true,
+			"stop_logging_when_free_disk_space_below_threshold":       100,
+			"turn_on_qos_logging":                                     true,
+			"update_account_log_every":                                3600,
 		}
 		if reflect.DeepEqual(defaultLogsSettings, logSettingsState) && !logsSettingsInConf {
 			_ = d.Set("logs_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("logs_settings", logSettingsState)
 		}
-	}else{
+	} else {
 		_ = d.Set("logs_settings", nil)
 	}
 
@@ -1707,7 +1707,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			firewallSettingsState["memory_pool_size"] = v
 		}
 		_ = d.Set("firewall_settings", firewallSettingsState)
-	} else{
+	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
 
@@ -1883,7 +1883,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			vpnSettingsState["office_mode"] = officeModeState
 		}
 		_ = d.Set("vpn-settings", vpnSettingsState)
-	}else{
+	} else {
 		_ = d.Set("vpn-settings", nil)
 	}
 
@@ -2100,7 +2100,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 					if ok := d.HasChange("vpn_settings.authentication.authentication_clients"); ok {
 						if v, ok := d.GetOk("vpn_settings.authentication.authentication_clients"); ok {
 							authentication["authentication-clients"] = v.(*schema.Set).List()
-						}else{
+						} else {
 							oldValues, _ := d.GetChange("vpn_settings.authentication.authentication_clients")
 							authentication["authentication-clients"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 						}
@@ -2286,7 +2286,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_alerts_to_server"); ok {
 		if v, ok := d.GetOk("send_alerts_to_server"); ok {
 			gateway["send-alerts-to-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_alerts_to_server")
 			gateway["send-alerts-to-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}
@@ -2295,7 +2295,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_logs_to_backup_server"); ok {
 		if v, ok := d.GetOk("send_logs_to_backup_server"); ok {
 			gateway["send-logs-to-backup-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_logs_to_backup_server")
 			gateway["send-logs-to-backup-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}
@@ -2303,7 +2303,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_logs_to_server"); ok {
 		if v, ok := d.GetOk("send_logs_to_server"); ok {
 			gateway["send-logs-to-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_logs_to_server")
 			gateway["send-logs-to-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}
@@ -2405,7 +2405,6 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			gateway["logs-settings"] = logsSettings
 		}
 	}
-
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {

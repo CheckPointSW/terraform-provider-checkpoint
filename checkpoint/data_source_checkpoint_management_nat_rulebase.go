@@ -301,7 +301,6 @@ func dataSourceManagementNatRulebaseRead(d *schema.ResourceData, m interface{}) 
 		payload["filter_settings"] = filterSettings
 	}
 
-
 	showNatRulebaseRes, err := client.ApiCall("show-nat-rulebase", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())

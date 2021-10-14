@@ -843,7 +843,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("position.top"); ok {
 				if v.(string) == "top" {
 					accessRule["new-position"] = "top" // entire rule-base
-				} else{
+				} else {
 					accessRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}

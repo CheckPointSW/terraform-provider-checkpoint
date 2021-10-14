@@ -220,6 +220,7 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	log.Println("Create AccessRole - Map = ", accessRole)
 
 	addAccessRoleRes, err := client.ApiCall("add-access-role", accessRole, client.GetSessionID(), true, false)
+	// with timeout need to remove the second condition on first if.
 	if err != nil || !addAccessRoleRes.Success {
 		if addAccessRoleRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessRoleRes.ErrorMsg)
@@ -230,6 +231,24 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	d.SetId(addAccessRoleRes.GetData()["uid"].(string))
 
 	return readManagementAccessRole(d, m)
+	//return resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+	//	resp, err := client.ApiCall("add-access-role", accessRole, client.GetSessionID(), true, false)
+	//
+	//	if err != nil {
+	//		return resource.NonRetryableError(fmt.Errorf("Error describing instance: %s", err))
+	//	}
+	//
+	//	if !resp.Success {
+	//		return resource.RetryableError(fmt.Errorf("Expected instance to be created but was in state %s", resp.Success))
+	//	}
+	//
+	//	err = readManagementAccessRole(d, m)
+	//	if err != nil {
+	//		return resource.NonRetryableError(err)
+	//	} else {
+	//		return nil
+	//	}
+	//})
 }
 
 func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {

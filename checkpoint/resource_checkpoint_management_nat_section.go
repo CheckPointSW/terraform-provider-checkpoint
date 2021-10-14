@@ -137,7 +137,7 @@ func readManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
-		"uid": d.Id(),
+		"uid":     d.Id(),
 		"package": d.Get("package"),
 	}
 
@@ -202,13 +202,13 @@ func deleteManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	natSectionPayload := map[string]interface{}{
-		"uid": d.Id(),
+		"uid":     d.Id(),
 		"package": d.Get("package"),
 	}
 
 	log.Println("Delete NAT section")
 
-	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload , client.GetSessionID(), true, false)
+	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteNatSectionRes.Success {
 		if deleteNatSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteNatSectionRes.ErrorMsg)

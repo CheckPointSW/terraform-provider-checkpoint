@@ -31,7 +31,7 @@ func TestAccCheckpointManagementThreatProfile_basic(t *testing.T) {
 				Config: testAccManagementThreatProfileConfig(objName, "high", "Critical"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointThreatProfileExists(resourceName, &threatProfile),
-					testAccCheckCheckpointThreatProfileAttributes(&threatProfile, objName,"high", "Critical"),
+					testAccCheckCheckpointThreatProfileAttributes(&threatProfile, objName, "high", "Critical"),
 				),
 			},
 		},

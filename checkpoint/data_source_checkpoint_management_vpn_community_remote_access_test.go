@@ -34,7 +34,7 @@ func TestAccDataSourceCheckpointManagementVpnCommunityRemoteAccess_basic(t *test
 }
 
 func testAccDataSourceManagementVpnCommunityRemoteAccessConfig(name string, userGroups string) string {
-return fmt.Sprintf(`
+	return fmt.Sprintf(`
 resource "checkpoint_management_vpn_community_remote_access" "vpn_community_remote_access" {
     name = "%s"
 	user_groups = ["%s"]

@@ -28,7 +28,6 @@ func TestAccDataSourceCheckpointManagementServiceCitrixTcp_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "application", resourceName, "application"),
-
 				),
 			},
 		},
