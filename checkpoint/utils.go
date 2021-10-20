@@ -125,3 +125,13 @@ func createTaskFailMessage(command string, data map[string]interface{}) string {
 	}
 	return msg
 }
+
+//converts object type to source for machines and users.
+func getTypeToSource() map[string]string {
+	TypeToSource := map[string]string{
+		"identity-tag":  "Identity Tag",
+		"user-group":    "Internal User Groups",
+		"CpmiAnyObject": "Guests",
+	}
+	return TypeToSource
+}

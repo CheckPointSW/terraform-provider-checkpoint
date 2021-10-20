@@ -9,13 +9,13 @@ import (
 func main() {
 	apiClient, err := commands.InitClient()
 	if err != nil {
-		fmt.Println("logOut error: " + err.Error())
+		fmt.Println("logout error: " + err.Error())
 		os.Exit(1)
 	}
 
 	logoutRes, err := apiClient.ApiCall("logout", make(map[string]interface{}), apiClient.GetSessionID(), true, false)
 	if err != nil {
-		fmt.Println("logOut error: " + err.Error())
+		fmt.Println("logout error: " + err.Error())
 		os.Exit(1)
 	}
 
@@ -24,5 +24,5 @@ func main() {
 		fmt.Println(errMsg)
 		os.Exit(1)
 	}
-	fmt.Println("LogOut finished successfully")
+	fmt.Println("logout finished successfully")
 }

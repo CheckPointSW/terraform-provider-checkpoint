@@ -217,6 +217,10 @@ func dataSourceManagementServiceUdpRead(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("use_default_session_timeout", v)
 	}
 
+	if v := serviceUdp["color"]; v != nil {
+		_ = d.Set("color", v)
+	}
+
 	if serviceUdp["aggressive-aging"] != nil {
 
 		aggressiveAgingMap := serviceUdp["aggressive-aging"].(map[string]interface{})
