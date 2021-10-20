@@ -111,7 +111,7 @@ func resourceManagementAccessRole() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"detail_level": {
+			"details_level": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
