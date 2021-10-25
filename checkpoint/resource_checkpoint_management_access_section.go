@@ -164,7 +164,7 @@ func readManagementAccessSection(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("name", v)
 	}
 
-	if v := accessSection["layer"]; v != nil {
+	if v, ok := d.GetOk("layer"); ok {
 		_ = d.Set("layer", v)
 	}
 
@@ -193,7 +193,7 @@ func updateManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 		accessSection["name"] = d.Get("name")
 	}
 
-	if v, ok := d.GetOkExists("layer"); ok {
+	if v, ok := d.GetOk("layer"); ok {
 		accessSection["layer"] = v.(string)
 	}
 
