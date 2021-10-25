@@ -2,12 +2,12 @@
 layout: "checkpoint"
 page_title: "checkpoint_management_generic_data_center_server"
 sidebar_current: "docs-checkpoint-data-source-checkpoint-management-generic-data-center-server"
-description: |- This resource allows you to execute Check Point generic data center server.
+description: |- Use this data source to get information on an existing generic data center server.
 ---
 
 # Data Source: checkpoint_management_generic_data_center_server
 
-This resource allows you to execute Check Point Generic Data Center Server.
+Use this data source to get information on an existing Generic Data Center Server.
 
 ## Example Usage
 
