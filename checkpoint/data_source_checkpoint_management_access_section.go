@@ -59,6 +59,10 @@ func dataSourceManagementAccessSectionRead(d *schema.ResourceData, m interface{}
 
 	log.Println("Read AccessSection - Show JSON = ", accessSection)
 
+	if v, ok := d.GetOk("layer"); ok {
+		_ = d.Set("layer", v)
+	}
+
 	if v := accessSection["uid"]; v != nil {
 		_ = d.Set("uid", v)
 		d.SetId(v.(string))

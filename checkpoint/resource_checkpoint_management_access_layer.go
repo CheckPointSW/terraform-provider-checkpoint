@@ -44,7 +44,6 @@ func resourceManagementAccessLayer() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Whether to use X-Forward-For HTTP header, which is added by the  proxy server to keep track of the original source IP.",
-				Default:     false,
 			},
 			"firewall": {
 				Type:        schema.TypeBool,

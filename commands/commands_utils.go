@@ -11,28 +11,29 @@ import (
 )
 
 const (
-	FILENAME = "sid.json"
+	DefaultFilename = "sid.json"
 )
 
 type Session struct {
-	Sid string `json:"sid"`
-	Uid string `json:"uid"`
+	Sid      string `json:"sid"`
+	Uid      string `json:"uid"`
+	FileName string `json:"file_name"`
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(fileName string) (Session, error) {
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		_, err := os.Create(fileName)
 		if err != nil {
-			return Session{}, err
+			return Session{FileName: fileName}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(fileName)
 	if err != nil || len(b) == 0 {
-		return Session{}, err
+		return Session{FileName: fileName}, err
 	}
 	var s Session
 	if err = json.Unmarshal(b, &s); err != nil {
-		return Session{}, err
+		return Session{FileName: fileName}, err
 	}
 	return s, nil
 }
@@ -64,6 +65,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	password := os.Getenv("CHECKPOINT_PASSWORD")
 	portVal := os.Getenv("CHECKPOINT_PORT")
 	timeoutVal := os.Getenv("CHECKPOINT_TIMEOUT")
+	fileName := os.Getenv("CHECKPOINT_FILENAME")
 
 	var err error
 	if portVal != "" {
@@ -79,6 +81,10 @@ func InitClient() (checkpoint.ApiClient, error) {
 			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_TIMEOUT to integer")
 		}
 		timeout = time.Duration(timeoutInteger)
+	}
+
+	if fileName == "" {
+		fileName = DefaultFilename
 	}
 
 	if server == "" || username == "" || password == "" {
@@ -108,14 +114,14 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Sleep:                   checkpoint.SleepTime,
 	}
 
-	s, err := GetSession()
+	s, err := GetSession(fileName)
 	if err != nil {
 		return checkpoint.ApiClient{}, err
 	}
 	if s.Sid != "" {
 		args.Sid = s.Sid
 	} else {
-		return checkpoint.ApiClient{}, fmt.Errorf("session id not found. Verify 'sid.json' file exists in working directory")
+		return checkpoint.ApiClient{}, fmt.Errorf("session id not found. Verify %s file exists in working directory", fileName)
 	}
 
 	mgmt := checkpoint.APIClient(args)

@@ -199,15 +199,13 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 				_ = d.Set("machines", machinesListToReturn)
 			}
 		} else {
-			if accessRole["machines"] == "all identified" {
-				var machinesListToReturn []map[string]interface{}
-				machinesMapToAdd := map[string]interface{}{"source": "all identified", "selection": []string{"all identified"}}
-				machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
-				_ = d.Set("machines", machinesListToReturn)
-			} else {
-				_ = d.Set("machines", "any")
-			}
+			var machinesListToReturn []map[string]interface{}
+			machinesMapToAdd := map[string]interface{}{"source": accessRole["machines"], "selection": []string{accessRole["machines"].(string)}}
+			machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+			_ = d.Set("machines", machinesListToReturn)
 		}
+	} else {
+		_ = d.Set("machines", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if accessRole["networks"] != nil {
@@ -249,7 +247,6 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 	} else {
 		_ = d.Set("tags", nil)
 	}
-
 	if accessRole["users"] != nil {
 
 		usersList, ok := accessRole["users"].([]interface{})
@@ -299,15 +296,13 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 				_ = d.Set("users", usersListToReturn)
 			}
 		} else {
-			if accessRole["users"] == "all identified" {
-				var usersListToReturn []map[string]interface{}
-				usersMapToAdd := map[string]interface{}{"source": "all identified", "selection": []string{"all identified"}}
-				usersListToReturn = append(usersListToReturn, usersMapToAdd)
-				_ = d.Set("users", usersListToReturn)
-			} else {
-				_ = d.Set("users", "any")
-			}
+			var usersListToReturn []map[string]interface{}
+			usersMapToAdd := map[string]interface{}{"source": accessRole["users"], "selection": []string{accessRole["users"].(string)}}
+			usersListToReturn = append(usersListToReturn, usersMapToAdd)
+			_ = d.Set("users", usersListToReturn)
 		}
+	} else {
+		_ = d.Set("users", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if v := accessRole["color"]; v != nil {
@@ -316,6 +311,14 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 	if v := accessRole["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := accessRole["ignore-warnings"]; v != nil {
+		_ = d.Set("ignore_warnings", v)
+	}
+
+	if v := accessRole["ignore-errors"]; v != nil {
+		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil

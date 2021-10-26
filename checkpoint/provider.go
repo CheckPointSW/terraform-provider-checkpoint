@@ -55,6 +55,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PORT", checkpoint.DefaultPort),
 				Description: "Port used for connection to the API server",
 			},
+			"file_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_FILENAME", DefaultFilename),
+				Description: "FileName used to save the current sid to, default is sid.json.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_host":                                           resourceManagementHost(),
@@ -159,7 +165,6 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_simple_cluster":                                 resourceManagementSimpleCluster(),
 			"checkpoint_management_threat_profile":                                 resourceManagementThreatProfile(),
 			"checkpoint_management_generic_data_center_server":                     resourceManagementGenericDataCenterServer(),
-			"checkpoint_management_aws_data_center_server":                         resourceManagementAwsDataCenterServer(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -233,6 +238,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	domain := data.Get("domain").(string)
 	port := data.Get("port").(int)
 	timeout := data.Get("timeout").(int)
+	fileName := data.Get("file_name").(string)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
@@ -259,7 +265,10 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	case checkpoint.WebContext:
 		var s Session
 		var err error
-		s, err = GetSession()
+		log.Println("filename =", fileName)
+		s.FileName = fileName
+		log.Println("filename =", s.FileName)
+		s, err = GetSession(s.FileName)
 		if err != nil {
 			return nil, err
 		}
@@ -269,7 +278,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, domain)
+			s, err = login(mgmt, username, password, domain, fileName)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
@@ -282,7 +291,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "")
+		_, err := login(gaia, username, password, "", fileName)
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -293,16 +302,16 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, domain string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, domain string, fileName string) (Session, error) {
 	log.Printf("Perform login")
 
 	loginRes, err := client.Login(username, pwd, false, domain, false, "")
 	if err != nil {
 		localRequestsError := "invalid character '<' looking for beginning of value"
 		if strings.Contains(err.Error(), localRequestsError) {
-			return Session{}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
+			return Session{FileName: fileName}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
 		}
-		return Session{}, err
+		return Session{FileName: fileName}, err
 	}
 	if !loginRes.Success {
 		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
@@ -314,8 +323,9 @@ func login(client *checkpoint.ApiClient, username string, pwd string, domain str
 	}
 
 	s := Session{
-		Sid: client.GetSessionID(),
-		Uid: uid,
+		Sid:      client.GetSessionID(),
+		Uid:      uid,
+		FileName: fileName,
 	}
 
 	return s, nil

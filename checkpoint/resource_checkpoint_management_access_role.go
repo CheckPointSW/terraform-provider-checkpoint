@@ -111,12 +111,6 @@ func resourceManagementAccessRole() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
-				Default:     "standard",
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -174,8 +168,6 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 				accessRole["machines"] = machinesPayload
 			}
 		}
-	} else {
-		accessRole["machines"] = "any"
 	}
 
 	if v, ok := d.GetOk("networks"); ok {
@@ -221,8 +213,6 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 				accessRole["users"] = usersPayload
 			}
 		}
-	} else {
-		accessRole["users"] = "any"
 	}
 
 	if v, ok := d.GetOk("color"); ok {
@@ -231,10 +221,6 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("comments"); ok {
 		accessRole["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("details_level"); ok {
-		accessRole["details-level"] = v.(string)
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -261,12 +247,8 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 }
 
 func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
-	TypeToSource := getTypeToSource()
 	client := m.(*checkpoint.ApiClient)
 
-	var defaultAnyPayout []map[string]interface{}
-	temp := map[string]interface{}{"source": "any", "selection": []string{"any"}}
-	defaultAnyPayout = append(defaultAnyPayout, temp)
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
@@ -284,6 +266,8 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	}
 
 	accessRole := showAccessRoleRes.GetData()
+
+	TypeToSource := getTypeToSource()
 
 	log.Println("Read AccessRole - Show JSON = ", accessRole)
 
@@ -345,7 +329,7 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 			_ = d.Set("machines", machinesListToReturn)
 		}
 	} else {
-		_ = d.Set("machines", defaultAnyPayout)
+		_ = d.Set("machines", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if accessRole["networks"] != nil {
@@ -442,7 +426,7 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 			_ = d.Set("users", usersListToReturn)
 		}
 	} else {
-		_ = d.Set("users", defaultAnyPayout)
+		_ = d.Set("users", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if v := accessRole["color"]; v != nil {
@@ -451,10 +435,6 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	if v := accessRole["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := accessRole["details-level"]; v != nil {
-		_ = d.Set("details_level", v)
 	}
 
 	if v := accessRole["ignore-warnings"]; v != nil {
@@ -485,18 +465,18 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("machines") {
 		if v, ok := d.GetOk("machines"); ok {
 			selection := d.Get("machines.0.selection").(*schema.Set).List()
-			if val, ok := d.GetOk("machines.0.source"); ok && (val == "all identified" || val == "any") && selection[0] == val && len(selection) == 1 {
-				accessRole["machines"] = val
+			if src, ok := d.GetOk("machines.0.source"); ok && (src == "all identified" || src == "any") && selection[0] == src && len(selection) == 1 {
+				accessRole["machines"] = src
 			} else {
 				machinesList := v.([]interface{})
 				var machinesPayload []map[string]interface{}
 
 				for i := range machinesList {
-					Payload := make(map[string]interface{})
-					Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
-					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					Payload["base-dn"] = d.Get("machines." + strconv.Itoa(i) + ".base_dn")
-					machinesPayload = append(machinesPayload, Payload)
+					machinePayload := make(map[string]interface{})
+					machinePayload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
+					machinePayload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					machinePayload["base-dn"] = d.Get("machines." + strconv.Itoa(i) + ".base_dn")
+					machinesPayload = append(machinesPayload, machinePayload)
 				}
 				accessRole["machines"] = machinesPayload
 			}
@@ -531,18 +511,18 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("users") {
 		if v, ok := d.GetOk("users"); ok {
 			selection := d.Get("users.0.selection").(*schema.Set).List()
-			if val, ok := d.GetOk("users.0.source"); ok && (val == "all identified" || val == "any") && selection[0] == val && len(selection) == 1 {
-				accessRole["users"] = val
+			if src, ok := d.GetOk("users.0.source"); ok && (src == "all identified" || src == "any") && selection[0] == src && len(selection) == 1 {
+				accessRole["users"] = src
 			} else {
 				usersList := v.([]interface{})
 				var usersPayload []map[string]interface{}
 
 				for i := range usersList {
-					Payload := make(map[string]interface{})
-					Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
-					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					Payload["base-dn"] = d.Get("users." + strconv.Itoa(i) + ".base_dn")
-					usersPayload = append(usersPayload, Payload)
+					userPayload := make(map[string]interface{})
+					userPayload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
+					userPayload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					userPayload["base-dn"] = d.Get("users." + strconv.Itoa(i) + ".base_dn")
+					usersPayload = append(usersPayload, userPayload)
 				}
 				accessRole["users"] = usersPayload
 			}
@@ -557,10 +537,6 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("comments"); ok {
 		accessRole["comments"] = d.Get("comments")
-	}
-
-	if ok := d.HasChange("details_level"); ok {
-		accessRole["details-level"] = d.Get("details_level")
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

@@ -97,7 +97,15 @@ func testAccCheckCheckpointManagementAccessRoleAttributes(accessRoleMap *map[str
 func testAccManagementAccessRoleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_access_role" "test" {
-        name = "%s"
+	name = "%s"
+	machines {
+    selection = ["any"]
+    source = "any"
+	}
+	users {
+	selection = ["any"]
+	source = "any"
+	}
 }
 `, name)
 }

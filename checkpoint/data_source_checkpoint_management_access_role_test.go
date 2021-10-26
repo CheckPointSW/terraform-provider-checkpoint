@@ -38,6 +38,14 @@ func testAccDataSourceManagementAccessRoleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_access_role" "access_role" {
     name = "%s"
+	machines {
+    selection = ["any"]
+    source = "any"
+	}
+	users {
+	selection = ["any"]
+	source = "any"
+	}
 }
 
 data "checkpoint_management_data_access_role" "data_access_role" {

@@ -11,12 +11,13 @@ import (
 //var lock sync.Mutex
 
 const (
-	FILENAME = "sid.json"
+	DefaultFilename = "sid.json"
 )
 
 type Session struct {
-	Sid string `json:"sid"`
-	Uid string `json:"uid"`
+	Sid      string `json:"sid"`
+	Uid      string `json:"uid"`
+	FileName string `json:"file_name"`
 }
 
 func (s *Session) Save() error {
@@ -24,27 +25,27 @@ func (s *Session) Save() error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(FILENAME, f, 0644)
+	err = ioutil.WriteFile(s.FileName, f, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(fileName string) (Session, error) {
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		_, err := os.Create(fileName)
 		if err != nil {
-			return Session{}, err
+			return Session{FileName: fileName}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(fileName)
 	if err != nil || len(b) == 0 {
-		return Session{}, err
+		return Session{FileName: fileName}, err
 	}
 	var s Session
 	if err = json.Unmarshal(b, &s); err != nil {
-		return Session{}, err
+		return Session{FileName: fileName}, err
 	}
 	return s, nil
 }

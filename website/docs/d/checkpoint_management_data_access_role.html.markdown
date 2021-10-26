@@ -19,6 +19,10 @@ resource "checkpoint_management_access_role" "access_role" {
     source    = "any"
     selection = ["any"]
   }
+  users {
+    selection = ["any"]
+    source = "any"
+  }
 }
 
 data "checkpoint_management_data_access_role" "data_access_role" {

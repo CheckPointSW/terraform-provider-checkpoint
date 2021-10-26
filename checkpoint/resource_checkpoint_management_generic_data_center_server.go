@@ -68,12 +68,6 @@ func resourceManagementGenericDataCenterServer() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
-				Default:     "standard",
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -131,10 +125,6 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	if v, ok := d.GetOk("comments"); ok {
 		genericDataCenterServer["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("details_level"); ok {
-		genericDataCenterServer["details-level"] = v.(string)
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -237,10 +227,6 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 		_ = d.Set("comments", v)
 	}
 
-	if v := genericDataCenterServer["details-level"]; v != nil {
-		_ = d.Set("details_level", v)
-	}
-
 	if v := genericDataCenterServer["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -301,10 +287,6 @@ func updateManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	if ok := d.HasChange("comments"); ok {
 		genericDataCenterServer["comments"] = d.Get("comments")
-	}
-
-	if ok := d.HasChange("details_level"); ok {
-		genericDataCenterServer["details-level"] = d.Get("details_level")
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

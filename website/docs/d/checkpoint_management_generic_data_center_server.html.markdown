@@ -33,4 +33,3 @@ The following arguments are supported:
 
 * `name` - (Required if uid is not given) Object name.
 * `uid` - (Required if name is not given) Object unique identifier.
-* `details-level` - The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.

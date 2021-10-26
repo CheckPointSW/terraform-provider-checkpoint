@@ -14,6 +14,10 @@ This resource allows you to execute Check Point Access Role.
 ```hcl
 resource "checkpoint_management_access_role" "example" {
   name = "New Access Role 1"
+  machines {
+    source    = "all identified"
+    selection = ["all identified"]
+  }
   users {
     source    = "all identified"
     selection = ["all identified"]
@@ -37,8 +41,6 @@ The following arguments are supported:
 * `users` - (Optional) Users that can access the system.users blocks are documented below.
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `comments` - (Optional) Comments string.
-* `details-level` - (Optional) Valid values: uid, standard, full, The level of detail for some of the fields in the
-  response can vary from showing only the UID value of the object to a fully detailed representation of the object.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If
   ignore-warnings flag was omitted - warnings will also be ignored.

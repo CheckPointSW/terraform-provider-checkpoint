@@ -22,33 +22,32 @@ func dataSourceManagementGenericDataCenterServer() *schema.Resource {
 			},
 			"url": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "URL of the JSON feed (e.g. https://example.com/file.json).",
 			},
 			"interval": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Update interval of the feed in seconds.",
 			},
 			"custom_header": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Computed:    true,
 				Description: "When set to false, The admin is not using Key and Value for a Custom Header in order to connect to the feed server.\n\nWhen set to true, The admin is using Key and Value for a Custom Header in order to connect to the feed server.",
-				Default:     false,
 			},
 			"custom_key": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Key for the Custom Header, relevant and required only when custom_header set to true.",
 			},
 			"custom_value": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Value for the Custom Header, relevant and required only when custom_header set to true.",
 			},
 			"tags": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Computed:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -56,32 +55,22 @@ func dataSourceManagementGenericDataCenterServer() *schema.Resource {
 			},
 			"color": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default:     "black",
 			},
 			"comments": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Comments string.",
-			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object.",
-				Default:     "standard",
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Computed:    true,
 				Description: "Apply changes ignoring warnings. By Setting this parameter to 'true' test connection failure will be ignored.",
-				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Computed:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default:     false,
 			},
 		},
 	}
@@ -168,10 +157,6 @@ func dataSourceGenericDataCenterServerRead(d *schema.ResourceData, m interface{}
 
 	if v := genericDataCenterServer["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := genericDataCenterServer["details-level"]; v != nil {
-		_ = d.Set("details_level", v)
 	}
 
 	if v := genericDataCenterServer["ignore-warnings"]; v != nil {
