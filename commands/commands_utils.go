@@ -65,7 +65,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	password := os.Getenv("CHECKPOINT_PASSWORD")
 	portVal := os.Getenv("CHECKPOINT_PORT")
 	timeoutVal := os.Getenv("CHECKPOINT_TIMEOUT")
-	fileName := os.Getenv("CHECKPOINT_FILENAME")
+	fileName := os.Getenv("CHECKPOINT_SESSION_FILE_NAME")
 
 	var err error
 	if portVal != "" {

@@ -20,31 +20,6 @@ func dataSourceManagementGenericDataCenterServer() *schema.Resource {
 				Optional:    true,
 				Description: "Object unique identifier.",
 			},
-			"url": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "URL of the JSON feed (e.g. https://example.com/file.json).",
-			},
-			"interval": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Update interval of the feed in seconds.",
-			},
-			"custom_header": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "When set to false, The admin is not using Key and Value for a Custom Header in order to connect to the feed server.\n\nWhen set to true, The admin is using Key and Value for a Custom Header in order to connect to the feed server.",
-			},
-			"custom_key": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Key for the Custom Header, relevant and required only when custom_header set to true.",
-			},
-			"custom_value": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Value for the Custom Header, relevant and required only when custom_header set to true.",
-			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -61,16 +36,6 @@ func dataSourceManagementGenericDataCenterServer() *schema.Resource {
 			"comments": {
 				Type:     schema.TypeString,
 				Computed: true,
-			},
-			"ignore_warnings": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Apply changes ignoring warnings. By Setting this parameter to 'true' test connection failure will be ignored.",
-			},
-			"ignore_errors": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 			},
 		},
 	}
@@ -116,25 +81,6 @@ func dataSourceGenericDataCenterServerRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("name", v)
 	}
 
-	if v := genericDataCenterServer["url"]; v != nil {
-		_ = d.Set("url", v)
-	}
-
-	if v := genericDataCenterServer["interval"]; v != nil {
-		_ = d.Set("interval", v)
-	}
-
-	if v := genericDataCenterServer["custom_header"]; v != nil {
-		_ = d.Set("custom_header", v.(bool))
-	}
-	if v := genericDataCenterServer["custom_key"]; v != nil {
-		_ = d.Set("custom_key", v)
-	}
-
-	if v := genericDataCenterServer["custom_value"]; v != nil {
-		_ = d.Set("custom_value", v)
-	}
-
 	if genericDataCenterServer["tags"] != nil {
 		tagsJson, ok := genericDataCenterServer["tags"].([]interface{})
 		if ok {
@@ -157,14 +103,6 @@ func dataSourceGenericDataCenterServerRead(d *schema.ResourceData, m interface{}
 
 	if v := genericDataCenterServer["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := genericDataCenterServer["ignore-warnings"]; v != nil {
-		_ = d.Set("ignore_warnings", v)
-	}
-
-	if v := genericDataCenterServer["ignore-errors"]; v != nil {
-		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil

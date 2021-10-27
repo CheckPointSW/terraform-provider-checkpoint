@@ -644,8 +644,6 @@ func deleteManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteThreatRuleRes.Success {
-		log.Println("yooo im in")
-		deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, false)
 		if deleteThreatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteThreatRuleRes.ErrorMsg)
 		}

@@ -167,7 +167,7 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, false)
+	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), false, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -179,7 +179,7 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 		return fmt.Errorf(showGenericDataCenterServerRes.ErrorMsg)
 	}
 	genericDataCenterServer := showGenericDataCenterServerRes.GetData()
-
+	log.Println("payload resource: ", genericDataCenterServer)
 	if v := genericDataCenterServer["name"]; v != nil {
 		_ = d.Set("name", v)
 	}

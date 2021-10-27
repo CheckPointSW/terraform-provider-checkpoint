@@ -35,7 +35,7 @@ func TestAccCheckpointManagementGenericDataCenterServer_basic(t *testing.T) {
 				Config: testAccManagementGenericDataCenterServerConfig(objName, url, interval),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementGenericDataCenterServerExists(resourceName, &genericDataCenterServerMap),
-					testAccCheckCheckpointManagementGenericDataCenterServerAttributes(&genericDataCenterServerMap, objName),
+					testAccCheckCheckpointManagementGenericDataCenterServerAttributes(&genericDataCenterServerMap, objName, url, interval),
 				),
 			},
 		},
@@ -85,12 +85,20 @@ func testAccCheckCheckpointManagementGenericDataCenterServerExists(resourceTfNam
 	}
 }
 
-func testAccCheckCheckpointManagementGenericDataCenterServerAttributes(genericDataCenterServerMap *map[string]interface{}, name string) resource.TestCheckFunc {
+func testAccCheckCheckpointManagementGenericDataCenterServerAttributes(genericDataCenterServerMap *map[string]interface{}, name string, url string, interval string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		genericDataCenterServerName := (*genericDataCenterServerMap)["name"].(string)
+		genericDataCenterServerUrl := (*genericDataCenterServerMap)["url"].(string)
+		genericDataCenterServerInterval := (*genericDataCenterServerMap)["interval"].(string)
 		if !strings.EqualFold(genericDataCenterServerName, name) {
 			return fmt.Errorf("name is %s, expected %s", name, genericDataCenterServerName)
+		}
+		if !strings.EqualFold(genericDataCenterServerUrl, url) {
+			return fmt.Errorf("url is %s, expected %s", url, genericDataCenterServerName)
+		}
+		if !strings.EqualFold(genericDataCenterServerInterval, interval) {
+			return fmt.Errorf("interval is %s, expected %s", interval, genericDataCenterServerName)
 		}
 		return nil
 	}

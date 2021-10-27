@@ -58,7 +58,7 @@ func Provider() terraform.ResourceProvider {
 			"file_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_FILENAME", DefaultFilename),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", DefaultFilename),
 				Description: "FileName used to save the current sid to, default is sid.json.",
 			},
 		},
