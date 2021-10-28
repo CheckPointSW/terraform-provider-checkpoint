@@ -21,8 +21,8 @@ func TestAccDataSourceCheckpointManagementGsnHandoverGroup_basic(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementGsnHandoverGroupConfig(objName, true, 2048, "All_Internet"),

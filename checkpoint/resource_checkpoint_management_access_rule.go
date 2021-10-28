@@ -741,35 +741,47 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 		if v, _ := trackMap["accounting"]; v != nil {
 			trackMapToReturn["accounting"] = strconv.FormatBool(v.(bool))
+		} else {
+			trackMapToReturn["accounting"] = false
 		}
 
 		if v, _ := trackMap["alert"]; v != nil {
 			trackMapToReturn["alert"] = v
+		} else {
+			trackMapToReturn["alert"] = "none"
 		}
 
 		if v, _ := trackMap["enable-firewall-session"]; v != nil {
 			trackMapToReturn["enable_firewall_session"] = strconv.FormatBool(v.(bool))
+		} else {
+			trackMapToReturn["enable_firewall_session"] = false
 		}
 
 		if v, _ := trackMap["per-connection"]; v != nil {
 			trackMapToReturn["per_connection"] = strconv.FormatBool(v.(bool))
+		} else {
+			trackMapToReturn["per_connection"] = false
 		}
 
 		if v, _ := trackMap["per-session"]; v != nil {
 			trackMapToReturn["per_session"] = strconv.FormatBool(v.(bool))
+		} else {
+			trackMapToReturn["per_session"] = false
 		}
 
 		if v, _ := trackMap["type"]; v != nil {
 			trackMapToReturn["type"] = v.(map[string]interface{})["name"]
+		} else {
+			trackMapToReturn["type"] = "None"
 		}
 
 		_, trackInConf := d.GetOk("track")
 		defaultTrack := map[string]interface{}{
-			"accounting":              "false",
+			"accounting":              false,
 			"alert":                   "none",
-			"enable_firewall_session": "false",
-			"per_connection":          "false",
-			"per_session":             "false",
+			"enable_firewall_session": false,
+			"per_connection":          false,
+			"per_session":             false,
 			"type":                    "None"}
 
 		if reflect.DeepEqual(defaultTrack, trackMapToReturn) && !trackInConf {
@@ -843,7 +855,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("position.top"); ok {
 				if v.(string) == "top" {
 					accessRule["new-position"] = "top" // entire rule-base
-				} else{
+				} else {
 					accessRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}
@@ -1003,32 +1015,33 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	} else {
 		oldTime, _ := d.GetChange("time")
-		accessRule["time"] = map[string]interface{}{"remove": oldTime.(*schema.Set).List()}
+		oldTimeLst := oldTime.(*schema.Set).List()
+		if len(oldTimeLst) > 0 {
+			accessRule["time"] = map[string]interface{}{"remove": oldTimeLst}
+		}
 	}
 
 	if d.HasChange("track") {
 
 		if _, ok := d.GetOk("track"); ok {
-
 			res := make(map[string]interface{})
-
-			if d.HasChange("track.accounting") {
-				res["accounting"] = d.Get("track.accounting")
+			if v, ok := d.GetOk("track.accounting"); ok {
+				res["accounting"] = v
 			}
-			if d.HasChange("track.alert") {
-				res["alert"] = d.Get("track.alert")
+			if v, ok := d.GetOk("track.alert"); ok {
+				res["alert"] = v
 			}
-			if d.HasChange("track.enable_firewall_session") {
-				res["enable-firewall-session"] = d.Get("track.enable_firewall_session")
+			if v, ok := d.GetOk("track.enable_firewall_session"); ok {
+				res["enable-firewall-session"] = v
 			}
-			if d.HasChange("track.per_connection") {
-				res["per-connection"] = d.Get("track.per_connection")
+			if v, ok := d.GetOk("track.per_connection"); ok {
+				res["per-connection"] = v
 			}
-			if d.HasChange("track.per_session") {
-				res["per-session"] = d.Get("track.per_session")
+			if v, ok := d.GetOk("track.per_session"); ok {
+				res["per-session"] = v
 			}
-			if d.HasChange("track.type") {
-				res["type"] = d.Get("track.type")
+			if v, ok := d.GetOk("track.type"); ok {
+				res["type"] = v
 			}
 			accessRule["track"] = res
 

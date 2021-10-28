@@ -208,6 +208,10 @@ func dataSourceManagementServiceTcpRead(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("use_default_session_timeout", v)
 	}
 
+	if v := serviceTcp["color"]; v != nil {
+		_ = d.Set("color", v)
+	}
+
 	if serviceTcp["aggressive-aging"] != nil {
 
 		aggressiveAgingMap := serviceTcp["aggressive-aging"].(map[string]interface{})

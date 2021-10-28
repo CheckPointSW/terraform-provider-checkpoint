@@ -91,7 +91,6 @@ func createManagementPutFile(d *schema.ResourceData, m interface{}) error {
 
 	_ = d.Set("tasks", resolveTaskIds(PutFileRes.GetData()))
 
-
 	return readManagementPutFile(d, m)
 }
 

@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementGsnHandoverGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementGsnHandoverGroupRead,
+		Read: dataSourceManagementGsnHandoverGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

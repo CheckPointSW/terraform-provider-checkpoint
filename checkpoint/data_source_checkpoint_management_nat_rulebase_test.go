@@ -25,7 +25,7 @@ func TestAccDataSourceCheckpointManagementNatRulebase_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementNatRulebaseConfig("Standard", 1 , "Hide NAT"),
+				Config: testAccDataSourceManagementNatRulebaseConfig("Standard", 1, "Hide NAT"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointNatRulebase(dataSourceShowObjects, &showObjectsQuery),
 					testAccCheckCheckpointNatRulebaseAttributes(&showObjectsQuery),

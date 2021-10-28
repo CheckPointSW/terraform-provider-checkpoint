@@ -90,7 +90,7 @@ func testAccCheckCheckpointManagementSimpleGatewayAttributes(simpleGatewayJson *
 			return fmt.Errorf("name is %s, expected %s", simpleGatewayName, name)
 		}
 
-		simpleGatewayIpv4:= (*simpleGatewayJson)["ipv4-address"].(string)
+		simpleGatewayIpv4 := (*simpleGatewayJson)["ipv4-address"].(string)
 		if !strings.EqualFold(simpleGatewayIpv4, ipv4) {
 			return fmt.Errorf("ipv4 is %s, expected %s", simpleGatewayIpv4, ipv4)
 		}

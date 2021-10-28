@@ -24,7 +24,7 @@ func TestAccDataSourceCheckpointManagementThreatProfile_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementThreatProfileConfig(objName,"high", "Critical"),
+				Config: testAccDataSourceManagementThreatProfileConfig(objName, "high", "Critical"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "active_protections_performance_impact", resourceName, "active_protections_performance_impact"),

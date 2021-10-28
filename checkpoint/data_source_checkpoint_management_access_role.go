@@ -111,12 +111,17 @@ func dataSourceManagementAccessRole() *schema.Resource {
 }
 
 func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) error {
-
+	TypeToSource := getTypeToSource()
 	client := m.(*checkpoint.ApiClient)
+	var name string
+	var uid string
 
-	name := d.Get("name").(string)
-	uid := d.Get("uid").(string)
-
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
+	}
+	if v, ok := d.GetOk("uid"); ok {
+		uid = v.(string)
+	}
 	payload := make(map[string]interface{})
 
 	if name != "" {
@@ -155,6 +160,7 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 			if len(machinesList) > 0 {
 
 				var machinesListToReturn []map[string]interface{}
+				machinesByType := make(map[string]map[string]interface{})
 
 				for i := range machinesList {
 
@@ -162,19 +168,44 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 					machinesMapToAdd := make(map[string]interface{})
 
-					if v, _ := machinesMap["source"]; v != nil {
-						machinesMapToAdd["source"] = v
-					}
-					if v, _ := machinesMap["selection"]; v != nil {
-						machinesMapToAdd["selection"] = v
-					}
 					if v, _ := machinesMap["base-dn"]; v != nil {
 						machinesMapToAdd["base_dn"] = v
 					}
-					machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+
+					if v, _ := machinesMap["type"]; v != nil {
+						machineType := v.(string)
+						if _, ok := TypeToSource[machineType]; !ok {
+							TypeToSource[machineType] = machineType
+						}
+						machineSource := TypeToSource[machineType]
+						if value, ok := machinesByType[machineSource]; ok {
+							machinesMapToAdd = value
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = append(machinesMapToAdd["selection"].([]string), machinesMap["name"].(string))
+								machinesByType[machineSource] = machinesMapToAdd
+							}
+						} else {
+							machinesMapToAdd["source"] = machineSource
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = []string{machinesMap["name"].(string)}
+								machinesByType[machineSource] = machinesMapToAdd
+							}
+						}
+					}
 				}
+				for _, v := range machinesByType {
+					machinesListToReturn = append(machinesListToReturn, v)
+				}
+				_ = d.Set("machines", machinesListToReturn)
 			}
+		} else {
+			var machinesListToReturn []map[string]interface{}
+			machinesMapToAdd := map[string]interface{}{"source": accessRole["machines"], "selection": []string{accessRole["machines"].(string)}}
+			machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+			_ = d.Set("machines", machinesListToReturn)
 		}
+	} else {
+		_ = d.Set("machines", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if accessRole["networks"] != nil {
@@ -188,13 +219,17 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 				}
 			}
 			_ = d.Set("networks", networksIds)
+		} else {
+			_ = d.Set("networks", nil)
 		}
 	} else {
 		_ = d.Set("networks", nil)
 	}
 
-	if v := accessRole["remote-access-clients"]; v != nil {
-		_ = d.Set("remote_access_clients", v)
+	if v := accessRole["remote-access-client"]; v != nil {
+		_ = d.Set("remote_access_clients", v.(map[string]interface{})["name"])
+	} else {
+		_ = d.Set("remote_access_clients", nil)
 	}
 
 	if accessRole["tags"] != nil {
@@ -212,7 +247,6 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 	} else {
 		_ = d.Set("tags", nil)
 	}
-
 	if accessRole["users"] != nil {
 
 		usersList, ok := accessRole["users"].([]interface{})
@@ -222,6 +256,7 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 			if len(usersList) > 0 {
 
 				var usersListToReturn []map[string]interface{}
+				usersByType := make(map[string]map[string]interface{})
 
 				for i := range usersList {
 
@@ -229,19 +264,45 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 					usersMapToAdd := make(map[string]interface{})
 
-					if v, _ := usersMap["source"]; v != nil {
-						usersMapToAdd["source"] = v
-					}
-					if v, _ := usersMap["selection"]; v != nil {
-						usersMapToAdd["selection"] = v
-					}
 					if v, _ := usersMap["base-dn"]; v != nil {
 						usersMapToAdd["base_dn"] = v
 					}
-					usersListToReturn = append(usersListToReturn, usersMapToAdd)
+
+					if v, _ := usersMap["type"]; v != nil {
+						userType := v.(string)
+						if _, ok := TypeToSource[userType]; !ok {
+							TypeToSource[userType] = userType
+						}
+						userSource := TypeToSource[userType]
+						if value, ok := usersByType[userSource]; ok {
+							usersMapToAdd = value
+
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = append(usersMapToAdd["selection"].([]string), usersMap["name"].(string))
+								usersByType[userSource] = usersMapToAdd
+							}
+						} else {
+							usersMapToAdd["source"] = userSource
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = []string{usersMap["name"].(string)}
+								usersByType[userSource] = usersMapToAdd
+							}
+						}
+					}
 				}
+				for _, v := range usersByType {
+					usersListToReturn = append(usersListToReturn, v)
+				}
+				_ = d.Set("users", usersListToReturn)
 			}
+		} else {
+			var usersListToReturn []map[string]interface{}
+			usersMapToAdd := map[string]interface{}{"source": accessRole["users"], "selection": []string{accessRole["users"].(string)}}
+			usersListToReturn = append(usersListToReturn, usersMapToAdd)
+			_ = d.Set("users", usersListToReturn)
 		}
+	} else {
+		_ = d.Set("users", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if v := accessRole["color"]; v != nil {
@@ -252,5 +313,14 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("comments", v)
 	}
 
+	if v := accessRole["ignore-warnings"]; v != nil {
+		_ = d.Set("ignore_warnings", v)
+	}
+
+	if v := accessRole["ignore-errors"]; v != nil {
+		_ = d.Set("ignore_errors", v)
+	}
+
 	return nil
+
 }

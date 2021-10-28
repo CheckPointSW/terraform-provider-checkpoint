@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementNatRule() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementNatRuleRead,
+		Read: dataSourceManagementNatRuleRead,
 		Schema: map[string]*schema.Schema{
 			"package": {
 				Type:        schema.TypeString,

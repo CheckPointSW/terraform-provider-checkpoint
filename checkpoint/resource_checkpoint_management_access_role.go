@@ -5,8 +5,8 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-
 	"strconv"
+	"time"
 )
 
 func resourceManagementAccessRole() *schema.Resource {
@@ -63,6 +63,7 @@ func resourceManagementAccessRole() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Remote access clients identified by name or UID.",
+				Default:     "Any",
 			},
 			"tags": {
 				Type:        schema.TypeSet,
@@ -123,6 +124,9 @@ func resourceManagementAccessRole() *schema.Resource {
 				Default:     false,
 			},
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(30 * time.Second),
+		},
 	}
 }
 
@@ -140,25 +144,29 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 		machinesList := v.([]interface{})
 
 		if len(machinesList) > 0 {
+			selection := d.Get("machines.0.selection").(*schema.Set).List()
+			if val, ok := d.GetOk("machines.0.source"); ok && (val == "all identified" || val == "any") && selection[0] == val && len(selection) == 1 {
+				accessRole["machines"] = val
+			} else {
+				var machinesPayload []map[string]interface{}
 
-			var machinesPayload []map[string]interface{}
+				for i := range machinesList {
 
-			for i := range machinesList {
+					Payload := make(map[string]interface{})
 
-				Payload := make(map[string]interface{})
-
-				if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".source"); ok {
-					Payload["source"] = v.(string)
+					if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".source"); ok {
+						Payload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".selection"); ok {
+						Payload["selection"] = v.(*schema.Set).List()
+					}
+					if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".base_dn"); ok {
+						Payload["base-dn"] = v.(string)
+					}
+					machinesPayload = append(machinesPayload, Payload)
 				}
-				if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".selection"); ok {
-					Payload["selection"] = v.(*schema.Set).List()
-				}
-				if v, ok := d.GetOk("machines." + strconv.Itoa(i) + ".base_dn"); ok {
-					Payload["base-dn"] = v.(string)
-				}
-				machinesPayload = append(machinesPayload, Payload)
+				accessRole["machines"] = machinesPayload
 			}
-			accessRole["machines"] = machinesPayload
 		}
 	}
 
@@ -168,6 +176,8 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("remote_access_clients"); ok {
 		accessRole["remote-access-clients"] = v.(string)
+	} else {
+		accessRole["remote-access-clients"] = "Any"
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -179,25 +189,29 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 		usersList := v.([]interface{})
 
 		if len(usersList) > 0 {
+			selection := d.Get("users.0.selection").(*schema.Set).List()
+			if val, ok := d.GetOk("users.0.source"); ok && (val == "all identified" || val == "any") && selection[0] == val && len(selection) == 1 {
+				accessRole["users"] = val
+			} else {
+				var usersPayload []map[string]interface{}
 
-			var usersPayload []map[string]interface{}
+				for i := range usersList {
 
-			for i := range usersList {
+					Payload := make(map[string]interface{})
 
-				Payload := make(map[string]interface{})
-
-				if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".source"); ok {
-					Payload["source"] = v.(string)
+					if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".source"); ok {
+						Payload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".selection"); ok {
+						Payload["selection"] = v.(*schema.Set).List()
+					}
+					if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".base_dn"); ok {
+						Payload["base-dn"] = v.(string)
+					}
+					usersPayload = append(usersPayload, Payload)
 				}
-				if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".selection"); ok {
-					Payload["selection"] = v.(*schema.Set).List()
-				}
-				if v, ok := d.GetOk("users." + strconv.Itoa(i) + ".base_dn"); ok {
-					Payload["base-dn"] = v.(string)
-				}
-				usersPayload = append(usersPayload, Payload)
+				accessRole["users"] = usersPayload
 			}
-			accessRole["users"] = usersPayload
 		}
 	}
 
@@ -233,7 +247,6 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 }
 
 func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
@@ -254,6 +267,8 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	accessRole := showAccessRoleRes.GetData()
 
+	TypeToSource := getTypeToSource()
+
 	log.Println("Read AccessRole - Show JSON = ", accessRole)
 
 	if v := accessRole["name"]; v != nil {
@@ -269,6 +284,7 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 			if len(machinesList) > 0 {
 
 				var machinesListToReturn []map[string]interface{}
+				machinesByType := make(map[string]map[string]interface{})
 
 				for i := range machinesList {
 
@@ -276,19 +292,44 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 					machinesMapToAdd := make(map[string]interface{})
 
-					if v, _ := machinesMap["source"]; v != nil {
-						machinesMapToAdd["source"] = v
-					}
-					if v, _ := machinesMap["selection"]; v != nil {
-						machinesMapToAdd["selection"] = v
-					}
 					if v, _ := machinesMap["base-dn"]; v != nil {
 						machinesMapToAdd["base_dn"] = v
 					}
-					machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+
+					if v, _ := machinesMap["type"]; v != nil {
+						machineType := v.(string)
+						if _, ok := TypeToSource[machineType]; !ok {
+							TypeToSource[machineType] = machineType
+						}
+						machineSource := TypeToSource[machineType]
+						if value, ok := machinesByType[machineSource]; ok {
+							machinesMapToAdd = value
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = append(machinesMapToAdd["selection"].([]string), machinesMap["name"].(string))
+								machinesByType[machineSource] = machinesMapToAdd
+							}
+						} else {
+							machinesMapToAdd["source"] = machineSource
+							if val, _ := machinesMap["name"]; val != nil {
+								machinesMapToAdd["selection"] = []string{machinesMap["name"].(string)}
+								machinesByType[machineSource] = machinesMapToAdd
+							}
+						}
+					}
 				}
+				for _, v := range machinesByType {
+					machinesListToReturn = append(machinesListToReturn, v)
+				}
+				_ = d.Set("machines", machinesListToReturn)
 			}
+		} else {
+			var machinesListToReturn []map[string]interface{}
+			machinesMapToAdd := map[string]interface{}{"source": accessRole["machines"], "selection": []string{accessRole["machines"].(string)}}
+			machinesListToReturn = append(machinesListToReturn, machinesMapToAdd)
+			_ = d.Set("machines", machinesListToReturn)
 		}
+	} else {
+		_ = d.Set("machines", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if accessRole["networks"] != nil {
@@ -302,13 +343,17 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 			_ = d.Set("networks", networksIds)
+		} else {
+			_ = d.Set("networks", nil)
 		}
 	} else {
 		_ = d.Set("networks", nil)
 	}
 
-	if v := accessRole["remote-access-clients"]; v != nil {
-		_ = d.Set("remote_access_clients", v)
+	if v := accessRole["remote-access-client"]; v != nil {
+		_ = d.Set("remote_access_clients", v.(map[string]interface{})["name"])
+	} else {
+		_ = d.Set("remote_access_clients", nil)
 	}
 
 	if accessRole["tags"] != nil {
@@ -326,7 +371,6 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	} else {
 		_ = d.Set("tags", nil)
 	}
-
 	if accessRole["users"] != nil {
 
 		usersList, ok := accessRole["users"].([]interface{})
@@ -336,6 +380,7 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 			if len(usersList) > 0 {
 
 				var usersListToReturn []map[string]interface{}
+				usersByType := make(map[string]map[string]interface{})
 
 				for i := range usersList {
 
@@ -343,19 +388,45 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 					usersMapToAdd := make(map[string]interface{})
 
-					if v, _ := usersMap["source"]; v != nil {
-						usersMapToAdd["source"] = v
-					}
-					if v, _ := usersMap["selection"]; v != nil {
-						usersMapToAdd["selection"] = v
-					}
 					if v, _ := usersMap["base-dn"]; v != nil {
 						usersMapToAdd["base_dn"] = v
 					}
-					usersListToReturn = append(usersListToReturn, usersMapToAdd)
+
+					if v, _ := usersMap["type"]; v != nil {
+						userType := v.(string)
+						if _, ok := TypeToSource[userType]; !ok {
+							TypeToSource[userType] = userType
+						}
+						userSource := TypeToSource[userType]
+						if value, ok := usersByType[userSource]; ok {
+							usersMapToAdd = value
+
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = append(usersMapToAdd["selection"].([]string), usersMap["name"].(string))
+								usersByType[userSource] = usersMapToAdd
+							}
+						} else {
+							usersMapToAdd["source"] = userSource
+							if val, _ := usersMap["name"]; val != nil {
+								usersMapToAdd["selection"] = []string{usersMap["name"].(string)}
+								usersByType[userSource] = usersMapToAdd
+							}
+						}
+					}
 				}
+				for _, v := range usersByType {
+					usersListToReturn = append(usersListToReturn, v)
+				}
+				_ = d.Set("users", usersListToReturn)
 			}
+		} else {
+			var usersListToReturn []map[string]interface{}
+			usersMapToAdd := map[string]interface{}{"source": accessRole["users"], "selection": []string{accessRole["users"].(string)}}
+			usersListToReturn = append(usersListToReturn, usersMapToAdd)
+			_ = d.Set("users", usersListToReturn)
 		}
+	} else {
+		_ = d.Set("users", []map[string]interface{}{{"source": "any", "selection": []string{"any"}}})
 	}
 
 	if v := accessRole["color"]; v != nil {
@@ -392,62 +463,41 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("machines") {
-
 		if v, ok := d.GetOk("machines"); ok {
+			selection := d.Get("machines.0.selection").(*schema.Set).List()
+			if src, ok := d.GetOk("machines.0.source"); ok && (src == "all identified" || src == "any") && selection[0] == src && len(selection) == 1 {
+				accessRole["machines"] = src
+			} else {
+				machinesList := v.([]interface{})
+				var machinesPayload []map[string]interface{}
 
-			machinesList := v.([]interface{})
-
-			var machinesPayload []map[string]interface{}
-
-			for i := range machinesList {
-
-				Payload := make(map[string]interface{})
-
-				if d.HasChange("machines." + strconv.Itoa(i) + ".source") {
-					Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
-					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List() // Required
+				for i := range machinesList {
+					machinePayload := make(map[string]interface{})
+					machinePayload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
+					machinePayload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					machinePayload["base-dn"] = d.Get("machines." + strconv.Itoa(i) + ".base_dn")
+					machinesPayload = append(machinesPayload, machinePayload)
 				}
-				if d.HasChange("machines." + strconv.Itoa(i) + ".selection") {
-					Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					if _, found := Payload["source"]; !found { // Required
-						Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
-					}
-				}
-				if d.HasChange("machines." + strconv.Itoa(i) + ".base_dn") {
-					Payload["base-dn"] = d.Get("machines." + strconv.Itoa(i) + ".base_dn")
-
-					if _, found := Payload["source"]; !found { // Required
-						Payload["source"] = d.Get("machines." + strconv.Itoa(i) + ".source")
-					}
-
-					if _, found := Payload["selection"]; !found { // Required
-						Payload["selection"] = d.Get("machines." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					}
-				}
-				machinesPayload = append(machinesPayload, Payload)
+				accessRole["machines"] = machinesPayload
 			}
-			accessRole["machines"] = machinesPayload
 		} else {
-			oldmachines, _ := d.GetChange("machines")
-			var machinesToDelete []interface{}
-			for _, i := range oldmachines.([]interface{}) {
-				machinesToDelete = append(machinesToDelete, i.(map[string]interface{})["name"].(string))
-			}
-			accessRole["machines"] = map[string]interface{}{"remove": machinesToDelete}
+			accessRole["machines"] = "any"
 		}
 	}
-
 	if d.HasChange("networks") {
 		if v, ok := d.GetOk("networks"); ok {
 			accessRole["networks"] = v.(*schema.Set).List()
 		} else {
-			oldNetworks, _ := d.GetChange("networks")
-			accessRole["networks"] = map[string]interface{}{"remove": oldNetworks.(*schema.Set).List()}
+			accessRole["networks"] = "any"
 		}
 	}
 
 	if ok := d.HasChange("remote_access_clients"); ok {
-		accessRole["remote-access-clients"] = d.Get("remote_access_clients")
+		if v, ok := d.GetOk("remote_access_clients"); ok {
+			accessRole["remote-access-clients"] = v.(string)
+		} else {
+			accessRole["remote-access-clients"] = "any"
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -458,50 +508,26 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 			accessRole["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
 	}
-
 	if d.HasChange("users") {
-
 		if v, ok := d.GetOk("users"); ok {
+			selection := d.Get("users.0.selection").(*schema.Set).List()
+			if src, ok := d.GetOk("users.0.source"); ok && (src == "all identified" || src == "any") && selection[0] == src && len(selection) == 1 {
+				accessRole["users"] = src
+			} else {
+				usersList := v.([]interface{})
+				var usersPayload []map[string]interface{}
 
-			usersList := v.([]interface{})
-
-			var usersPayload []map[string]interface{}
-
-			for i := range usersList {
-
-				Payload := make(map[string]interface{})
-
-				if d.HasChange("users." + strconv.Itoa(i) + ".source") {
-					Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
-					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List() // Required
+				for i := range usersList {
+					userPayload := make(map[string]interface{})
+					userPayload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
+					userPayload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
+					userPayload["base-dn"] = d.Get("users." + strconv.Itoa(i) + ".base_dn")
+					usersPayload = append(usersPayload, userPayload)
 				}
-				if d.HasChange("users." + strconv.Itoa(i) + ".selection") {
-					Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					if _, found := Payload["source"]; !found { // Required
-						Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
-					}
-				}
-				if d.HasChange("users." + strconv.Itoa(i) + ".base_dn") {
-					Payload["base-dn"] = d.Get("users." + strconv.Itoa(i) + ".base_dn")
-
-					if _, found := Payload["source"]; !found { // Required
-						Payload["source"] = d.Get("users." + strconv.Itoa(i) + ".source")
-					}
-
-					if _, found := Payload["selection"]; !found { // Required
-						Payload["selection"] = d.Get("users." + strconv.Itoa(i) + ".selection").(*schema.Set).List()
-					}
-				}
-				usersPayload = append(usersPayload, Payload)
+				accessRole["users"] = usersPayload
 			}
-			accessRole["users"] = usersPayload
 		} else {
-			oldusers, _ := d.GetChange("users")
-			var usersToDelete []interface{}
-			for _, i := range oldusers.([]interface{}) {
-				usersToDelete = append(usersToDelete, i.(map[string]interface{})["name"].(string))
-			}
-			accessRole["users"] = map[string]interface{}{"remove": usersToDelete}
+			accessRole["users"] = "any"
 		}
 	}
 

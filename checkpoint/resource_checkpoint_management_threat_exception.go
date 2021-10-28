@@ -20,7 +20,7 @@ func resourceManagementThreatException() *schema.Resource {
 				if len(arr) != 3 {
 					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_UID>;exception_group_uid or rule_uid;<EXCEPTION_GROUP_UID> or <PARENT_RULE_UID>;<RULE_UID>")
 				}
-				if !strings.EqualFold(arr[1], "exception_group_uid") && !strings.EqualFold(arr[1], "rule_uid"){
+				if !strings.EqualFold(arr[1], "exception_group_uid") && !strings.EqualFold(arr[1], "rule_uid") {
 					return nil, fmt.Errorf("invalid unique identifier 2nd argument. Valid values: exception_group_uid or rule_uid")
 				}
 				_ = d.Set("layer", arr[0])
@@ -559,7 +559,7 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 			if v, ok := d.GetOk("position.top"); ok {
 				if v.(string) == "top" {
 					threatException["new-position"] = "top" // entire rule-base
-				} else{
+				} else {
 					threatException["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}

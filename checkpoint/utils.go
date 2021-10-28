@@ -11,7 +11,7 @@ import (
 //var lock sync.Mutex
 
 const (
-	FILENAME = "sid.json"
+	DefaultSessionFilename = "sid.json"
 )
 
 type Session struct {
@@ -19,26 +19,26 @@ type Session struct {
 	Uid string `json:"uid"`
 }
 
-func (s *Session) Save() error {
+func (s *Session) Save(sessionFileName string) error {
 	f, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(FILENAME, f, 0644)
+	err = ioutil.WriteFile(sessionFileName, f, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(sessionFileName string) (Session, error) {
+	if _, err := os.Stat(sessionFileName); os.IsNotExist(err) {
+		_, err := os.Create(sessionFileName)
 		if err != nil {
 			return Session{}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(sessionFileName)
 	if err != nil || len(b) == 0 {
 		return Session{}, err
 	}
@@ -124,4 +124,14 @@ func createTaskFailMessage(command string, data map[string]interface{}) string {
 		}
 	}
 	return msg
+}
+
+//converts object type to source for machines and users.
+func getTypeToSource() map[string]string {
+	TypeToSource := map[string]string{
+		"identity-tag":  "Identity Tag",
+		"user-group":    "Internal User Groups",
+		"CpmiAnyObject": "Guests",
+	}
+	return TypeToSource
 }

@@ -37,7 +37,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Cluster mode.",
-				Default: "cluster-xl-ha",
+				Default:     "cluster-xl-ha",
 			},
 			"interfaces": {
 				Type:        schema.TypeList,
@@ -89,7 +89,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Anti spoofing.",
-							Default: true,
+							Default:     true,
 						},
 						"anti_spoofing_settings": {
 							Type:        schema.TypeMap,
@@ -119,7 +119,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Security zone.",
-							Default: false,
+							Default:     false,
 						},
 						"security_zone_settings": {
 							Type:        schema.TypeMap,
@@ -144,7 +144,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Topology.",
-							Default: "automatic",
+							Default:     "automatic",
 						},
 						"topology_settings": {
 							Type:        schema.TypeMap,
@@ -360,7 +360,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "OS name.",
-				Default: "Gaia",
+				Default:     "Gaia",
 			},
 			"version": {
 				Type:        schema.TypeString,
@@ -449,7 +449,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "IP selection",
-										Default: "use-main-address",
+										Default:     "use-main-address",
 									},
 									"dns_resolving_hostname": {
 										Type:        schema.TypeString,
@@ -493,7 +493,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 									},
 									"allocate_ip_address_from": {
 										Type:        schema.TypeMap,
-										Optional: true,
+										Optional:    true,
 										Description: "Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -1443,7 +1443,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 		} else {
 			_ = d.Set("members", membersList)
 		}
-	}else{
+	} else {
 		_ = d.Set("members", nil)
 	}
 
@@ -1513,19 +1513,19 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 
 	if v := cluster["send_alerts_to_server"]; v != nil {
 		_ = d.Set("send_alerts_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_alerts_to_server", nil)
 	}
 
 	if v := cluster["send-logs-to-backup-server"]; v != nil {
 		_ = d.Set("send_logs_to_backup_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_backup_server", nil)
 	}
 
 	if v := cluster["send-logs-to-server"]; v != nil {
 		_ = d.Set("send_logs_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_server", nil)
 	}
 
@@ -1551,7 +1551,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 			firewallSettingsState["memory_pool_size"] = v
 		}
 		_ = d.Set("firewall_settings", firewallSettingsState)
-	} else{
+	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
 
@@ -1727,7 +1727,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 			vpnSettingsState["office_mode"] = officeModeState
 		}
 		_ = d.Set("vpn-settings", vpnSettingsState)
-	}else{
+	} else {
 		_ = d.Set("vpn-settings", nil)
 	}
 
@@ -1862,7 +1862,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				interfacesPayload = append(interfacesPayload, interfacePayload)
 			}
 			cluster["interfaces"] = interfacesPayload
-		}else{
+		} else {
 			// Remove interface
 			oldInterfaces, _ := d.GetChange("interfaces")
 			var interfacesToDelete []interface{}
@@ -1926,7 +1926,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				membersPayload = append(membersPayload, memberPayload)
 			}
 			cluster["members"] = membersPayload
-		}else{
+		} else {
 			oldMembers, _ := d.GetChange("members")
 			var membersToDelete []interface{}
 			for _, member := range oldMembers.([]interface{}) {
@@ -2029,7 +2029,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 					if ok := d.HasChange("vpn_settings.authentication.authentication_clients"); ok {
 						if v, ok := d.GetOk("vpn_settings.authentication.authentication_clients"); ok {
 							authentication["authentication-clients"] = v.(*schema.Set).List()
-						}else{
+						} else {
 							oldValues, _ := d.GetChange("vpn_settings.authentication.authentication_clients")
 							authentication["authentication-clients"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 						}
@@ -2215,7 +2215,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_alerts_to_server"); ok {
 		if v, ok := d.GetOk("send_alerts_to_server"); ok {
 			cluster["send-alerts-to-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_alerts_to_server")
 			cluster["send-alerts-to-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}
@@ -2224,7 +2224,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_logs_to_backup_server"); ok {
 		if v, ok := d.GetOk("send_logs_to_backup_server"); ok {
 			cluster["send-logs-to-backup-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_logs_to_backup_server")
 			cluster["send-logs-to-backup-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}
@@ -2232,7 +2232,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	if ok := d.HasChange("send_logs_to_server"); ok {
 		if v, ok := d.GetOk("send_logs_to_server"); ok {
 			cluster["send-logs-to-server"] = v.(*schema.Set).List()
-		}else{
+		} else {
 			oldValues, _ := d.GetChange("send_logs_to_server")
 			cluster["send-logs-to-server"] = map[string]interface{}{"remove": oldValues.(*schema.Set).List()}
 		}

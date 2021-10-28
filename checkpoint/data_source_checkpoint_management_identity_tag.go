@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementIdentityTag() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementIdentityTagRead,
+		Read: dataSourceManagementIdentityTagRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

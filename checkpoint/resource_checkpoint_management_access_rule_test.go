@@ -117,6 +117,14 @@ resource "checkpoint_management_access_rule" "test" {
 	source = ["Any"]
 	destination = ["Any"]
 	service = ["Any"]
+	track = {
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = false
+    per_session = false
+    type = "None"
+  }
 }
 `, name, layer)
 }

@@ -78,7 +78,7 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		apiCA.Context = WebContext
 	}
 
-	if apiCA.Timeout == -1 || apiCA.Timeout == TimeOut {
+	if apiCA.Timeout == -1 || apiCA.Timeout == TimeOut{
 		apiCA.Timeout =	TimeOut
 	}else{
 		apiCA.Timeout = apiCA.Timeout * time.Second
@@ -340,18 +340,18 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 			}
    		}
 
-   		if blockingError := res.data["blocking-errors"]; blockingError != nil {
-			fullErrorMsg += "\nBlocking errors: "
-			warningMsgType := reflect.TypeOf(blockingError).Kind()
-			if warningMsgType == reflect.String {
-				fullErrorMsg += blockingError.(string) + "\n"
-			} else {
-				blockingErrorsList := res.data["blocking-errors"].([]interface{})
-				for i := range blockingErrorsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
-				}
-			}
-		}
+	   if blockingError := res.data["blocking-errors"]; blockingError != nil {
+		   fullErrorMsg += "\nBlocking errors: "
+		   warningMsgType := reflect.TypeOf(blockingError).Kind()
+		   if warningMsgType == reflect.String {
+			   fullErrorMsg += blockingError.(string) + "\n"
+		   } else {
+			   blockingErrorsList := res.data["blocking-errors"].([]interface{})
+			   for i := range blockingErrorsList {
+				   fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
+			   }
+		   }
+	   }
 
    		res.ErrorMsg = fullErrorMsg
    	}
@@ -590,7 +590,7 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 
 		}
 
-		if totalTasks > 0 && completedTasks == totalTasks {
+		if completedTasks == totalTasks {
 			taskComplete = true
 		} else {
 			time.Sleep(c.sleep)
@@ -626,6 +626,7 @@ func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 
 	if err != nil {
 		fmt.Println("Problem showing tasks, try again")
+
 	}
 
 	if taskRes.Success {
@@ -644,6 +645,7 @@ func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 	}
 
 	return taskRes
+
 }
 
 /**

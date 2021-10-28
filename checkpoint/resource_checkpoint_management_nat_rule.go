@@ -83,43 +83,43 @@ func resourceManagementNatRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Nat method.",
-				Default: "static",
+				Default:     "static",
 			},
 			"original_destination": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Original destination.",
-				Default: "Any",
+				Default:     "Any",
 			},
 			"original_service": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Original service.",
-				Default: "Any",
+				Default:     "Any",
 			},
 			"original_source": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Original source.",
-				Default: "Any",
+				Default:     "Any",
 			},
 			"translated_destination": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Translated destination.",
-				Default: "Original",
+				Default:     "Original",
 			},
 			"translated_service": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Translated service.",
-				Default: "Original",
+				Default:     "Original",
 			},
 			"translated_source": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Translated source.",
-				Default: "Original",
+				Default:     "Original",
 			},
 			"auto_generated": {
 				Type:        schema.TypeBool,
@@ -250,7 +250,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	payload := map[string]interface{}{
-		"uid":   d.Id(),
+		"uid":     d.Id(),
 		"package": d.Get("package"),
 	}
 
@@ -353,7 +353,7 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("position.top"); ok {
 				if v.(string) == "top" {
 					natRule["new-position"] = "top" // entire rule-base
-				} else{
+				} else {
 					natRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}
@@ -445,7 +445,7 @@ func deleteManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	natRulePayload := map[string]interface{}{
-		"uid":   d.Id(),
+		"uid":     d.Id(),
 		"package": d.Get("package"),
 	}
 

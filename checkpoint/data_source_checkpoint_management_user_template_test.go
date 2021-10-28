@@ -24,7 +24,7 @@ func TestAccDataSourceCheckpointManagementUserTemplate_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementUserTemplateConfig(objName,"2030-05-30", false),
+				Config: testAccDataSourceManagementUserTemplateConfig(objName, "2030-05-30", false),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 				),

@@ -164,6 +164,10 @@ func readManagementAccessSection(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("name", v)
 	}
 
+	if v, ok := d.GetOk("layer"); ok {
+		_ = d.Set("layer", v)
+	}
+
 	if v := accessSection["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -187,6 +191,10 @@ func updateManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 		accessSection["new-name"] = newName
 	} else {
 		accessSection["name"] = d.Get("name")
+	}
+
+	if v, ok := d.GetOk("layer"); ok {
+		accessSection["layer"] = v.(string)
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {

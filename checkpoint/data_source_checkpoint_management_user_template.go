@@ -12,7 +12,7 @@ import (
 
 func dataSourceManagementUserTemplate() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementUserTemplateRead,
+		Read: dataSourceManagementUserTemplateRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -227,10 +227,10 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 
 		allowedLocationsMapToReturn := make(map[string]interface{})
 
-		if v, _ := allowedLocationsMap["destinations"]; v != nil{
+		if v, _ := allowedLocationsMap["destinations"]; v != nil {
 			allowedLocationsMapToReturn["destinations"] = v
 		}
-		if v, _ := allowedLocationsMap["sources"]; v != nil{
+		if v, _ := allowedLocationsMap["sources"]; v != nil {
 			allowedLocationsMapToReturn["sources"] = v
 		}
 
@@ -252,13 +252,13 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 
 		encryptionMapToReturn := make(map[string]interface{})
 
-		if v, _ := encryptionMap["ike"]; v != nil{
+		if v, _ := encryptionMap["ike"]; v != nil {
 			encryptionMapToReturn["enable_ike"] = strconv.FormatBool(v.(bool))
 		}
-		if v, _ := encryptionMap["public-key"]; v != nil{
+		if v, _ := encryptionMap["public-key"]; v != nil {
 			encryptionMapToReturn["enable_public_key"] = strconv.FormatBool(v.(bool))
 		}
-		if v, _ := encryptionMap["shared-secret"]; v != nil{
+		if v, _ := encryptionMap["shared-secret"]; v != nil {
 			encryptionMapToReturn["enable_shared_secret"] = strconv.FormatBool(v.(bool))
 		}
 

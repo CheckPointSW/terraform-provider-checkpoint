@@ -37,19 +37,19 @@ func resourceManagementThreatProfile() *schema.Resource {
 			"confidence_level_high": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default: "Prevent",
+				Default:     "Prevent",
 				Description: "Action for protections with high confidence level.",
 			},
 			"confidence_level_low": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default: "Detect",
+				Default:     "Detect",
 				Description: "Action for protections with low confidence level.",
 			},
 			"confidence_level_medium": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default: "Prevent",
+				Default:     "Prevent",
 				Description: "Action for protections with medium confidence level.",
 			},
 			"indicator_overrides": &schema.Schema{
@@ -114,19 +114,19 @@ func resourceManagementThreatProfile() *schema.Resource {
 						"add_customized_text_to_email_body": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default: false,
+							Default:     false,
 							Description: "Add customized text to the malicious email body.",
 						},
 						"add_email_subject_prefix": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default: false,
+							Default:     false,
 							Description: "Add a prefix to the malicious email subject.",
 						},
 						"add_x_header_to_email": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default: false,
+							Default:     false,
 							Description: "Add an X-Header to the malicious email.",
 						},
 						"email_action": {
@@ -292,31 +292,31 @@ func resourceManagementThreatProfile() *schema.Resource {
 			"use_indicators": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "Indicates whether the profile should make use of indicators.",
 			},
 			"anti_bot": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "Is Anti-Bot blade activated.",
 			},
 			"anti_virus": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "Is Anti-Virus blade activated.",
 			},
 			"ips": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "Is IPS blade activated.",
 			},
 			"threat_emulation": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "Is Threat Emulation blade activated.",
 			},
 			"activate_protections_by_extended_attributes": &schema.Schema{
@@ -515,7 +515,7 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	}
 
 	if _, ok := d.GetOk("malicious_mail_policy_settings"); ok {
-		maliciousMailPolicySettingsPayload	 := make(map[string]interface{})
+		maliciousMailPolicySettingsPayload := make(map[string]interface{})
 
 		if v, ok := d.GetOkExists("malicious_mail_policy_settings.add_customized_text_to_email_body"); ok {
 			maliciousMailPolicySettingsPayload["add-customized-text-to-email-body"] = v.(bool)
@@ -793,16 +793,16 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		}
 		_, ipsSettingsInConf := d.GetOk("ips_settings")
 		defaultIpsSettings := map[string]interface{}{
-			"newly_updated_protections": "active",
+			"newly_updated_protections":                  "active",
 			"exclude_protection_with_performance_impact": false,
-			"exclude_protection_with_severity": false,
+			"exclude_protection_with_severity":           false,
 		}
 		if reflect.DeepEqual(defaultIpsSettings, ipsSettingsState) && !ipsSettingsInConf {
 			_ = d.Set("ips_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("ips_settings", ipsSettingsState)
 		}
-	}else{
+	} else {
 		_ = d.Set("ips_settings", nil)
 	}
 
@@ -848,24 +848,24 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 
 		_, maliciousMailPolicySettingsInConf := d.GetOk("malicious_mail_policy_settings")
 		defaultMaliciousMailPolicySettings := map[string]interface{}{
-			"email_action": "allow",
-			"remove_attachments_and_links": true,
-			"malicious_attachments_text": "Malicious email attachment '$filename$' removed by Check Point.",
-			"failed_to_scan_attachments_text": "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
-			"malicious_links_text": "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
-			"add_x_header_to_email": false,
-			"add_email_subject_prefix": false,
-			"email_subject_prefix_text": "Attachment was found malicious. It is recommended not to open this mail.",
+			"email_action":                      "allow",
+			"remove_attachments_and_links":      true,
+			"malicious_attachments_text":        "Malicious email attachment '$filename$' removed by Check Point.",
+			"failed_to_scan_attachments_text":   "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
+			"malicious_links_text":              "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
+			"add_x_header_to_email":             false,
+			"add_email_subject_prefix":          false,
+			"email_subject_prefix_text":         "Attachment was found malicious. It is recommended not to open this mail.",
 			"add_customized_text_to_email_body": false,
-			"email_body_customized_text": "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
-			"send_copy": false,
+			"email_body_customized_text":        "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
+			"send_copy":                         false,
 		}
 		if reflect.DeepEqual(defaultMaliciousMailPolicySettings, maliciousMailPolicySettingsState) && !maliciousMailPolicySettingsInConf {
 			_ = d.Set("malicious_mail_policy_settings", map[string]interface{}{})
 		} else {
 			_ = d.Set("malicious_mail_policy_settings", maliciousMailPolicySettingsState)
 		}
-	}else{
+	} else {
 		_ = d.Set("malicious_mail_policy_settings", nil)
 	}
 
@@ -947,7 +947,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 			scanMaliciousLinksState["max_links"] = v
 		}
 		_ = d.Set("scan_malicious_links", scanMaliciousLinksState)
-	}else{
+	} else {
 		_ = d.Set("scan_malicious_links", nil)
 	}
 
@@ -970,10 +970,10 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 				extendedAttributesToActivateState = append(extendedAttributesToActivateState, extendedAttributesToActivate)
 			}
 			_ = d.Set("activate_protections_by_extended_attributes", extendedAttributesToActivateState)
-		}else{
+		} else {
 			_ = d.Set("activate_protections_by_extended_attributes", extendedAttributesToActivateList)
 		}
-	}else{
+	} else {
 		_ = d.Set("activate_protections_by_extended_attributes", nil)
 	}
 
@@ -996,10 +996,10 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 				extendedAttributesToDeactivateState = append(extendedAttributesToDeactivateState, extendedAttributesToDeactivate)
 			}
 			_ = d.Set("deactivate_protections_by_extended_attributes", extendedAttributesToDeactivateState)
-		}else{
+		} else {
 			_ = d.Set("deactivate_protections_by_extended_attributes", extendedAttributesToDeactivateList)
 		}
-	}else{
+	} else {
 		_ = d.Set("deactivate_protections_by_extended_attributes", nil)
 	}
 
@@ -1101,7 +1101,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 				}
 				threatProfile["indicator-overrides"] = indicatorOverridesPayload
 			}
-		}else{
+		} else {
 			oldVal, _ := d.GetChange("indicator_overrides")
 			indicatorOverridesList := oldVal.([]interface{})
 			if len(indicatorOverridesList) > 0 {
@@ -1135,7 +1135,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	}
 
 	if ok := d.HasChange("malicious_mail_policy_settings"); ok {
-		maliciousMailPolicySettingsPayload	 := make(map[string]interface{})
+		maliciousMailPolicySettingsPayload := make(map[string]interface{})
 
 		if v, ok := d.GetOkExists("malicious_mail_policy_settings.add_customized_text_to_email_body"); ok {
 			maliciousMailPolicySettingsPayload["add-customized-text-to-email-body"] = v.(bool)
@@ -1199,7 +1199,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 				}
 				threatProfile["overrides"] = overridesPayload
 			}
-		}else{
+		} else {
 			oldVal, _ := d.GetChange("overrides")
 			overridesList := oldVal.([]interface{})
 			if len(overridesList) > 0 {
@@ -1267,7 +1267,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 				}
 				threatProfile["activate-protections-by-extended-attributes"] = activateProtectionsByExtendedAttributesPayload
 			}
-		}else{
+		} else {
 			oldVal, _ := d.GetChange("activate_protections_by_extended_attributes")
 			activateProtectionsByExtendedAttributesList := oldVal.([]interface{})
 			if len(activateProtectionsByExtendedAttributesList) > 0 {
@@ -1302,7 +1302,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 				}
 				threatProfile["deactivate-protections-by-extended-attributes"] = deactivateProtectionsByExtendedAttributesPayload
 			}
-		}else{
+		} else {
 			oldVal, _ := d.GetChange("deactivate_protections_by_extended_attributes")
 			deactivateProtectionsByExtendedAttributesList := oldVal.([]interface{})
 			if len(deactivateProtectionsByExtendedAttributesList) > 0 {

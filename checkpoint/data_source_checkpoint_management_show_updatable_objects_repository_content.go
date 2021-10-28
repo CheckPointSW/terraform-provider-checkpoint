@@ -247,7 +247,6 @@ func dataSourceManagementShowUpdatableObjectsRepositoryContentRead(d *schema.Res
 		}
 	}
 
-
 	showUpdatableObjectsRepositoryContentRes, err := client.ApiCall("show-updatable-objects-repository-content", payload, client.GetSessionID(), true, false)
 	if err != nil {
 		return fmt.Errorf(err.Error())

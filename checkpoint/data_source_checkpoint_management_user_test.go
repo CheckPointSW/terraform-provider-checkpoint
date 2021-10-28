@@ -24,7 +24,7 @@ func TestAccDataSourceCheckpointManagementUser_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceManagementUserConfig(objName,"myuser@email.com", "2030-05-30", "0501112233", "securid", true, "08:00", "17:00"),
+				Config: testAccDataSourceManagementUserConfig(objName, "myuser@email.com", "2030-05-30", "0501112233", "securid", true, "08:00", "17:00"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 				),

@@ -15,7 +15,7 @@ This resource allows you to execute Check Point User Group.
 
 ```hcl
 resource "checkpoint_management_user_group" "user_group" {
-    name = "user group"
+    name = "user_group"
     email = "user@email.com"
 }
 

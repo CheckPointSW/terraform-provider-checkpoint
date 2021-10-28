@@ -505,7 +505,7 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("position.top"); ok {
 				if v.(string) == "top" {
 					threatRule["new-position"] = "top" // entire rule-base
-				} else{
+				} else {
 					threatRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}
@@ -552,7 +552,6 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("enabled") {
 		threatRule["enabled"] = d.Get("enabled")
 	}
-
 	if d.HasChange("install_on") {
 		if v, ok := d.GetOk("install_on"); ok {
 			threatRule["install-on"] = v.(*schema.Set).List()
@@ -632,7 +631,7 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		}
 		return fmt.Errorf(err.Error())
 	}
-	return readManagementAccessRule(d, m)
+	return readManagementThreatRule(d, m)
 }
 
 func deleteManagementThreatRule(d *schema.ResourceData, m interface{}) error {

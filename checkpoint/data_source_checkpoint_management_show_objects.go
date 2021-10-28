@@ -22,7 +22,7 @@ func dataSourceManagementShowObjects() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The objects' type, e.g.: host, service-tcp, network, address-range...",
-				Default: "object",
+				Default:     "object",
 			},
 			"ip_only": {
 				Type:        schema.TypeBool,
@@ -175,7 +175,6 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 			payload["order"] = orderPayload
 		}
 	}
-
 
 	showObjectsRes, err := client.ApiCall("show-objects", payload, client.GetSessionID(), true, false)
 	if err != nil {

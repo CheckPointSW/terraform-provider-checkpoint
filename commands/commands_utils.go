@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	FILENAME = "sid.json"
+	DefaultFilename = "sid.json"
 )
 
 type Session struct {
@@ -19,14 +19,14 @@ type Session struct {
 	Uid string `json:"uid"`
 }
 
-func GetSession() (Session, error) {
-	if _, err := os.Stat(FILENAME); os.IsNotExist(err) {
-		_, err := os.Create(FILENAME)
+func GetSession(sessionFileName string) (Session, error) {
+	if _, err := os.Stat(sessionFileName); os.IsNotExist(err) {
+		_, err := os.Create(sessionFileName)
 		if err != nil {
 			return Session{}, err
 		}
 	}
-	b, err := ioutil.ReadFile(FILENAME)
+	b, err := ioutil.ReadFile(sessionFileName)
 	if err != nil || len(b) == 0 {
 		return Session{}, err
 	}
@@ -64,6 +64,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	password := os.Getenv("CHECKPOINT_PASSWORD")
 	portVal := os.Getenv("CHECKPOINT_PORT")
 	timeoutVal := os.Getenv("CHECKPOINT_TIMEOUT")
+	sessionFileName := os.Getenv("CHECKPOINT_SESSION_FILE_NAME")
 
 	var err error
 	if portVal != "" {
@@ -79,6 +80,10 @@ func InitClient() (checkpoint.ApiClient, error) {
 			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_TIMEOUT to integer")
 		}
 		timeout = time.Duration(timeoutInteger)
+	}
+
+	if sessionFileName == "" {
+		sessionFileName = DefaultFilename
 	}
 
 	if server == "" || username == "" || password == "" {
@@ -108,14 +113,14 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Sleep:                   checkpoint.SleepTime,
 	}
 
-	s, err := GetSession()
+	s, err := GetSession(sessionFileName)
 	if err != nil {
 		return checkpoint.ApiClient{}, err
 	}
 	if s.Sid != "" {
 		args.Sid = s.Sid
 	} else {
-		return checkpoint.ApiClient{}, fmt.Errorf("session id not found. Verify 'sid.json' file exists in working directory")
+		return checkpoint.ApiClient{}, fmt.Errorf("session id not found. Verify %s file exists in working directory", sessionFileName)
 	}
 
 	mgmt := checkpoint.APIClient(args)

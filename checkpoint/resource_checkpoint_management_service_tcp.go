@@ -121,7 +121,7 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Description: "Color of the object. Should be one of existing colors.",
 				Default:     "black",
 			},
-			"comments": &schema.Schema{
+			"comments": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Comments string.",
@@ -301,6 +301,10 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	if v := serviceTcp["use-default-session-timeout"]; v != nil {
 		_ = d.Set("use_default_session_timeout", v)
+	}
+
+	if v := serviceTcp["color"]; v != nil {
+		_ = d.Set("color", v)
 	}
 
 	if serviceTcp["aggressive-aging"] != nil {

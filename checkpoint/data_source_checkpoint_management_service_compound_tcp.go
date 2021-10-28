@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementServiceCompoundTcp() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementServiceCompoundTcpRead,
+		Read: dataSourceManagementServiceCompoundTcpRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

@@ -10,7 +10,7 @@ import (
 
 func TestAccDataSourceCheckpointManagementAccessRule_basic(t *testing.T) {
 
-	objName := "tfTestManagementDataAccessRole_" + acctest.RandString(6)
+	objName := "tfTestManagementDataAccessRule_" + acctest.RandString(6)
 	resourceName := "checkpoint_management_access_rule.access_rule"
 	dataSourceName := "data.checkpoint_management_data_access_rule.data_access_rule"
 
@@ -40,6 +40,17 @@ resource "checkpoint_management_access_rule" "access_rule" {
     name = "%s"
 	layer = "%s"
 	position = {top = "top"}
+	source = ["Any"]
+	destination = ["Any"]
+	service = ["Any"]
+	track = {
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = false
+    per_session = false
+    type = "None"
+  }
 }
 
 data "checkpoint_management_data_access_rule" "data_access_rule" {

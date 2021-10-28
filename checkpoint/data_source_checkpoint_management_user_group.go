@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementUserGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementUserGroupRead,
+		Read: dataSourceManagementUserGroupRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

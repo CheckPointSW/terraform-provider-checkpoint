@@ -9,7 +9,7 @@ import (
 
 func dataSourceManagementSimpleGateway() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementSimpleGatewayRead,
+		Read: dataSourceManagementSimpleGatewayRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -315,7 +315,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Computed:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema {
+					Schema: map[string]*schema.Schema{
 						"alert_when_free_disk_space_below": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -335,7 +335,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Alert when free disk space below type.",
-							Default: "popup alert",
+							Default:     "popup alert",
 						},
 						"before_delete_keep_logs_from_the_last_days": {
 							Type:        schema.TypeBool,
@@ -565,7 +565,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 									},
 									"allocate_ip_address_from": {
 										Type:        schema.TypeMap,
-										Computed: true,
+										Computed:    true,
 										Description: "Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -999,19 +999,19 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 	if v := gateway["send_alerts_to_server"]; v != nil {
 		_ = d.Set("send_alerts_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_alerts_to_server", nil)
 	}
 
 	if v := gateway["send-logs-to-backup-server"]; v != nil {
 		_ = d.Set("send_logs_to_backup_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_backup_server", nil)
 	}
 
 	if v := gateway["send-logs-to-server"]; v != nil {
 		_ = d.Set("send_logs_to_server", v)
-	}else {
+	} else {
 		_ = d.Set("send_logs_to_server", nil)
 	}
 
@@ -1160,7 +1160,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 				_ = d.Set("logs_settings", logSettingsState)
 			}
 		*/
-	}else{
+	} else {
 		_ = d.Set("logs_settings", nil)
 	}
 
@@ -1186,7 +1186,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 			firewallSettingsState["memory_pool_size"] = v
 		}
 		_ = d.Set("firewall_settings", firewallSettingsState)
-	} else{
+	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
 
@@ -1362,7 +1362,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 			vpnSettingsState["office_mode"] = officeModeState
 		}
 		_ = d.Set("vpn-settings", vpnSettingsState)
-	}else{
+	} else {
 		_ = d.Set("vpn-settings", nil)
 	}
 

@@ -10,7 +10,7 @@ import (
 
 func dataSourceManagementThreatRule() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceManagementThreatRuleRead,
+		Read: dataSourceManagementThreatRuleRead,
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,

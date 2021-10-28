@@ -2,8 +2,7 @@
 layout: "checkpoint"
 page_title: "checkpoint_management_data_access_rule"
 sidebar_current: "docs-checkpoint-data-source-checkpoint-management-access-rule"
-description: |-
-  Use this data source to get information on an existing Check Point Access Rule.
+description: |- Use this data source to get information on an existing Check Point Access Rule.
 ---
 
 # Data Source: checkpoint_management_data_access_rule
@@ -12,17 +11,27 @@ Use this data source to get information on an existing Check Point Access Rule.
 
 ## Example Usage
 
-
 ```hcl
 resource "checkpoint_management_access_rule" "access_rule" {
-    name = "My Rule"
-	layer = "Network"
-	position = {top = "top"}
+  name        = "My Rule"
+  layer       = "Network"
+  position    = { top = "top" }
+  source      = ["Any"]
+  destination = ["Any"]
+  service     = ["Any"]
+  track       = {
+    accounting              = false
+    alert                   = "none"
+    enable_firewall_session = false
+    per_connection          = false
+    per_session             = false
+    type                    = "None"
+  }
 }
 
 data "checkpoint_management_data_access_rule" "data_access_rule" {
-    name = "${checkpoint_management_access_rule.access_rule.name}"
-    layer = "${checkpoint_management_access_rule.access_rule.layer}"
+  name  = "${checkpoint_management_access_rule.access_rule.name}"
+  layer = "${checkpoint_management_access_rule.access_rule.layer}"
 }
 ```
 
@@ -54,11 +63,10 @@ The following arguments are supported:
 * `vpn` - Communities or Directional.
 * `comments` - Comments string.
 
-
 `action_settings` supports the following:
 
-* `enable_identity_captive_portal` 
-* `limit` 
+* `enable_identity_captive_portal`
+* `limit`
 
 `custom_fields` supports the following:
 
