@@ -4,6 +4,7 @@ import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"strconv"
 )
 
 func dataSourceManagementGenericDataCenterServer() *schema.Resource {
@@ -19,6 +20,31 @@ func dataSourceManagementGenericDataCenterServer() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Object unique identifier.",
+			},
+			"url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URL of the JSON feed (e.g. https://example.com/file.json).",
+			},
+			"interval": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Update interval of the feed in seconds.",
+			},
+			"custom_header": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "When set to false, The admin is not using Key and Value for a Custom Header in order to connect to the feed server.\n\nWhen set to true, The admin is using Key and Value for a Custom Header in order to connect to the feed server.",
+			},
+			"custom_key": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Key for the Custom Header, relevant and required only when custom_header set to true.",
+			},
+			"custom_value": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Value for the Custom Header, relevant and required only when custom_header set to true.",
 			},
 			"tags": {
 				Type:        schema.TypeSet,
@@ -79,6 +105,21 @@ func dataSourceGenericDataCenterServerRead(d *schema.ResourceData, m interface{}
 
 	if v := genericDataCenterServer["name"]; v != nil {
 		_ = d.Set("name", v)
+	}
+
+	if genericDataCenterServer["properties"] != nil {
+		propsJson, ok := genericDataCenterServer["properties"].([]interface{})
+		if ok {
+			for _, prop := range propsJson {
+				propMap := prop.(map[string]interface{})
+				propName := propMap["name"].(string)
+				propValue := propMap["value"]
+				if propName == "custom_header" {
+					propValue, _ = strconv.ParseBool(propValue.(string))
+				}
+				_ = d.Set(propName, propValue)
+			}
+		}
 	}
 
 	if genericDataCenterServer["tags"] != nil {

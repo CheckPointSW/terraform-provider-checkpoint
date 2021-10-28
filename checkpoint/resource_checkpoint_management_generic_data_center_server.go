@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -104,15 +105,15 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 	}
 
 	if v, ok := d.GetOk("custom_header"); ok {
-		genericDataCenterServer["custom-header"] = v.(bool)
+		genericDataCenterServer["custom_header"] = v.(bool)
 	}
 
 	if v, ok := d.GetOk("custom_key"); ok {
-		genericDataCenterServer["custom-key"] = v.(string)
+		genericDataCenterServer["custom_key"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("custom_value"); ok {
-		genericDataCenterServer["custom-value"] = v.(string)
+		genericDataCenterServer["custom_value"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -138,11 +139,15 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 	log.Println("Create genericDataCenterServer - Map = ", genericDataCenterServer)
 
 	addGenericDataCenterServerRes, err := client.ApiCall("add-data-center-server", genericDataCenterServer, client.GetSessionID(), true, false)
-	if err != nil || !addGenericDataCenterServerRes.Success {
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if !addGenericDataCenterServerRes.Success {
 		if addGenericDataCenterServerRes.ErrorMsg != "" {
 			return fmt.Errorf(addGenericDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		msg := createTaskFailMessage("add-data-center-server", addGenericDataCenterServerRes.GetData())
+		return fmt.Errorf(msg)
 	}
 	payload := map[string]interface{}{
 		"name": genericDataCenterServer["name"],
@@ -180,27 +185,24 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 	}
 	genericDataCenterServer := showGenericDataCenterServerRes.GetData()
 	log.Println("payload resource: ", genericDataCenterServer)
+
 	if v := genericDataCenterServer["name"]; v != nil {
 		_ = d.Set("name", v)
 	}
 
-	if v := genericDataCenterServer["url"]; v != nil {
-		_ = d.Set("url", v)
-	}
-
-	if v := genericDataCenterServer["interval"]; v != nil {
-		_ = d.Set("interval", v)
-	}
-
-	if v := genericDataCenterServer["custom_header"]; v != nil {
-		_ = d.Set("custom_header", v.(bool))
-	}
-	if v := genericDataCenterServer["custom_key"]; v != nil {
-		_ = d.Set("custom_key", v)
-	}
-
-	if v := genericDataCenterServer["custom_value"]; v != nil {
-		_ = d.Set("custom_value", v)
+	if genericDataCenterServer["properties"] != nil {
+		propsJson, ok := genericDataCenterServer["properties"].([]interface{})
+		if ok {
+			for _, prop := range propsJson {
+				propMap := prop.(map[string]interface{})
+				propName := propMap["name"].(string)
+				propValue := propMap["value"]
+				if propName == "custom_header" {
+					propValue, _ = strconv.ParseBool(propValue.(string))
+				}
+				_ = d.Set(propName, propValue)
+			}
+		}
 	}
 
 	if genericDataCenterServer["tags"] != nil {
@@ -300,11 +302,15 @@ func updateManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 	log.Println("Update genericDataCenterServer - Map = ", genericDataCenterServer)
 
 	updateGenericDataCenterServerRes, err := client.ApiCall("set-data-center-server", genericDataCenterServer, client.GetSessionID(), true, false)
-	if err != nil || !updateGenericDataCenterServerRes.Success {
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if !updateGenericDataCenterServerRes.Success {
 		if updateGenericDataCenterServerRes.ErrorMsg != "" {
 			return fmt.Errorf(updateGenericDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		msg := createTaskFailMessage("set-data-center-server", updateGenericDataCenterServerRes.GetData())
+		return fmt.Errorf(msg)
 	}
 
 	return readManagementGenericDataCenterServer(d, m)
