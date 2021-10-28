@@ -16,12 +16,12 @@ resource "checkpoint_management_access_role" "access_role" {
   name     = "My Access Role"
   comments = "my-Access-Role"
   machines {
-    source    = "any"
-    selection = ["any"]
+    source    = "all identified"
+    selection = ["all identified"]
   }
   users {
     selection = ["any"]
-    source = "any"
+    source    = "any"
   }
 }
 

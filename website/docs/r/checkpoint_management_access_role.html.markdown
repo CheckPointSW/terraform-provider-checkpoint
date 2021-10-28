@@ -15,8 +15,8 @@ This resource allows you to execute Check Point Access Role.
 resource "checkpoint_management_access_role" "example" {
   name = "New Access Role 1"
   machines {
-    source    = "all identified"
-    selection = ["all identified"]
+    source    = "any"
+    selection = ["any"]
   }
   users {
     source    = "all identified"

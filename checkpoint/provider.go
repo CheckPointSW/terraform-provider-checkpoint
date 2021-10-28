@@ -55,11 +55,11 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PORT", checkpoint.DefaultPort),
 				Description: "Port used for connection to the API server",
 			},
-			"file_name": {
+			"session_file_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", DefaultFilename),
-				Description: "FileName used to save the current sid to, default is sid.json.",
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", DefaultSessionFilename),
+				Description: "File name used to store the current session id.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -238,7 +238,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	domain := data.Get("domain").(string)
 	port := data.Get("port").(int)
 	timeout := data.Get("timeout").(int)
-	fileName := data.Get("file_name").(string)
+	sessionFileName := data.Get("session_file_name").(string)
 
 	if server == "" || username == "" || password == "" {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
@@ -265,10 +265,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	case checkpoint.WebContext:
 		var s Session
 		var err error
-		log.Println("filename =", fileName)
-		s.FileName = fileName
-		log.Println("filename =", s.FileName)
-		s, err = GetSession(s.FileName)
+		s, err = GetSession(sessionFileName)
 		if err != nil {
 			return nil, err
 		}
@@ -278,12 +275,12 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, domain, fileName)
+			s, err = login(mgmt, username, password, domain)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
 			}
-			if err := s.Save(); err != nil {
+			if err := s.Save(sessionFileName); err != nil {
 				return nil, err
 			}
 		}
@@ -291,7 +288,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "", fileName)
+		_, err := login(gaia, username, password, "")
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -302,16 +299,16 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, domain string, fileName string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, domain string) (Session, error) {
 	log.Printf("Perform login")
 
 	loginRes, err := client.Login(username, pwd, false, domain, false, "")
 	if err != nil {
 		localRequestsError := "invalid character '<' looking for beginning of value"
 		if strings.Contains(err.Error(), localRequestsError) {
-			return Session{FileName: fileName}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
+			return Session{}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
 		}
-		return Session{FileName: fileName}, err
+		return Session{}, err
 	}
 	if !loginRes.Success {
 		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
@@ -323,9 +320,8 @@ func login(client *checkpoint.ApiClient, username string, pwd string, domain str
 	}
 
 	s := Session{
-		Sid:      client.GetSessionID(),
-		Uid:      uid,
-		FileName: fileName,
+		Sid: client.GetSessionID(),
+		Uid: uid,
 	}
 
 	return s, nil

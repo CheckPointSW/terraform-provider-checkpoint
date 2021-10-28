@@ -68,7 +68,7 @@ The following arguments are supported:
   the `CHECKPOINT_TIMEOUT` environment variable. Default value is `10` seconds.
 * `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT`
   environment variable. Default value is `443`.
-* `file_name` - (Optional) File name used to store the current session id. this can also be defined via
+* `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
   the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
 
 ## Authentication
@@ -183,12 +183,9 @@ Please use the following for logout:
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/logout
 $ go build logout.go
-$ mv logout $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && publish && logout
+$ mv logout $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/logout_from_session
+$ terraform apply && publish && logout_from_session
 ```
-
-Note: logout is saved for logout options in some command line's interpreters, We recommend naming the logout in a
-different name than "logout", and use `terraform apply && publish && NEWNAME` accordingly.
 
 ### Install Policy
 
@@ -210,7 +207,7 @@ $ terraform apply && install_policy -policy-package <package name> -target <targ
 ### Example usage
 
 ```bash
-$ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway"
+$ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway" && logout_from_session
 ```
 
 ## Import Resources

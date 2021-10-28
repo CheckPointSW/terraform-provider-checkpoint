@@ -11,41 +11,40 @@ import (
 //var lock sync.Mutex
 
 const (
-	DefaultFilename = "sid.json"
+	DefaultSessionFilename = "sid.json"
 )
 
 type Session struct {
-	Sid      string `json:"sid"`
-	Uid      string `json:"uid"`
-	FileName string `json:"file_name"`
+	Sid string `json:"sid"`
+	Uid string `json:"uid"`
 }
 
-func (s *Session) Save() error {
+func (s *Session) Save(sessionFileName string) error {
 	f, err := json.MarshalIndent(s, "", " ")
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(s.FileName, f, 0644)
+	err = ioutil.WriteFile(sessionFileName, f, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetSession(fileName string) (Session, error) {
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
-		_, err := os.Create(fileName)
+func GetSession(sessionFileName string) (Session, error) {
+	if _, err := os.Stat(sessionFileName); os.IsNotExist(err) {
+		_, err := os.Create(sessionFileName)
 		if err != nil {
-			return Session{FileName: fileName}, err
+			return Session{}, err
 		}
 	}
-	b, err := ioutil.ReadFile(fileName)
+	b, err := ioutil.ReadFile(sessionFileName)
 	if err != nil || len(b) == 0 {
-		return Session{FileName: fileName}, err
+		return Session{}, err
 	}
 	var s Session
 	if err = json.Unmarshal(b, &s); err != nil {
-		return Session{FileName: fileName}, err
+		return Session{}, err
 	}
 	return s, nil
 }

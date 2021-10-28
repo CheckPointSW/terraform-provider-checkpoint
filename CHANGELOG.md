@@ -7,24 +7,21 @@ FEATURES
 
 ENHANCEMENTS
 
-* `commands/logout/logout.go`: Added support for logout command.
-* `resource_checkpoint_management_access_role`: Increased timeout on access-role resource.
-* Added the option to save session id (`SID`) to a different file name (instead of "sid.json").
+* `commands/logout/logout.go`: Add support for logout post apply script.
+* `resource_checkpoint_management_access_role`: Increase timeout on access-role resource.
+* Add support to select session file name via environment variable `CHECKPOINT_SESSION_FILE_NAME`, default value
+  remains `sid.json`.
 
 BUG FIXES
 
-* `resource_checkpoint_management_access_role` - Fixed the bug that made the program when editing the comment's field.
-  crash.
-* `resource_checkpoint_management_threat_rule` - Fixed the bug that made the program crash when updating the
-  resource's fields.
-* `resource_checkpoint_management_access_rule` - Fixed the bug that made the program crash when setting "track" to "log"
-  and applying more than once.
-* `resource_checkpoint_management_access_section` - Fixed the bug that caused the section to crash while updating any
-  resource's field.
-* `resource_checkpoint_management_access_layer` - Fixed the bug that compelled the user to set application_and_url_filtering
-  to true.
-* `resource_checkpoint_management_service_tcp.go` - Fixed readManagementServiceTcp not setting a value for color.
-* `resource_checkpoint_management_service_udp.go` - Fixed readManagementServiceUdp not setting a value for color.
+* `resource_checkpoint_management_access_role` - Fix bug that caused when updating comment.
+* `resource_checkpoint_management_threat_rule` - Fix bug general bug in read function.
+* `resource_checkpoint_management_access_rule` - Fix the bug in `track` field.
+* `resource_checkpoint_management_access_section` - Fix bug in `layer` field in update and read functions.
+* `resource_checkpoint_management_access_layer` - Remove `detect_using_x_forward_for` field default value from the
+  schema.
+* `resource_checkpoint_management_service_tcp.go` - Fix bug in `color` field in read functions.
+* `resource_checkpoint_management_service_udp.go` - Fix bug in `color` field in read functions.
 
 ## 1.4.0 (March 22, 2021)
 
