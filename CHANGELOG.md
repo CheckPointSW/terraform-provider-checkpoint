@@ -20,8 +20,8 @@ BUG FIXES
 * `resource_checkpoint_management_access_section` - Fix bug in `layer` field in update and read functions.
 * `resource_checkpoint_management_access_layer` - Remove `detect_using_x_forward_for` field default value from the
   schema.
-* `resource_checkpoint_management_service_tcp.go` - Fix bug in `color` field in read functions.
-* `resource_checkpoint_management_service_udp.go` - Fix bug in `color` field in read functions.
+* `resource_checkpoint_management_service_tcp` - Fix bug in `color` field in read functions.
+* `resource_checkpoint_management_service_udp` - Fix bug in `color` field in read functions.
 
 ## 1.4.0 (March 22, 2021)
 
