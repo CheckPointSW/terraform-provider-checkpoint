@@ -70,14 +70,14 @@ type ApiClient struct {
 // Returns new client instance
 func APIClient(apiCA ApiClientArgs) *ApiClient {
 	isPortDefault := false
-	proxyUsed := true
+	proxyUsed := false
 
 	if apiCA.Port == -1 || apiCA.Port == DefaultPort {
 		apiCA.Port = DefaultPort
 		isPortDefault = true
 	}
-	if apiCA.ProxyPort == DefaultProxyPort && apiCA.ProxyHost == DefaultProxyHost {
-		proxyUsed = false
+	if apiCA.ProxyPort != DefaultProxyPort && apiCA.ProxyHost != DefaultProxyHost {
+		proxyUsed = true
 	}
 
 	// The context of using the client - defaults to web api
