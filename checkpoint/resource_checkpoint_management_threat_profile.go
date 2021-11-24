@@ -680,7 +680,7 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create Threat Profile - Map = ", threatProfile)
 
-	threatProfileRes, err := client.ApiCall("add-threat-profile", threatProfile, client.GetSessionID(), true, false)
+	threatProfileRes, err := client.ApiCall("add-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -692,7 +692,7 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 		return fmt.Errorf(msg)
 	}
 
-	showThreatProfileRes, err := client.ApiCall("show-threat-profile", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, false)
+	showThreatProfileRes, err := client.ApiCall("show-threat-profile", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -713,7 +713,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, false)
+	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1344,7 +1344,7 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update Threat Profile - Map = ", threatProfile)
 
-	threatProfileRes, err := client.ApiCall("set-threat-profile", threatProfile, client.GetSessionID(), true, false)
+	threatProfileRes, err := client.ApiCall("set-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1368,7 +1368,7 @@ func deleteManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
-	deleteThreatProfileRes, err := client.ApiCall("delete-threat-profile", threatProfilePayload, client.GetSessionID(), true, false)
+	deleteThreatProfileRes, err := client.ApiCall("delete-threat-profile", threatProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
 		return fmt.Errorf(err.Error())

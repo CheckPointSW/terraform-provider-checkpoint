@@ -88,7 +88,7 @@ func createManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create SecurityZone - Map = ", securityZone)
 
-	addSecurityZoneRes, err := client.ApiCall("add-security-zone", securityZone, client.GetSessionID(), true, false)
+	addSecurityZoneRes, err := client.ApiCall("add-security-zone", securityZone, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addSecurityZoneRes.Success {
 		if addSecurityZoneRes.ErrorMsg != "" {
 			return fmt.Errorf(addSecurityZoneRes.ErrorMsg)
@@ -109,7 +109,7 @@ func readManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, false)
+	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -205,7 +205,7 @@ func updateManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update SecurityZone - Map = ", securityZone)
 
-	updateSecurityZoneRes, err := client.ApiCall("set-security-zone", securityZone, client.GetSessionID(), true, false)
+	updateSecurityZoneRes, err := client.ApiCall("set-security-zone", securityZone, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateSecurityZoneRes.Success {
 		if updateSecurityZoneRes.ErrorMsg != "" {
 			return fmt.Errorf(updateSecurityZoneRes.ErrorMsg)
@@ -226,7 +226,7 @@ func deleteManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete SecurityZone")
 
-	deleteSecurityZoneRes, err := client.ApiCall("delete-security-zone", securityZonePayload, client.GetSessionID(), true, false)
+	deleteSecurityZoneRes, err := client.ApiCall("delete-security-zone", securityZonePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteSecurityZoneRes.Success {
 		if deleteSecurityZoneRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteSecurityZoneRes.ErrorMsg)

@@ -95,7 +95,7 @@ func createManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Service Group - Map = ", serviceGroup)
 
-	addServiceGroupRes, err := client.ApiCall("add-service-group", serviceGroup, client.GetSessionID(), true, false)
+	addServiceGroupRes, err := client.ApiCall("add-service-group", serviceGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceGroupRes.Success {
 		if addServiceGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceGroupRes.ErrorMsg)
@@ -116,7 +116,7 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, false)
+	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -221,7 +221,7 @@ func updateManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Service Group - Map = ", serviceGroup)
-	setserviceGroupRes, _ := client.ApiCall("set-service-group", serviceGroup, client.GetSessionID(), true, false)
+	setserviceGroupRes, _ := client.ApiCall("set-service-group", serviceGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setserviceGroupRes.Success {
 		return fmt.Errorf(setserviceGroupRes.ErrorMsg)
 	}
@@ -234,7 +234,7 @@ func deleteManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceGroupRes, _ := client.ApiCall("delete-service-group", payload, client.GetSessionID(), true, false)
+	deleteServiceGroupRes, _ := client.ApiCall("delete-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceGroupRes.Success {
 		return fmt.Errorf(deleteServiceGroupRes.ErrorMsg)
 	}

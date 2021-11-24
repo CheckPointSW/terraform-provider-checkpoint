@@ -68,7 +68,7 @@ func dataSourceManagementServiceCompoundTcpRead(d *schema.ResourceData, m interf
 		payload["uid"] = uid
 	}
 
-	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, false)
+	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

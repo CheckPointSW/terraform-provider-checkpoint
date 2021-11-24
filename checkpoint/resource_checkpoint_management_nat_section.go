@@ -119,7 +119,7 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create NAT section - Map = ", natSection)
 
-	addNatSectionRes, err := client.ApiCall("add-nat-section", natSection, client.GetSessionID(), true, false)
+	addNatSectionRes, err := client.ApiCall("add-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatSectionRes.Success {
 		if addNatSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(addNatSectionRes.ErrorMsg)
@@ -141,7 +141,7 @@ func readManagementNatSection(d *schema.ResourceData, m interface{}) error {
 		"package": d.Get("package"),
 	}
 
-	showNatSectionRes, err := client.ApiCall("show-nat-section", payload, client.GetSessionID(), true, false)
+	showNatSectionRes, err := client.ApiCall("show-nat-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -186,7 +186,7 @@ func updateManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update NAT section - Map = ", natSection)
 
-	updateNatSectionRes, err := client.ApiCall("set-nat-section", natSection, client.GetSessionID(), true, false)
+	updateNatSectionRes, err := client.ApiCall("set-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatSectionRes.Success {
 		if updateNatSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(updateNatSectionRes.ErrorMsg)
@@ -208,7 +208,7 @@ func deleteManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete NAT section")
 
-	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload, client.GetSessionID(), true, false)
+	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteNatSectionRes.Success {
 		if deleteNatSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteNatSectionRes.ErrorMsg)

@@ -94,7 +94,7 @@ func createManagementUninstallSoftwarePackage(d *schema.ResourceData, m interfac
 		payload["concurrency-limit"] = v.(int)
 	}
 
-	UninstallSoftwarePackageRes, _ := client.ApiCall("uninstall-software-package", payload, client.GetSessionID(), true, false)
+	UninstallSoftwarePackageRes, _ := client.ApiCall("uninstall-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UninstallSoftwarePackageRes.Success {
 		return fmt.Errorf(UninstallSoftwarePackageRes.ErrorMsg)
 	}

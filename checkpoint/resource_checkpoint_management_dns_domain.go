@@ -97,7 +97,7 @@ func createManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create DnsDomain - Map = ", dnsDomain)
 
-	addDnsDomainRes, err := client.ApiCall("add-dns-domain", dnsDomain, client.GetSessionID(), true, false)
+	addDnsDomainRes, err := client.ApiCall("add-dns-domain", dnsDomain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDnsDomainRes.Success {
 		if addDnsDomainRes.ErrorMsg != "" {
 			return fmt.Errorf(addDnsDomainRes.ErrorMsg)
@@ -118,7 +118,7 @@ func readManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, false)
+	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -222,7 +222,7 @@ func updateManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update DnsDomain - Map = ", dnsDomain)
 
-	updateDnsDomainRes, err := client.ApiCall("set-dns-domain", dnsDomain, client.GetSessionID(), true, false)
+	updateDnsDomainRes, err := client.ApiCall("set-dns-domain", dnsDomain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDnsDomainRes.Success {
 		if updateDnsDomainRes.ErrorMsg != "" {
 			return fmt.Errorf(updateDnsDomainRes.ErrorMsg)
@@ -243,7 +243,7 @@ func deleteManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete DnsDomain")
 
-	deleteDnsDomainRes, err := client.ApiCall("delete-dns-domain", dnsDomainPayload, client.GetSessionID(), true, false)
+	deleteDnsDomainRes, err := client.ApiCall("delete-dns-domain", dnsDomainPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDnsDomainRes.Success {
 		if deleteDnsDomainRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteDnsDomainRes.ErrorMsg)

@@ -38,7 +38,7 @@ func hostnameParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 func createHostname(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := hostnameParseSchemaToMap(d)
-	setPIRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, false)
+	setPIRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
 	}
@@ -52,7 +52,7 @@ func createHostname(d *schema.ResourceData, m interface{}) error {
 func readHostname(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := map[string]interface{}{}
-	showHostnameRes, _ := client.ApiCall("show-hostname", payload, client.GetSessionID(), true, false)
+	showHostnameRes, _ := client.ApiCall("show-hostname", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !showHostnameRes.Success {
 		// Handle deletion of an object from other clients - Object not found
 		if objectNotFound(showHostnameRes.GetData()["code"].(string)) {
@@ -71,7 +71,7 @@ func readHostname(d *schema.ResourceData, m interface{}) error {
 func updateHostname(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := hostnameParseSchemaToMap(d)
-	setNetworkRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, false)
+	setNetworkRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}

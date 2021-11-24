@@ -210,7 +210,12 @@ func resourceManagementSimpleCluster() *schema.Resource {
 							Optional:    true,
 							Description: "SIC one time password.",
 						},
-						"sic_name": {
+						"priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The member priority on the cluster.",
+						},
+						"sic_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Secure Internal Communication name.",
@@ -1208,7 +1213,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create Simple Cluster - Map = ", cluster)
 
-	addClusterRes, err := client.ApiCall("add-simple-cluster", cluster, client.GetSessionID(), true, false)
+	addClusterRes, err := client.ApiCall("add-simple-cluster", cluster, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1221,7 +1226,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	}
 
 	// add-simple-cluster returns task-id. Call show-simple-cluster for object uid.
-	showClusterRes, err := client.ApiCall("show-simple-cluster", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, false)
+	showClusterRes, err := client.ApiCall("show-simple-cluster", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1241,7 +1246,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, false)
+	showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1261,7 +1266,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 			totalInterfaces := int(total.(float64))
 			if totalInterfaces > 50 {
 				payload["limit-interfaces"] = totalInterfaces
-				showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, false)
+				showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil {
 					return fmt.Errorf(err.Error())
 				}
@@ -1394,6 +1399,9 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 				if v, _ := memberJson["name"]; v != nil {
 					memberState["name"] = v
 				}
+				if v, _ := memberJson["priority"]; v != nil {
+					memberState["priority"] = v
+				}
 				if v, _ := memberJson["ip-address"]; v != nil {
 					memberState["ip_address"] = v
 				}
@@ -1407,6 +1415,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 							if v, _ := memberInterfaceJson["name"]; v != nil {
 								memberInterfaceState["name"] = v
 							}
+
 							if v, _ := memberInterfaceJson["ipv4-address"]; v != nil {
 								memberInterfaceState["ipv4_address"] = v
 							}
@@ -1886,6 +1895,10 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 					memberPayload["ip-address"] = v
 				}
 
+				if v, ok := d.GetOk("members." + strconv.Itoa(i) + ".priority"); ok {
+					memberPayload["priority"] = v
+				}
+
 				if v, ok := d.GetOk("members." + strconv.Itoa(i) + ".one_time_password"); ok {
 					memberPayload["one-time-password"] = v
 				}
@@ -2264,7 +2277,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Update Simple Cluster - Map = ", cluster)
-	updateSimpleClusterRes, err := client.ApiCall("set-simple-cluster", cluster, client.GetSessionID(), true, false)
+	updateSimpleClusterRes, err := client.ApiCall("set-simple-cluster", cluster, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -2287,7 +2300,7 @@ func deleteManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
-	deleteClusterRes, err := client.ApiCall("delete-simple-cluster", payload, client.GetSessionID(), true, false)
+	deleteClusterRes, err := client.ApiCall("delete-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteClusterRes.Success {
 		if deleteClusterRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteClusterRes.ErrorMsg)

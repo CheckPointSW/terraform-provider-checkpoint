@@ -219,7 +219,7 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Service Tcp - Map = ", serviceTcp)
 
-	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(), true, false)
+	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceTcpRes.Success {
 		if addServiceTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceTcpRes.ErrorMsg)
@@ -240,7 +240,7 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, false)
+	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -457,7 +457,7 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Service Tcp - Map = ", serviceTcp)
-	setServiceTcpRes, _ := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, false)
+	setServiceTcpRes, _ := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setServiceTcpRes.Success {
 		return fmt.Errorf(setServiceTcpRes.ErrorMsg)
 	}
@@ -470,7 +470,7 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(), true, false)
+	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceTcpRes.Success {
 		return fmt.Errorf(deleteServiceTcpRes.ErrorMsg)
 	}

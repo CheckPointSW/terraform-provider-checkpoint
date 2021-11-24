@@ -55,7 +55,7 @@ func createManagementAssignGlobalAssignment(d *schema.ResourceData, m interface{
 		payload["global-domains"] = v.(*schema.Set).List()
 	}
 
-	AssignGlobalAssignmentRes, _ := client.ApiCall("assign-global-assignment", payload, client.GetSessionID(), true, false)
+	AssignGlobalAssignmentRes, _ := client.ApiCall("assign-global-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AssignGlobalAssignmentRes.Success {
 		return fmt.Errorf(AssignGlobalAssignmentRes.ErrorMsg)
 	}

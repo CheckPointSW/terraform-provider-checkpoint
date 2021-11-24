@@ -118,7 +118,7 @@ func createManagementInstallPolicy(d *schema.ResourceData, m interface{}) error 
 		payload["revision"] = v.(bool)
 	}
 
-	installPolicyRes, _ := client.ApiCall("install-policy", payload, client.GetSessionID(), true, false)
+	installPolicyRes, _ := client.ApiCall("install-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !installPolicyRes.Success {
 		return fmt.Errorf(installPolicyRes.ErrorMsg)
 	}

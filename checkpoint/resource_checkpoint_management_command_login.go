@@ -40,13 +40,13 @@ func resourceManagementLogin() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Login to the last published session. Such login is done with the Read Only permissions.",
+				Description: "commonLoginLogic to the last published session. Such login is done with the Read Only permissions.",
 			},
 			"read_only": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Login with Read Only permissions. This parameter is not considered in case continue-last-session is true.",
+				Description: "commonLoginLogic with Read Only permissions. This parameter is not considered in case continue-last-session is true.",
 			},
 			"session_comments": {
 				Type:        schema.TypeString,
@@ -112,7 +112,7 @@ func createManagementLogin(d *schema.ResourceData, m interface{}) error {
 		payload["session-timeout"] = v.(int)
 	}
 
-	loginRes, _ := client.ApiCall("login", payload, "", true, false)
+	loginRes, _ := client.ApiCall("login", payload, "", true, client.IsProxyUsed())
 	if !loginRes.Success {
 		return fmt.Errorf(loginRes.ErrorMsg)
 	}

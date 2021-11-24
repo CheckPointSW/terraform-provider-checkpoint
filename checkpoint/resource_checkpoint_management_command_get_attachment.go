@@ -47,7 +47,7 @@ func createManagementGetAttachment(d *schema.ResourceData, m interface{}) error 
 		payload["id"] = v.(string)
 	}
 
-	GetAttachmentRes, _ := client.ApiCall("get-attachment", payload, client.GetSessionID(), true, false)
+	GetAttachmentRes, _ := client.ApiCall("get-attachment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !GetAttachmentRes.Success {
 		return fmt.Errorf(GetAttachmentRes.ErrorMsg)
 	}

@@ -103,7 +103,7 @@ func dataSourceManagementApplicationSiteRead(d *schema.ResourceData, m interface
 		payload["uid"] = uid
 	}
 
-	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, false)
+	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

@@ -254,7 +254,7 @@ func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create UserTemplate - Map = ", userTemplate)
 
-	addUserTemplateRes, err := client.ApiCall("add-user-template", userTemplate, client.GetSessionID(), true, false)
+	addUserTemplateRes, err := client.ApiCall("add-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addUserTemplateRes.Success {
 		if addUserTemplateRes.ErrorMsg != "" {
 			return fmt.Errorf(addUserTemplateRes.ErrorMsg)
@@ -275,7 +275,7 @@ func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, false)
+	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -555,7 +555,7 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update UserTemplate - Map = ", userTemplate)
 
-	updateUserTemplateRes, err := client.ApiCall("set-user-template", userTemplate, client.GetSessionID(), true, false)
+	updateUserTemplateRes, err := client.ApiCall("set-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateUserTemplateRes.Success {
 		if updateUserTemplateRes.ErrorMsg != "" {
 			return fmt.Errorf(updateUserTemplateRes.ErrorMsg)
@@ -576,7 +576,7 @@ func deleteManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete UserTemplate")
 
-	deleteUserTemplateRes, err := client.ApiCall("delete-user-template", userTemplatePayload, client.GetSessionID(), true, false)
+	deleteUserTemplateRes, err := client.ApiCall("delete-user-template", userTemplatePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteUserTemplateRes.Success {
 		if deleteUserTemplateRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteUserTemplateRes.ErrorMsg)

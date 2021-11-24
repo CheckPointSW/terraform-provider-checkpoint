@@ -94,7 +94,7 @@ func createManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Create ServiceCitrixTcp - Map = ", serviceCitrixTcp)
 
-	addServiceCitrixTcpRes, err := client.ApiCall("add-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, false)
+	addServiceCitrixTcpRes, err := client.ApiCall("add-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceCitrixTcpRes.Success {
 		if addServiceCitrixTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceCitrixTcpRes.ErrorMsg)
@@ -115,7 +115,7 @@ func readManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) error
 		"uid": d.Id(),
 	}
 
-	showServiceCitrixTcpRes, err := client.ApiCall("show-service-citrix-tcp", payload, client.GetSessionID(), true, false)
+	showServiceCitrixTcpRes, err := client.ApiCall("show-service-citrix-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -210,7 +210,7 @@ func updateManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Update ServiceCitrixTcp - Map = ", serviceCitrixTcp)
 
-	updateServiceCitrixTcpRes, err := client.ApiCall("set-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, false)
+	updateServiceCitrixTcpRes, err := client.ApiCall("set-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceCitrixTcpRes.Success {
 		if updateServiceCitrixTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceCitrixTcpRes.ErrorMsg)
@@ -231,7 +231,7 @@ func deleteManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Delete ServiceCitrixTcp")
 
-	deleteServiceCitrixTcpRes, err := client.ApiCall("delete-service-citrix-tcp", serviceCitrixTcpPayload, client.GetSessionID(), true, false)
+	deleteServiceCitrixTcpRes, err := client.ApiCall("delete-service-citrix-tcp", serviceCitrixTcpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceCitrixTcpRes.Success {
 		if deleteServiceCitrixTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceCitrixTcpRes.ErrorMsg)

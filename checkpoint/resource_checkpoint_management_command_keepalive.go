@@ -20,7 +20,7 @@ func createManagementKeepalive(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	KeepaliveRes, _ := client.ApiCall("keepalive", payload, client.GetSessionID(), true, false)
+	KeepaliveRes, _ := client.ApiCall("keepalive", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !KeepaliveRes.Success {
 		return fmt.Errorf(KeepaliveRes.ErrorMsg)
 	}

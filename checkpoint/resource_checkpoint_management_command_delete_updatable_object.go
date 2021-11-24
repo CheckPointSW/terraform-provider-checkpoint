@@ -51,7 +51,7 @@ func createManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	DeleteUpdatableObjectRes, _ := client.ApiCall("delete-updatable-object", payload, client.GetSessionID(), true, false)
+	DeleteUpdatableObjectRes, _ := client.ApiCall("delete-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteUpdatableObjectRes.Success {
 		return fmt.Errorf(DeleteUpdatableObjectRes.ErrorMsg)
 	}

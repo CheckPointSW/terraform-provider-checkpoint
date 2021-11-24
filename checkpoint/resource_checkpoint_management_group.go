@@ -95,7 +95,7 @@ func createManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Group - Map = ", group)
 
-	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, false)
+	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGroupRes.Success {
 		if addGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addGroupRes.ErrorMsg)
@@ -116,7 +116,7 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showGroupRes, err := client.ApiCall("show-group", payload, client.GetSessionID(), true, false)
+	showGroupRes, err := client.ApiCall("show-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -221,7 +221,7 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Group - Map = ", group)
-	setGroupRes, _ := client.ApiCall("set-group", group, client.GetSessionID(), true, false)
+	setGroupRes, _ := client.ApiCall("set-group", group, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setGroupRes.Success {
 		return fmt.Errorf(setGroupRes.ErrorMsg)
 	}
@@ -234,7 +234,7 @@ func deleteManagementGroup(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteGroupRes, _ := client.ApiCall("delete-group", payload, client.GetSessionID(), true, false)
+	deleteGroupRes, _ := client.ApiCall("delete-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteGroupRes.Success {
 		return fmt.Errorf(deleteGroupRes.ErrorMsg)
 	}

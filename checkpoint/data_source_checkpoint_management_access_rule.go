@@ -275,7 +275,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, false)
+	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

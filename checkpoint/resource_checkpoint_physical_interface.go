@@ -280,7 +280,7 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		payload["ipv4-mask-length"] = v.(int)
 	}
 
-	setPIRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, false)
+	setPIRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
 	}
@@ -296,7 +296,7 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"name": d.Get("name"),
 	}
-	showPIRes, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, false)
+	showPIRes, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !showPIRes.Success {
 		// Handle deletion of an object from other clients - Object not found
 		if objectNotFound(showPIRes.GetData()["code"].(string)) {
@@ -353,7 +353,7 @@ func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 		payload["ipv4-mask-length"] = d.Get("ipv4_mask_length")
 	}
 
-	setNetworkRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, false)
+	setNetworkRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}

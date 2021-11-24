@@ -100,7 +100,7 @@ func createManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create TimeGroup - Map = ", timeGroup)
 
-	addTimeGroupRes, err := client.ApiCall("add-time-group", timeGroup, client.GetSessionID(), true, false)
+	addTimeGroupRes, err := client.ApiCall("add-time-group", timeGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTimeGroupRes.Success {
 		if addTimeGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addTimeGroupRes.ErrorMsg)
@@ -121,7 +121,7 @@ func readManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showTimeGroupRes, err := client.ApiCall("show-time-group", payload, client.GetSessionID(), true, false)
+	showTimeGroupRes, err := client.ApiCall("show-time-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -242,7 +242,7 @@ func updateManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update TimeGroup - Map = ", timeGroup)
 
-	updateTimeGroupRes, err := client.ApiCall("set-time-group", timeGroup, client.GetSessionID(), true, false)
+	updateTimeGroupRes, err := client.ApiCall("set-time-group", timeGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTimeGroupRes.Success {
 		if updateTimeGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(updateTimeGroupRes.ErrorMsg)
@@ -263,7 +263,7 @@ func deleteManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete TimeGroup")
 
-	deleteTimeGroupRes, err := client.ApiCall("delete-time-group", timeGroupPayload, client.GetSessionID(), true, false)
+	deleteTimeGroupRes, err := client.ApiCall("delete-time-group", timeGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTimeGroupRes.Success {
 		if deleteTimeGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteTimeGroupRes.ErrorMsg)

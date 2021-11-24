@@ -93,7 +93,7 @@ func dataSourceManagementAccessLayerRead(d *schema.ResourceData, m interface{}) 
 		payload["uid"] = uid
 	}
 
-	showAccessLayerRes, err := client.ApiCall("show-access-layer", payload, client.GetSessionID(), true, false)
+	showAccessLayerRes, err := client.ApiCall("show-access-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

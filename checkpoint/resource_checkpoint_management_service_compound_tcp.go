@@ -105,7 +105,7 @@ func createManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Create ServiceCompoundTcp - Map = ", serviceCompoundTcp)
 
-	addServiceCompoundTcpRes, err := client.ApiCall("add-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, false)
+	addServiceCompoundTcpRes, err := client.ApiCall("add-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceCompoundTcpRes.Success {
 		if addServiceCompoundTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceCompoundTcpRes.ErrorMsg)
@@ -126,7 +126,7 @@ func readManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
-	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, false)
+	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -229,7 +229,7 @@ func updateManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Update ServiceCompoundTcp - Map = ", serviceCompoundTcp)
 
-	updateServiceCompoundTcpRes, err := client.ApiCall("set-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, false)
+	updateServiceCompoundTcpRes, err := client.ApiCall("set-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceCompoundTcpRes.Success {
 		if updateServiceCompoundTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceCompoundTcpRes.ErrorMsg)
@@ -250,7 +250,7 @@ func deleteManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Delete ServiceCompoundTcp")
 
-	deleteServiceCompoundTcpRes, err := client.ApiCall("delete-service-compound-tcp", serviceCompoundTcpPayload, client.GetSessionID(), true, false)
+	deleteServiceCompoundTcpRes, err := client.ApiCall("delete-service-compound-tcp", serviceCompoundTcpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceCompoundTcpRes.Success {
 		if deleteServiceCompoundTcpRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceCompoundTcpRes.ErrorMsg)

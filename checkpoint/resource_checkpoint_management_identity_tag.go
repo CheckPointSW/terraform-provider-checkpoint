@@ -94,7 +94,7 @@ func createManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create IdentityTag - Map = ", identityTag)
 
-	addIdentityTagRes, err := client.ApiCall("add-identity-tag", identityTag, client.GetSessionID(), true, false)
+	addIdentityTagRes, err := client.ApiCall("add-identity-tag", identityTag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addIdentityTagRes.Success {
 		if addIdentityTagRes.ErrorMsg != "" {
 			return fmt.Errorf(addIdentityTagRes.ErrorMsg)
@@ -115,7 +115,7 @@ func readManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showIdentityTagRes, err := client.ApiCall("show-identity-tag", payload, client.GetSessionID(), true, false)
+	showIdentityTagRes, err := client.ApiCall("show-identity-tag", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -210,7 +210,7 @@ func updateManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update IdentityTag - Map = ", identityTag)
 
-	updateIdentityTagRes, err := client.ApiCall("set-identity-tag", identityTag, client.GetSessionID(), true, false)
+	updateIdentityTagRes, err := client.ApiCall("set-identity-tag", identityTag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateIdentityTagRes.Success {
 		if updateIdentityTagRes.ErrorMsg != "" {
 			return fmt.Errorf(updateIdentityTagRes.ErrorMsg)
@@ -231,7 +231,7 @@ func deleteManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete IdentityTag")
 
-	deleteIdentityTagRes, err := client.ApiCall("delete-identity-tag", identityTagPayload, client.GetSessionID(), true, false)
+	deleteIdentityTagRes, err := client.ApiCall("delete-identity-tag", identityTagPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteIdentityTagRes.Success {
 		if deleteIdentityTagRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteIdentityTagRes.ErrorMsg)

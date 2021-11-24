@@ -96,7 +96,7 @@ func createManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{})
 		payload["recurrence"] = res
 	}
 
-	SetIpsUpdateScheduleRes, _ := client.ApiCall("set-ips-update-schedule", payload, client.GetSessionID(), true, false)
+	SetIpsUpdateScheduleRes, _ := client.ApiCall("set-ips-update-schedule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetIpsUpdateScheduleRes.Success {
 		return fmt.Errorf(SetIpsUpdateScheduleRes.ErrorMsg)
 	}

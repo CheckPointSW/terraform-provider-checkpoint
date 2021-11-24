@@ -142,7 +142,7 @@ func createManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 
 	log.Println("Create MulticastAddressRange - Map = ", multicastAddressRange)
 
-	addMulticastAddressRangeRes, err := client.ApiCall("add-multicast-address-range", multicastAddressRange, client.GetSessionID(), true, false)
+	addMulticastAddressRangeRes, err := client.ApiCall("add-multicast-address-range", multicastAddressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addMulticastAddressRangeRes.Success {
 		if addMulticastAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(addMulticastAddressRangeRes.ErrorMsg)
@@ -163,7 +163,7 @@ func readManagementMulticastAddressRange(d *schema.ResourceData, m interface{}) 
 		"uid": d.Id(),
 	}
 
-	showMulticastAddressRangeRes, err := client.ApiCall("show-multicast-address-range", payload, client.GetSessionID(), true, false)
+	showMulticastAddressRangeRes, err := client.ApiCall("show-multicast-address-range", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -307,7 +307,7 @@ func updateManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 
 	log.Println("Update MulticastAddressRange - Map = ", multicastAddressRange)
 
-	updateMulticastAddressRangeRes, err := client.ApiCall("set-multicast-address-range", multicastAddressRange, client.GetSessionID(), true, false)
+	updateMulticastAddressRangeRes, err := client.ApiCall("set-multicast-address-range", multicastAddressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateMulticastAddressRangeRes.Success {
 		if updateMulticastAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(updateMulticastAddressRangeRes.ErrorMsg)
@@ -328,7 +328,7 @@ func deleteManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 
 	log.Println("Delete MulticastAddressRange")
 
-	deleteMulticastAddressRangeRes, err := client.ApiCall("delete-multicast-address-range", multicastAddressRangePayload, client.GetSessionID(), true, false)
+	deleteMulticastAddressRangeRes, err := client.ApiCall("delete-multicast-address-range", multicastAddressRangePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteMulticastAddressRangeRes.Success {
 		if deleteMulticastAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteMulticastAddressRangeRes.ErrorMsg)

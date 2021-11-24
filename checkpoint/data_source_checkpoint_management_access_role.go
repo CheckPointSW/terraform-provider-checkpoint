@@ -130,7 +130,7 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, false)
+	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

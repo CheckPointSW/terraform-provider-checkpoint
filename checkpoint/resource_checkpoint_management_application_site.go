@@ -150,7 +150,7 @@ func createManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Create ApplicationSite - Map = ", applicationSite)
 
-	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, false)
+	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteRes.Success {
 		if addApplicationSiteRes.ErrorMsg != "" {
 			return fmt.Errorf(addApplicationSiteRes.ErrorMsg)
@@ -171,7 +171,7 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
-	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, false)
+	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -349,7 +349,7 @@ func updateManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Update ApplicationSite - Map = ", applicationSite)
 
-	updateApplicationSiteRes, err := client.ApiCall("set-application-site", applicationSite, client.GetSessionID(), true, false)
+	updateApplicationSiteRes, err := client.ApiCall("set-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteRes.Success {
 		if updateApplicationSiteRes.ErrorMsg != "" {
 			return fmt.Errorf(updateApplicationSiteRes.ErrorMsg)
@@ -370,7 +370,7 @@ func deleteManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Delete ApplicationSite")
 
-	deleteApplicationSiteRes, err := client.ApiCall("delete-application-site", applicationSitePayload, client.GetSessionID(), true, false)
+	deleteApplicationSiteRes, err := client.ApiCall("delete-application-site", applicationSitePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteRes.Success {
 		if deleteApplicationSiteRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteApplicationSiteRes.ErrorMsg)

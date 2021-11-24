@@ -42,7 +42,7 @@ func createManagementInstallDatabase(d *schema.ResourceData, m interface{}) erro
 		payload["targets"] = v.(*schema.Set).List()
 	}
 
-	InstallDatabaseRes, _ := client.ApiCall("install-database", payload, client.GetSessionID(), true, false)
+	InstallDatabaseRes, _ := client.ApiCall("install-database", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallDatabaseRes.Success {
 		return fmt.Errorf(InstallDatabaseRes.ErrorMsg)
 	}

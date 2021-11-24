@@ -228,7 +228,7 @@ func createManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Service Udp - Map = ", serviceUdp)
 
-	addServiceUdpRes, err := client.ApiCall("add-service-udp", serviceUdp, client.GetSessionID(), true, false)
+	addServiceUdpRes, err := client.ApiCall("add-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceUdpRes.Success {
 		if addServiceUdpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceUdpRes.ErrorMsg)
@@ -249,7 +249,7 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, false)
+	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -473,7 +473,7 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Service Udp - Map = ", serviceUdp)
-	setServiceUdpRes, _ := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, false)
+	setServiceUdpRes, _ := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setServiceUdpRes.Success {
 		return fmt.Errorf(setServiceUdpRes.ErrorMsg)
 	}
@@ -486,7 +486,7 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(), true, false)
+	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceUdpRes.Success {
 		return fmt.Errorf(deleteServiceUdpRes.ErrorMsg)
 	}

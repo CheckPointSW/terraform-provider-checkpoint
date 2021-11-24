@@ -48,7 +48,7 @@ func testAccCheckCheckpointNatRulebase(resourceTfName string, res *map[string]in
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-nat-rulebase", map[string]interface{}{"package": "Standard", "filter": "Hide NAT", "limit": 1}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-nat-rulebase", map[string]interface{}{"package": "Standard", "filter": "Hide NAT", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

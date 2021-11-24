@@ -186,7 +186,7 @@ func createManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Create ExceptionGroup - Map = ", exceptionGroup)
 
-	addExceptionGroupRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, false)
+	addExceptionGroupRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addExceptionGroupRes.Success {
 		if addExceptionGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addExceptionGroupRes.ErrorMsg)
@@ -207,7 +207,7 @@ func readManagementExceptionGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, false)
+	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -390,7 +390,7 @@ func updateManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Update ExceptionGroup - Map = ", exceptionGroup)
 
-	updateExceptionGroupRes, err := client.ApiCall("set-exception-group", exceptionGroup, client.GetSessionID(), true, false)
+	updateExceptionGroupRes, err := client.ApiCall("set-exception-group", exceptionGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateExceptionGroupRes.Success {
 		if updateExceptionGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(updateExceptionGroupRes.ErrorMsg)
@@ -411,7 +411,7 @@ func deleteManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Delete ExceptionGroup")
 
-	deleteExceptionGroupRes, err := client.ApiCall("delete-exception-group", exceptionGroupPayload, client.GetSessionID(), true, false)
+	deleteExceptionGroupRes, err := client.ApiCall("delete-exception-group", exceptionGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteExceptionGroupRes.Success {
 		if deleteExceptionGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteExceptionGroupRes.ErrorMsg)

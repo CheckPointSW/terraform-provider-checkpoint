@@ -98,7 +98,7 @@ func createManagementExport(d *schema.ResourceData, m interface{}) error {
 		payload["query-limit"] = v.(int)
 	}
 
-	ExportRes, _ := client.ApiCall("export", payload, client.GetSessionID(), true, false)
+	ExportRes, _ := client.ApiCall("export", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !ExportRes.Success {
 		return fmt.Errorf(ExportRes.ErrorMsg)
 	}

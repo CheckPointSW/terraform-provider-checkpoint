@@ -115,7 +115,7 @@ func createManagementSetAutomaticPurge(d *schema.ResourceData, m interface{}) er
 		payload["scheduling"] = res
 	}
 
-	SetAutomaticPurgeRes, _ := client.ApiCall("set-automatic-purge", payload, client.GetSessionID(), true, false)
+	SetAutomaticPurgeRes, _ := client.ApiCall("set-automatic-purge", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetAutomaticPurgeRes.Success {
 		return fmt.Errorf(SetAutomaticPurgeRes.ErrorMsg)
 	}

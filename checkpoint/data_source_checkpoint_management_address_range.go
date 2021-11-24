@@ -127,7 +127,7 @@ func dataSourceManagementAddressRangeRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, false)
+	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

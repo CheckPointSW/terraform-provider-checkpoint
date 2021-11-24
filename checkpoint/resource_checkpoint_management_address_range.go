@@ -185,7 +185,7 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Address Range - Map = ", addressRange)
 
-	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true, false)
+	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAddressRangeRes.Success {
 		if addAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(addAddressRangeRes.ErrorMsg)
@@ -206,7 +206,7 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, false)
+	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -392,7 +392,7 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Address Range - Map = ", addressRange)
-	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true, false)
+	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAddressRangeRes.Success {
 		if updateAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAddressRangeRes.ErrorMsg)
@@ -411,7 +411,7 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, false)
+	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAddressRangeRes.Success {
 		if deleteAddressRangeRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAddressRangeRes.ErrorMsg)

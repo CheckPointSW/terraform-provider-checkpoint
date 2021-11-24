@@ -68,7 +68,7 @@ func dataSourceManagementExceptionGroupRead(d *schema.ResourceData, m interface{
 		payload["uid"] = uid
 	}
 
-	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, false)
+	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

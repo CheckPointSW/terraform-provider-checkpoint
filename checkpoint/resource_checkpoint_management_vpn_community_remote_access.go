@@ -106,7 +106,7 @@ func createManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, false)
+	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetVpnCommunityRemoteAccessRes.Success {
 		return fmt.Errorf(SetVpnCommunityRemoteAccessRes.ErrorMsg)
 	}
@@ -172,7 +172,7 @@ func updateManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, false)
+	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetVpnCommunityRemoteAccessRes.Success {
 		return fmt.Errorf(SetVpnCommunityRemoteAccessRes.ErrorMsg)
 	}
@@ -187,7 +187,7 @@ func readManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interface{
 		"uid": d.Id(),
 	}
 
-	showVpnCommunityRemoteAccessRes, err := client.ApiCall("show-vpn-community-remote-access", payload, client.GetSessionID(), true, false)
+	showVpnCommunityRemoteAccessRes, err := client.ApiCall("show-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

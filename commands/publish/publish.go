@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, false)
+	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, apiClient.IsProxyUsed())
 	if err != nil {
 		fmt.Println("Publish error: " + err.Error())
 		os.Exit(1)

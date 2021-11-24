@@ -64,5 +64,5 @@ The following arguments are supported:
 `checkpoint_management_threat_rule` can be imported by using the following format: LAYER_NAME;RULE_UID
 
 ```
-$ terraform import checkpoint_management_threat_rule.example Layer_Name;9423d36f-2d66-4754-b9e2-e9f4493751d3
+$ terraform import checkpoint_management_threat_rule.example "Layer_Name;9423d36f-2d66-4754-b9e2-e9f4493751d3"
 ```

@@ -88,7 +88,7 @@ func createManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create DynamicObject - Map = ", dynamicObject)
 
-	addDynamicObjectRes, err := client.ApiCall("add-dynamic-object", dynamicObject, client.GetSessionID(), true, false)
+	addDynamicObjectRes, err := client.ApiCall("add-dynamic-object", dynamicObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDynamicObjectRes.Success {
 		if addDynamicObjectRes.ErrorMsg != "" {
 			return fmt.Errorf(addDynamicObjectRes.ErrorMsg)
@@ -109,7 +109,7 @@ func readManagementDynamicObject(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showDynamicObjectRes, err := client.ApiCall("show-dynamic-object", payload, client.GetSessionID(), true, false)
+	showDynamicObjectRes, err := client.ApiCall("show-dynamic-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -205,7 +205,7 @@ func updateManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update DynamicObject - Map = ", dynamicObject)
 
-	updateDynamicObjectRes, err := client.ApiCall("set-dynamic-object", dynamicObject, client.GetSessionID(), true, false)
+	updateDynamicObjectRes, err := client.ApiCall("set-dynamic-object", dynamicObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDynamicObjectRes.Success {
 		if updateDynamicObjectRes.ErrorMsg != "" {
 			return fmt.Errorf(updateDynamicObjectRes.ErrorMsg)
@@ -226,7 +226,7 @@ func deleteManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Delete DynamicObject")
 
-	deleteDynamicObjectRes, err := client.ApiCall("delete-dynamic-object", dynamicObjectPayload, client.GetSessionID(), true, false)
+	deleteDynamicObjectRes, err := client.ApiCall("delete-dynamic-object", dynamicObjectPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDynamicObjectRes.Success {
 		if deleteDynamicObjectRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteDynamicObjectRes.ErrorMsg)

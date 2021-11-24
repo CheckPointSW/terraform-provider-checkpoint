@@ -75,7 +75,7 @@ func dataSourceManagementServiceRpcRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, false)
+	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

@@ -71,7 +71,7 @@ func createManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 		payload["indirect-max-depth"] = v.(int)
 	}
 
-	WhereUsedRes, _ := client.ApiCall("where-used", payload, client.GetSessionID(), true, false)
+	WhereUsedRes, _ := client.ApiCall("where-used", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !WhereUsedRes.Success {
 		return fmt.Errorf(WhereUsedRes.ErrorMsg)
 	}

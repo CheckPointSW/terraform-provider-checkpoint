@@ -176,7 +176,7 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 		}
 	}
 
-	showObjectsRes, err := client.ApiCall("show-objects", payload, client.GetSessionID(), true, false)
+	showObjectsRes, err := client.ApiCall("show-objects", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

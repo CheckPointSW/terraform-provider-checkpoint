@@ -123,7 +123,7 @@ func dataSourceManagementMdsRead(d *schema.ResourceData, m interface{}) error {
 		payload["uid"] = uid
 	}
 
-	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, false)
+	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

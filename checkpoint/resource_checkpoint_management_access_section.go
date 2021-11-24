@@ -122,7 +122,7 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create AccessSection - Map = ", accessSection)
 
-	addAccessSectionRes, err := client.ApiCall("add-access-section", accessSection, client.GetSessionID(), true, false)
+	addAccessSectionRes, err := client.ApiCall("add-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessSectionRes.Success {
 		if addAccessSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessSectionRes.ErrorMsg)
@@ -144,7 +144,7 @@ func readManagementAccessSection(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, false)
+	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -207,7 +207,7 @@ func updateManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update AccessSection - Map = ", accessSection)
 
-	updateAccessSectionRes, err := client.ApiCall("set-access-section", accessSection, client.GetSessionID(), true, false)
+	updateAccessSectionRes, err := client.ApiCall("set-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessSectionRes.Success {
 		if updateAccessSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessSectionRes.ErrorMsg)
@@ -229,7 +229,7 @@ func deleteManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Delete AccessSection")
 
-	deleteAccessSectionRes, err := client.ApiCall("delete-access-section", accessSectionPayload, client.GetSessionID(), true, false)
+	deleteAccessSectionRes, err := client.ApiCall("delete-access-section", accessSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessSectionRes.Success {
 		if deleteAccessSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAccessSectionRes.ErrorMsg)

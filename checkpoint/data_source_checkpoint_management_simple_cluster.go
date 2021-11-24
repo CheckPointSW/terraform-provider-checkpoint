@@ -198,7 +198,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Computed:    true,
 							Description: "IPv4 or IPv6 address.",
 						},
-						"sic_name": {
+						"sic_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Secure Internal Communication name.",
@@ -894,7 +894,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 		payload["uid"] = uid
 	}
 
-	showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, false)
+	showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -910,7 +910,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			totalInterfaces := int(total.(float64))
 			if totalInterfaces > 50 {
 				payload["limit-interfaces"] = totalInterfaces
-				showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, false)
+				showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil {
 					return fmt.Errorf(err.Error())
 				}

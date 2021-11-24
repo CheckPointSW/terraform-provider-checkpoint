@@ -13,7 +13,7 @@ func TestAccDataSourceCheckpointManagementGenericDataCenterServer_basic(t *testi
 	objName := "tfTestManagementDataGenericDataCenterServer_" + acctest.RandString(6)
 	resourceName := "checkpoint_management_generic_data_center_server.generic_data_center_server"
 	dataSourceName := "data.checkpoint_management_generic_data_center_server.generic_data_center_server"
-	url := "/home/admin/test.json"
+	url := "MY_URL"
 	interval := "60"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
@@ -42,6 +42,7 @@ resource "checkpoint_management_generic_data_center_server" "generic_data_center
     name = "%s"
 	url = "%s"
 	interval = "%s"
+	ignore_warnings = true
 }
 
 data "checkpoint_management_generic_data_center_server" "generic_data_center_server" {

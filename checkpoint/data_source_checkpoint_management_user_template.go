@@ -157,7 +157,7 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, false)
+	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

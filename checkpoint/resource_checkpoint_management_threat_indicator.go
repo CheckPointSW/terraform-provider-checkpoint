@@ -283,7 +283,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Create Threat Indicator - Map = ", threatIndicator)
 
-	threatIndicatorRes, err := client.ApiCall("add-threat-indicator", threatIndicator, client.GetSessionID(), true, false)
+	threatIndicatorRes, err := client.ApiCall("add-threat-indicator", threatIndicator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -304,7 +304,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		"name": d.Get("name"),
 	}
 
-	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, false)
+	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -329,7 +329,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error 
 		"name": d.Get("name"),
 	}
 
-	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, false)
+	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -487,7 +487,7 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	}
 
 	log.Println("Update Threat Indicator - Map = ", threatIndicator)
-	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true, false)
+	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatIndicatorRes.Success {
 		if updateThreatIndicatorRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatIndicatorRes.ErrorMsg)
@@ -506,7 +506,7 @@ func deleteManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 		"name": d.Get("name"),
 	}
 
-	deleteThreatIndicatorRes, err := client.ApiCall("delete-threat-indicator", threatIndicatorPayload, client.GetSessionID(), true, false)
+	deleteThreatIndicatorRes, err := client.ApiCall("delete-threat-indicator", threatIndicatorPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatIndicatorRes.Success {
 		if deleteThreatIndicatorRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteThreatIndicatorRes.ErrorMsg)

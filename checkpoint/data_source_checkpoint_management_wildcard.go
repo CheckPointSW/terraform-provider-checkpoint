@@ -86,7 +86,7 @@ func dataSourceManagementWildcardRead(d *schema.ResourceData, m interface{}) err
 		payload["uid"] = uid
 	}
 
-	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, false)
+	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

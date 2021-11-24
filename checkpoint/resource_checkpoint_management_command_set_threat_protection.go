@@ -112,7 +112,7 @@ func createManagementSetThreatProtection(d *schema.ResourceData, m interface{}) 
 		}
 	}
 
-	SetThreatProtectionRes, _ := client.ApiCall("set-threat-protection", payload, client.GetSessionID(), true, false)
+	SetThreatProtectionRes, _ := client.ApiCall("set-threat-protection", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetThreatProtectionRes.Success {
 		return fmt.Errorf(SetThreatProtectionRes.ErrorMsg)
 	}

@@ -76,7 +76,7 @@ func createManagementRestoreDomain(d *schema.ResourceData, m interface{}) error 
 		payload["verify-only"] = v.(bool)
 	}
 
-	RestoreDomainRes, _ := client.ApiCall("restore-domain", payload, client.GetSessionID(), true, false)
+	RestoreDomainRes, _ := client.ApiCall("restore-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RestoreDomainRes.Success {
 		return fmt.Errorf(RestoreDomainRes.ErrorMsg)
 	}

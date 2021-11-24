@@ -807,7 +807,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		payload["uid"] = uid
 	}
 
-	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, false)
+	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

@@ -150,7 +150,7 @@ func dataSourceManagementServiceUdpRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, false)
+	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

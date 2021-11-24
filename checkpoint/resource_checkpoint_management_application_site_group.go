@@ -100,7 +100,7 @@ func createManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 
 	log.Println("Create ApplicationSiteGroup - Map = ", applicationSiteGroup)
 
-	addApplicationSiteGroupRes, err := client.ApiCall("add-application-site-group", applicationSiteGroup, client.GetSessionID(), true, false)
+	addApplicationSiteGroupRes, err := client.ApiCall("add-application-site-group", applicationSiteGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteGroupRes.Success {
 		if addApplicationSiteGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addApplicationSiteGroupRes.ErrorMsg)
@@ -121,7 +121,7 @@ func readManagementApplicationSiteGroup(d *schema.ResourceData, m interface{}) e
 		"uid": d.Id(),
 	}
 
-	showApplicationSiteGroupRes, err := client.ApiCall("show-application-site-group", payload, client.GetSessionID(), true, false)
+	showApplicationSiteGroupRes, err := client.ApiCall("show-application-site-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -242,7 +242,7 @@ func updateManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 
 	log.Println("Update ApplicationSiteGroup - Map = ", applicationSiteGroup)
 
-	updateApplicationSiteGroupRes, err := client.ApiCall("set-application-site-group", applicationSiteGroup, client.GetSessionID(), true, false)
+	updateApplicationSiteGroupRes, err := client.ApiCall("set-application-site-group", applicationSiteGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteGroupRes.Success {
 		if updateApplicationSiteGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(updateApplicationSiteGroupRes.ErrorMsg)
@@ -263,7 +263,7 @@ func deleteManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 
 	log.Println("Delete ApplicationSiteGroup")
 
-	deleteApplicationSiteGroupRes, err := client.ApiCall("delete-application-site-group", applicationSiteGroupPayload, client.GetSessionID(), true, false)
+	deleteApplicationSiteGroupRes, err := client.ApiCall("delete-application-site-group", applicationSiteGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteGroupRes.Success {
 		if deleteApplicationSiteGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteApplicationSiteGroupRes.ErrorMsg)

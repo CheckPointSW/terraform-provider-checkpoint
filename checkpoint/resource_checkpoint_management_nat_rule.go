@@ -232,7 +232,7 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create NAT Rule - Map = ", natRule)
 
-	addNatRuleRes, err := client.ApiCall("add-nat-rule", natRule, client.GetSessionID(), true, false)
+	addNatRuleRes, err := client.ApiCall("add-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatRuleRes.Success {
 		if addNatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addNatRuleRes.ErrorMsg)
@@ -254,7 +254,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 		"package": d.Get("package"),
 	}
 
-	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, false)
+	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -430,7 +430,7 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update NAT Rule - Map = ", natRule)
 
-	updateNatRuleRes, err := client.ApiCall("set-nat-rule", natRule, client.GetSessionID(), true, false)
+	updateNatRuleRes, err := client.ApiCall("set-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatRuleRes.Success {
 		if updateNatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateNatRuleRes.ErrorMsg)
@@ -449,7 +449,7 @@ func deleteManagementNatRule(d *schema.ResourceData, m interface{}) error {
 		"package": d.Get("package"),
 	}
 
-	deleteAccessRuleRes, err := client.ApiCall("delete-nat-rule", natRulePayload, client.GetSessionID(), true, false)
+	deleteAccessRuleRes, err := client.ApiCall("delete-nat-rule", natRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)

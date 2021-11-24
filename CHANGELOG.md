@@ -1,3 +1,43 @@
+## 1.6.0 (November 24, 2021)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_aws_data_center_server`
+* **New Resource:** `resource_checkpoint_management_azure_data_center_server`
+* **New Resource:** `resource_checkpoint_management_gcp_data_center_server`
+* **New Resource:** `resource_checkpoint_management_vmware_data_center_server`
+* **New Resource:** `resource_checkpoint_management_aci_data_center_server`
+* **New Resource:** `resource_checkpoint_management_ise_data_center_server`
+* **New Resource:** `resource_checkpoint_management_nuage_data_center_server`
+* **New Resource:** `resource_checkpoint_management_openstack_data_center_server`
+* **New Resource:** `resource_checkpoint_management_kubernetes_data_center_server`
+* **New Resource:** `resource_checkpoint_management_data_center_query`
+* **New Data Source:** `data_source_checkpoint_management_aws_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_azure_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_gcp_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_vmware_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_aci_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_ise_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_nuage_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_openstack_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_kubernetes_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_data_center_query`
+* **New Data Source:** `data_source_checkpoint_management_data_center_content`
+* **New Data Source:** `data_source_checkpoint_management_access_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_threat_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_https_rulebase`
+
+ENHANCEMENTS
+
+* Add support to authenticate management server with api key using `api_key` or via environment variable `CHECKPOINT_API_KEY`.
+* Add support to select proxy host using `proxy_host` or via environment variable `CHECKPOINT_PROXY_HOST`.
+* Add support to select proxy port using `proxy_port` or via environment variable `CHECKPOINT_PROXY_PORT`.
+
+BUG FIXES
+
+* `resource_checkpoint_management_simple_cluster` - Fix bug that the `members` field did not import properly.
+* `data_source_checkpoint_management_nat_rulebase` - Save all relevant fields in read function.
+
 ## 1.5.0 (October 28, 2021)
 
 FEATURES

@@ -62,7 +62,7 @@ func dataSourceManagementIdentityTagRead(d *schema.ResourceData, m interface{}) 
 		payload["uid"] = uid
 	}
 
-	showIdentityTagRes, err := client.ApiCall("show-identity-tag", payload, client.GetSessionID(), true, false)
+	showIdentityTagRes, err := client.ApiCall("show-identity-tag", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

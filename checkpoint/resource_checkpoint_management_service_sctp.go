@@ -205,7 +205,7 @@ func createManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create ServiceSctp - Map = ", serviceSctp)
 
-	addServiceSctpRes, err := client.ApiCall("add-service-sctp", serviceSctp, client.GetSessionID(), true, false)
+	addServiceSctpRes, err := client.ApiCall("add-service-sctp", serviceSctp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceSctpRes.Success {
 		if addServiceSctpRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceSctpRes.ErrorMsg)
@@ -226,7 +226,7 @@ func readManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, false)
+	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -433,7 +433,7 @@ func updateManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update ServiceSctp - Map = ", serviceSctp)
 
-	updateServiceSctpRes, err := client.ApiCall("set-service-sctp", serviceSctp, client.GetSessionID(), true, false)
+	updateServiceSctpRes, err := client.ApiCall("set-service-sctp", serviceSctp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceSctpRes.Success {
 		if updateServiceSctpRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceSctpRes.ErrorMsg)
@@ -454,7 +454,7 @@ func deleteManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete ServiceSctp")
 
-	deleteServiceSctpRes, err := client.ApiCall("delete-service-sctp", serviceSctpPayload, client.GetSessionID(), true, false)
+	deleteServiceSctpRes, err := client.ApiCall("delete-service-sctp", serviceSctpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceSctpRes.Success {
 		if deleteServiceSctpRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceSctpRes.ErrorMsg)

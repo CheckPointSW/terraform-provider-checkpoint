@@ -149,7 +149,7 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Package - Map = ", _package)
 
-	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true, false)
+	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addPackageRes.Success {
 		if addPackageRes.ErrorMsg != "" {
 			return fmt.Errorf(addPackageRes.ErrorMsg)
@@ -170,7 +170,7 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, false)
+	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -336,7 +336,7 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Package - Map = ", _package)
-	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true, false)
+	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updatePackageRes.Success {
 		if updatePackageRes.ErrorMsg != "" {
 			return fmt.Errorf(updatePackageRes.ErrorMsg)
@@ -355,7 +355,7 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	deletePackageRes, err := client.ApiCall("delete-package", packagePayload, client.GetSessionID(), true, false)
+	deletePackageRes, err := client.ApiCall("delete-package", packagePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deletePackageRes.Success {
 		if deletePackageRes.ErrorMsg != "" {
 			return fmt.Errorf(deletePackageRes.ErrorMsg)

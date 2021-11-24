@@ -76,7 +76,7 @@ func dataSourceManagementGroupWithExclusionRead(d *schema.ResourceData, m interf
 		payload["uid"] = uid
 	}
 
-	showGroupWithExclusionRes, err := client.ApiCall("show-group-with-exclusion", payload, client.GetSessionID(), true, false)
+	showGroupWithExclusionRes, err := client.ApiCall("show-group-with-exclusion", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

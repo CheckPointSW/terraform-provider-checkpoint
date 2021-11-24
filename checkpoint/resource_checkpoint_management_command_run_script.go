@@ -82,7 +82,7 @@ func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
 		payload["comments"] = v.(string)
 	}
 
-	RunScriptRes, _ := client.ApiCall("run-script", payload, client.GetSessionID(), true, false)
+	RunScriptRes, _ := client.ApiCall("run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RunScriptRes.Success {
 		return fmt.Errorf(RunScriptRes.ErrorMsg)
 	}

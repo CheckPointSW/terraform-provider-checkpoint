@@ -46,7 +46,7 @@ func createManagementAddThreatProtections(d *schema.ResourceData, m interface{})
 		payload["package-path"] = v.(string)
 	}
 
-	AddThreatProtectionsRes, _ := client.ApiCall("add-threat-protections", payload, client.GetSessionID(), true, false)
+	AddThreatProtectionsRes, _ := client.ApiCall("add-threat-protections", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddThreatProtectionsRes.Success {
 		return fmt.Errorf(AddThreatProtectionsRes.ErrorMsg)
 	}

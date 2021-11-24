@@ -34,5 +34,5 @@ data "checkpoint_management_data_access_role" "data_access_role" {
 
 The following arguments are supported:
 
-* `name` - (Required if uid is not given) Object name.
-* `uid` - (Required name uid is not given) Object unique identifier.
+* `name` - (Optional) Object name.
+* `uid` - (Optional) Object unique identifier.

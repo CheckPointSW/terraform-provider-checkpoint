@@ -47,7 +47,7 @@ func createManagementHaFullSync(d *schema.ResourceData, m interface{}) error {
 		payload["uid"] = v.(string)
 	}
 
-	HaFullSyncRes, _ := client.ApiCall("ha-full-sync", payload, client.GetSessionID(), true, false)
+	HaFullSyncRes, _ := client.ApiCall("ha-full-sync", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !HaFullSyncRes.Success {
 		return fmt.Errorf(HaFullSyncRes.ErrorMsg)
 	}

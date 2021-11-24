@@ -115,7 +115,7 @@ func createManagementServiceIcmp6(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create ServiceIcmp6 - Map = ", serviceIcmp6)
 
-	addServiceIcmp6Res, err := client.ApiCall("add-service-icmp6", serviceIcmp6, client.GetSessionID(), true, false)
+	addServiceIcmp6Res, err := client.ApiCall("add-service-icmp6", serviceIcmp6, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceIcmp6Res.Success {
 		if addServiceIcmp6Res.ErrorMsg != "" {
 			return fmt.Errorf(addServiceIcmp6Res.ErrorMsg)
@@ -136,7 +136,7 @@ func readManagementServiceIcmp6(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceIcmp6Res, err := client.ApiCall("show-service-icmp6", payload, client.GetSessionID(), true, false)
+	showServiceIcmp6Res, err := client.ApiCall("show-service-icmp6", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -256,7 +256,7 @@ func updateManagementServiceIcmp6(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update ServiceIcmp6 - Map = ", serviceIcmp6)
 
-	updateServiceIcmp6Res, err := client.ApiCall("set-service-icmp6", serviceIcmp6, client.GetSessionID(), true, false)
+	updateServiceIcmp6Res, err := client.ApiCall("set-service-icmp6", serviceIcmp6, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceIcmp6Res.Success {
 		if updateServiceIcmp6Res.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceIcmp6Res.ErrorMsg)
@@ -277,7 +277,7 @@ func deleteManagementServiceIcmp6(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete ServiceIcmp6")
 
-	deleteServiceIcmp6Res, err := client.ApiCall("delete-service-icmp6", serviceIcmp6Payload, client.GetSessionID(), true, false)
+	deleteServiceIcmp6Res, err := client.ApiCall("delete-service-icmp6", serviceIcmp6Payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceIcmp6Res.Success {
 		if deleteServiceIcmp6Res.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceIcmp6Res.ErrorMsg)

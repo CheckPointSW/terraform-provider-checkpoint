@@ -136,7 +136,7 @@ func createManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) 
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	AddDataCenterObjectRes, _ := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, false)
+	AddDataCenterObjectRes, _ := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddDataCenterObjectRes.Success {
 		return fmt.Errorf(AddDataCenterObjectRes.ErrorMsg)
 	}

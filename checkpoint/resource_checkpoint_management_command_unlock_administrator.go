@@ -31,7 +31,7 @@ func createManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) 
 		payload["name"] = v.(string)
 	}
 
-	UnlockAdministratorRes, _ := client.ApiCall("unlock-administrator", payload, client.GetSessionID(), true, false)
+	UnlockAdministratorRes, _ := client.ApiCall("unlock-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UnlockAdministratorRes.Success {
 		return fmt.Errorf(UnlockAdministratorRes.ErrorMsg)
 	}

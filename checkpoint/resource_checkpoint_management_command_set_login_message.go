@@ -17,13 +17,13 @@ func resourceManagementSetLoginMessage() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Login message header.",
+				Description: "commonLoginLogic message header.",
 			},
 			"message": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Login message body.",
+				Description: "commonLoginLogic message body.",
 			},
 			"show_message": {
 				Type:        schema.TypeBool,
@@ -61,7 +61,7 @@ func createManagementSetLoginMessage(d *schema.ResourceData, m interface{}) erro
 		payload["warning"] = v.(bool)
 	}
 
-	SetLoginMessageRes, _ := client.ApiCall("set-login-message", payload, client.GetSessionID(), true, false)
+	SetLoginMessageRes, _ := client.ApiCall("set-login-message", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetLoginMessageRes.Success {
 		return fmt.Errorf(SetLoginMessageRes.ErrorMsg)
 	}

@@ -175,7 +175,7 @@ func dataSourceManagementThreatExceptionRead(d *schema.ResourceData, m interface
 		payload["rule-name"] = v.(string)
 	}
 
-	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, false)
+	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

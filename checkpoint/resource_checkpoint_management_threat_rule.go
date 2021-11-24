@@ -301,7 +301,7 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Threat Rule - Map = ", threatRule)
 
-	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, false)
+	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatRuleRes.Success {
 		if addThreatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addThreatRuleRes.ErrorMsg)
@@ -323,7 +323,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	showThreatRuleRes, err := client.ApiCall("show-threat-rule", payload, client.GetSessionID(), true, false)
+	showThreatRuleRes, err := client.ApiCall("show-threat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -624,7 +624,7 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Threat Rule - Map = ", threatRule)
 
-	updateThreatRuleRes, err := client.ApiCall("set-threat-rule", threatRule, client.GetSessionID(), true, false)
+	updateThreatRuleRes, err := client.ApiCall("set-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatRuleRes.Success {
 		if updateThreatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatRuleRes.ErrorMsg)
@@ -642,7 +642,7 @@ func deleteManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, false)
+	deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatRuleRes.Success {
 		if deleteThreatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteThreatRuleRes.ErrorMsg)

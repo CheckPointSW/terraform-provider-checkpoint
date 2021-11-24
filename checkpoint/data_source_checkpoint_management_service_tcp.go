@@ -145,7 +145,7 @@ func dataSourceManagementServiceTcpRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, false)
+	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

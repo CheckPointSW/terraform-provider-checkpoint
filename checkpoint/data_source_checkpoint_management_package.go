@@ -96,7 +96,7 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 		payload["uid"] = uid
 	}
 
-	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, false)
+	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

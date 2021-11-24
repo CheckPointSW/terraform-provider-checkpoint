@@ -60,6 +60,8 @@ The following arguments are supported:
   the `CHECKPOINT_USERNAME` environment variable.
 * `password` - (Optional) Check Point Management admin password. It must be provided, but can also be defined via
   the `CHECKPOINT_PASSWORD` environment variable.
+* `api_key` - (Optional) Check Point Management admin api key. this can also be defined via
+  the `CHECKPOINT_API_KEY` environment variable.
 * `context` - (Optional) Check Point access context - `web_api` or `gaia_api`. This can also be defined via
   the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
 * `domain` - (Optional) Login to specific domain. Domain can be identified by name or UID. This can also be defined via
@@ -70,6 +72,10 @@ The following arguments are supported:
   environment variable. Default value is `443`.
 * `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
   the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
+* `proxy_host` - (Optional) Proxy host used for proxy connections. this can also be defined via
+  the `CHECKPOINT_PROXY_HOST` environment variable.
+* `proxy_port` - (Optional) Proxy port used for proxy connections. this can also be defined via
+  the `CHECKPOINT_PROXY_PORT` environment variable.
 
 ## Authentication
 
@@ -80,13 +86,22 @@ The Check Point provider offers providing credentials for authentication. The fo
 
 ### Static credentials
 
-Usage:
+Usage with username and password:
 
 ```hcl
 provider "checkpoint" {
   server   = "192.0.2.1"
   username = "aa"
   password = "aaaa"
+  context  = "web_api"
+  domain   = "Domain Name"
+}
+```
+Usage with api key:
+```hcl
+provider "checkpoint" {
+  server   = "192.0.2.1"
+  api_key = "tBdloE9eOYzzSQicNxS7mA=="
   context  = "web_api"
   domain   = "Domain Name"
 }

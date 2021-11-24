@@ -74,7 +74,7 @@ func dataSourceManagementVpnCommunityRemoteAccessRead(d *schema.ResourceData, m 
 		payload["uid"] = uid
 	}
 
-	showVpnCommunityRemoteAccessRes, err := client.ApiCall("show-vpn-community-remote-access", payload, client.GetSessionID(), true, false)
+	showVpnCommunityRemoteAccessRes, err := client.ApiCall("show-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

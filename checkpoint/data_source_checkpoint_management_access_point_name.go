@@ -81,7 +81,7 @@ func dataSourceManagementAccessPointNameRead(d *schema.ResourceData, m interface
 		payload["uid"] = uid
 	}
 
-	showAccessPointNameRes, err := client.ApiCall("show-access-point-name", payload, client.GetSessionID(), true, false)
+	showAccessPointNameRes, err := client.ApiCall("show-access-point-name", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

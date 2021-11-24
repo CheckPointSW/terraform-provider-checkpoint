@@ -233,7 +233,7 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create AccessRole - Map = ", accessRole)
 
-	addAccessRoleRes, err := client.ApiCall("add-access-role", accessRole, client.GetSessionID(), true, false)
+	addAccessRoleRes, err := client.ApiCall("add-access-role", accessRole, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRoleRes.Success {
 		if addAccessRoleRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessRoleRes.ErrorMsg)
@@ -253,7 +253,7 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, false)
+	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -549,7 +549,7 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update AccessRole - Map = ", accessRole)
 
-	updateAccessRoleRes, err := client.ApiCall("set-access-role", accessRole, client.GetSessionID(), true, false)
+	updateAccessRoleRes, err := client.ApiCall("set-access-role", accessRole, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessRoleRes.Success {
 		if updateAccessRoleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessRoleRes.ErrorMsg)
@@ -570,7 +570,7 @@ func deleteManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete AccessRole")
 
-	deleteAccessRoleRes, err := client.ApiCall("delete-access-role", accessRolePayload, client.GetSessionID(), true, false)
+	deleteAccessRoleRes, err := client.ApiCall("delete-access-role", accessRolePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRoleRes.Success {
 		if deleteAccessRoleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAccessRoleRes.ErrorMsg)

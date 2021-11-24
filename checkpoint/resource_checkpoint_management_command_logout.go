@@ -29,7 +29,7 @@ func resourceManagementLogout() *schema.Resource {
 func createManagementLogout(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), client.GetSessionID(), true, false)
+	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), client.GetSessionID(), true, client.IsProxyUsed())
 	if !logoutRes.Success {
 		return fmt.Errorf(logoutRes.ErrorMsg)
 	}

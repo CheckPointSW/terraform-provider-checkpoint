@@ -93,7 +93,7 @@ func createManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) e
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	AddUpdatableObjectRes, _ := client.ApiCall("add-updatable-object", payload, client.GetSessionID(), true, false)
+	AddUpdatableObjectRes, _ := client.ApiCall("add-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddUpdatableObjectRes.Success {
 		return fmt.Errorf(AddUpdatableObjectRes.ErrorMsg)
 	}
