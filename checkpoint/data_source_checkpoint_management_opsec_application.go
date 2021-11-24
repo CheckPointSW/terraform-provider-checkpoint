@@ -108,7 +108,7 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 		payload["uid"] = uid
 	}
 
-	showOpsecApplicationRes, err := client.ApiCall("show-opsec-application", payload, client.GetSessionID(), true, false)
+	showOpsecApplicationRes, err := client.ApiCall("show-opsec-application", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

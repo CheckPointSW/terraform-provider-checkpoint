@@ -124,7 +124,7 @@ func createManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Wildcard - Map = ", wildcard)
 
-	addWildcardRes, err := client.ApiCall("add-wildcard", wildcard, client.GetSessionID(), true, false)
+	addWildcardRes, err := client.ApiCall("add-wildcard", wildcard, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addWildcardRes.Success {
 		if addWildcardRes.ErrorMsg != "" {
 			return fmt.Errorf(addWildcardRes.ErrorMsg)
@@ -145,7 +145,7 @@ func readManagementWildcard(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, false)
+	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -273,7 +273,7 @@ func updateManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Wildcard - Map = ", wildcard)
 
-	updateWildcardRes, err := client.ApiCall("set-wildcard", wildcard, client.GetSessionID(), true, false)
+	updateWildcardRes, err := client.ApiCall("set-wildcard", wildcard, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateWildcardRes.Success {
 		if updateWildcardRes.ErrorMsg != "" {
 			return fmt.Errorf(updateWildcardRes.ErrorMsg)
@@ -294,7 +294,7 @@ func deleteManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete Wildcard")
 
-	deleteWildcardRes, err := client.ApiCall("delete-wildcard", wildcardPayload, client.GetSessionID(), true, false)
+	deleteWildcardRes, err := client.ApiCall("delete-wildcard", wildcardPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteWildcardRes.Success {
 		if deleteWildcardRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteWildcardRes.ErrorMsg)

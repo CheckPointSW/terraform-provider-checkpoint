@@ -85,7 +85,7 @@ func dataSourceGenericDataCenterServerRead(d *schema.ResourceData, m interface{}
 	} else if uid != "" {
 		payload["uid"] = uid
 	}
-	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, false)
+	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

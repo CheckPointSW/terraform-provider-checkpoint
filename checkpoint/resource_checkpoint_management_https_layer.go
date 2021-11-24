@@ -98,7 +98,7 @@ func createManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create HttpsLayer - Map = ", httpsLayer)
 
-	addHttpsLayerRes, err := client.ApiCall("add-https-layer", httpsLayer, client.GetSessionID(), true, false)
+	addHttpsLayerRes, err := client.ApiCall("add-https-layer", httpsLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsLayerRes.Success {
 		if addHttpsLayerRes.ErrorMsg != "" {
 			return fmt.Errorf(addHttpsLayerRes.ErrorMsg)
@@ -119,7 +119,7 @@ func readManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showHttpsLayerRes, err := client.ApiCall("show-https-layer", payload, client.GetSessionID(), true, false)
+	showHttpsLayerRes, err := client.ApiCall("show-https-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -223,7 +223,7 @@ func updateManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update HttpsLayer - Map = ", httpsLayer)
 
-	updateHttpsLayerRes, err := client.ApiCall("set-https-layer", httpsLayer, client.GetSessionID(), true, false)
+	updateHttpsLayerRes, err := client.ApiCall("set-https-layer", httpsLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsLayerRes.Success {
 		if updateHttpsLayerRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHttpsLayerRes.ErrorMsg)
@@ -244,7 +244,7 @@ func deleteManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete HttpsLayer")
 
-	deleteHttpsLayerRes, err := client.ApiCall("delete-https-layer", httpsLayerPayload, client.GetSessionID(), true, false)
+	deleteHttpsLayerRes, err := client.ApiCall("delete-https-layer", httpsLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsLayerRes.Success {
 		if deleteHttpsLayerRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteHttpsLayerRes.ErrorMsg)

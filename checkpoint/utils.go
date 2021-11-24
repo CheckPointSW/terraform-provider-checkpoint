@@ -135,3 +135,14 @@ func getTypeToSource() map[string]string {
 	}
 	return TypeToSource
 }
+
+func getKeysToFixedKeys() map[string]string {
+	KeysToFixedKeys := map[string]string{
+		"PREDEFINED":          "predefined",
+		"Type in Data Center": "type-in-data-center",
+		"Name in Data Center": "name-in-data-center",
+		"IP Address":          "ip-address",
+		"TAG":                 "tag",
+	}
+	return KeysToFixedKeys
+}

@@ -31,7 +31,7 @@ func createManagementDisconnect(d *schema.ResourceData, m interface{}) error {
 		payload["discard"] = v.(bool)
 	}
 
-	DisconnectRes, _ := client.ApiCall("disconnect", payload, client.GetSessionID(), true, false)
+	DisconnectRes, _ := client.ApiCall("disconnect", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DisconnectRes.Success {
 		return fmt.Errorf(DisconnectRes.ErrorMsg)
 	}

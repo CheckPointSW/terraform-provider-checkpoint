@@ -163,7 +163,7 @@ func dataSourceManagementVpnCommunityMeshedRead(d *schema.ResourceData, m interf
 		payload["uid"] = uid
 	}
 
-	showVpnCommunityMeshedRes, err := client.ApiCall("show-vpn-community-meshed", payload, client.GetSessionID(), true, false)
+	showVpnCommunityMeshedRes, err := client.ApiCall("show-vpn-community-meshed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

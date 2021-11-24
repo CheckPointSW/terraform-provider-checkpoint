@@ -64,7 +64,7 @@ func dataSourceManagementHttpsLayerRead(d *schema.ResourceData, m interface{}) e
 		payload["uid"] = uid
 	}
 
-	showHttpsLayerRes, err := client.ApiCall("show-https-layer", payload, client.GetSessionID(), true, false)
+	showHttpsLayerRes, err := client.ApiCall("show-https-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

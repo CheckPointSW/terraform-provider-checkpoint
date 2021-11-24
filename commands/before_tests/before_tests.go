@@ -16,7 +16,7 @@ func addApplicationSite(client checkpoint.ApiClient) error {
 		"url-list":         []string{"www.cnet.com"},
 	}
 
-	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, false)
+	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteRes.Success {
 		if addApplicationSiteRes.ErrorMsg != "" {
 			return fmt.Errorf(addApplicationSiteRes.ErrorMsg)
@@ -33,7 +33,7 @@ func addApplicationSiteCategory(client checkpoint.ApiClient) error {
 		"name": "New Application Site Category 1",
 	}
 
-	addApplicationSiteRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, false)
+	addApplicationSiteRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteRes.Success {
 		if addApplicationSiteRes.ErrorMsg != "" {
 			return fmt.Errorf(addApplicationSiteRes.ErrorMsg)
@@ -51,7 +51,7 @@ func addHost(client checkpoint.ApiClient) error {
 		"ipv4-address": "10.0.0.1",
 	}
 
-	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, false)
+	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHostRes.Success {
 		if addHostRes.ErrorMsg != "" {
 			return fmt.Errorf(addHostRes.ErrorMsg)
@@ -64,7 +64,7 @@ func addHost(client checkpoint.ApiClient) error {
 		"ipv4-address": "10.0.0.2",
 	}
 
-	addHost1Res, err := client.ApiCall("add-host", host1, client.GetSessionID(), true, false)
+	addHost1Res, err := client.ApiCall("add-host", host1, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHost1Res.Success {
 		if addHost1Res.ErrorMsg != "" {
 			return fmt.Errorf(addHost1Res.ErrorMsg)
@@ -77,7 +77,7 @@ func addHost(client checkpoint.ApiClient) error {
 		"ipv4-address": "10.0.0.3",
 	}
 
-	addHost2Res, err := client.ApiCall("add-host", host2, client.GetSessionID(), true, false)
+	addHost2Res, err := client.ApiCall("add-host", host2, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHost2Res.Success {
 		if addHost2Res.ErrorMsg != "" {
 			return fmt.Errorf(addHost2Res.ErrorMsg)
@@ -94,7 +94,7 @@ func addGroup(client checkpoint.ApiClient) error {
 		"name": "new group 1",
 	}
 
-	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, false)
+	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGroupRes.Success {
 		if addGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addGroupRes.ErrorMsg)
@@ -106,7 +106,7 @@ func addGroup(client checkpoint.ApiClient) error {
 		"name": "new group 2",
 	}
 
-	addGroup1Res, err := client.ApiCall("add-group", group1, client.GetSessionID(), true, false)
+	addGroup1Res, err := client.ApiCall("add-group", group1, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGroup1Res.Success {
 		if addGroup1Res.ErrorMsg != "" {
 			return fmt.Errorf(addGroup1Res.ErrorMsg)
@@ -123,7 +123,7 @@ func addThreatLayer(client checkpoint.ApiClient) error {
 		"name": "New Layer 1",
 	}
 
-	addThreatLayerRes, err := client.ApiCall("add-threat-layer", threatLayer, client.GetSessionID(), true, false)
+	addThreatLayerRes, err := client.ApiCall("add-threat-layer", threatLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatLayerRes.Success {
 		if addThreatLayerRes.ErrorMsg != "" {
 			return fmt.Errorf(addThreatLayerRes.ErrorMsg)
@@ -142,7 +142,7 @@ func addThreatRule(client checkpoint.ApiClient) error {
 		"name":     "First threat rule",
 	}
 
-	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, false)
+	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatRuleRes.Success {
 		if addThreatRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addThreatRuleRes.ErrorMsg)
@@ -159,7 +159,7 @@ func addExceptionGroup(client checkpoint.ApiClient) error {
 		"name": "exception_group_2",
 	}
 
-	addExceptionGroupeRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, false)
+	addExceptionGroupeRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addExceptionGroupeRes.Success {
 		if addExceptionGroupeRes.ErrorMsg != "" {
 			return fmt.Errorf(addExceptionGroupeRes.ErrorMsg)
@@ -176,7 +176,7 @@ func addHTTPSLayer(client checkpoint.ApiClient) error {
 		"name": "New Layer 2",
 	}
 
-	addHTTPSLayerRes, err := client.ApiCall("add-https-layer", HTTPSLayer, client.GetSessionID(), true, false)
+	addHTTPSLayerRes, err := client.ApiCall("add-https-layer", HTTPSLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHTTPSLayerRes.Success {
 		if addHTTPSLayerRes.ErrorMsg != "" {
 			return fmt.Errorf(addHTTPSLayerRes.ErrorMsg)
@@ -194,7 +194,7 @@ func addHTTPSLayer(client checkpoint.ApiClient) error {
 //		"ipAddress4": "10.0.0.1",
 //	}
 //
-//	addMdsRes, err := client.ApiCall("add-generic-object", mds, client.GetSessionID(), true, false)
+//	addMdsRes, err := client.ApiCall("add-generic-object", mds, client.GetSessionID(), true, client.IsProxyUsed())
 //	if err != nil || !addMdsRes.Success {
 //		if addMdsRes.ErrorMsg != "" {
 //			return fmt.Errorf(addMdsRes.ErrorMsg)
@@ -211,7 +211,7 @@ func addHTTPSLayer(client checkpoint.ApiClient) error {
 //		"name" : "New Application Site Category 1",
 //	}
 //
-//	addApplicationSiteRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, false)
+//	addApplicationSiteRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 //	if err != nil || !addApplicationSiteRes.Success {
 //		if addApplicationSiteRes.ErrorMsg != "" {
 //			return fmt.Errorf(addApplicationSiteRes.ErrorMsg)
@@ -269,7 +269,7 @@ func main() {
 		log.Fatalf("error: %s", err)
 	}
 
-	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, false)
+	publishRes, err := apiClient.ApiCall("publish", map[string]interface{}{}, apiClient.GetSessionID(), true, apiClient.IsProxyUsed())
 	if err != nil {
 		log.Fatalf("error: %s", err)
 	}

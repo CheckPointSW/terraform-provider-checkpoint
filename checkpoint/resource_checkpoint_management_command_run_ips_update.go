@@ -37,7 +37,7 @@ func createManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 		payload["package-path"] = v.(string)
 	}
 
-	runIpsUpdateRes, _ := client.ApiCall("run-ips-update", payload, client.GetSessionID(), true, false)
+	runIpsUpdateRes, _ := client.ApiCall("run-ips-update", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !runIpsUpdateRes.Success {
 		return fmt.Errorf(runIpsUpdateRes.ErrorMsg)
 	}

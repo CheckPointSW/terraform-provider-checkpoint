@@ -46,7 +46,7 @@ func createManagementPublish(d *schema.ResourceData, m interface{}) error {
 		payload["uid"] = v.(string)
 	}
 
-	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(), true, false)
+	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !publishRes.Success {
 		return fmt.Errorf(publishRes.ErrorMsg)
 	}

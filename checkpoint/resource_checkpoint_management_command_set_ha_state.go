@@ -37,7 +37,7 @@ func createManagementSetHaState(d *schema.ResourceData, m interface{}) error {
 		payload["new-state"] = v.(string)
 	}
 
-	SetHaStateRes, _ := client.ApiCall("set-ha-state", payload, client.GetSessionID(), true, false)
+	SetHaStateRes, _ := client.ApiCall("set-ha-state", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetHaStateRes.Success {
 		return fmt.Errorf(SetHaStateRes.ErrorMsg)
 	}

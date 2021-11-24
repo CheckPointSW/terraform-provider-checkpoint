@@ -147,7 +147,7 @@ func dataSourceManagementServiceOtherRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, false)
+	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

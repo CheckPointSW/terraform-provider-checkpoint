@@ -383,7 +383,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Host - Map = ", host)
 
-	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, false)
+	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHostRes.Success {
 		if addHostRes.ErrorMsg != "" {
 			return fmt.Errorf(addHostRes.ErrorMsg)
@@ -404,7 +404,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, false)
+	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -572,7 +572,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 				payload := map[string]interface{}{
 					"uid": v,
 				}
-				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, false)
+				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil || !showProtectedByRes.Success {
 					if showProtectedByRes.ErrorMsg != "" {
 						return fmt.Errorf(showProtectedByRes.ErrorMsg)
@@ -791,7 +791,7 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Host - Map = ", host)
-	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, false)
+	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHostRes.Success {
 		if updateHostRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHostRes.ErrorMsg)
@@ -810,7 +810,7 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	deleteHostRes, err := client.ApiCall("delete-host", hostPayload, client.GetSessionID(), true, false)
+	deleteHostRes, err := client.ApiCall("delete-host", hostPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHostRes.Success {
 		if deleteHostRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteHostRes.ErrorMsg)

@@ -106,7 +106,7 @@ func createManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create ServiceRpc - Map = ", serviceRpc)
 
-	addServiceRpcRes, err := client.ApiCall("add-service-rpc", serviceRpc, client.GetSessionID(), true, false)
+	addServiceRpcRes, err := client.ApiCall("add-service-rpc", serviceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceRpcRes.Success {
 		if addServiceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceRpcRes.ErrorMsg)
@@ -127,7 +127,7 @@ func readManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, false)
+	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -239,7 +239,7 @@ func updateManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update ServiceRpc - Map = ", serviceRpc)
 
-	updateServiceRpcRes, err := client.ApiCall("set-service-rpc", serviceRpc, client.GetSessionID(), true, false)
+	updateServiceRpcRes, err := client.ApiCall("set-service-rpc", serviceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceRpcRes.Success {
 		if updateServiceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceRpcRes.ErrorMsg)
@@ -260,7 +260,7 @@ func deleteManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete ServiceRpc")
 
-	deleteServiceRpcRes, err := client.ApiCall("delete-service-rpc", serviceRpcPayload, client.GetSessionID(), true, false)
+	deleteServiceRpcRes, err := client.ApiCall("delete-service-rpc", serviceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceRpcRes.Success {
 		if deleteServiceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceRpcRes.ErrorMsg)

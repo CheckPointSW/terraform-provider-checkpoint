@@ -58,7 +58,7 @@ func dataSourceManagementSecurityZoneRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, false)
+	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

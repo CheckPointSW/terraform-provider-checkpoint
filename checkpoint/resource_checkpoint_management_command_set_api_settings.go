@@ -41,7 +41,7 @@ func createManagementSetApiSettings(d *schema.ResourceData, m interface{}) error
 		payload["automatic-start"] = v.(bool)
 	}
 
-	SetApiSettingsRes, _ := client.ApiCall("set-api-settings", payload, client.GetSessionID(), true, false)
+	SetApiSettingsRes, _ := client.ApiCall("set-api-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetApiSettingsRes.Success {
 		return fmt.Errorf(SetApiSettingsRes.ErrorMsg)
 	}

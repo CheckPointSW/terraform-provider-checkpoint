@@ -106,7 +106,7 @@ func createManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create ServiceDceRpc - Map = ", serviceDceRpc)
 
-	addServiceDceRpcRes, err := client.ApiCall("add-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, false)
+	addServiceDceRpcRes, err := client.ApiCall("add-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceDceRpcRes.Success {
 		if addServiceDceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceDceRpcRes.ErrorMsg)
@@ -127,7 +127,7 @@ func readManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceDceRpcRes, err := client.ApiCall("show-service-dce-rpc", payload, client.GetSessionID(), true, false)
+	showServiceDceRpcRes, err := client.ApiCall("show-service-dce-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -239,7 +239,7 @@ func updateManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update ServiceDceRpc - Map = ", serviceDceRpc)
 
-	updateServiceDceRpcRes, err := client.ApiCall("set-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, false)
+	updateServiceDceRpcRes, err := client.ApiCall("set-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceDceRpcRes.Success {
 		if updateServiceDceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceDceRpcRes.ErrorMsg)
@@ -260,7 +260,7 @@ func deleteManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Delete ServiceDceRpc")
 
-	deleteServiceDceRpcRes, err := client.ApiCall("delete-service-dce-rpc", serviceDceRpcPayload, client.GetSessionID(), true, false)
+	deleteServiceDceRpcRes, err := client.ApiCall("delete-service-dce-rpc", serviceDceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceDceRpcRes.Success {
 		if deleteServiceDceRpcRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceDceRpcRes.ErrorMsg)

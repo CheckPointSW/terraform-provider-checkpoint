@@ -328,7 +328,7 @@ func createManagementThreatException(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Create Threat Exception - Map = ", threatException)
 
-	addThreatExceptionRes, err := client.ApiCall("add-threat-exception", threatException, client.GetSessionID(), true, false)
+	addThreatExceptionRes, err := client.ApiCall("add-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatExceptionRes.Success {
 		if addThreatExceptionRes.ErrorMsg != "" {
 			return fmt.Errorf(addThreatExceptionRes.ErrorMsg)
@@ -366,7 +366,7 @@ func readManagementThreatException(d *schema.ResourceData, m interface{}) error 
 		payload["rule-name"] = v.(string)
 	}
 
-	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, false)
+	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -682,7 +682,7 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Update Threat Exception - Map = ", threatException)
 
-	updateThreatExceptionRes, err := client.ApiCall("set-threat-exception", threatException, client.GetSessionID(), true, false)
+	updateThreatExceptionRes, err := client.ApiCall("set-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatExceptionRes.Success {
 		if updateThreatExceptionRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatExceptionRes.ErrorMsg)
@@ -716,7 +716,7 @@ func deleteManagementThreatException(d *schema.ResourceData, m interface{}) erro
 		threatExceptionPayload["rule-name"] = v
 	}
 
-	deleteThreatExceptionRes, err := client.ApiCall("delete-threat-exception", threatExceptionPayload, client.GetSessionID(), true, false)
+	deleteThreatExceptionRes, err := client.ApiCall("delete-threat-exception", threatExceptionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatExceptionRes.Success {
 		if deleteThreatExceptionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteThreatExceptionRes.ErrorMsg)

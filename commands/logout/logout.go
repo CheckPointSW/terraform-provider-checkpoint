@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	logoutRes, err := apiClient.ApiCall("logout", make(map[string]interface{}), apiClient.GetSessionID(), true, false)
+	logoutRes, err := apiClient.ApiCall("logout", make(map[string]interface{}), apiClient.GetSessionID(), true, apiClient.IsProxyUsed())
 	if err != nil {
 		fmt.Println("logout error: " + err.Error())
 		os.Exit(1)

@@ -189,7 +189,7 @@ func createManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Create OpsecApplication - Map = ", opsecApplication)
 
-	addOpsecApplicationRes, err := client.ApiCall("add-opsec-application", opsecApplication, client.GetSessionID(), true, false)
+	addOpsecApplicationRes, err := client.ApiCall("add-opsec-application", opsecApplication, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addOpsecApplicationRes.Success {
 		if addOpsecApplicationRes.ErrorMsg != "" {
 			return fmt.Errorf(addOpsecApplicationRes.ErrorMsg)
@@ -210,7 +210,7 @@ func readManagementOpsecApplication(d *schema.ResourceData, m interface{}) error
 		"uid": d.Id(),
 	}
 
-	showOpsecApplicationRes, err := client.ApiCall("show-opsec-application", payload, client.GetSessionID(), true, false)
+	showOpsecApplicationRes, err := client.ApiCall("show-opsec-application", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -400,7 +400,7 @@ func updateManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Update OpsecApplication - Map = ", opsecApplication)
 
-	updateOpsecApplicationRes, err := client.ApiCall("set-opsec-application", opsecApplication, client.GetSessionID(), true, false)
+	updateOpsecApplicationRes, err := client.ApiCall("set-opsec-application", opsecApplication, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateOpsecApplicationRes.Success {
 		if updateOpsecApplicationRes.ErrorMsg != "" {
 			return fmt.Errorf(updateOpsecApplicationRes.ErrorMsg)
@@ -421,7 +421,7 @@ func deleteManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Delete OpsecApplication")
 
-	deleteOpsecApplicationRes, err := client.ApiCall("delete-opsec-application", opsecApplicationPayload, client.GetSessionID(), true, false)
+	deleteOpsecApplicationRes, err := client.ApiCall("delete-opsec-application", opsecApplicationPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteOpsecApplicationRes.Success {
 		if deleteOpsecApplicationRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteOpsecApplicationRes.ErrorMsg)

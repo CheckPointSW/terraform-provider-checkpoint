@@ -26,7 +26,7 @@ func createManagementUpdateUpdatableObjectsRepositoryContent(d *schema.ResourceD
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	UpdateUpdatableObjectsRepositoryContentRes, _ := client.ApiCall("update-updatable-objects-repository-content", payload, client.GetSessionID(), true, false)
+	UpdateUpdatableObjectsRepositoryContentRes, _ := client.ApiCall("update-updatable-objects-repository-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UpdateUpdatableObjectsRepositoryContentRes.Success {
 		return fmt.Errorf(UpdateUpdatableObjectsRepositoryContentRes.ErrorMsg)
 	}

@@ -51,7 +51,7 @@ func putFileParseSchemaToMap(d *schema.ResourceData) map[string]interface{} {
 func createPutFile(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
-	setPIRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
+	setPIRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
 		return fmt.Errorf(setPIRes.ErrorMsg)
 	}
@@ -69,7 +69,7 @@ func readPutFile(d *schema.ResourceData, m interface{}) error {
 func updatePutFile(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := putFileParseSchemaToMap(d)
-	setNetworkRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
+	setNetworkRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}

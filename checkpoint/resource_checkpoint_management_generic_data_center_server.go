@@ -138,7 +138,7 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	log.Println("Create genericDataCenterServer - Map = ", genericDataCenterServer)
 
-	addGenericDataCenterServerRes, err := client.ApiCall("add-data-center-server", genericDataCenterServer, client.GetSessionID(), true, false)
+	addGenericDataCenterServerRes, err := client.ApiCall("add-data-center-server", genericDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -152,7 +152,7 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 	payload := map[string]interface{}{
 		"name": genericDataCenterServer["name"],
 	}
-	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, false)
+	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -172,7 +172,7 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), false, false)
+	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), false, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -301,7 +301,7 @@ func updateManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	log.Println("Update genericDataCenterServer - Map = ", genericDataCenterServer)
 
-	updateGenericDataCenterServerRes, err := client.ApiCall("set-data-center-server", genericDataCenterServer, client.GetSessionID(), true, false)
+	updateGenericDataCenterServerRes, err := client.ApiCall("set-data-center-server", genericDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -326,7 +326,7 @@ func deleteManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	log.Println("Delete genericDataCenterServer")
 
-	deleteGenericDataCenterServerRes, err := client.ApiCall("delete-data-center-server", genericDataCenterServerPayload, client.GetSessionID(), true, false)
+	deleteGenericDataCenterServerRes, err := client.ApiCall("delete-data-center-server", genericDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGenericDataCenterServerRes.Success {
 		if deleteGenericDataCenterServerRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteGenericDataCenterServerRes.ErrorMsg)

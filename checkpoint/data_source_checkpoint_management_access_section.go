@@ -47,7 +47,7 @@ func dataSourceManagementAccessSectionRead(d *schema.ResourceData, m interface{}
 		payload["uid"] = uid
 	}
 
-	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, false)
+	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

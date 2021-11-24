@@ -28,7 +28,7 @@ func resourceManagementAddApiKey() *schema.Resource {
 			"api_key": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Represents the API Key to be used for Login.",
+				Description: "Represents the API Key to be used for commonLoginLogic.",
 			},
 		},
 	}
@@ -46,7 +46,7 @@ func createManagementAddApiKey(d *schema.ResourceData, m interface{}) error {
 		payload["admin-name"] = v.(string)
 	}
 
-	AddApiKeyRes, _ := client.ApiCall("add-api-key", payload, client.GetSessionID(), true, false)
+	AddApiKeyRes, _ := client.ApiCall("add-api-key", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddApiKeyRes.Success {
 		return fmt.Errorf(AddApiKeyRes.ErrorMsg)
 	}

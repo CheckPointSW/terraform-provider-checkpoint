@@ -115,7 +115,7 @@ func createManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Create GsnHandoverGroup - Map = ", gsnHandoverGroup)
 
-	addGsnHandoverGroupRes, err := client.ApiCall("add-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, false)
+	addGsnHandoverGroupRes, err := client.ApiCall("add-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGsnHandoverGroupRes.Success {
 		if addGsnHandoverGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addGsnHandoverGroupRes.ErrorMsg)
@@ -136,7 +136,7 @@ func readManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) error
 		"uid": d.Id(),
 	}
 
-	showGsnHandoverGroupRes, err := client.ApiCall("show-gsn-handover-group", payload, client.GetSessionID(), true, false)
+	showGsnHandoverGroupRes, err := client.ApiCall("show-gsn-handover-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -264,7 +264,7 @@ func updateManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Update GsnHandoverGroup - Map = ", gsnHandoverGroup)
 
-	updateGsnHandoverGroupRes, err := client.ApiCall("set-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, false)
+	updateGsnHandoverGroupRes, err := client.ApiCall("set-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGsnHandoverGroupRes.Success {
 		if updateGsnHandoverGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(updateGsnHandoverGroupRes.ErrorMsg)
@@ -285,7 +285,7 @@ func deleteManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Delete GsnHandoverGroup")
 
-	deleteGsnHandoverGroupRes, err := client.ApiCall("delete-gsn-handover-group", gsnHandoverGroupPayload, client.GetSessionID(), true, false)
+	deleteGsnHandoverGroupRes, err := client.ApiCall("delete-gsn-handover-group", gsnHandoverGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGsnHandoverGroupRes.Success {
 		if deleteGsnHandoverGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteGsnHandoverGroupRes.ErrorMsg)

@@ -506,7 +506,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Access Rule - Map = ", accessRule)
 
-	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, false)
+	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessRuleRes.ErrorMsg)
@@ -528,7 +528,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, false)
+	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1109,7 +1109,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Access Rule - Map = ", accessRule)
 
-	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, false)
+	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessRuleRes.Success {
 		if updateAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
@@ -1128,7 +1128,7 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	deleteAccessRuleRes, err := client.ApiCall("delete-access-rule", accessRulePayload, client.GetSessionID(), true, false)
+	deleteAccessRuleRes, err := client.ApiCall("delete-access-rule", accessRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)

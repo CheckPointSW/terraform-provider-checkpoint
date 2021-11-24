@@ -57,6 +57,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	// Default values
 	port := checkpoint.DefaultPort
 	timeout := checkpoint.TimeOut
+	proxyPort := checkpoint.DefaultProxyPort
 
 	// Get credentials from Environment variables
 	server := os.Getenv("CHECKPOINT_SERVER")
@@ -65,12 +66,22 @@ func InitClient() (checkpoint.ApiClient, error) {
 	portVal := os.Getenv("CHECKPOINT_PORT")
 	timeoutVal := os.Getenv("CHECKPOINT_TIMEOUT")
 	sessionFileName := os.Getenv("CHECKPOINT_SESSION_FILE_NAME")
+	proxyHost := os.Getenv("CHECKPOINT_PROXY_HOST")
+	proxyPortStr := os.Getenv("CHECKPOINT_PROXY_PORT")
+	apiKey := os.Getenv("CHECKPOINT_API_KEY")
 
 	var err error
 	if portVal != "" {
 		port, err = strconv.Atoi(portVal)
 		if err != nil {
 			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_PORT to integer")
+		}
+	}
+
+	if proxyPortStr != "" {
+		proxyPort, err = strconv.Atoi(proxyPortStr)
+		if err != nil {
+			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_PROXY_PORT to integer")
 		}
 	}
 
@@ -86,8 +97,8 @@ func InitClient() (checkpoint.ApiClient, error) {
 		sessionFileName = DefaultFilename
 	}
 
-	if server == "" || username == "" || password == "" {
-		return checkpoint.ApiClient{}, fmt.Errorf("missing at least one required parameter to initialize API client (CHECKPOINT_SERVER, CHECKPOINT_USERNAME, CHECKPOINT_PASSWORD)")
+	if server == "" || ((username == "" || password == "") && apiKey == "") {
+		return checkpoint.ApiClient{}, fmt.Errorf("missing at least one required parameter to initialize API client (CHECKPOINT_SERVER, (CHECKPOINT_USERNAME and CHECKPOINT_PASSWORD) OR CHECKPOINT_API_KEY)")
 	}
 
 	// install policy/publish - only on management api
@@ -102,8 +113,8 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Fingerprint:             "",
 		Sid:                     "",
 		Server:                  server,
-		ProxyHost:               "",
-		ProxyPort:               -1,
+		ProxyHost:               proxyHost,
+		ProxyPort:               proxyPort,
 		ApiVersion:              "",
 		IgnoreServerCertificate: false,
 		AcceptServerCertificate: false,

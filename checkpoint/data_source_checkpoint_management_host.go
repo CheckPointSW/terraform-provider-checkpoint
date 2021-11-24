@@ -223,7 +223,7 @@ func dataSourceManagementHostRead(d *schema.ResourceData, m interface{}) error {
 		payload["uid"] = uid
 	}
 
-	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, false)
+	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -386,7 +386,7 @@ func dataSourceManagementHostRead(d *schema.ResourceData, m interface{}) error {
 				payload := map[string]interface{}{
 					"uid": v,
 				}
-				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, false)
+				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil || !showProtectedByRes.Success {
 					if showProtectedByRes.ErrorMsg != "" {
 						return fmt.Errorf(showProtectedByRes.ErrorMsg)

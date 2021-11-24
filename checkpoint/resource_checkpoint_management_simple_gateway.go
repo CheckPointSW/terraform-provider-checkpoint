@@ -1313,7 +1313,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create Simple Gateway - Map = ", gateway)
 
-	addGatewayRes, err := client.ApiCall("add-simple-gateway", gateway, client.GetSessionID(), true, false)
+	addGatewayRes, err := client.ApiCall("add-simple-gateway", gateway, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGatewayRes.Success {
 		if addGatewayRes.ErrorMsg != "" {
 			return fmt.Errorf(addGatewayRes.ErrorMsg)
@@ -1333,7 +1333,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, false)
+	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -2428,7 +2428,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Update Simple Gateway - Map = ", gateway)
-	updateSimpleGatewayRes, err := client.ApiCall("set-simple-gateway", gateway, client.GetSessionID(), true, false)
+	updateSimpleGatewayRes, err := client.ApiCall("set-simple-gateway", gateway, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateSimpleGatewayRes.Success {
 		if updateSimpleGatewayRes.ErrorMsg != "" {
 			return fmt.Errorf(updateSimpleGatewayRes.ErrorMsg)
@@ -2447,7 +2447,7 @@ func deleteManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
-	deleteGatewayRes, err := client.ApiCall("delete-simple-gateway", gatewayPayload, client.GetSessionID(), true, false)
+	deleteGatewayRes, err := client.ApiCall("delete-simple-gateway", gatewayPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGatewayRes.Success {
 		if deleteGatewayRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteGatewayRes.ErrorMsg)

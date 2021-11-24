@@ -708,7 +708,7 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Create CheckpointHost - Map = ", checkpointHost)
 
-	addCheckpointHostRes, err := client.ApiCall("add-checkpoint-host", checkpointHost, client.GetSessionID(), true, false)
+	addCheckpointHostRes, err := client.ApiCall("add-checkpoint-host", checkpointHost, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addCheckpointHostRes.Success {
 		if addCheckpointHostRes.ErrorMsg != "" {
 			return fmt.Errorf(addCheckpointHostRes.ErrorMsg)
@@ -729,7 +729,7 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showCheckpointHostRes, err := client.ApiCall("show-checkpoint-host", payload, client.GetSessionID(), true, false)
+	showCheckpointHostRes, err := client.ApiCall("show-checkpoint-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -1396,7 +1396,7 @@ func updateManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Update CheckpointHost - Map = ", checkpointHost)
 
-	updateCheckpointHostRes, err := client.ApiCall("set-checkpoint-host", checkpointHost, client.GetSessionID(), true, false)
+	updateCheckpointHostRes, err := client.ApiCall("set-checkpoint-host", checkpointHost, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateCheckpointHostRes.Success {
 		if updateCheckpointHostRes.ErrorMsg != "" {
 			return fmt.Errorf(updateCheckpointHostRes.ErrorMsg)
@@ -1416,7 +1416,7 @@ func deleteManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 
 	log.Println("Delete CheckpointHost")
 
-	deleteCheckpointHostRes, err := client.ApiCall("delete-checkpoint-host", checkpointHostPayload, client.GetSessionID(), true, false)
+	deleteCheckpointHostRes, err := client.ApiCall("delete-checkpoint-host", checkpointHostPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteCheckpointHostRes.Success {
 		if deleteCheckpointHostRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteCheckpointHostRes.ErrorMsg)

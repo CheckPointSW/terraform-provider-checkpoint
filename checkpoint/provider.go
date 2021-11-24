@@ -61,6 +61,24 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", DefaultSessionFilename),
 				Description: "File name used to store the current session id.",
 			},
+			"proxy_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PROXY_HOST", checkpoint.DefaultProxyHost),
+				Description: "HTTP proxy server address (without \"http://\").",
+			},
+			"proxy_port": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PROXY_PORT", checkpoint.DefaultProxyPort),
+				Description: "HTTP proxy port.",
+			},
+			"api_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_API_KEY", ""),
+				Description: "Administrator API key.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_host":                                           resourceManagementHost(),
@@ -165,6 +183,16 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_simple_cluster":                                 resourceManagementSimpleCluster(),
 			"checkpoint_management_threat_profile":                                 resourceManagementThreatProfile(),
 			"checkpoint_management_generic_data_center_server":                     resourceManagementGenericDataCenterServer(),
+			"checkpoint_management_vmware_data_center_server":                      resourceManagementVMwareDataCenterServer(),
+			"checkpoint_management_aci_data_center_server":                         resourceManagementAciDataCenterServer(),
+			"checkpoint_management_ise_data_center_server":                         resourceManagementIseDataCenterServer(),
+			"checkpoint_management_aws_data_center_server":                         resourceManagementAwsDataCenterServer(),
+			"checkpoint_management_gcp_data_center_server":                         resourceManagementGcpDataCenterServer(),
+			"checkpoint_management_azure_data_center_server":                       resourceManagementAzureDataCenterServer(),
+			"checkpoint_management_nuage_data_center_server":                       resourceManagementNuageDataCenterServer(),
+			"checkpoint_management_openstack_data_center_server":                   resourceManagementOpenStackDataCenterServer(),
+			"checkpoint_management_kubernetes_data_center_server":                  resourceManagementKubernetesDataCenterServer(),
+			"checkpoint_management_data_center_query":                              resourceManagementDataCenterQuery(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -224,6 +252,21 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_simple_gateway":                            dataSourceManagementSimpleGateway(),
 			"checkpoint_management_threat_profile":                            dataSourceManagementThreatProfile(),
 			"checkpoint_management_generic_data_center_server":                dataSourceManagementGenericDataCenterServer(),
+			"checkpoint_management_vmware_data_center_server":                 dataSourceManagementVMwareDataCenterServer(),
+			"checkpoint_management_aci_data_center_server":                    dataSourceManagementAciDataCenterServer(),
+			"checkpoint_management_ise_data_center_server":                    dataSourceManagementIseDataCenterServer(),
+			"checkpoint_management_aws_data_center_server":                    dataSourceManagementAwsDataCenterServer(),
+			"checkpoint_management_gcp_data_center_server":                    dataSourceManagementGcpDataCenterServer(),
+			"checkpoint_management_azure_data_center_server":                  dataSourceManagementAzureDataCenterServer(),
+			"checkpoint_management_nuage_data_center_server":                  dataSourceManagementNuageDataCenterServer(),
+			"checkpoint_management_openstack_data_center_server":              dataSourceManagementOpenStackDataCenterServer(),
+			"checkpoint_management_kubernetes_data_center_server":             dataSourceManagementKubernetesDataCenterServer(),
+			"checkpoint_management_data_center_query":                         dataSourceManagementDataCenterQuery(),
+			"checkpoint_management_data_center_content":                       dataSourceManagementDataCenterContent(),
+			"checkpoint_management_access_rulebase":                           dataSourceManagementAccessRuleBase(),
+			"checkpoint_management_nat_rulebase":                              dataSourceManagementNatRuleBase(),
+			"checkpoint_management_threat_rulebase":                           dataSourceManagementThreatRuleBase(),
+			"checkpoint_management_https_rulebase":                            dataSourceManagementHttpsRuleBase(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -239,9 +282,12 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	port := data.Get("port").(int)
 	timeout := data.Get("timeout").(int)
 	sessionFileName := data.Get("session_file_name").(string)
+	proxyHost := data.Get("proxy_host").(string)
+	proxyPort := data.Get("proxy_port").(int)
+	apiKey := data.Get("api_key").(string)
 
-	if server == "" || username == "" || password == "" {
-		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, username, password)")
+	if server == "" || ((username == "" || password == "") && apiKey == "") {
+		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, (username and password) OR api_key)")
 	}
 
 	args := checkpoint.ApiClientArgs{
@@ -249,8 +295,8 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		Fingerprint:             "",
 		Sid:                     "",
 		Server:                  server,
-		ProxyHost:               "",
-		ProxyPort:               -1,
+		ProxyHost:               proxyHost,
+		ProxyPort:               proxyPort,
 		ApiVersion:              "",
 		IgnoreServerCertificate: false,
 		AcceptServerCertificate: false,
@@ -275,7 +321,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, domain)
+			s, err = login(mgmt, username, password, apiKey, domain)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
@@ -288,7 +334,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "")
+		_, err := login(gaia, username, password, "", "")
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -299,10 +345,15 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, domain string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string) (Session, error) {
 	log.Printf("Perform login")
-
-	loginRes, err := client.Login(username, pwd, false, domain, false, "")
+	var loginRes checkpoint.APIResponse
+	var err error
+	if apiKey != "" {
+		loginRes, err = client.LoginWithApiKey(apiKey, false, domain, false, "")
+	} else {
+		loginRes, err = client.Login(username, pwd, false, domain, false, "")
+	}
 	if err != nil {
 		localRequestsError := "invalid character '<' looking for beginning of value"
 		if strings.Contains(err.Error(), localRequestsError) {

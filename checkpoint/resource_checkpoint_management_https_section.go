@@ -109,7 +109,7 @@ func createManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	}
 	log.Println("Create HttpsSection - Map = ", httpsSection)
 
-	addHttpsSectionRes, err := client.ApiCall("add-https-section", httpsSection, client.GetSessionID(), true, false)
+	addHttpsSectionRes, err := client.ApiCall("add-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsSectionRes.Success {
 		if addHttpsSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(addHttpsSectionRes.ErrorMsg)
@@ -131,7 +131,7 @@ func readManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, false)
+	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -186,7 +186,7 @@ func updateManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update HttpsSection - Map = ", httpsSection)
 
-	updateHttpsSectionRes, err := client.ApiCall("set-https-section", httpsSection, client.GetSessionID(), true, false)
+	updateHttpsSectionRes, err := client.ApiCall("set-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsSectionRes.Success {
 		if updateHttpsSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHttpsSectionRes.ErrorMsg)
@@ -208,7 +208,7 @@ func deleteManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete HttpsSection")
 
-	deleteHttpsSectionRes, err := client.ApiCall("delete-https-section", httpsSectionPayload, client.GetSessionID(), true, false)
+	deleteHttpsSectionRes, err := client.ApiCall("delete-https-section", httpsSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsSectionRes.Success {
 		if deleteHttpsSectionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteHttpsSectionRes.ErrorMsg)

@@ -82,7 +82,7 @@ func dataSourceManagementThreatIndicatorRead(d *schema.ResourceData, m interface
 		payload["uid"] = uid
 	}
 
-	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, false)
+	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

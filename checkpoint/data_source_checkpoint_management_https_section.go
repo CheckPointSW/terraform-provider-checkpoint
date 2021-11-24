@@ -47,7 +47,7 @@ func dataSourceManagementHttpsSectionRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, false)
+	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

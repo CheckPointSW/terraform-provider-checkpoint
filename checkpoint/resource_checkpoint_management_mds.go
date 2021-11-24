@@ -194,7 +194,7 @@ func createManagementMds(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Mds - Map = ", mds)
 
-	addMdsRes, err := client.ApiCall("add-mds", mds, client.GetSessionID(), true, false)
+	addMdsRes, err := client.ApiCall("add-mds", mds, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addMdsRes.Success {
 		if addMdsRes.ErrorMsg != "" {
 			return fmt.Errorf(addMdsRes.ErrorMsg)
@@ -215,7 +215,7 @@ func readManagementMds(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, false)
+	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -409,7 +409,7 @@ func updateManagementMds(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update Mds - Map = ", mds)
 
-	updateMdsRes, err := client.ApiCall("set-mds", mds, client.GetSessionID(), true, false)
+	updateMdsRes, err := client.ApiCall("set-mds", mds, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateMdsRes.Success {
 		if updateMdsRes.ErrorMsg != "" {
 			return fmt.Errorf(updateMdsRes.ErrorMsg)
@@ -430,7 +430,7 @@ func deleteManagementMds(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete Mds")
 
-	deleteMdsRes, err := client.ApiCall("delete-mds", mdsPayload, client.GetSessionID(), true, false)
+	deleteMdsRes, err := client.ApiCall("delete-mds", mdsPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteMdsRes.Success {
 		if deleteMdsRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteMdsRes.ErrorMsg)

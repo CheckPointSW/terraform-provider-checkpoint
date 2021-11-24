@@ -41,7 +41,7 @@ func createManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.Resource
 		payload["file-raw-data"] = v.(string)
 	}
 
-	RunThreatEmulationFileTypesOfflineUpdateRes, _ := client.ApiCall("run-threat-emulation-file-types-offline-update", payload, client.GetSessionID(), true, false)
+	RunThreatEmulationFileTypesOfflineUpdateRes, _ := client.ApiCall("run-threat-emulation-file-types-offline-update", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RunThreatEmulationFileTypesOfflineUpdateRes.Success {
 		return fmt.Errorf(RunThreatEmulationFileTypesOfflineUpdateRes.ErrorMsg)
 	}

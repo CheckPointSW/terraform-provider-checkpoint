@@ -266,7 +266,7 @@ func createManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 	log.Println("Create HttpsRule - Map = ", httpsRule)
 
-	addHttpsRuleRes, err := client.ApiCall("add-https-rule", httpsRule, client.GetSessionID(), true, false)
+	addHttpsRuleRes, err := client.ApiCall("add-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsRuleRes.Success {
 		if addHttpsRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(addHttpsRuleRes.ErrorMsg)
@@ -288,7 +288,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 		"layer": d.Get("layer"),
 	}
 
-	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, false)
+	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -589,7 +589,7 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update HttpsRule - Map = ", httpsRule)
 
-	updateHttpsRuleRes, err := client.ApiCall("set-https-rule", httpsRule, client.GetSessionID(), true, false)
+	updateHttpsRuleRes, err := client.ApiCall("set-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsRuleRes.Success {
 		if updateHttpsRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(updateHttpsRuleRes.ErrorMsg)
@@ -611,7 +611,7 @@ func deleteManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete HttpsRule")
 
-	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, false)
+	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsRuleRes.Success {
 		if deleteHttpsRuleRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteHttpsRuleRes.ErrorMsg)

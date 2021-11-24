@@ -39,7 +39,7 @@ func main() {
 		"targets":        targets,
 	}
 
-	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(), true, false)
+	installPolicyRes, err := apiClient.ApiCall("install-policy", payload, apiClient.GetSessionID(), true, apiClient.IsProxyUsed())
 	if err != nil {
 		fmt.Println("Install policy error: " + err.Error())
 		os.Exit(1)

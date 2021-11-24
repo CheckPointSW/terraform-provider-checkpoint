@@ -82,7 +82,7 @@ func createManagementPutFile(d *schema.ResourceData, m interface{}) error {
 		payload["comments"] = v.(string)
 	}
 
-	PutFileRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
+	PutFileRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !PutFileRes.Success {
 		return fmt.Errorf(PutFileRes.ErrorMsg)
 	}

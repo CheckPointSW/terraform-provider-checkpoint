@@ -62,7 +62,7 @@ func dataSourceManagementDnsDomainRead(d *schema.ResourceData, m interface{}) er
 		payload["uid"] = uid
 	}
 
-	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, false)
+	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

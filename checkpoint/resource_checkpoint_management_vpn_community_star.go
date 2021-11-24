@@ -315,7 +315,7 @@ func createManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Create VpnCommunityStar - Map = ", vpnCommunityStar)
 
-	addVpnCommunityStarRes, err := client.ApiCall("add-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, false)
+	addVpnCommunityStarRes, err := client.ApiCall("add-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVpnCommunityStarRes.Success {
 		if addVpnCommunityStarRes.ErrorMsg != "" {
 			return fmt.Errorf(addVpnCommunityStarRes.ErrorMsg)
@@ -336,7 +336,7 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 		"uid": d.Id(),
 	}
 
-	showVpnCommunityStarRes, err := client.ApiCall("show-vpn-community-star", payload, client.GetSessionID(), true, false)
+	showVpnCommunityStarRes, err := client.ApiCall("show-vpn-community-star", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -724,7 +724,7 @@ func updateManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Update VpnCommunityStar - Map = ", vpnCommunityStar)
 
-	updateVpnCommunityStarRes, err := client.ApiCall("set-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, false)
+	updateVpnCommunityStarRes, err := client.ApiCall("set-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVpnCommunityStarRes.Success {
 		if updateVpnCommunityStarRes.ErrorMsg != "" {
 			return fmt.Errorf(updateVpnCommunityStarRes.ErrorMsg)
@@ -745,7 +745,7 @@ func deleteManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 
 	log.Println("Delete VpnCommunityStar")
 
-	deleteVpnCommunityStarRes, err := client.ApiCall("delete-vpn-community-star", vpnCommunityStarPayload, client.GetSessionID(), true, false)
+	deleteVpnCommunityStarRes, err := client.ApiCall("delete-vpn-community-star", vpnCommunityStarPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVpnCommunityStarRes.Success {
 		if deleteVpnCommunityStarRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteVpnCommunityStarRes.ErrorMsg)

@@ -106,7 +106,7 @@ func createManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Create GroupWithExclusion - Map = ", groupWithExclusion)
 
-	addGroupWithExclusionRes, err := client.ApiCall("add-group-with-exclusion", groupWithExclusion, client.GetSessionID(), true, false)
+	addGroupWithExclusionRes, err := client.ApiCall("add-group-with-exclusion", groupWithExclusion, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGroupWithExclusionRes.Success {
 		if addGroupWithExclusionRes.ErrorMsg != "" {
 			return fmt.Errorf(addGroupWithExclusionRes.ErrorMsg)
@@ -127,7 +127,7 @@ func readManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
-	showGroupWithExclusionRes, err := client.ApiCall("show-group-with-exclusion", payload, client.GetSessionID(), true, false)
+	showGroupWithExclusionRes, err := client.ApiCall("show-group-with-exclusion", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -239,7 +239,7 @@ func updateManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Update GroupWithExclusion - Map = ", groupWithExclusion)
 
-	updateGroupWithExclusionRes, err := client.ApiCall("set-group-with-exclusion", groupWithExclusion, client.GetSessionID(), true, false)
+	updateGroupWithExclusionRes, err := client.ApiCall("set-group-with-exclusion", groupWithExclusion, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGroupWithExclusionRes.Success {
 		if updateGroupWithExclusionRes.ErrorMsg != "" {
 			return fmt.Errorf(updateGroupWithExclusionRes.ErrorMsg)
@@ -260,7 +260,7 @@ func deleteManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Delete GroupWithExclusion")
 
-	deleteGroupWithExclusionRes, err := client.ApiCall("delete-group-with-exclusion", groupWithExclusionPayload, client.GetSessionID(), true, false)
+	deleteGroupWithExclusionRes, err := client.ApiCall("delete-group-with-exclusion", groupWithExclusionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGroupWithExclusionRes.Success {
 		if deleteGroupWithExclusionRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteGroupWithExclusionRes.ErrorMsg)

@@ -5,7 +5,7 @@ version 1.0
 A library for communicating with Check Point's management server using Golang
 written by: Check Point software technologies inc.
 June 2019
-tested with Check Point R80.20 (tested with take hero2 198)
+tested with Check Point R81.20
 
 -----------------------------------------------------------------------------
 
@@ -30,47 +30,54 @@ import (
 )
 
 const (
-	InProgress   	 	string = "in progress"
-	DefaultPort      	int    = 443
-	Limit            	int    = 50
-	Filename         	string = "fingerprints.json"
-	TimeOut 			time.Duration = time.Second * 10
-	SleepTime			time.Duration = time.Second * 2
-	GaiaContext 		string = "gaia_api"
-	WebContext 		string = "web_api"
+	InProgress       string        = "in progress"
+	DefaultPort      int           = 443
+	Limit            int           = 50
+	Filename         string        = "fingerprints.json"
+	TimeOut          time.Duration = time.Second * 10
+	SleepTime        time.Duration = time.Second * 2
+	GaiaContext      string        = "gaia_api"
+	WebContext       string        = "web_api"
+	DefaultProxyPort               = -1
+	DefaultProxyHost               = ""
 )
 
 // Check Point API Client (Management/GAIA)
 type ApiClient struct {
-	port             int
-	isPortDefault_   bool
-	fingerprint      string
-	sid              string
-	server           string
-	domain           string
-	proxyHost        string
-	proxyPort        int
-	apiVersion       string
-	ignoreServerCertificate           bool
+	port                    int
+	isPortDefault_          bool
+	fingerprint             string
+	sid                     string
+	server                  string
+	domain                  string
+	proxyHost               string
+	proxyPort               int
+	isProxyUsed             bool
+	apiVersion              string
+	ignoreServerCertificate bool
 	acceptServerCertificate bool
-	debugFile        string
-	httpDebugLevel   string
-	context 		 string
-	autoPublish 	 bool
-	timeout          time.Duration
-	sleep			 time.Duration
-	userAgent 		 string
+	debugFile               string
+	httpDebugLevel          string
+	context                 string
+	autoPublish             bool
+	timeout                 time.Duration
+	sleep                   time.Duration
+	userAgent               string
 }
 
 // Api Client constructor
 // Input ApiClientArgs
 // Returns new client instance
 func APIClient(apiCA ApiClientArgs) *ApiClient {
-	isPortDefault  := false
+	isPortDefault := false
+	proxyUsed := true
 
 	if apiCA.Port == -1 || apiCA.Port == DefaultPort {
 		apiCA.Port = DefaultPort
 		isPortDefault = true
+	}
+	if apiCA.ProxyPort == DefaultProxyPort && apiCA.ProxyHost == DefaultProxyHost {
+		proxyUsed = false
 	}
 
 	// The context of using the client - defaults to web api
@@ -78,9 +85,9 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		apiCA.Context = WebContext
 	}
 
-	if apiCA.Timeout == -1 || apiCA.Timeout == TimeOut{
-		apiCA.Timeout =	TimeOut
-	}else{
+	if apiCA.Timeout == -1 || apiCA.Timeout == TimeOut {
+		apiCA.Timeout = TimeOut
+	} else {
 		apiCA.Timeout = apiCA.Timeout * time.Second
 	}
 
@@ -89,24 +96,25 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 	}
 
 	return &ApiClient{
-		port: apiCA.Port,
-		isPortDefault_: isPortDefault,
-		fingerprint: apiCA.Fingerprint,
-		sid: apiCA.Sid,
-		server: apiCA.Server,
-		domain: "",
-		proxyHost: apiCA.ProxyHost,
-		proxyPort: apiCA.ProxyPort,
-		apiVersion: apiCA.ApiVersion,
+		port:                    apiCA.Port,
+		isPortDefault_:          isPortDefault,
+		fingerprint:             apiCA.Fingerprint,
+		sid:                     apiCA.Sid,
+		server:                  apiCA.Server,
+		domain:                  "",
+		proxyHost:               apiCA.ProxyHost,
+		proxyPort:               apiCA.ProxyPort,
+		isProxyUsed:             proxyUsed,
+		apiVersion:              apiCA.ApiVersion,
 		ignoreServerCertificate: apiCA.IgnoreServerCertificate,
 		acceptServerCertificate: apiCA.AcceptServerCertificate,
-		debugFile: apiCA.DebugFile,
-		httpDebugLevel: apiCA.HttpDebugLevel,
-		context: apiCA.Context,
-		autoPublish: apiCA.AutoPublish,
-		timeout: apiCA.Timeout,
-		sleep: apiCA.Sleep,
-		userAgent: apiCA.UserAgent,
+		debugFile:               apiCA.DebugFile,
+		httpDebugLevel:          apiCA.HttpDebugLevel,
+		context:                 apiCA.Context,
+		autoPublish:             apiCA.AutoPublish,
+		timeout:                 apiCA.Timeout,
+		sleep:                   apiCA.Sleep,
+		userAgent:               apiCA.UserAgent,
 	}
 }
 
@@ -120,7 +128,6 @@ func (c *ApiClient) GetContext() string {
 	return c.context
 }
 
-
 func (c *ApiClient) GetAutoPublish() bool {
 	return c.autoPublish
 }
@@ -133,6 +140,11 @@ func (c *ApiClient) getFingerprint() string {
 // Returns true if API port is set to default
 func (c *ApiClient) IsPortDefault() bool {
 	return c.isPortDefault_
+}
+
+// Returns true if client use proxy
+func (c *ApiClient) IsProxyUsed() bool {
+	return c.isProxyUsed
 }
 
 // Set API port
@@ -155,12 +167,10 @@ func (c *ApiClient) SetTimeout(timeout time.Duration) {
 	c.timeout = timeout
 }
 
-
 // Returns session id
 func (c *ApiClient) GetSessionID() string {
 	return c.sid
 }
-
 
 /*
 Performs a 'login' API call to management server
@@ -174,12 +184,36 @@ payload: [optional] More settings for the login command
 returns: APIResponse, error
 side-effects: updates the class's uid and server variables
 
- */
+*/
 func (c *ApiClient) Login(username string, password string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
 	credentials := map[string]interface{}{
-		"user":                  username,
-		"password":              password,
+		"user":     username,
+		"password": password,
 	}
+	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, payload)
+}
+
+/*
+performs a 'login' API call to the management server
+
+api_key: Check Point api-key
+continue_last_session: [optional] It is possible to continue the last Check Point session
+or to create a new one
+domain: [optional] The name, UID or IP-Address of the domain to login.
+read_only: [optional] Login with Read Only permissions. This parameter is not considered in case
+continue-last-session is true.
+payload: [optional] More settings for the login command
+returns: APIResponse object
+side-effects: updates the class's uid and server variables
+*/
+func (c *ApiClient) LoginWithApiKey(apiKey string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+	credentials := map[string]interface{}{
+		"api-key": apiKey,
+	}
+	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, payload)
+}
+
+func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
 
 	if c.context == WebContext {
 		credentials["continue-last-session"] = continueLastSession
@@ -218,7 +252,7 @@ useProxy: Determines if the user wants to use the proxy server and port provider
 return: APIResponse object
 side-effects: updates the class's uid and server variables
 
- */
+*/
 func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool) (APIResponse, error) {
 	fp, errFP := getFingerprint(c.server, c.port)
 	if errFP != nil {
@@ -277,7 +311,7 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 	var url string
 	if c.apiVersion == "" {
 		url = "/" + c.context + "/" + command
-	}else {
+	} else {
 		url = "/" + c.context + "/" + "v" + c.apiVersion + "/" + command
 	}
 
@@ -287,7 +321,7 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 
 	spotReader := bytes.NewReader(_data)
 
-	req, err := http.NewRequest("POST", "https://" + c.server + ":" + strconv.Itoa(c.port) + url, spotReader)
+	req, err := http.NewRequest("POST", "https://"+c.server+":"+strconv.Itoa(c.port)+url, spotReader)
 	if err != nil {
 		return APIResponse{}, err
 	}
@@ -308,53 +342,53 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 		return APIResponse{}, err
 	}
 
-   if !res.Success{
-   		fullErrorMsg := "failed to execute API call" +
-   						"\nStatus: " + res.StatusCode +
-   						"\nCode: " + res.GetData()["code"].(string) +
-   						"\nMessage: " + res.GetData()["message"].(string)
+	if !res.Success {
+		fullErrorMsg := "failed to execute API call" +
+			"\nStatus: " + res.StatusCode +
+			"\nCode: " + res.GetData()["code"].(string) +
+			"\nMessage: " + res.GetData()["message"].(string)
 
-   		if errorMsg := res.data["errors"]; errorMsg != nil {
+		if errorMsg := res.data["errors"]; errorMsg != nil {
 			fullErrorMsg += "\nErrors: "
-   			errorMsgType := reflect.TypeOf(errorMsg).Kind()
-   			if errorMsgType == reflect.String {
+			errorMsgType := reflect.TypeOf(errorMsg).Kind()
+			if errorMsgType == reflect.String {
 				fullErrorMsg += errorMsg.(string) + "\n"
 			} else {
 				errorsList := res.data["errors"].([]interface{})
 				for i := range errorsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + errorsList[i].(map[string]interface{})["message"].(string)
+					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + errorsList[i].(map[string]interface{})["message"].(string)
 				}
 			}
-   		}
+		}
 
-   		if warningMsg := res.data["warnings"]; warningMsg != nil {
-   			fullErrorMsg += "\nWarnings: "
-   			warningMsgType := reflect.TypeOf(warningMsg).Kind()
-   			if warningMsgType == reflect.String {
+		if warningMsg := res.data["warnings"]; warningMsg != nil {
+			fullErrorMsg += "\nWarnings: "
+			warningMsgType := reflect.TypeOf(warningMsg).Kind()
+			if warningMsgType == reflect.String {
 				fullErrorMsg += warningMsg.(string) + "\n"
 			} else {
 				warningsList := res.data["warnings"].([]interface{})
 				for i := range warningsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
+					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
 				}
 			}
-   		}
+		}
 
-	   if blockingError := res.data["blocking-errors"]; blockingError != nil {
-		   fullErrorMsg += "\nBlocking errors: "
-		   warningMsgType := reflect.TypeOf(blockingError).Kind()
-		   if warningMsgType == reflect.String {
-			   fullErrorMsg += blockingError.(string) + "\n"
-		   } else {
-			   blockingErrorsList := res.data["blocking-errors"].([]interface{})
-			   for i := range blockingErrorsList {
-				   fullErrorMsg += "\n" + strconv.Itoa(i + 1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
-			   }
-		   }
-	   }
+		if blockingError := res.data["blocking-errors"]; blockingError != nil {
+			fullErrorMsg += "\nBlocking errors: "
+			warningMsgType := reflect.TypeOf(blockingError).Kind()
+			if warningMsgType == reflect.String {
+				fullErrorMsg += blockingError.(string) + "\n"
+			} else {
+				blockingErrorsList := res.data["blocking-errors"].([]interface{})
+				for i := range blockingErrorsList {
+					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
+				}
+			}
+		}
 
-   		res.ErrorMsg = fullErrorMsg
-   	}
+		res.ErrorMsg = fullErrorMsg
+	}
 
 	if waitForTask == true && res.Success && command != "show-task" {
 		if _, ok := res.data["task-id"]; ok {
@@ -448,7 +482,6 @@ returns: an APIResponse object as detailed above
 */
 func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKeys []string, payload map[string]interface{}, err_output *error) []APIResponse {
 
-
 	const objLimit int = Limit
 	var finished bool = false
 
@@ -535,7 +568,6 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 
 	return serverResponse
 }
-
 
 /**
 When the server needs to perform an API call that may take a long time (e.g. run-script, install-policy,
@@ -669,7 +701,7 @@ func checkTasksStatus(taskResult *APIResponse) {
    @===================@
    |  FINGERPRINT AREA |
    @===================@
- */
+*/
 
 /**
 This function checks if the server's certificate is stored in the local fingerprints file.
@@ -716,7 +748,7 @@ func (c *ApiClient) CheckFingerprint() (bool, error) {
 		} else {
 			fmt.Fprintf(os.Stderr, "The server's fingerprint is different from your local record of this server's fingerprint.\n You maybe a victim to a Man-in-the-Middle attack, please beware.\n")
 		}
-		fmt.Fprintf(os.Stderr, "Server's fingerprint: %s\n", (serverFp), )
+		fmt.Fprintf(os.Stderr, "Server's fingerprint: %s\n", (serverFp))
 
 		if c.askYesOrNoQuestion("Do you accept this fingerprint?\n") {
 			if c.saveFingerprintToFile(c.server, serverFp) == nil {
@@ -854,6 +886,6 @@ func (c *ApiClient) createEmptyJsonFile(name string) error {
 func (c *ApiClient) askYesOrNoQuestion(question string) bool {
 	fmt.Println(question)
 	var answer string
-	_,_ = fmt.Scanln(&answer)
+	_, _ = fmt.Scanln(&answer)
 	return strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes"
 }

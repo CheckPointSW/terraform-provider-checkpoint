@@ -293,7 +293,7 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Create VpnCommunityMeshed - Map = ", vpnCommunityMeshed)
 
-	addVpnCommunityMeshedRes, err := client.ApiCall("add-vpn-community-meshed", vpnCommunityMeshed, client.GetSessionID(), true, false)
+	addVpnCommunityMeshedRes, err := client.ApiCall("add-vpn-community-meshed", vpnCommunityMeshed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVpnCommunityMeshedRes.Success {
 		if addVpnCommunityMeshedRes.ErrorMsg != "" {
 			return fmt.Errorf(addVpnCommunityMeshedRes.ErrorMsg)
@@ -314,7 +314,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
-	showVpnCommunityMeshedRes, err := client.ApiCall("show-vpn-community-meshed", payload, client.GetSessionID(), true, false)
+	showVpnCommunityMeshedRes, err := client.ApiCall("show-vpn-community-meshed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -669,7 +669,7 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Update VpnCommunityMeshed - Map = ", vpnCommunityMeshed)
 
-	updateVpnCommunityMeshedRes, err := client.ApiCall("set-vpn-community-meshed", vpnCommunityMeshed, client.GetSessionID(), true, false)
+	updateVpnCommunityMeshedRes, err := client.ApiCall("set-vpn-community-meshed", vpnCommunityMeshed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVpnCommunityMeshedRes.Success {
 		if updateVpnCommunityMeshedRes.ErrorMsg != "" {
 			return fmt.Errorf(updateVpnCommunityMeshedRes.ErrorMsg)
@@ -690,7 +690,7 @@ func deleteManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 
 	log.Println("Delete VpnCommunityMeshed")
 
-	deleteVpnCommunityMeshedRes, err := client.ApiCall("delete-vpn-community-meshed", vpnCommunityMeshedPayload, client.GetSessionID(), true, false)
+	deleteVpnCommunityMeshedRes, err := client.ApiCall("delete-vpn-community-meshed", vpnCommunityMeshedPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVpnCommunityMeshedRes.Success {
 		if deleteVpnCommunityMeshedRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteVpnCommunityMeshedRes.ErrorMsg)

@@ -46,7 +46,7 @@ func createManagementBackupDomain(d *schema.ResourceData, m interface{}) error {
 		payload["file-path"] = v.(string)
 	}
 
-	BackupDomainRes, _ := client.ApiCall("backup-domain", payload, client.GetSessionID(), true, false)
+	BackupDomainRes, _ := client.ApiCall("backup-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !BackupDomainRes.Success {
 		return fmt.Errorf(BackupDomainRes.ErrorMsg)
 	}

@@ -192,7 +192,7 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Network - Map = ", network)
 
-	addNetworkRes, err := client.ApiCall("add-network", network, client.GetSessionID(), true, false)
+	addNetworkRes, err := client.ApiCall("add-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNetworkRes.Success {
 		if addNetworkRes.ErrorMsg != "" {
 			return fmt.Errorf(addNetworkRes.ErrorMsg)
@@ -213,7 +213,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, false)
+	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -408,7 +408,7 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Network - Map = ", network)
-	setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, false)
+	setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
 		return fmt.Errorf(setNetworkRes.ErrorMsg)
 	}
@@ -421,7 +421,7 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	deleteNetworkRes, _ := client.ApiCall("delete-network", payload, client.GetSessionID(), true, false)
+	deleteNetworkRes, _ := client.ApiCall("delete-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteNetworkRes.Success {
 		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
 	}

@@ -76,7 +76,7 @@ func dataSourceManagementGsnHandoverGroupRead(d *schema.ResourceData, m interfac
 		payload["uid"] = uid
 	}
 
-	showGsnHandoverGroupRes, err := client.ApiCall("show-gsn-handover-group", payload, client.GetSessionID(), true, false)
+	showGsnHandoverGroupRes, err := client.ApiCall("show-gsn-handover-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

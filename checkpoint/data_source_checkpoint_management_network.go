@@ -131,7 +131,7 @@ func dataSourceManagementNetworkRead(d *schema.ResourceData, m interface{}) erro
 		payload["uid"] = uid
 	}
 
-	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, false)
+	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

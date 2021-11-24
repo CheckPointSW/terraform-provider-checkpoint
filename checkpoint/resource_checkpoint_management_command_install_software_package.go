@@ -94,7 +94,7 @@ func createManagementInstallSoftwarePackage(d *schema.ResourceData, m interface{
 		payload["concurrency-limit"] = v.(int)
 	}
 
-	InstallSoftwarePackageRes, _ := client.ApiCall("install-software-package", payload, client.GetSessionID(), true, false)
+	InstallSoftwarePackageRes, _ := client.ApiCall("install-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallSoftwarePackageRes.Success {
 		return fmt.Errorf(InstallSoftwarePackageRes.ErrorMsg)
 	}

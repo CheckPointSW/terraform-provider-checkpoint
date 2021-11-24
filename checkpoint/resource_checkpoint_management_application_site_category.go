@@ -97,7 +97,7 @@ func createManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 
 	log.Println("Create ApplicationSiteCategory - Map = ", applicationSiteCategory)
 
-	addApplicationSiteCategoryRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, false)
+	addApplicationSiteCategoryRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteCategoryRes.Success {
 		if addApplicationSiteCategoryRes.ErrorMsg != "" {
 			return fmt.Errorf(addApplicationSiteCategoryRes.ErrorMsg)
@@ -118,7 +118,7 @@ func readManagementApplicationSiteCategory(d *schema.ResourceData, m interface{}
 		"uid": d.Id(),
 	}
 
-	showApplicationSiteCategoryRes, err := client.ApiCall("show-application-site-category", payload, client.GetSessionID(), true, false)
+	showApplicationSiteCategoryRes, err := client.ApiCall("show-application-site-category", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -222,7 +222,7 @@ func updateManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 
 	log.Println("Update ApplicationSiteCategory - Map = ", applicationSiteCategory)
 
-	updateApplicationSiteCategoryRes, err := client.ApiCall("set-application-site-category", applicationSiteCategory, client.GetSessionID(), true, false)
+	updateApplicationSiteCategoryRes, err := client.ApiCall("set-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteCategoryRes.Success {
 		if updateApplicationSiteCategoryRes.ErrorMsg != "" {
 			return fmt.Errorf(updateApplicationSiteCategoryRes.ErrorMsg)
@@ -243,7 +243,7 @@ func deleteManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 
 	log.Println("Delete ApplicationSiteCategory")
 
-	deleteApplicationSiteCategoryRes, err := client.ApiCall("delete-application-site-category", applicationSiteCategoryPayload, client.GetSessionID(), true, false)
+	deleteApplicationSiteCategoryRes, err := client.ApiCall("delete-application-site-category", applicationSiteCategoryPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteCategoryRes.Success {
 		if deleteApplicationSiteCategoryRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteApplicationSiteCategoryRes.ErrorMsg)

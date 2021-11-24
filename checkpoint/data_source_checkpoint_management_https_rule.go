@@ -145,7 +145,7 @@ func dataSourceManagementHttpsRuleRead(d *schema.ResourceData, m interface{}) er
 		payload["uid"] = uid
 	}
 
-	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, false)
+	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

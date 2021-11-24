@@ -76,7 +76,7 @@ func createManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) 
 		payload["include-logs"] = v.(bool)
 	}
 
-	MigrateImportDomainRes, _ := client.ApiCall("migrate-import-domain", payload, client.GetSessionID(), true, false)
+	MigrateImportDomainRes, _ := client.ApiCall("migrate-import-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !MigrateImportDomainRes.Success {
 		return fmt.Errorf(MigrateImportDomainRes.ErrorMsg)
 	}

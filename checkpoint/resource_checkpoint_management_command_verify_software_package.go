@@ -59,7 +59,7 @@ func createManagementVerifySoftwarePackage(d *schema.ResourceData, m interface{}
 		payload["concurrency-limit"] = v.(int)
 	}
 
-	VerifySoftwarePackageRes, _ := client.ApiCall("verify-software-package", payload, client.GetSessionID(), true, false)
+	VerifySoftwarePackageRes, _ := client.ApiCall("verify-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !VerifySoftwarePackageRes.Success {
 		return fmt.Errorf(VerifySoftwarePackageRes.ErrorMsg)
 	}

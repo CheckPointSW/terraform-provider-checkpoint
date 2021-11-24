@@ -235,7 +235,7 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create ServiceOther - Map = ", serviceOther)
 
-	addServiceOtherRes, err := client.ApiCall("add-service-other", serviceOther, client.GetSessionID(), true, false)
+	addServiceOtherRes, err := client.ApiCall("add-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceOtherRes.Success {
 		if addServiceOtherRes.ErrorMsg != "" {
 			return fmt.Errorf(addServiceOtherRes.ErrorMsg)
@@ -256,7 +256,7 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, false)
+	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -492,7 +492,7 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update ServiceOther - Map = ", serviceOther)
 
-	updateServiceOtherRes, err := client.ApiCall("set-service-other", serviceOther, client.GetSessionID(), true, false)
+	updateServiceOtherRes, err := client.ApiCall("set-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceOtherRes.Success {
 		if updateServiceOtherRes.ErrorMsg != "" {
 			return fmt.Errorf(updateServiceOtherRes.ErrorMsg)
@@ -513,7 +513,7 @@ func deleteManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete ServiceOther")
 
-	deleteServiceOtherRes, err := client.ApiCall("delete-service-other", serviceOtherPayload, client.GetSessionID(), true, false)
+	deleteServiceOtherRes, err := client.ApiCall("delete-service-other", serviceOtherPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceOtherRes.Success {
 		if deleteServiceOtherRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteServiceOtherRes.ErrorMsg)

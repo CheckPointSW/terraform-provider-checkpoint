@@ -36,7 +36,7 @@ func createManagementDeleteThreatProtections(d *schema.ResourceData, m interface
 		payload["package-format"] = v.(string)
 	}
 
-	DeleteThreatProtectionsRes, _ := client.ApiCall("delete-threat-protections", payload, client.GetSessionID(), true, false)
+	DeleteThreatProtectionsRes, _ := client.ApiCall("delete-threat-protections", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteThreatProtectionsRes.Success {
 		return fmt.Errorf(DeleteThreatProtectionsRes.ErrorMsg)
 	}

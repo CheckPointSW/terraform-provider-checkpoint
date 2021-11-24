@@ -36,7 +36,7 @@ func createManagementVerifyPolicy(d *schema.ResourceData, m interface{}) error {
 		payload["policy-package"] = v.(string)
 	}
 
-	VerifyPolicyRes, _ := client.ApiCall("verify-policy", payload, client.GetSessionID(), true, false)
+	VerifyPolicyRes, _ := client.ApiCall("verify-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !VerifyPolicyRes.Success {
 		return fmt.Errorf(VerifyPolicyRes.ErrorMsg)
 	}

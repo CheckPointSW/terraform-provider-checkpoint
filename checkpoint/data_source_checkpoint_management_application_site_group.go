@@ -74,7 +74,7 @@ func dataSourceManagementApplicationSiteGroupRead(d *schema.ResourceData, m inte
 		payload["uid"] = uid
 	}
 
-	showApplicationSiteGroupRes, err := client.ApiCall("show-application-site-group", payload, client.GetSessionID(), true, false)
+	showApplicationSiteGroupRes, err := client.ApiCall("show-application-site-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

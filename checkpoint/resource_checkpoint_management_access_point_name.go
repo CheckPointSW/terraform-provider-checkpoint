@@ -133,7 +133,7 @@ func createManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Create AccessPointName - Map = ", accessPointName)
 
-	addAccessPointNameRes, err := client.ApiCall("add-access-point-name", accessPointName, client.GetSessionID(), true, false)
+	addAccessPointNameRes, err := client.ApiCall("add-access-point-name", accessPointName, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessPointNameRes.Success {
 		if addAccessPointNameRes.ErrorMsg != "" {
 			return fmt.Errorf(addAccessPointNameRes.ErrorMsg)
@@ -154,7 +154,7 @@ func readManagementAccessPointName(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
-	showAccessPointNameRes, err := client.ApiCall("show-access-point-name", payload, client.GetSessionID(), true, false)
+	showAccessPointNameRes, err := client.ApiCall("show-access-point-name", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -281,7 +281,7 @@ func updateManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Update AccessPointName - Map = ", accessPointName)
 
-	updateAccessPointNameRes, err := client.ApiCall("set-access-point-name", accessPointName, client.GetSessionID(), true, false)
+	updateAccessPointNameRes, err := client.ApiCall("set-access-point-name", accessPointName, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessPointNameRes.Success {
 		if updateAccessPointNameRes.ErrorMsg != "" {
 			return fmt.Errorf(updateAccessPointNameRes.ErrorMsg)
@@ -302,7 +302,7 @@ func deleteManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 
 	log.Println("Delete AccessPointName")
 
-	deleteAccessPointNameRes, err := client.ApiCall("delete-access-point-name", accessPointNamePayload, client.GetSessionID(), true, false)
+	deleteAccessPointNameRes, err := client.ApiCall("delete-access-point-name", accessPointNamePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessPointNameRes.Success {
 		if deleteAccessPointNameRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteAccessPointNameRes.ErrorMsg)

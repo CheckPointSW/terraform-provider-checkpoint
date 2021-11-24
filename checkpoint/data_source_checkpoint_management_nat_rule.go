@@ -105,7 +105,7 @@ func dataSourceManagementNatRuleRead(d *schema.ResourceData, m interface{}) erro
 		payload["uid"] = uid
 	}
 
-	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, false)
+	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

@@ -16,7 +16,7 @@ func TestAccCheckpointManagementGenericDataCenterServer_basic(t *testing.T) {
 	var genericDataCenterServerMap map[string]interface{}
 	resourceName := "checkpoint_management_generic_data_center_server.test"
 	objName := "tfTestManagementGenericDataCenterServer_" + acctest.RandString(6)
-	url := "/home/admin/test.json"
+	url := "MY_URL"
 	interval := "60"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
@@ -102,6 +102,7 @@ resource "checkpoint_management_generic_data_center_server" "test" {
         name = "%s"
 		url = "%s"
 		interval = "%s"
+		ignore_warnings = true
 }
 `, name, url, interval)
 }

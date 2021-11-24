@@ -434,7 +434,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 		payload["uid"] = uid
 	}
 
-	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, false)
+	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

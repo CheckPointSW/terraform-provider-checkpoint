@@ -163,7 +163,7 @@ func dataSourceManagementUserRead(d *schema.ResourceData, m interface{}) error {
 		payload["uid"] = uid
 	}
 
-	showUserRes, err := client.ApiCall("show-user", payload, client.GetSessionID(), true, false)
+	showUserRes, err := client.ApiCall("show-user", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

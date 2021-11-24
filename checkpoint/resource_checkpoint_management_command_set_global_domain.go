@@ -120,7 +120,7 @@ func createManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) erro
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	SetGlobalDomainRes, _ := client.ApiCall("set-global-domain", payload, client.GetSessionID(), true, false)
+	SetGlobalDomainRes, _ := client.ApiCall("set-global-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetGlobalDomainRes.Success {
 		return fmt.Errorf(SetGlobalDomainRes.ErrorMsg)
 	}

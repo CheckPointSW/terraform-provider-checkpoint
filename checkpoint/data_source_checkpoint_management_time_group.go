@@ -73,7 +73,7 @@ func dataSourceManagementTimeGroupRead(d *schema.ResourceData, m interface{}) er
 		payload["uid"] = uid
 	}
 
-	showTimeGroupRes, err := client.ApiCall("show-time-group", payload, client.GetSessionID(), true, false)
+	showTimeGroupRes, err := client.ApiCall("show-time-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

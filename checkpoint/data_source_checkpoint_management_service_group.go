@@ -73,7 +73,7 @@ func dataSourceManagementServiceGroupRead(d *schema.ResourceData, m interface{})
 		payload["uid"] = uid
 	}
 
-	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, false)
+	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

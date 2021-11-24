@@ -51,7 +51,7 @@ func createManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	DeleteDataCenterObjectRes, _ := client.ApiCall("delete-data-center-object", payload, client.GetSessionID(), true, false)
+	DeleteDataCenterObjectRes, _ := client.ApiCall("delete-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteDataCenterObjectRes.Success {
 		return fmt.Errorf(DeleteDataCenterObjectRes.ErrorMsg)
 	}

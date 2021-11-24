@@ -131,7 +131,7 @@ func dataSourceManagementServiceSctpRead(d *schema.ResourceData, m interface{}) 
 		payload["uid"] = uid
 	}
 
-	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, false)
+	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

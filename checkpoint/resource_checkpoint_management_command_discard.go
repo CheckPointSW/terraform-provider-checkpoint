@@ -20,7 +20,7 @@ func createManagementDiscard(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	DiscardRes, _ := client.ApiCall("discard", payload, client.GetSessionID(), true, false)
+	DiscardRes, _ := client.ApiCall("discard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DiscardRes.Success {
 		return fmt.Errorf(DiscardRes.ErrorMsg)
 	}

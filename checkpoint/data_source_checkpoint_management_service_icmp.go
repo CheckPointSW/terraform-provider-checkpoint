@@ -80,7 +80,7 @@ func dataSourceManagementServiceIcmpRead(d *schema.ResourceData, m interface{}) 
 		payload["uid"] = uid
 	}
 
-	showServiceIcmpRes, err := client.ApiCall("show-service-icmp", payload, client.GetSessionID(), true, false)
+	showServiceIcmpRes, err := client.ApiCall("show-service-icmp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

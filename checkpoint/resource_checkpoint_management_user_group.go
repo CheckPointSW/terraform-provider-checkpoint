@@ -106,7 +106,7 @@ func createManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create UserGroup - Map = ", userGroup)
 
-	addUserGroupRes, err := client.ApiCall("add-user-group", userGroup, client.GetSessionID(), true, false)
+	addUserGroupRes, err := client.ApiCall("add-user-group", userGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addUserGroupRes.Success {
 		if addUserGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addUserGroupRes.ErrorMsg)
@@ -127,7 +127,7 @@ func readManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showUserGroupRes, err := client.ApiCall("show-user-group", payload, client.GetSessionID(), true, false)
+	showUserGroupRes, err := client.ApiCall("show-user-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -247,7 +247,7 @@ func updateManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update UserGroup - Map = ", userGroup)
 
-	updateUserGroupRes, err := client.ApiCall("set-user-group", userGroup, client.GetSessionID(), true, false)
+	updateUserGroupRes, err := client.ApiCall("set-user-group", userGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateUserGroupRes.Success {
 		if updateUserGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(updateUserGroupRes.ErrorMsg)
@@ -268,7 +268,7 @@ func deleteManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Delete UserGroup")
 
-	deleteUserGroupRes, err := client.ApiCall("delete-user-group", userGroupPayload, client.GetSessionID(), true, false)
+	deleteUserGroupRes, err := client.ApiCall("delete-user-group", userGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteUserGroupRes.Success {
 		if deleteUserGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteUserGroupRes.ErrorMsg)
