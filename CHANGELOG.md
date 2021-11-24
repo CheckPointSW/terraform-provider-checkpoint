@@ -1,4 +1,4 @@
-## 1.6.0 (UNKNOWN)
+## 1.6.0 (November 24, 2021)
 
 FEATURES
 
