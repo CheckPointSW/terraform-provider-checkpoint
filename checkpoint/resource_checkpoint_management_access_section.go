@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+	"strings"
 )
 
 func resourceManagementAccessSection() *schema.Resource {
@@ -14,7 +15,15 @@ func resourceManagementAccessSection() *schema.Resource {
 		Update: updateManagementAccessSection,
 		Delete: deleteManagementAccessSection,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+				arr := strings.Split(d.Id(), ";")
+				if len(arr) != 2 {
+					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_IDENTIFIER>;<SECTION_UID>")
+				}
+				_ = d.Set("layer", arr[0])
+				d.SetId(arr[1])
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {

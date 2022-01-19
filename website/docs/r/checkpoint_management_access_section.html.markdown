@@ -30,3 +30,11 @@ The following arguments are supported:
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 * `position` - (Required) Position in the rulebase. 
+
+## Import
+
+`checkpoint_management_access_section` can be imported by using the following format: LAYER_NAME;SECTION_UID
+
+```
+$ terraform import checkpoint_management_access_section.example "Network;354e184c-2f42-485c-b62d-ff9b3d29ee3e"
+```
