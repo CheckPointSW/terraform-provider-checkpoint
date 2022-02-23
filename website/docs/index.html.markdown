@@ -16,6 +16,7 @@ configuration errors. With the Check Point provider, DevOps teams can automate t
 DevSecOps workflows.
 
 ## Examples usage
+## Terraform 0.12 and earlier:
 
 ```hcl
 # Configure the Check Point Provider
@@ -32,6 +33,25 @@ resource "checkpoint_management_network" "network" {
   subnet4      = "192.0.2.0"
   mask_length4 = "24"
   # ...   
+}
+```
+## Terraform 0.13 and later:
+```hcl
+terraform {
+  required_providers {
+    checkpoint = {
+      source  = "checkpointsw/checkpoint"
+      version = "~> 1.6.0"
+    }
+  }
+}
+
+# Configure the Check Point Provider
+provider "checkpoint" {
+  server   = "192.0.2.1"
+  username = "aa"
+  password = "aaaa"
+  context  = "web_api"
 }
 ```
 
@@ -135,6 +155,17 @@ $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
  ```
 
+Usage with api key:
+
+```bash
+$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_API_KEY="tBdloE9eOYzzSQicNxS7mA=="
+$ export CHECKPOINT_CONTEXT="web_api"
+$ export CHECKPOINT_DOMAIN="Domain Name"
+$ export CHECKPOINT_TIMEOUT=10
+$ export CHECKPOINT_PORT=443
+ ```
+
 Then configure the Check Point Provider as following:
 
 ```hcl
@@ -200,6 +231,17 @@ $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/co
 $ go build logout.go
 $ mv logout $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/logout_from_session
 $ terraform apply && publish && logout_from_session
+```
+
+### Discard
+
+Please use the following for Discard:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/discard
+$ go build discard.go
+$ mv discard $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ discard
 ```
 
 ### Install Policy

@@ -1,4 +1,19 @@
+## 1.7.0 (TBA)
+
+ENHANCEMENTS
+
+* `commands/discard/discard.go`: Add support for discard post apply script.
+
+BUG FIXES
+
+* updated `go.sum` to fix usage of packages with security vulnerabilities.
+* `resource_checkpoint_management_access_rule` - Fix bug that the `track` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_access_rule` - Fix bug that the `track` field forced user to put default values as input. Made name field optional and not required.
+* `resource_checkpoint_management_simple_gateway` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_simple_gateway` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+
 ## 1.6.0 (November 24, 2021)
+
 
 FEATURES
 

@@ -478,63 +478,36 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 			_ = d.Set("time", timeIds)
 		}
 	}
-
 	if accessRule["track"] != nil {
 
 		trackMap := accessRule["track"].(map[string]interface{})
 
 		trackMapToReturn := make(map[string]interface{})
-
-		if v, _ := trackMap["accounting"]; v != nil {
+		if v := trackMap["accounting"]; v != nil {
 			trackMapToReturn["accounting"] = strconv.FormatBool(v.(bool))
-		} else {
-			trackMapToReturn["accounting"] = false
 		}
 
 		if v, _ := trackMap["alert"]; v != nil {
-			trackMapToReturn["alert"] = v
-		} else {
-			trackMapToReturn["alert"] = "none"
+			trackMapToReturn["alert"] = v.(string)
 		}
 
-		if v, _ := trackMap["enable-firewall-session"]; v != nil {
+		if v := trackMap["enable-firewall-session"]; v != nil {
 			trackMapToReturn["enable_firewall_session"] = strconv.FormatBool(v.(bool))
-		} else {
-			trackMapToReturn["enable_firewall_session"] = false
 		}
 
-		if v, _ := trackMap["per-connection"]; v != nil {
+		if v := trackMap["per-connection"]; v != nil {
 			trackMapToReturn["per_connection"] = strconv.FormatBool(v.(bool))
-		} else {
-			trackMapToReturn["per_connection"] = false
 		}
 
-		if v, _ := trackMap["per-session"]; v != nil {
+		if v := trackMap["per-session"]; v != nil {
 			trackMapToReturn["per_session"] = strconv.FormatBool(v.(bool))
-		} else {
-			trackMapToReturn["per_session"] = false
 		}
 
 		if v, _ := trackMap["type"]; v != nil {
-			trackMapToReturn["type"] = v.(map[string]interface{})["name"]
-		} else {
-			trackMapToReturn["type"] = "None"
+			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
 		}
+		err = d.Set("track", trackMapToReturn)
 
-		_, trackInConf := d.GetOk("track")
-		defaultTrack := map[string]interface{}{
-			"accounting":              false,
-			"alert":                   "none",
-			"enable_firewall_session": false,
-			"per_connection":          false,
-			"per_session":             false,
-			"type":                    "None"}
-
-		if reflect.DeepEqual(defaultTrack, trackMapToReturn) && !trackInConf {
-			_ = d.Set("track", map[string]interface{}{})
-		} else {
-			_ = d.Set("track", trackMapToReturn)
-		}
 	} else {
 		_ = d.Set("track", nil)
 	}

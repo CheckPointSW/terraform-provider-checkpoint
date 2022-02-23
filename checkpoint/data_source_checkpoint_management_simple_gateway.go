@@ -5,6 +5,8 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+	"math"
+	"strconv"
 )
 
 func dataSourceManagementSimpleGateway() *schema.Resource {
@@ -271,6 +273,11 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Computed:    true,
 				Description: "Gateway platform hardware type.",
 			},
+			"one_time_password": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "SIC one time password.",
+			},
 			"sic_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -321,10 +328,25 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Computed:    true,
 							Description: "Enable alert when free disk space is below threshold.",
 						},
-						"alert_when_free_disk_space_below_metrics": {
+						"free_disk_space_metrics": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Alert when free disk space below metrics.",
+							Description: "Free disk space metrics.",
+						},
+						"delete_index_files_when_index_size_above_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Delete index files when index size above metrics",
+						},
+						"delete_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Delete when free disk space below metric.",
+						},
+						"stop_logging_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stop logging when free disk space below metrics",
 						},
 						"alert_when_free_disk_space_below_threshold": {
 							Type:        schema.TypeInt,
@@ -372,11 +394,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Computed:    true,
 							Description: "Enable delete index files when index size above.",
 						},
-						"delete_index_files_when_index_size_above_metrics": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Delete index files when index size above metrics.",
-						},
 						"delete_index_files_when_index_size_above_threshold": {
 							Type:        schema.TypeInt,
 							Computed:    true,
@@ -386,11 +403,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Enable delete when free disk space below.",
-						},
-						"delete_when_free_disk_space_below_metrics": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Delete when free disk space below metric.",
 						},
 						"delete_when_free_disk_space_below_threshold": {
 							Type:        schema.TypeInt,
@@ -416,11 +428,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Forward logs to log server schedule name.",
-						},
-						"free_disk_space_metrics": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Free disk space metrics.",
 						},
 						"perform_log_rotate_before_log_forwarding": {
 							Type:        schema.TypeBool,
@@ -1019,147 +1026,105 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		logSettingsJson := v.(map[string]interface{})
 		logSettingsState := make(map[string]interface{})
 		if v := logSettingsJson["alert-when-free-disk-space-below"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below"] = v
+			logSettingsState["alert_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
 		}
 		if v := logSettingsJson["alert-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_metrics"] = v
-		}
-		if v := logSettingsJson["alert_when_free_disk_space_below_threshold"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_threshold"] = v
-		}
-		if v := logSettingsJson["alert-when-free-disk-space-below-type"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_type"] = v
-		}
-		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days"]; v != nil {
-			logSettingsState["before_delete_keep_logs_from_the_last_days"] = v
-		}
-		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
-			logSettingsState["before_delete_keep_logs_from_the_last_days_threshold"] = v
-		}
-		if v := logSettingsJson["before-delete-run-script"]; v != nil {
-			logSettingsState["before_delete_run_script"] = v
-		}
-		if v := logSettingsJson["before-delete-run-script-command"]; v != nil {
-			logSettingsState["before_delete_run_script_command"] = v
-		}
-		if v := logSettingsJson["delete-index-files-older-than-days"]; v != nil {
-			logSettingsState["delete_index_files_older_than_days"] = v
-		}
-		if v := logSettingsJson["delete-index-files-older-than-days-threshold"]; v != nil {
-			logSettingsState["delete_index_files_older_than_days_threshold"] = v
-		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above"] = v
+			logSettingsState["alert_when_free_disk_space_below_metrics"] = v.(string)
 		}
 		if v := logSettingsJson["delete-index-files-when-index-size-above-metrics"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above_metrics"] = v
-		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above-threshold"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above_threshold"] = v
-		}
-		if v := logSettingsJson["delete-when-free-disk-space-below"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below"] = v
+			logSettingsState["delete_index_files_when_index_size_above_metrics"] = v.(string)
 		}
 		if v := logSettingsJson["delete-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below_metrics"] = v
-		}
-		if v := logSettingsJson["delete-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below_threshold"] = v
-		}
-		if v := logSettingsJson["detect-new-citrix-ica-application-names"]; v != nil {
-			logSettingsState["detect_new_citrix_ica_application_names"] = v
-		}
-		if v := logSettingsJson["forward-logs-to-log-server"]; v != nil {
-			logSettingsState["forward_logs_to_log_server"] = v
-		}
-		if v := logSettingsJson["forward-logs-to-log-server-name"]; v != nil {
-			logSettingsState["forward_logs_to_log_server_name"] = v
-		}
-		if v := logSettingsJson["forward-logs-to-log-server-schedule-name"]; v != nil {
-			logSettingsState["forward_logs_to_log_server_schedule_name"] = v
-		}
-		if v := logSettingsJson["perform-log-rotate-before-log-forwarding"]; v != nil {
-			logSettingsState["perform_log_rotate_before_log_forwarding"] = v
-		}
-		if v := logSettingsJson["reject-connections-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["reject_connections_when_free_disk_space_below_threshold"] = v
-		}
-		if v := logSettingsJson["reserve-for-packet-capture-metrics"]; v != nil {
-			logSettingsState["reserve_for_packet_capture_metrics"] = v
-		}
-		if v := logSettingsJson["reserve-for-packet-capture-threshold"]; v != nil {
-			logSettingsState["reserve_for_packet_capture_threshold"] = v
-		}
-		if v := logSettingsJson["rotate-log-by-file-size"]; v != nil {
-			logSettingsState["rotate_log_by_file_size"] = v
-		}
-		if v := logSettingsJson["rotate-log-file-size-threshold"]; v != nil {
-			logSettingsState["rotate_log_file_size_threshold"] = v
-		}
-		if v := logSettingsJson["rotate-log-on-schedule"]; v != nil {
-			logSettingsState["rotate_log_on_schedule"] = v
-		}
-		if v := logSettingsJson["rotate-log-schedule-name"]; v != nil {
-			logSettingsState["rotate_log_schedule_name"] = v
-		}
-		if v := logSettingsJson["stop-logging-when-free-disk-space-below"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below"] = v
+			logSettingsState["delete_when_free_disk_space_below_metrics"] = v.(string)
 		}
 		if v := logSettingsJson["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below_metrics"] = v
+			logSettingsState["stop_logging_when_free_disk_space_below_metrics"] = v.(string)
+		}
+		if v := logSettingsJson["alert-when-free-disk-space-below-threshold"]; v != nil {
+			logSettingsState["alert_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["alert-when-free-disk-space-below-type"]; v != nil {
+			logSettingsState["alert_when_free_disk_space_below_type"] = v.(string)
+		}
+		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days"]; v != nil {
+			logSettingsState["before_delete_keep_logs_from_the_last_days"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
+			logSettingsState["before_delete_keep_logs_from_the_last_days_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["before-delete-run-script"]; v != nil {
+			logSettingsState["before_delete_run_script"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["before-delete-run-script-command"]; v != nil {
+			logSettingsState["before_delete_run_script_command"] = v.(string)
+		}
+		if v := logSettingsJson["delete-index-files-older-than-days"]; v != nil {
+			logSettingsState["delete_index_files_older_than_days"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["delete-index-files-older-than-days-threshold"]; v != nil {
+			logSettingsState["delete_index_files_older_than_days_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["delete-index-files-when-index-size-above"]; v != nil {
+			logSettingsState["delete_index_files_when_index_size_above"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["delete-index-files-when-index-size-above-threshold"]; v != nil {
+			logSettingsState["delete_index_files_when_index_size_above_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["delete-when-free-disk-space-below"]; v != nil {
+			logSettingsState["delete_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["delete-when-free-disk-space-below-threshold"]; v != nil {
+			logSettingsState["delete_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["detect-new-citrix-ica-application-names"]; v != nil {
+			logSettingsState["detect_new_citrix_ica_application_names"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["forward-logs-to-log-server"]; v != nil {
+			logSettingsState["forward_logs_to_log_server"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["forward-logs-to-log-server-name"]; v != nil {
+			logSettingsState["forward_logs_to_log_server_name"] = v.(string)
+		}
+		if v := logSettingsJson["forward-logs-to-log-server-schedule-name"]; v != nil {
+			logSettingsState["forward_logs_to_log_server_schedule_name"] = v.(string)
+		}
+		if v := logSettingsJson["perform-log-rotate-before-log-forwarding"]; v != nil {
+			logSettingsState["perform_log_rotate_before_log_forwarding"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["reject-connections-when-free-disk-space-below-threshold"]; v != nil {
+			logSettingsState["reject_connections_when_free_disk_space_below_threshold"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["reserve-for-packet-capture-metrics"]; v != nil {
+			logSettingsState["reserve_for_packet_capture_metrics"] = v.(string)
+		}
+		if v := logSettingsJson["reserve-for-packet-capture-threshold"]; v != nil {
+			logSettingsState["reserve_for_packet_capture_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["rotate-log-by-file-size"]; v != nil {
+			logSettingsState["rotate_log_by_file_size"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["rotate-log-file-size-threshold"]; v != nil {
+			logSettingsState["rotate_log_file_size_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		}
+		if v := logSettingsJson["rotate-log-on-schedule"]; v != nil {
+			logSettingsState["rotate_log_on_schedule"] = strconv.FormatBool(v.(bool))
+		}
+		if v := logSettingsJson["rotate-log-schedule-name"]; v != nil {
+			logSettingsState["rotate_log_schedule_name"] = v.(string)
+		}
+		if v := logSettingsJson["stop-logging-when-free-disk-space-below"]; v != nil {
+			logSettingsState["stop_logging_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
 		}
 		if v := logSettingsJson["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below_threshold"] = v
+			logSettingsState["stop_logging_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
 		}
 		if v := logSettingsJson["turn-on-qos-logging"]; v != nil {
-			logSettingsState["turn_on_qos_logging"] = v
+			logSettingsState["turn_on_qos_logging"] = strconv.FormatBool(v.(bool))
 		}
 		if v := logSettingsJson["update-account-log-every"]; v != nil {
-			logSettingsState["update_account_log_every"] = v
+			logSettingsState["update_account_log_every"] = strconv.Itoa(int(math.Round(v.(float64))))
 		}
 		_ = d.Set("logs_settings", logSettingsState)
-		/*
-			_, logsSettingsInConf := d.GetOk("logs_settings")
-			defaultLogsSettings := map[string]interface{}{
-				"rotate_log_by_file_size": false,
-				"rotate_log_file_size_threshold": 1000,
-				"rotate_log_on_schedule": false,
-				"alert_when_free_disk_space_below_metrics": "mbytes",
-				"alert_when_free_disk_space_below": true,
-				"alert_when_free_disk_space_below_threshold": 20,
-				"alert_when_free_disk_space_below_type": "popup alert",
-				"delete_when_free_disk_space_below_metrics": "mbytes",
-				"delete_when_free_disk_space_below": true,
-				"delete_when_free_disk_space_below_threshold": 5000,
-				"before_delete_keep_logs_from_the_last_days": false,
-				"before_delete_keep_logs_from_the_last_days_threshold": 3664,
-				"before_delete_run_script": false,
-				"before_delete_run_script_command": "",
-				"stop_logging_when_free_disk_space_below_metrics": "mbytes",
-				"stop_logging_when_free_disk_space_below": true,
-				"stop_logging_when_free_disk_space_below_threshold": 100,
-				"reject_connections_when_free_disk_space_below_threshold": false,
-				"reserve_for_packet_capture_metrics": "mbytes",
-				"reserve_for_packet_capture_threshold": 500,
-				"delete_index_files_when_index_size_above_metrics": "mbytes",
-				"delete_index_files_when_index_size_above": false,
-				"delete_index_files_when_index_size_above_threshold": 100000,
-				"delete_index_files_older_than_days": false,
-				"delete_index_files_older_than_days_threshold": 14,
-				"forward_logs_to_log_server": false,
-				"perform_log_rotate_before_log_forwarding": false,
-				"update_account_log_every": 3600,
-				"detect_new_citrix_ica_application_names": false,
-				"turn_on_qos_logging": true,
-			}
-			if reflect.DeepEqual(defaultLogsSettings, logSettingsState) && !logsSettingsInConf {
-				log.Println("[royl] simple GW using default logs settings")
-				_ = d.Set("logs_settings", map[string]interface{}{})
-			} else {
-				log.Println("[royl] simple GW set current logs settings")
-				_ = d.Set("logs_settings", logSettingsState)
-			}
-		*/
 	} else {
 		_ = d.Set("logs_settings", nil)
 	}

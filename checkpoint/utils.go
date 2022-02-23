@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"io/ioutil"
 	"os"
 )
@@ -129,9 +130,10 @@ func createTaskFailMessage(command string, data map[string]interface{}) string {
 //converts object type to source for machines and users.
 func getTypeToSource() map[string]string {
 	TypeToSource := map[string]string{
-		"identity-tag":  "Identity Tag",
-		"user-group":    "Internal User Groups",
-		"CpmiAnyObject": "Guests",
+		"identity-tag":      "Identity Tag",
+		"user-group":        "Internal User Groups",
+		"CpmiAnyObject":     "Guests",
+		"CpmiExternalGroup": "LDAP groups",
 	}
 	return TypeToSource
 }
@@ -145,4 +147,9 @@ func getKeysToFixedKeys() map[string]string {
 		"TAG":                 "tag",
 	}
 	return KeysToFixedKeys
+}
+func isArgDefault(v string, d *schema.ResourceData, arg string, defaultVal string) bool {
+	_, ok := d.GetOk(arg)
+	isDefault := v == defaultVal && ok
+	return v != defaultVal || isDefault
 }

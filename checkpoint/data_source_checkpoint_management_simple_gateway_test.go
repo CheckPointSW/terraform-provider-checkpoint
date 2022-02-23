@@ -38,8 +38,8 @@ func testAccDataSourceManagementSimpleGatewayConfig(name string, ipv4 string) st
 resource "checkpoint_management_simple_gateway" "test" {
 	name = "%s"
 	ipv4_address = "%s"
-	version = "R81"
-	send_logs_to_server = ["ice-main-take-392"]
+	version = "R81.20"
+	send_logs_to_server = ["ivory-main-take-323"]
 }
 
 data "checkpoint_management_simple_gateway" "simple_gateway" {

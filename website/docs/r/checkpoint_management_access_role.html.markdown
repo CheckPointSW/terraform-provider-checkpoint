@@ -54,8 +54,8 @@ The following arguments are supported:
 
 `users` supports the following:
 
-* `source` - (Optional) any, all identified, Active Directory name or UID or Identity Tag or Internal User Groups or
-  LDAP groups or Guests. default value = "any"
+* `source` - (Optional) any, all identified, UID or Identity Tag or Internal User Groups or
+  LDAP groups or Guests. default value = "any", supports only one AD group named CpmiAdGroup due to API limitations.
 * `selection` - (Optional) Name or UID of an object selected from source. selection blocks are documented below. default
-  value = ["any"]
+  value = ["any"], on ad groups: Adds ad_group prefix to the selection, and removes spaces due to API limitations.
 * `base_dn` - (Optional) When source is "Active Directory" use "base-dn" to refine the query in AD database. 
