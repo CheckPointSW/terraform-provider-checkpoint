@@ -1,4 +1,4 @@
-## 1.7.0 (TBA)
+## 1.7.0 (February 24, 2022)
 
 ENHANCEMENTS
 
