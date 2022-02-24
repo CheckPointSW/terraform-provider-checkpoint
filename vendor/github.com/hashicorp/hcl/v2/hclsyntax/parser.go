@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"unicode/utf8"
 
-	"github.com/apparentlymart/go-textseg/v12/textseg"
+	"github.com/apparentlymart/go-textseg/textseg"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -670,7 +670,6 @@ Traversal:
 				trav := make(hcl.Traversal, 0, 1)
 				var firstRange, lastRange hcl.Range
 				firstRange = p.NextRange()
-				lastRange = marker.Range
 				for p.Peek().Type == TokenDot {
 					dot := p.Read()
 
@@ -761,7 +760,7 @@ Traversal:
 					Each:   travExpr,
 					Item:   itemExpr,
 
-					SrcRange:    hcl.RangeBetween(from.Range(), lastRange),
+					SrcRange:    hcl.RangeBetween(dot.Range, lastRange),
 					MarkerRange: hcl.RangeBetween(dot.Range, marker.Range),
 				}
 
@@ -820,7 +819,7 @@ Traversal:
 					Each:   travExpr,
 					Item:   itemExpr,
 
-					SrcRange:    hcl.RangeBetween(from.Range(), travExpr.Range()),
+					SrcRange:    hcl.RangeBetween(open.Range, travExpr.Range()),
 					MarkerRange: hcl.RangeBetween(open.Range, close.Range),
 				}
 
@@ -868,9 +867,8 @@ Traversal:
 						Collection: ret,
 						Key:        keyExpr,
 
-						SrcRange:     hcl.RangeBetween(from.Range(), rng),
-						OpenRange:    open.Range,
-						BracketRange: rng,
+						SrcRange:  rng,
+						OpenRange: open.Range,
 					}
 				}
 			}
@@ -901,7 +899,7 @@ func makeRelativeTraversal(expr Expression, next hcl.Traverser, rng hcl.Range) E
 		return &RelativeTraversalExpr{
 			Source:    expr,
 			Traversal: hcl.Traversal{next},
-			SrcRange:  hcl.RangeBetween(expr.Range(), rng),
+			SrcRange:  rng,
 		}
 	}
 }
@@ -911,7 +909,7 @@ func (p *parser) parseExpressionTerm() (Expression, hcl.Diagnostics) {
 
 	switch start.Type {
 	case TokenOParen:
-		oParen := p.Read() // eat open paren
+		p.Read() // eat open paren
 
 		p.PushIncludeNewlines(false)
 
@@ -937,18 +935,8 @@ func (p *parser) parseExpressionTerm() (Expression, hcl.Diagnostics) {
 			p.setRecovery()
 		}
 
-		cParen := p.Read() // eat closing paren
+		p.Read() // eat closing paren
 		p.PopIncludeNewlines()
-
-		// Our parser's already taken care of the precedence effect of the
-		// parentheses by considering them to be a kind of "term", but we
-		// still need to include the parentheses in our AST so we can give
-		// an accurate representation of the source range that includes the
-		// open and closing parentheses.
-		expr = &ParenthesesExpr{
-			Expression: expr,
-			SrcRange:   hcl.RangeBetween(oParen.Range, cParen.Range),
-		}
 
 		return expr, diags
 
