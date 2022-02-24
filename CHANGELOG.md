@@ -1,4 +1,4 @@
-## 1.7.0 (TBA)
+## 1.7.0 (February 24, 2022)
 
 ENHANCEMENTS
 
@@ -64,19 +64,17 @@ ENHANCEMENTS
 
 * `commands/logout/logout.go`: Add support for logout post apply script.
 * `resource_checkpoint_management_access_role`: Increase timeout on access-role resource.
-* Add support to select session file name via environment variable `CHECKPOINT_SESSION_FILE_NAME`, default value
-  remains `sid.json`.
+* Add support to select session file name via environment variable `CHECKPOINT_SESSION_FILE_NAME`, default value remains `sid.json`.
 
 BUG FIXES
 
-* `resource_checkpoint_management_access_role` - Fix bug that caused when updating comment.
-* `resource_checkpoint_management_threat_rule` - Fix bug general bug in read function.
-* `resource_checkpoint_management_access_rule` - Fix the bug in `track` field.
-* `resource_checkpoint_management_access_section` - Fix bug in `layer` field in update and read functions.
-* `resource_checkpoint_management_access_layer` - Remove `detect_using_x_forward_for` field default value from the
-  schema.
-* `resource_checkpoint_management_service_tcp.go` - Fix bug in `color` field in read functions.
-* `resource_checkpoint_management_service_udp.go` - Fix bug in `color` field in read functions.
+* `resource_checkpoint_management_access_role`: Fix bug that caused when updating `comment` field.
+* `resource_checkpoint_management_threat_rule`: Fix general bug in read function.
+* `resource_checkpoint_management_access_rule`: Fix bug in `track` field.
+* `resource_checkpoint_management_access_section`: Add `layer` field in update and read functions.
+* `resource_checkpoint_management_access_layer`: Remove `detect_using_x_forward_for` field default value from schema.
+* `resource_checkpoint_management_service_tcp`: Save `color` field into state.
+* `resource_checkpoint_management_service_udp`: Save `color` field into state.
 
 ## 1.4.0 (March 22, 2021)
 
