@@ -162,9 +162,8 @@ The following arguments are supported:
 * `visitor_mode_interface` - (Optional) Interface for Visitor Mode. Must be set when "support-visitor-mode" is true. Insert IPV4 Address of existing interface or "All IPs" when you want all interfaces.
 
 `logs_settings` supports the following:
-* `free_disk_space_metrics` - (Optional) Free disk space metrics. 
-* `accept_syslog_messages` - (Optional) Enable accept syslog messages. 
-* `alert_when_free_disk_space_below` - (Optional) Enable alert when free disk space is below threshold. 
+* `alert_when_free_disk_space_below` - (Optional) Enable alert when free disk space is below threshold.
+* `alert_when_free_disk_space_below_metrics` - (Optional) Free disk space metrics. 
 * `alert_when_free_disk_space_below_threshold` - (Optional) Alert when free disk space below threshold. 
 * `alert_when_free_disk_space_below_type` - (Optional) Alert when free disk space below type. 
 * `before_delete_keep_logs_from_the_last_days` - (Optional) Enable before delete keep logs from the last days. 
@@ -173,17 +172,20 @@ The following arguments are supported:
 * `before_delete_run_script_command` - (Optional) Before delete run script command. 
 * `delete_index_files_older_than_days` - (Optional) Enable delete index files older than days. 
 * `delete_index_files_older_than_days_threshold` - (Optional) Delete index files older than days threshold. 
+* `delete_index_files_when_index_size_above` - (Optional) Enable delete index files when index size is above.
+* `delete_index_files_when_index_size_above_threshold` - (Optional) Delete index files when index size is above threshold.
 * `delete_when_free_disk_space_below` - (Optional) Enable delete when free disk space below. 
 * `delete_when_free_disk_space_below_threshold` - (Optional) Delete when free disk space below threshold. 
 * `detect_new_citrix_ica_application_names` - (Optional) Enable detect new citrix ica application names. 
 * `enable_log_indexing` - (Optional) Enable log indexing. 
-* `forward_logs_to_log_server` - (Optional) Enable forward logs to log server. 
-* `forward_logs_to_log_server_name` - (Optional) Forward logs to log server name. 
-* `forward_logs_to_log_server_schedule_name` - (Optional) Forward logs to log server schedule name. 
+* `forward_logs_to_log_server` - (Optional) Enable forward logs to log server.
+* `perform_log_rotate_before_log_forwarding` - (Optional) Enable perform log rotate before log forwarding.
+* `reject_connections_when_free_disk_space_below_threshold` - (Optional) Enable reject connections when free disk space below threshold.
+* `reserve_for_packet_capture_metrics` - (Optional) Reserve for packet capture metrics.
+* `reserve_for_packet_capture_threshold` - (Optional) Reserve for packet capture threshold.
 * `rotate_log_by_file_size` - (Optional) Enable rotate log by file size. 
 * `rotate_log_file_size_threshold` - (Optional) Log file size threshold. 
-* `rotate_log_on_schedule` - (Optional) Enable rotate log on schedule. 
-* `rotate_log_schedule_name` - (Optional) Rotate log schedule name. 
+* `rotate_log_on_schedule` - (Optional) Enable rotate log on schedule.
 * `stop_logging_when_free_disk_space_below` - (Optional) Enable stop logging when free disk space below. 
 * `stop_logging_when_free_disk_space_below_threshold` - (Optional) Stop logging when free disk space below threshold. 
 * `turn_on_qos_logging` - (Optional) Enable turn on qos loggig. 

@@ -79,7 +79,7 @@ The following arguments are supported:
 
 * `layer` - (Required) Layer that the rule belongs to identified by the name or UID.
 * `position` - (Required) Position in the rulebase. Position blocks are documented below.
-* `name` - (Required) Rule name.
+* `name` - (Optional) Rule name.
 * `action` - (Optional) \"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".
 * `action_settings` - (Optional) Action settings. Action settings blocks are documented below.
 * `content` - (Optional) List of processed file types that this rule applies on.
