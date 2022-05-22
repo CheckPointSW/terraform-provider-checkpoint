@@ -317,6 +317,68 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"application_control_and_url_filtering_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Computed:    true,
+				Description: "Gateway Application Control and URL filtering settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"global_settings_mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Whether to override global settings or not.",
+						},
+						"override_global_settings": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "override global settings object.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"fail_mode": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Fail mode - allow or block all requests.",
+									},
+									"website_categorization": {
+										Type:        schema.TypeMap,
+										Computed:    true,
+										Description: "Website categorization object.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"mode": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Website categorization mode.",
+												},
+												"custom_mode": {
+													Type:        schema.TypeMap,
+													Computed:    true,
+													Description: "Custom mode object.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"social_networking_widgets": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Social networking widgets mode.",
+															},
+															"url_filtering": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "URL filtering mode.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"logs_settings": {
 				Type:        schema.TypeMap,
 				Computed:    true,
@@ -942,6 +1004,53 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 	if v := gateway["application-control"]; v != nil {
 		_ = d.Set("application_control", v)
+	}
+
+	if gateway["application-control-and-url-filtering-settings"] != nil {
+
+		applicationControlSettingsMap := gateway["application-control-and-url-filtering-settings"].(map[string]interface{})
+
+		applicationControlSettingsMapToReturn := make(map[string]interface{})
+
+		if v, _ := applicationControlSettingsMap["global-settings-mode"]; v != nil {
+			applicationControlSettingsMapToReturn["global_settings_mode"] = v
+		}
+
+		if overrideGlobal, _ := applicationControlSettingsMap["override-global-settings"]; overrideGlobal != nil {
+			overrideGlobalSettingsMap := overrideGlobal.(map[string]interface{})
+			overrideGlobalMapToReturn := make(map[string]interface{})
+			if v, _ := overrideGlobalSettingsMap["fail-mode"]; v != nil {
+				overrideGlobalMapToReturn["fail_mode"] = v
+			}
+
+			if websiteCategorization, _ := overrideGlobalSettingsMap["website-categorization"]; websiteCategorization != nil {
+				websiteCategorizationMap := websiteCategorization.(map[string]interface{})
+				websiteCategorizationMapToReturn := make(map[string]interface{})
+
+				if v, _ := websiteCategorizationMap["mode"]; v != nil {
+					websiteCategorizationMapToReturn["mode"] = v
+				}
+
+				if customMode, _ := websiteCategorizationMap["custom-mode"]; customMode != nil {
+					customModeMap := customMode.(map[string]interface{})
+					customModeMapToReturn := make(map[string]interface{})
+					if v, _ := customModeMap["social-networking-widgets"]; v != nil {
+						customModeMapToReturn["social_networking_widgets"] = v
+					}
+
+					if v, _ := customModeMap["url-filtering"]; v != nil {
+						customModeMapToReturn["url_filtering"] = v
+					}
+					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+				}
+				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+			}
+			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+		}
+
+		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
+	} else {
+		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{})
 	}
 
 	if v := gateway["content-awareness"]; v != nil {
