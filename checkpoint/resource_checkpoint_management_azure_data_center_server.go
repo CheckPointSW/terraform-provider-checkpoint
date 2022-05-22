@@ -49,7 +49,7 @@ func resourceManagementAzureDataCenterServer() *schema.Resource {
 				Description: "The Application ID of the Service Principal, in UUID format.\nRequired for authentication-method: service-principal-authentication.",
 			},
 			"application_key": {
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The key created for the Service Principal.\nRequired for authentication-method: service-principal-authentication.",
 				Default:     false,
