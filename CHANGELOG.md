@@ -1,3 +1,30 @@
+## 1.8.0 (May 22, 2022)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_threat_ioc_feed`
+* **New Resource:** `resource_checkpoint_management_domain`
+* **New Resource:** `resource_checkpoint_management_add_repository_package`
+* **New Resource:** `resource_checkpoint_management_delete_repository_package`
+* **New Resource:** `resource_checkpoint_management_time`
+* **New Resource:** `resource_checkpoint_management_trusted_client`
+* **New Data Source:** `data_source_checkpoint_management_threat_ioc_feed`
+* **New Data Source:** `data_source_checkpoint_management_domain`
+* **New Data Source:** `data_source_checkpoint_management_repository_package`
+* **New Data Source:** `data_source_checkpoint_management_time`
+* **New Data Source:** `data_source_checkpoint_management_trusted_client`
+
+ENHANCEMENTS
+
+* `data_source_checkpoint_management_simple_gateway` - Add support to `application_control_and_url_filtering_settings` field.
+* `resource_checkpoint_management_simple_gateway` - Add support to `application_control_and_url_filtering_settings` field.
+
+BUG FIXES
+
+* `resource_checkpoint_management_checkpoint_host` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_checkpoint_host` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `resource_checkpoint_management_aws_data_center_server` - Fix bug that the `enable_sts_assume_role` field treated as string instead of bool.
+
 ## 1.7.0 (February 24, 2022)
 
 ENHANCEMENTS

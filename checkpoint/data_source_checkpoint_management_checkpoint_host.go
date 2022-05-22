@@ -479,6 +479,7 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 					}
 					interfacesListToReturn = append(interfacesListToReturn, interfacesMapToAdd)
 				}
+				_ = d.Set("interfaces", interfacesListToReturn)
 			}
 		}
 	}

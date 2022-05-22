@@ -13,9 +13,10 @@ This resource allows you to execute Check Point AWS Data Center Server.
 
 ```hcl
 resource "checkpoint_management_aws_data_center_server" "testAws" {
-  authenticationMethod = "user-authentication"
-  accessKeyId          = "MY-KEY-ID"
-  secretAccessKey      = "MY-SECRET-KEY"
+  name = "MY-AWS"
+  authentication_method = "user-authentication"
+  access_key_id          = "MY-KEY-ID"
+  secret_access_key      = "MY-SECRET-KEY"
   region               = "us-east-1"
 }
 ```
