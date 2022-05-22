@@ -124,7 +124,7 @@ func createManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 	}
 
 	if v, ok := d.GetOk("enable_sts_assume_role"); ok {
-		awsDataCenterServer["enable-sts-assume-role"] = v.(string)
+		awsDataCenterServer["enable-sts-assume-role"] = v.(bool)
 	}
 
 	if v, ok := d.GetOk("sts_role"); ok {

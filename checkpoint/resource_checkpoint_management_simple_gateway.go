@@ -184,6 +184,68 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Optional:    true,
 				Description: "Application Control blade enabled.",
 			},
+			"application_control_and_url_filtering_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Gateway Application Control and URL filtering settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"global_settings_mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to override global settings or not.",
+						},
+						"override_global_settings": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: "override global settings object.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"fail_mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Fail mode - allow or block all requests.",
+									},
+									"website_categorization": {
+										Type:        schema.TypeMap,
+										Optional:    true,
+										Description: "Website categorization object.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"mode": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Website categorization mode.",
+												},
+												"custom_mode": {
+													Type:        schema.TypeMap,
+													Optional:    true,
+													Description: "Custom mode object.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"social_networking_widgets": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Social networking widgets mode.",
+															},
+															"url_filtering": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "URL filtering mode.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"content_awareness": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -1539,7 +1601,56 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 	} else {
 		_ = d.Set("send_logs_to_server", nil)
 	}
+	if gateway["application-control-and-url-filtering-settings"] != nil {
 
+		defaultapplicationControlSettingsMap := map[string]interface{}{
+			"global-settings-mode": "use_global_settings",
+		}
+		applicationControlSettingsMap := gateway["application-control-and-url-filtering-settings"].(map[string]interface{})
+
+		applicationControlSettingsMapToReturn := make(map[string]interface{})
+
+		if v, _ := applicationControlSettingsMap["global-settings-mode"]; v != nil && isArgDefault(v.(string), d, "application_control_and_url_filtering_settings.global_settings_mode", defaultapplicationControlSettingsMap["global-settings-mode"].(string)) {
+			applicationControlSettingsMapToReturn["global_settings_mode"] = v
+		}
+
+		if overrideGlobal, ok := applicationControlSettingsMap["override-global-settings"]; ok {
+			overrideGlobalSettingsMap := overrideGlobal.(map[string]interface{})
+			overrideGlobalMapToReturn := make(map[string]interface{})
+			if v, _ := overrideGlobalSettingsMap["fail-mode"]; v != nil {
+				overrideGlobalMapToReturn["fail_mode"] = v
+			}
+
+			if websiteCategorization, _ := overrideGlobalSettingsMap["website-categorization"]; websiteCategorization != nil {
+				websiteCategorizationMap := websiteCategorization.(map[string]interface{})
+				websiteCategorizationMapToReturn := make(map[string]interface{})
+
+				if v, _ := websiteCategorizationMap["mode"]; v != nil {
+					websiteCategorizationMapToReturn["mode"] = v
+				}
+
+				if customMode, _ := websiteCategorizationMap["custom-mode"]; customMode != nil {
+					customModeMap := customMode.(map[string]interface{})
+					customModeMapToReturn := make(map[string]interface{})
+					if v, _ := customModeMap["social-networking-widgets"]; v != nil {
+						customModeMapToReturn["social_networking_widgets"] = v
+					}
+
+					if v, _ := customModeMap["url-filtering"]; v != nil {
+						customModeMapToReturn["url_filtering"] = v
+					}
+					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+				}
+				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+			}
+			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+		}
+		if len(applicationControlSettingsMapToReturn) > 0 {
+			_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
+		}
+	} else {
+		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{})
+	}
 	if v := gateway["logs-settings"]; v != nil {
 		logSettingsJson := v.(map[string]interface{})
 		logSettingsState := make(map[string]interface{})
@@ -2469,8 +2580,6 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			} else {
 				logsSettings["update-account-log-every"] = defaultLogsSettings["update-account-log-every"]
 			}
-			log.Println("HERE???")
-			log.Println("SETTINGS???", logsSettings)
 
 			gateway["logs-settings"] = logsSettings
 		} else {
