@@ -49,7 +49,7 @@ func testAccCheckpointManagementApplicationSiteGroupDestroy(s *terraform.State) 
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-application-site-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-application-site-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("ApplicationSiteGroup object (%s) still exists", rs.Primary.ID)
 			}
@@ -73,7 +73,7 @@ func testAccCheckCheckpointManagementApplicationSiteGroupExists(resourceTfName s
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-application-site-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-application-site-group", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

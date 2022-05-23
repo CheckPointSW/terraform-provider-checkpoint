@@ -162,7 +162,7 @@ func dataSourceManagementThreatIocFeedRead(d *schema.ResourceData, m interface{}
 		payload["uid"] = uid
 	}
 
-	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, false)
+	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}

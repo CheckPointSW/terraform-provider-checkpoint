@@ -37,7 +37,7 @@ func createManagementDeleteRepositoryPackage(d *schema.ResourceData, m interface
 		payload["name"] = v.(string)
 	}
 
-	DeleteRepositoryPackageRes, _ := client.ApiCall("delete-repository-package", payload, client.GetSessionID(), true, false)
+	DeleteRepositoryPackageRes, _ := client.ApiCall("delete-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteRepositoryPackageRes.Success {
 		return fmt.Errorf(DeleteRepositoryPackageRes.ErrorMsg)
 	}

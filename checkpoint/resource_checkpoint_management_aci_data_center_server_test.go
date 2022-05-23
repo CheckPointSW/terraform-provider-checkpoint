@@ -50,7 +50,7 @@ func testAccCheckpointManagementAciDataCenterServerDestroy(s *terraform.State) e
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("AciDataCenterServer object (%s) still exists", rs.Primary.ID)
 			}
@@ -74,7 +74,7 @@ func testAccCheckCheckpointManagementAciDataCenterServerExists(resourceTfName st
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

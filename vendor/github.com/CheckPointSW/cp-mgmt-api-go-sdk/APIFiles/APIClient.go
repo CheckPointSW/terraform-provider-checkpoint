@@ -172,6 +172,23 @@ func (c *ApiClient) GetSessionID() string {
 	return c.sid
 }
 
+// Deprecated: Do not use.
+func (c *ApiClient) Login(username string, password string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+	credentials := map[string]interface{}{
+		"user":     username,
+		"password": password,
+	}
+	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, make(map[string]interface{}))
+}
+
+// Deprecated: Do not use.
+func (c *ApiClient) LoginWithApiKey(apiKey string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+	credentials := map[string]interface{}{
+		"api-key": apiKey,
+	}
+	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, make(map[string]interface{}))
+}
+
 /*
 Performs a 'login' API call to management server
 
@@ -185,7 +202,7 @@ returns: APIResponse, error
 side-effects: updates the class's uid and server variables
 
 */
-func (c *ApiClient) Login(username string, password string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+func (c *ApiClient) ApiLogin(username string, password string, continueLastSession bool, domain string, readOnly bool, payload map[string]interface{}) (APIResponse, error) {
 	credentials := map[string]interface{}{
 		"user":     username,
 		"password": password,
@@ -206,14 +223,14 @@ payload: [optional] More settings for the login command
 returns: APIResponse object
 side-effects: updates the class's uid and server variables
 */
-func (c *ApiClient) LoginWithApiKey(apiKey string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+func (c *ApiClient) ApiLoginWithApiKey(apiKey string, continueLastSession bool, domain string, readOnly bool, payload map[string]interface{}) (APIResponse, error) {
 	credentials := map[string]interface{}{
 		"api-key": apiKey,
 	}
 	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, payload)
 }
 
-func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
+func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continueLastSession bool, domain string, readOnly bool, payload map[string]interface{}) (APIResponse, error) {
 
 	if c.context == WebContext {
 		credentials["continue-last-session"] = continueLastSession
@@ -222,6 +239,10 @@ func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continu
 
 	if domain != "" {
 		credentials["domain"] = domain
+	}
+
+	for k, v := range payload{
+		credentials[k] = v
 	}
 
 	loginRes, errCall := c.ApiCall("login", credentials, "", false, false)

@@ -45,7 +45,7 @@ func testAccCheckpointServiceTcpDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("service tcp object (%s) still exists", rs.Primary.ID)
 			}
@@ -68,7 +68,7 @@ func testAccCheckCheckpointServiceTcpExists(resourceTfName string, res *map[stri
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-service-tcp", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

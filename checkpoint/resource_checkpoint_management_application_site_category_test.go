@@ -48,7 +48,7 @@ func testAccCheckpointManagementApplicationSiteCategoryDestroy(s *terraform.Stat
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-application-site-category", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-application-site-category", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("ApplicationSiteCategory object (%s) still exists", rs.Primary.ID)
 			}
@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementApplicationSiteCategoryExists(resourceTfNam
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-application-site-category", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-application-site-category", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

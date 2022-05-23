@@ -48,7 +48,7 @@ func testAccCheckpointManagementVpnCommunityMeshedDestroy(s *terraform.State) er
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-vpn-community-meshed", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-vpn-community-meshed", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("VpnCommunityMeshed object (%s) still exists", rs.Primary.ID)
 			}
@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementVpnCommunityMeshedExists(resourceTfName str
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-vpn-community-meshed", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-vpn-community-meshed", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

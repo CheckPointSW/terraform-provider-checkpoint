@@ -62,7 +62,7 @@ func testAccCheckCheckpointPhysicalInterfaceExists(resourceTfName string, res *m
 
 		payload["name"] = rs.Primary.Attributes["name"]
 
-		response, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

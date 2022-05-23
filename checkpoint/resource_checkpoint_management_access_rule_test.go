@@ -45,7 +45,7 @@ func testAccCheckpointAccessRuleDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("access rule object (%s) still exists", rs.Primary.ID)
 			}
@@ -68,7 +68,7 @@ func testAccCheckCheckpointAccessRuleExists(resourceTfName string, res *map[stri
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
@@ -90,7 +90,7 @@ func testAccCheckCheckpointAccessRuleAttributes(accessRule *map[string]interface
 		accessRuleLayerUid := accessRule["layer"].(string)
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-access-layer", map[string]interface{}{"uid": accessRuleLayerUid}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-access-layer", map[string]interface{}{"uid": accessRuleLayerUid}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
