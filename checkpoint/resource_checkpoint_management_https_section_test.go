@@ -48,7 +48,7 @@ func testAccCheckpointManagementHttpsSectionDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "New Layer 2"}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "New Layer 2"}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("HttpsSection object (%s) still exists", rs.Primary.ID)
 			}
@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementHttpsSectionExists(resourceTfName string, r
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Default Layer"}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-https-section", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Default Layer"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

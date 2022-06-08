@@ -79,6 +79,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_API_KEY", ""),
 				Description: "Administrator API key.",
 			},
+			"session_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_NAME", ""),
+				Description: "Session unique name.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_host":                                           resourceManagementHost(),
@@ -194,6 +200,24 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_kubernetes_data_center_server":                  resourceManagementKubernetesDataCenterServer(),
 			"checkpoint_management_data_center_query":                              resourceManagementDataCenterQuery(),
 			"checkpoint_management_threat_ioc_feed":                                resourceManagementThreatIocFeed(),
+			"checkpoint_management_smtp_server":                                    resourceManagementSmtpServer(),
+			"checkpoint_management_network_feed":                                   resourceManagementNetworkFeed(),
+			"checkpoint_management_md_permissions_profile":                         resourceManagementMdPermissionsProfile(),
+			"checkpoint_management_interoperable_device":                           resourceManagementInteroperableDevice(),
+			"checkpoint_management_domain_permissions_profile":                     resourceManagementDomainPermissionsProfile(),
+			"checkpoint_management_idp_administrator_group":                        resourceManagementIdpAdministratorGroup(),
+			"checkpoint_management_check_threat_ioc_feed":                          resourceManagementCheckThreatIocFeed(),
+			"checkpoint_management_check_network_feed":                             resourceManagementCheckNetworkFeed(),
+			"checkpoint_management_get_platform":                                   resourceManagementGetPlatform(),
+			"checkpoint_management_install_lsm_policy":                             resourceManagementInstallLsmPolicy(),
+			"checkpoint_management_install_lsm_settings":                           resourceManagementInstallLsmSettings(),
+			"checkpoint_management_lsm_run_script":                                 resourceManagementLsmRunScript(),
+			"checkpoint_management_reset_sic":                                      resourceManagementResetSic(),
+			"checkpoint_management_test_sic_status":                                resourceManagementTestSicStatus(),
+			"checkpoint_management_update_provisioned_satellites":                  resourceManagementUpdateProvisionedSatellites(),
+			"checkpoint_management_repository_script":                              resourceManagementRepositoryScript(),
+			"checkpoint_management_set_idp_default_assignment":                     resourceManagementSetIdpDefaultAssignment(),
+			"checkpoint_management_set_idp_to_domain_assignment":                   resourceManagementSetIdpToDomainAssignment(),
 			"checkpoint_management_domain":                                         resourceManagementDomain(),
 			"checkpoint_management_add_repository_package":                         resourceManagementAddRepositoryPackage(),
 			"checkpoint_management_delete_repository_package":                      resourceManagementDeleteRepositoryPackage(),
@@ -274,6 +298,19 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_threat_rulebase":                           dataSourceManagementThreatRuleBase(),
 			"checkpoint_management_https_rulebase":                            dataSourceManagementHttpsRuleBase(),
 			"checkpoint_management_threat_ioc_feed":                           dataSourceManagementThreatIocFeed(),
+			"checkpoint_management_smtp_server":                               dataSourceManagementSmtpServer(),
+			"checkpoint_management_network_feed":                              dataSourceManagementNetworkFeed(),
+			"checkpoint_management_interoperable_device":                      dataSourceManagementInteroperableDevice(),
+			"checkpoint_management_idp_administrator_group":                   dataSourceManagementIdpAdministratorGroup(),
+			"checkpoint_management_md_permissions_profile":                    dataSourceManagementMdPermissionsProfile(),
+			"checkpoint_management_domain_permissions_profile":                dataSourceManagementDomainPermissionsProfile(),
+			"checkpoint_management_repository_script":                         dataSourceManagementRepositoryScript(),
+			"checkpoint_management_idp_default_assignment":                    dataSourceManagementIdpDefaultAssignment(),
+			"checkpoint_management_lsm_cluster_profile":                       dataSourceManagementLsmClusterProfile(),
+			"checkpoint_management_lsm_gateway_profile":                       dataSourceManagementLsmGatewayProfile(),
+			"checkpoint_management_cluster_member":                            dataSourceManagementClusterMember(),
+			"checkpoint_management_provisioning_profile":                      dataSourceManagementProvisioningProfile(),
+			"checkpoint_management_idp_to_domain_assignment":                  dataSourceManagementIdpToDomainAssignment(),
 			"checkpoint_management_domain":                                    dataSourceManagementDomain(),
 			"checkpoint_management_repository_package":                        dataSourceManagementRepositoryPackage(),
 			"checkpoint_management_time":                                      dataSourceManagementTime(),
@@ -296,6 +333,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	proxyHost := data.Get("proxy_host").(string)
 	proxyPort := data.Get("proxy_port").(int)
 	apiKey := data.Get("api_key").(string)
+	sessionName := data.Get("session_name").(string)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, (username and password) OR api_key)")
@@ -332,7 +370,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, apiKey, domain)
+			s, err = login(mgmt, username, password, apiKey, domain, sessionName)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
@@ -345,7 +383,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "", "")
+		_, err := login(gaia, username, password, "", "", "")
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -356,15 +394,22 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string, sessionName string) (Session, error) {
 	log.Printf("Perform login")
 	var loginRes checkpoint.APIResponse
 	var err error
-	if apiKey != "" {
-		loginRes, err = client.LoginWithApiKey(apiKey, false, domain, false, "")
-	} else {
-		loginRes, err = client.Login(username, pwd, false, domain, false, "")
+
+	payload := make(map[string]interface{})
+	if sessionName != "" {
+		payload["session-name"] = sessionName
 	}
+
+	if apiKey != "" {
+		loginRes, err = client.ApiLoginWithApiKey(apiKey, false, domain, false, payload)
+	} else {
+		loginRes, err = client.ApiLogin(username, pwd, false, domain, false, payload)
+	}
+
 	if err != nil {
 		localRequestsError := "invalid character '<' looking for beginning of value"
 		if strings.Contains(err.Error(), localRequestsError) {

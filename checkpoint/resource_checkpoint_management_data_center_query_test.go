@@ -45,7 +45,7 @@ func testAccCheckpointManagementDataCenterQueryDestroy(s *terraform.State) error
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-data-center-query", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-data-center-query", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("DataCenterQuery object (%s) still exists", rs.Primary.ID)
 			}
@@ -69,7 +69,7 @@ func testAccCheckCheckpointManagementDataCenterQueryExists(resourceTfName string
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-data-center-query", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-data-center-query", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

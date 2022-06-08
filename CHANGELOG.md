@@ -1,3 +1,43 @@
+## 1.9.0 (TBA)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_get_platform`
+* **New Resource:** `resource_checkpoint_management_reset_sic`
+* **New Resource:** `resource_checkpoint_management_test_sic_status`
+* **New Resource:** `resource_checkpoint_management_set_idp_default_assignment`
+* **New Resource:** `resource_checkpoint_management_set_idp_to_domain_assignment`
+* **New Resource:** `resource_checkpoint_management_interoperable_device`
+* **New Resource:** `resource_checkpoint_management_install_lsm_police`
+* **New Resource:** `resource_checkpoint_management_install_lsm_settings`
+* **New Resource:** `resource_checkpoint_management_lsm_run_script`
+* **New Resource:** `resource_checkpoint_management_update_provisioned_satellites`
+* **New Resource:** `resource_checkpoint_management_repository_script`
+* **New Resource:** `resource_checkpoint_management_smtp_server`
+* **New Resource:** `resource_checkpoint_management_check_threat_ioc_feed`
+* **New Resource:** `resource_checkpoint_management_domain_permissions_profile`
+* **New Resource:** `resource_checkpoint_management_idp_administrator_group`
+* **New Resource:** `resource_checkpoint_management_md_permissions_profile`
+* **New Resource:** `resource_checkpoint_management_network_feed`
+* **New Resource:** `resource_checkpoint_management_check_network_feed`
+* **New Data Source:** `data_source_checkpoint_management_cluster_member`
+* **New Data Source:** `data_source_checkpoint_management_domain_permissions_profile`
+* **New Data Source:** `data_source_checkpoint_management_idp_default_assignment`
+* **New Data Source:** `data_source_checkpoint_management_lsm_cluster_profile`
+* **New Data Source:** `data_source_checkpoint_management_lsm_gateway_profile`
+* **New Data Source:** `data_source_checkpoint_management_provisioning_profile`
+* **New Data Source:** `data_source_checkpoint_management_interoperable_device`
+* **New Data Source:** `data_source_checkpoint_management_repository_script`
+* **New Data Source:** `data_source_checkpoint_management_smtp_server`
+* **New Data Source:** `data_source_checkpoint_management_idp_administrator_group`
+* **New Data Source:** `data_source_checkpoint_management_md_permissions_profile`
+* **New Data Source:** `data_source_checkpoint_management_network_feed`
+
+ENHANCEMENTS
+
+* Add `approve_session`, `submit_session` and `reject_session` post apply scripts
+* Add support to log in with `session_name`.
+
 ## 1.8.0 (May 22, 2022)
 
 FEATURES

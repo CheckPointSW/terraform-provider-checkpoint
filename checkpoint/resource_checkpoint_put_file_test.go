@@ -67,7 +67,7 @@ func testAccCheckCheckpointPutFileExists(resourceTfName string, res *map[string]
 		payload["text-content"] = rs.Primary.Attributes["text_content"]
 		payload["override"], _ = strconv.ParseBool(rs.Primary.Attributes["override"])
 
-		response, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

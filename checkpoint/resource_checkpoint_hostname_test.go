@@ -57,7 +57,7 @@ func testAccCheckCheckpointHostnameExists(resourceTfName string, res *map[string
 
 		// retrieve the client from test provider. client is after providerConfigure()
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-hostname", map[string]interface{}{}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-hostname", map[string]interface{}{}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

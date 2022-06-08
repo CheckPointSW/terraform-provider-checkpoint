@@ -244,6 +244,41 @@ $ mv discard $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ discard
 ```
 
+### approve_session
+
+Please use the following for approve_session:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/approve_session
+$ go build approve_session.go
+$ mv approve_session $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ approve_session "SESSION_UID"
+```
+
+### reject_session
+
+Please use the following for reject_session:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/reject_session
+$ go build reject_session.go
+$ mv reject_session $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ reject_session "SESSION_UID" "REJECT_REASON"
+```
+
+### submit_session
+
+Please use the following for submit_session:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/submit_session
+$ go build submit_session.go
+$ mv submit_session $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ submit_session "SESSION_UID"
+```
+
+if no session_uid is provided it will submit the current session.
+
 ### Install Policy
 
 The following arguments are supported:

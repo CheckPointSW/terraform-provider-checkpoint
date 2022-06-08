@@ -287,7 +287,7 @@ func createManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create ThreatIocFeed - Map = ", threatIocFeed)
 
-	addThreatIocFeedRes, err := client.ApiCall("add-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, false)
+	addThreatIocFeedRes, err := client.ApiCall("add-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatIocFeedRes.Success {
 		if addThreatIocFeedRes.ErrorMsg != "" {
 			return fmt.Errorf(addThreatIocFeedRes.ErrorMsg)
@@ -308,7 +308,7 @@ func readManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
-	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, false)
+	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
@@ -596,7 +596,7 @@ func updateManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update ThreatIocFeed - Map = ", threatIocFeed)
 
-	updateThreatIocFeedRes, err := client.ApiCall("set-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, false)
+	updateThreatIocFeedRes, err := client.ApiCall("set-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatIocFeedRes.Success {
 		if updateThreatIocFeedRes.ErrorMsg != "" {
 			return fmt.Errorf(updateThreatIocFeedRes.ErrorMsg)
@@ -617,7 +617,7 @@ func deleteManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Delete ThreatIocFeed")
 
-	deleteThreatIocFeedRes, err := client.ApiCall("delete-threat-ioc-feed", threatIocFeedPayload, client.GetSessionID(), true, false)
+	deleteThreatIocFeedRes, err := client.ApiCall("delete-threat-ioc-feed", threatIocFeedPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatIocFeedRes.Success {
 		if deleteThreatIocFeedRes.ErrorMsg != "" {
 			return fmt.Errorf(deleteThreatIocFeedRes.ErrorMsg)

@@ -50,7 +50,7 @@ func testAccCheckpointManagementGenericDataCenterServerDestroy(s *terraform.Stat
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("GenericDataCenterServer object (%s) still exists", rs.Primary.ID)
 			}
@@ -74,7 +74,7 @@ func testAccCheckCheckpointManagementGenericDataCenterServerExists(resourceTfNam
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-data-center-server", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

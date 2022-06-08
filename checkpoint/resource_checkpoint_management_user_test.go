@@ -48,7 +48,7 @@ func testAccCheckpointManagementUserDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-user", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-user", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success {
 				return fmt.Errorf("User object (%s) still exists", rs.Primary.ID)
 			}
@@ -72,7 +72,7 @@ func testAccCheckCheckpointManagementUserExists(resourceTfName string, res *map[
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-user", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-user", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

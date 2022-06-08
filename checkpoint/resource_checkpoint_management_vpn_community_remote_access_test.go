@@ -56,7 +56,7 @@ func testAccCheckCheckpointManagementVpnCommunityRemoteAccessExists(resourceTfNa
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 
-		response, err := client.ApiCall("show-vpn-community-remote-access", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, false)
+		response, err := client.ApiCall("show-vpn-community-remote-access", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return err
 		}

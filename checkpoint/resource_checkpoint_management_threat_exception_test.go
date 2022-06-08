@@ -49,7 +49,7 @@ func testAccCheckpointThreatExceptionDestroy(s *terraform.State) error {
 			continue
 		}
 		if rs.Primary.ID != "" {
-			res, _ := client.ApiCall("show-threat-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": layerName, "rule-name": threatRuleName}, client.GetSessionID(), true, false)
+			res, _ := client.ApiCall("show-threat-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": layerName, "rule-name": threatRuleName}, client.GetSessionID(), true, client.IsProxyUsed())
 			if res.Success { // Resource still exists. failed to destroy.
 				return fmt.Errorf("threat rule object (%s) still exists", rs.Primary.ID)
 			}
@@ -72,7 +72,7 @@ func testAccCheckCheckpointThreatExceptionExists(resourceTfName string, res *map
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-threat-exception", map[string]interface{}{"uid": rs.Primary.ID, "layer": layerName, "rule-name": ruleName}, client.GetSessionID(), true, false)
+		response, _ := client.ApiCall("show-threat-exception", map[string]interface{}{"uid": rs.Primary.ID, "layer": layerName, "rule-name": ruleName}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}
