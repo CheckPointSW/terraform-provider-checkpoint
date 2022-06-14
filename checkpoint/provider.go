@@ -223,6 +223,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_delete_repository_package":                      resourceManagementDeleteRepositoryPackage(),
 			"checkpoint_management_time":                                           resourceManagementTime(),
 			"checkpoint_management_trusted_client":                                 resourceManagementTrustedClient(),
+			"checkpoint_management_connect_cloud_services":                         resourceManagementConnectCloudServices(),
+			"checkpoint_management_disconnect_cloud_services":                      resourceManagementDisconnectCloudServices(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -315,6 +317,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_repository_package":                        dataSourceManagementRepositoryPackage(),
 			"checkpoint_management_time":                                      dataSourceManagementTime(),
 			"checkpoint_management_trusted_client":                            dataSourceManagementTrustedClient(),
+			"checkpoint_management_cloud_services":                            dataSourceManagementCloudServices(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

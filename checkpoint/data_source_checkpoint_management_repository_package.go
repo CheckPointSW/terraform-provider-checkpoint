@@ -49,8 +49,6 @@ func dataSourceManagementRepositoryPackageRead(d *schema.ResourceData, m interfa
 	if v := RepositoryPackage["uid"]; v != nil {
 		_ = d.Set("uid", v)
 		d.SetId(v.(string))
-	} else {
-		d.SetId("ff")
 	}
 
 	if v, ok := d.GetOk("name"); ok {

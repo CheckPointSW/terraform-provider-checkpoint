@@ -140,7 +140,7 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 			}
 		}
 		_, installationTargetsInConf := d.GetOk("installation_targets")
-		if installationTargetsIds[0] == "all" && !installationTargetsInConf {
+		if len(installationTargetsIds) == 1 && installationTargetsIds[0] == "all" && !installationTargetsInConf {
 			_ = d.Set("installation_targets", []interface{}{})
 		} else {
 			_ = d.Set("installation_targets", installationTargetsIds)

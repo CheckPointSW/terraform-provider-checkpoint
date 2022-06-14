@@ -96,6 +96,8 @@ The following arguments are supported:
   the `CHECKPOINT_PROXY_HOST` environment variable.
 * `proxy_port` - (Optional) Proxy port used for proxy connections. this can also be defined via
   the `CHECKPOINT_PROXY_PORT` environment variable.
+* `session_name` - (Optional) Session unique name. this can also be defined via
+  the `CHECKPOINT_SESSION_NAME` environment variable.
 
 ## Authentication
 
@@ -146,24 +148,32 @@ credentials will override the environment variables.
 Usage:
 
 ```bash
-$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_SERVER="192.0.2.1"
 $ export CHECKPOINT_USERNAME="aa"
 $ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
 $ export CHECKPOINT_DOMAIN="Domain Name"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
+$ export CHECKPOINT_SESSION_NAME="Terraform session"
+$ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_PROXY_HOST="1.2.3.4"
+$ export CHECKPOINT_PROXY_PORT="123"
  ```
 
 Usage with api key:
 
 ```bash
-$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_SERVER="192.0.2.1"
 $ export CHECKPOINT_API_KEY="tBdloE9eOYzzSQicNxS7mA=="
 $ export CHECKPOINT_CONTEXT="web_api"
 $ export CHECKPOINT_DOMAIN="Domain Name"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
+$ export CHECKPOINT_SESSION_NAME="Terraform session"
+$ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_PROXY_HOST="1.2.3.4"
+$ export CHECKPOINT_PROXY_PORT="123"
  ```
 
 Then configure the Check Point Provider as following:
