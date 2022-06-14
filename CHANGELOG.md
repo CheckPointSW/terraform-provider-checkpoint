@@ -1,4 +1,4 @@
-## 1.9.0 (TBA)
+## 1.9.0 (June 14, 2022)
 
 FEATURES
 
@@ -20,6 +20,8 @@ FEATURES
 * **New Resource:** `resource_checkpoint_management_md_permissions_profile`
 * **New Resource:** `resource_checkpoint_management_network_feed`
 * **New Resource:** `resource_checkpoint_management_check_network_feed`
+* **New Resource:** `resource_checkpoint_management_connect_cloud_services`
+* **New Resource:** `resource_checkpoint_management_disconnect_cloud_services`
 * **New Data Source:** `data_source_checkpoint_management_cluster_member`
 * **New Data Source:** `data_source_checkpoint_management_domain_permissions_profile`
 * **New Data Source:** `data_source_checkpoint_management_idp_default_assignment`
@@ -32,11 +34,13 @@ FEATURES
 * **New Data Source:** `data_source_checkpoint_management_idp_administrator_group`
 * **New Data Source:** `data_source_checkpoint_management_md_permissions_profile`
 * **New Data Source:** `data_source_checkpoint_management_network_feed`
+* **New Data Source:** `data_source_checkpoint_management_cloud_services`
 
 ENHANCEMENTS
 
 * Add `approve_session`, `submit_session` and `reject_session` post apply scripts
-* Add support to log in with `session_name`.
+* Add `session_name` field to provider to specify login session name.
+* Add `granular_encryptions` and `tunnel_granularity` fields to VPN resources and data sources.
 
 ## 1.8.0 (May 22, 2022)
 
