@@ -1,3 +1,9 @@
+## 1.9.1 (June 16, 2022)
+
+BUG FIXES
+
+* Fix certificate error (Use GO SDK v1.5.1).
+
 ## 1.9.0 (June 14, 2022)
 
 FEATURES
@@ -38,7 +44,7 @@ FEATURES
 
 ENHANCEMENTS
 
-* Add `approve_session`, `submit_session` and `reject_session` post apply scripts
+* Add `approve_session`, `submit_session` and `reject_session` post apply scripts.
 * Add `session_name` field to provider to specify login session name.
 * Add `granular_encryptions` and `tunnel_granularity` fields to VPN resources and data sources.
 
