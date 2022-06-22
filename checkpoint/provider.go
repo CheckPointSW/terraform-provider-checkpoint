@@ -31,6 +31,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_PASSWORD", nil),
 				Description: "Check Point Management admin password",
 			},
+			"cloud_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CLOUD_PATH", nil),
+				Description: "Check Point SMART-1 Cloud Path",
+			},			
 			"context": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -328,6 +334,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	server := data.Get("server").(string)
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)
+	cloud_path := data.Get("cloud_path").(string)	
 	context := data.Get("context").(string)
 	domain := data.Get("domain").(string)
 	port := data.Get("port").(int)
@@ -347,6 +354,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		Fingerprint:             "",
 		Sid:                     "",
 		Server:                  server,
+		Cloud_path:				 cloud_path,		
 		ProxyHost:               proxyHost,
 		ProxyPort:               proxyPort,
 		ApiVersion:              "",
