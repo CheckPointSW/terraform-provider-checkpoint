@@ -17,6 +17,7 @@ func resourceManagementDeleteApiKey() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "API key to be deleted.",
 			},
 			"admin_uid": {

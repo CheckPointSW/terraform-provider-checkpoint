@@ -98,6 +98,8 @@ The following arguments are supported:
   the `CHECKPOINT_PROXY_PORT` environment variable.
 * `session_name` - (Optional) Session unique name. this can also be defined via
   the `CHECKPOINT_SESSION_NAME` environment variable.
+* `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
+  the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
 
 ## Authentication
 
@@ -123,9 +125,19 @@ Usage with api key:
 ```hcl
 provider "checkpoint" {
   server   = "192.0.2.1"
-  api_key = "tBdloE9eOYzzSQicNxS7mA=="
+  api_key  = "tBdloE9eOYzzSQicNxS7mA=="
   context  = "web_api"
   domain   = "Domain Name"
+}
+```
+
+Smart-1 Cloud:
+```hcl
+provider "checkpoint" {
+  server   = "chkp-vmnc6s4y.maas.checkpoint.com"
+  api_key  = "tBdloE9eOYzzSQicNxS7mA=="
+  context  = "web_api"
+  cloud_mgmt_id = "de9a9b08-c7c7-436e-a64a-a54136301701"
 }
 ```
 
@@ -159,6 +171,7 @@ $ export CHECKPOINT_SESSION_NAME="Terraform session"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
+$ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
  ```
 
 Usage with api key:
@@ -174,6 +187,7 @@ $ export CHECKPOINT_SESSION_NAME="Terraform session"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
+$ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
  ```
 
 Then configure the Check Point Provider as following:

@@ -69,6 +69,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	proxyHost := os.Getenv("CHECKPOINT_PROXY_HOST")
 	proxyPortStr := os.Getenv("CHECKPOINT_PROXY_PORT")
 	apiKey := os.Getenv("CHECKPOINT_API_KEY")
+	cloudMgmtId := os.Getenv("CHECKPOINT_CLOUD_MGMT_ID")
 
 	var err error
 	if portVal != "" {
@@ -104,7 +105,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	// install policy/publish - only on management api
 	if val, ok := os.LookupEnv("CHECKPOINT_CONTEXT"); ok {
 		if val == "gaia_api" {
-			return checkpoint.ApiClient{}, fmt.Errorf("install-policy/publish is valid only on management api (CHECKPOINT_CONTEXT = gaia_api)")
+			return checkpoint.ApiClient{}, fmt.Errorf("post apply/destroy scripts are valid only on management api. Env var CHECKPOINT_CONTEXT is 'gaia_api'")
 		}
 	}
 
@@ -122,6 +123,8 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Context:                 "web_api",
 		Timeout:                 timeout,
 		Sleep:                   checkpoint.SleepTime,
+		UserAgent:               "Terraform",
+		CloudMgmtId:             cloudMgmtId,
 	}
 
 	s, err := GetSession(sessionFileName)

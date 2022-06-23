@@ -67,15 +67,16 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 	}
 
 	if v := showCloudServicesRes["connected-at"]; v != nil {
-		connectedAtShow := showCloudServicesRes["connected-at"].(map[string]interface{})
-		connectedAtState := make(map[string]interface{})
-		if v := connectedAtShow["iso-8601"]; v != nil {
-			connectedAtState["iso_8601"] = v
+		if connectedAtShow, ok := showCloudServicesRes["connected-at"].(map[string]interface{}); ok {
+			connectedAtState := make(map[string]interface{})
+			if v := connectedAtShow["iso-8601"]; v != nil {
+				connectedAtState["iso_8601"] = v
+			}
+			if v := connectedAtShow["posix"]; v != nil {
+				connectedAtState["posix"] = v
+			}
+			_ = d.Set("connected_at", connectedAtState)
 		}
-		if v := connectedAtShow["posix"]; v != nil {
-			connectedAtState["posix"] = v
-		}
-		_ = d.Set("connected_at", connectedAtState)
 	}else{
 		_ = d.Set("connected_at", nil)
 	}

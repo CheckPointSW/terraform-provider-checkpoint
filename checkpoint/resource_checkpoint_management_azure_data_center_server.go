@@ -31,16 +31,19 @@ func resourceManagementAzureDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "An Azure Active Directory user Format <username>@<domain>.\nRequired for authentication-method: user-authentication.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Azure account.\nRequired for authentication-method: user-authentication.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Azure account encoded in Base64.\nRequired for authentication-method: user-authentication.",
 			},
 			"application_id": {

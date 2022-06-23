@@ -28,6 +28,7 @@ func resourceManagementAddApiKey() *schema.Resource {
 			"api_key": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "Represents the API Key to be used for commonLoginLogic.",
 			},
 		},

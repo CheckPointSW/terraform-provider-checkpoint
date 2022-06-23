@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
+	"strconv"
 )
 
 func dataSourceManagementVpnCommunityStar() *schema.Resource {
@@ -149,6 +150,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 						"shared_secret": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Sensitive:   true,
 							Description: "Shared secret.",
 						},
 					},
@@ -313,8 +315,8 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 		_ = d.Set("name", v)
 	}
 
-	if vpnCommunityStar["center_gateways"] != nil {
-		centerGatewaysJson, ok := vpnCommunityStar["center_gateways"].([]interface{})
+	if vpnCommunityStar["center-gateways"] != nil {
+		centerGatewaysJson, ok := vpnCommunityStar["center-gateways"].([]interface{})
 		if ok {
 			centerGatewaysIds := make([]string, 0)
 			if len(centerGatewaysJson) > 0 {
@@ -405,35 +407,31 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 	}
 
 	if vpnCommunityStar["override-vpn-domains"] != nil {
+		overrideVpnDomainsList := vpnCommunityStar["override-vpn-domains"].([]interface{})
+		var overrideVpnDomainsListToReturn []map[string]interface{}
+		if len(overrideVpnDomainsList) > 0 {
+			for i := range overrideVpnDomainsList {
 
-		overrideVpnDomainsList, ok := vpnCommunityStar["override-vpn-domains"].([]interface{})
+				overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
 
-		if ok {
+				overrideVpnDomainsMapToAdd := make(map[string]interface{})
 
-			if len(overrideVpnDomainsList) > 0 {
-
-				var overrideVpnDomainsListToReturn []map[string]interface{}
-
-				for i := range overrideVpnDomainsList {
-
-					overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
-
-					overrideVpnDomainsMapToAdd := make(map[string]interface{})
-
-					if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
-						overrideVpnDomainsMapToAdd["gateway"] = v
-					}
-					if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
-						overrideVpnDomainsMapToAdd["vpn_domain"] = v
-					}
-					overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
+				if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
+					overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
 				}
+				if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
+					overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
+				}
+				overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
 			}
 		}
+		_ = d.Set("override_vpn_domains", overrideVpnDomainsListToReturn)
+	}else{
+		_ = d.Set("override_vpn_domains", nil)
 	}
 
-	if vpnCommunityStar["satellite_gateways"] != nil {
-		satelliteGatewaysJson, ok := vpnCommunityStar["satellite_gateways"].([]interface{})
+	if vpnCommunityStar["satellite-gateways"] != nil {
+		satelliteGatewaysJson, ok := vpnCommunityStar["satellite-gateways"].([]interface{})
 		if ok {
 			satelliteGatewaysIds := make([]string, 0)
 			if len(satelliteGatewaysJson) > 0 {
@@ -449,31 +447,40 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 	}
 
 	if vpnCommunityStar["shared-secrets"] != nil {
-
-		sharedSecretsList, ok := vpnCommunityStar["shared-secrets"].([]interface{})
-
-		if ok {
-
-			if len(sharedSecretsList) > 0 {
-
-				var sharedSecretsListToReturn []map[string]interface{}
-
-				for i := range sharedSecretsList {
-
-					sharedSecretsMap := sharedSecretsList[i].(map[string]interface{})
-
+		sharedSecretsList := vpnCommunityStar["shared-secrets"].([]interface{})
+		var sharedSecretsListToReturn []map[string]interface{}
+		if len(sharedSecretsList) > 0 {
+			for i := range sharedSecretsList {
+				sharedSecretsMap := sharedSecretsList[i].(map[string]interface{})
+				externalGateway := ""
+				sharedSecret := "N/A"
+				if v, _ := sharedSecretsMap["external-gateway"]; v != nil {
+					externalGateway = v.(map[string]interface{})["name"].(string)
+					if val, ok := d.GetOk("shared_secrets"); ok {
+						sharedSecretsList := val.([]interface{})
+						if len(sharedSecretsList) > 0 {
+							for i := range sharedSecretsList {
+								if v, ok := d.GetOk("shared_secrets." + strconv.Itoa(i) + ".external_gateway"); ok {
+									if externalGateway == v.(string) {
+										sharedSecret = d.Get("shared_secrets." + strconv.Itoa(i) + ".shared_secret").(string)
+										break
+									}
+								}
+							}
+						}
+					}
+				}
+				if externalGateway != "" {
 					sharedSecretsMapToAdd := make(map[string]interface{})
-
-					if v, _ := sharedSecretsMap["external-gateway"]; v != nil {
-						sharedSecretsMapToAdd["external_gateway"] = v
-					}
-					if v, _ := sharedSecretsMap["shared-secret"]; v != nil {
-						sharedSecretsMapToAdd["shared_secret"] = v
-					}
+					sharedSecretsMapToAdd["external_gateway"] = externalGateway
+					sharedSecretsMapToAdd["shared_secret"] = sharedSecret
 					sharedSecretsListToReturn = append(sharedSecretsListToReturn, sharedSecretsMapToAdd)
 				}
 			}
 		}
+		_ = d.Set("shared_secrets", sharedSecretsListToReturn)
+	}else{
+		_ = d.Set("shared_secrets", nil)
 	}
 
 	if v := vpnCommunityStar["tunnel-granularity"]; v != nil {

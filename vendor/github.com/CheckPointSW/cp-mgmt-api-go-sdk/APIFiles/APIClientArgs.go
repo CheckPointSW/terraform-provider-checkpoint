@@ -18,8 +18,9 @@ type ApiClientArgs struct {
 	Context                 string
 	AutoPublish				bool
 	Timeout 				time.Duration
-	Sleep 				time.Duration
-	UserAgent			string
+	Sleep 				    time.Duration
+	UserAgent			    string
+	CloudMgmtId             string
 }
 
 /*
@@ -39,7 +40,7 @@ DebugFile: name of debug file
 Context: which API to use - Management API = web_api (default) or GAIA API = gaia_api
 Timeout: HTTP Client timeout value
 */
-func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration, userAgent string) ApiClientArgs {
+func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration, userAgent string, cloudMgmtId string) ApiClientArgs {
 
 	return ApiClientArgs{
 		Port: port,
@@ -56,5 +57,6 @@ func APIClientArgs(port int, fingerprint string, sid string, server string, prox
 		Timeout: timeout,
 		Sleep: sleep,
 		UserAgent: userAgent,
+		CloudMgmtId: cloudMgmtId,
 	}
 }

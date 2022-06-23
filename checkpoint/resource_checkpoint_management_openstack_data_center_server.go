@@ -32,16 +32,19 @@ func resourceManagementOpenStackDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Username of the OpenStack server.\nTo login to specific domain insert domain name before username.\nExample: <domain>/<username>",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the OpenStack server.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the OpenStack server encoded in Base64.",
 			},
 			"certificate_fingerprint": {

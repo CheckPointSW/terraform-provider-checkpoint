@@ -52,6 +52,7 @@ func dataSourceManagementNetworkFeed() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "username for authenticating with the URL.",
 			},
 			"custom_header": {

@@ -48,6 +48,7 @@ func resourceManagementMds() *schema.Resource {
 			"one_time_password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Secure internal connection one time password.",
 			},
 			"sic_name": {

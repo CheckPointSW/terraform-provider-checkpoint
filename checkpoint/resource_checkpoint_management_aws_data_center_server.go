@@ -33,11 +33,13 @@ func resourceManagementAwsDataCenterServer() *schema.Resource {
 			"access_key_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Access key ID for the AWS account.\nRequired for authentication-method: user-authentication.",
 			},
 			"secret_access_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Secret access key for the AWS account.\nRequired for authentication-method: user-authentication.",
 			},
 			"region": {

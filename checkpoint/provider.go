@@ -85,6 +85,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_NAME", ""),
 				Description: "Session unique name.",
 			},
+			"cloud_mgmt_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CLOUD_MGMT_ID", ""),
+				Description: "Smart-1 Cloud management UID",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_host":                                           resourceManagementHost(),
@@ -337,6 +343,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	proxyPort := data.Get("proxy_port").(int)
 	apiKey := data.Get("api_key").(string)
 	sessionName := data.Get("session_name").(string)
+	cloudMgmtId := data.Get("cloud_mgmt_id").(string)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, (username and password) OR api_key)")
@@ -357,6 +364,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		Timeout:                 time.Duration(timeout),
 		Sleep:                   checkpoint.SleepTime,
 		UserAgent:               "Terraform",
+		CloudMgmtId:             cloudMgmtId,
 	}
 
 	switch context {

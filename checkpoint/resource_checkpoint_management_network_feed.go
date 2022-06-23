@@ -46,6 +46,7 @@ func resourceManagementNetworkFeed() *schema.Resource {
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "password for authenticating with the URL.",
 			},
 			"tags": {
@@ -59,6 +60,7 @@ func resourceManagementNetworkFeed() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "username for authenticating with the URL.",
 			},
 			"custom_header": {

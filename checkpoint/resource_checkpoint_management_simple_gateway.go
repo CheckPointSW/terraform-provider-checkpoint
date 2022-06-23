@@ -345,6 +345,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 			"one_time_password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "SIC one time password.",
 			},
 			"sic_name": {

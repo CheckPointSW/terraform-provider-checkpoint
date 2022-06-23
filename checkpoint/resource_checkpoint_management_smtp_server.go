@@ -44,11 +44,13 @@ func resourceManagementSmtpServer() *schema.Resource {
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "A password for the SMTP server.<br><font color=\"red\">Required only if</font> authentication is set to true.",
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "A username for the SMTP server.<br><font color=\"red\">Required only if</font> authentication is set to true.",
 			},
 			"tags": {

@@ -81,6 +81,7 @@ func resourceManagementOpsecApplication() *schema.Resource {
 			"one_time_password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "A password required for establishing a Secure Internal Communication (SIC).",
 			},
 			"tags": {

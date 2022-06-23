@@ -37,16 +37,19 @@ func resourceManagementVMwareDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Username of the vCenter server",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the vCenter server.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the vCenter server encoded in Base64.",
 			},
 			"certificate_fingerprint": {

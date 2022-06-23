@@ -35,16 +35,19 @@ func resourceManagementIseDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "User ID of the ISE administrator server.\nWhen using commonLoginLogic Domains use the following syntax:\napic:<domain>\\<username>.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the ISE administrator server.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Cisco ISE administrator encoded in Base64.",
 			},
 			"certificate_fingerprint": {

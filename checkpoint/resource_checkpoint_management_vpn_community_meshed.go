@@ -147,6 +147,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 						"shared_secret": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "Shared secret.",
 						},
 					},
@@ -628,15 +629,9 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 	}
 
 	if vpnCommunityMeshed["override-vpn-domains"] != nil {
-
-		overrideVpnDomainsList, ok := vpnCommunityMeshed["override-vpn-domains"].([]interface{})
-
-		if ok {
-
+		overrideVpnDomainsList := vpnCommunityMeshed["override-vpn-domains"].([]interface{})
+		var overrideVpnDomainsListToReturn []map[string]interface{}
 			if len(overrideVpnDomainsList) > 0 {
-
-				var overrideVpnDomainsListToReturn []map[string]interface{}
-
 				for i := range overrideVpnDomainsList {
 
 					overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
@@ -644,43 +639,54 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 					overrideVpnDomainsMapToAdd := make(map[string]interface{})
 
 					if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
-						overrideVpnDomainsMapToAdd["gateway"] = v
+						overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
 					}
 					if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
-						overrideVpnDomainsMapToAdd["vpn_domain"] = v
+						overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
 					}
 					overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
 				}
 			}
-		}
+		_ = d.Set("override_vpn_domains", overrideVpnDomainsListToReturn)
+	}else{
+		_ = d.Set("override_vpn_domains", nil)
 	}
 
 	if vpnCommunityMeshed["shared-secrets"] != nil {
-
-		sharedSecretsList, ok := vpnCommunityMeshed["shared-secrets"].([]interface{})
-
-		if ok {
-
-			if len(sharedSecretsList) > 0 {
-
-				var sharedSecretsListToReturn []map[string]interface{}
-
-				for i := range sharedSecretsList {
-
-					sharedSecretsMap := sharedSecretsList[i].(map[string]interface{})
-
+		sharedSecretsList := vpnCommunityMeshed["shared-secrets"].([]interface{})
+		var sharedSecretsListToReturn []map[string]interface{}
+		if len(sharedSecretsList) > 0 {
+			for i := range sharedSecretsList {
+				sharedSecretsMap := sharedSecretsList[i].(map[string]interface{})
+				externalGateway := ""
+				sharedSecret := "N/A"
+				if v, _ := sharedSecretsMap["external-gateway"]; v != nil {
+					externalGateway = v.(map[string]interface{})["name"].(string)
+					if val, ok := d.GetOk("shared_secrets"); ok {
+						sharedSecretsList := val.([]interface{})
+						if len(sharedSecretsList) > 0 {
+							for i := range sharedSecretsList {
+								if v, ok := d.GetOk("shared_secrets." + strconv.Itoa(i) + ".external_gateway"); ok {
+									if externalGateway == v.(string) {
+										sharedSecret = d.Get("shared_secrets." + strconv.Itoa(i) + ".shared_secret").(string)
+										break
+									}
+								}
+							}
+						}
+					}
+				}
+				if externalGateway != "" {
 					sharedSecretsMapToAdd := make(map[string]interface{})
-
-					if v, _ := sharedSecretsMap["external-gateway"]; v != nil {
-						sharedSecretsMapToAdd["external_gateway"] = v
-					}
-					if v, _ := sharedSecretsMap["shared-secret"]; v != nil {
-						sharedSecretsMapToAdd["shared_secret"] = v
-					}
+					sharedSecretsMapToAdd["external_gateway"] = externalGateway
+					sharedSecretsMapToAdd["shared_secret"] = sharedSecret
 					sharedSecretsListToReturn = append(sharedSecretsListToReturn, sharedSecretsMapToAdd)
 				}
 			}
 		}
+		_ = d.Set("shared_secrets", sharedSecretsListToReturn)
+	}else{
+		_ = d.Set("shared_secrets", nil)
 	}
 
 	if v := vpnCommunityMeshed["tunnel-granularity"]; v != nil {

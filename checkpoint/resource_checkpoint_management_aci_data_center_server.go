@@ -35,16 +35,19 @@ func resourceManagementAciDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "User ID of the Cisco APIC server.\nWhen using commonLoginLogic Domains use the following syntax:\napic:<domain>\\<username>.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Cisco APIC server.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Cisco APIC server encoded in Base64.",
 			},
 			"certificate_fingerprint": {

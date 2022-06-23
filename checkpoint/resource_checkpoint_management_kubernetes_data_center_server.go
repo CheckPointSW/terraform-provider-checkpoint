@@ -27,11 +27,13 @@ func resourceManagementKubernetesDataCenterServer() *schema.Resource {
 			"hostname": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "IP address or hostname of the Kubernetes server.",
 			},
 			"token_file": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Kubernetes access token encoded in base64.",
 			},
 			"ca_certificate": {

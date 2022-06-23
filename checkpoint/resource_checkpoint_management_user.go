@@ -45,6 +45,7 @@ func resourceManagementUser() *schema.Resource {
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Checkpoint password authentication method identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"Check Point Password\".",
 			},
 			"radius_server": {

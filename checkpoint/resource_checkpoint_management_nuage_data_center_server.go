@@ -32,6 +32,7 @@ func resourceManagementNuageDataCenterServer() *schema.Resource {
 			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Username of the Nuage administrator.",
 			},
 			"organization": {
@@ -42,11 +43,13 @@ func resourceManagementNuageDataCenterServer() *schema.Resource {
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Nuage administrator.",
 			},
 			"password_base64": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Password of the Nuage administrator encoded in Base64.",
 			},
 			"certificate_fingerprint": {

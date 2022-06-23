@@ -31,6 +31,7 @@ func resourceManagementGcpDataCenterServer() *schema.Resource {
 			"private_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "A Service Account Key JSON file, encoded in base64.\nRequired for authentication-method: key-authentication.",
 			},
 			"tags": {

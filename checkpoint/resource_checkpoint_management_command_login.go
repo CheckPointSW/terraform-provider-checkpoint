@@ -16,12 +16,14 @@ func resourceManagementLogin() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "Administrator user name.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "Administrator password.",
 			},
 			"continue_last_session": {

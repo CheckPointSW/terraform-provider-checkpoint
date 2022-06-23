@@ -63,6 +63,7 @@ type ApiClient struct {
 	timeout                 time.Duration
 	sleep                   time.Duration
 	userAgent               string
+	cloudMgmtId             string
 }
 
 // Api Client constructor
@@ -95,6 +96,10 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		apiCA.Sleep = SleepTime
 	}
 
+	if apiCA.UserAgent == "" {
+		apiCA.UserAgent = "golang-api-wrapper"
+	}
+
 	return &ApiClient{
 		port:                    apiCA.Port,
 		isPortDefault_:          isPortDefault,
@@ -115,6 +120,7 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		timeout:                 apiCA.Timeout,
 		sleep:                   apiCA.Sleep,
 		userAgent:               apiCA.UserAgent,
+		cloudMgmtId:             apiCA.CloudMgmtId,
 	}
 }
 
@@ -241,8 +247,10 @@ func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continu
 		credentials["domain"] = domain
 	}
 
-	for k, v := range payload{
-		credentials[k] = v
+	if payload != nil {
+		for k, v := range payload {
+			credentials[k] = v
+		}
 	}
 
 	loginRes, errCall := c.ApiCall("login", credentials, "", false, false)
@@ -252,7 +260,9 @@ func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continu
 	if loginRes.Success {
 		c.sid = loginRes.data["sid"].(string)
 		c.domain = domain
-		c.apiVersion = loginRes.data["api-server-version"].(string)
+		if c.apiVersion == "" {
+			c.apiVersion = loginRes.data["api-server-version"].(string)
+		}
 	}
 
 	return loginRes, nil
@@ -283,7 +293,7 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 	c.fingerprint = fp
 	fpAuthentication, err := c.CheckFingerprint()
 	if !fpAuthentication {
-		return APIResponse{}, errors.New("fingerprint Doesn't match, someone might be trying to steal your information\n")
+		return APIResponse{}, errors.New("fingerprint doesn't match, someone might be trying to steal your information\n")
 	}
 	if err != nil {
 		return APIResponse{}, err
@@ -292,28 +302,14 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 	if payload == nil {
 		payload = map[string]interface{}{}
 	}
-	if sid == "" {
-		sid = c.sid
-	}
 
 	_data, err := json.Marshal(payload)
 	if err != nil {
 		return APIResponse{}, err
 	}
 
-	if c.userAgent == "" {
-		c.userAgent = "golang-api-wrapper"
-	}
-
-	headers := map[string]interface{}{
-		"User-Agent":     c.userAgent,
-		"Accept":         "*/*",
-		"Content-Type":   "application/json",
-		"Content-Length": len(_data),
-	}
-
-	if sid != "" {
-		headers["X-chkp-sid"] = sid
+	if sid == "" {
+		sid = c.sid
 	}
 
 	var client *Client
@@ -329,12 +325,19 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 		}
 	}
 
-	var url string
-	if c.apiVersion == "" {
-		url = "/" + c.context + "/" + command
-	} else {
-		url = "/" + c.context + "/" + "v" + c.apiVersion + "/" + command
+	url := "https://" + c.server + ":" + strconv.Itoa(c.port)
+
+	if c.cloudMgmtId != "" {
+		url += "/" + c.cloudMgmtId
 	}
+
+	url += "/" + c.context
+
+	if c.apiVersion != "" {
+		url += "/v" + c.apiVersion
+	}
+
+	url += "/" + command
 
 	client.fingerprint = c.fingerprint
 
@@ -342,15 +345,16 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 
 	spotReader := bytes.NewReader(_data)
 
-	req, err := http.NewRequest("POST", "https://"+c.server+":"+strconv.Itoa(c.port)+url, spotReader)
+	req, err := http.NewRequest("POST", url, spotReader)
 	if err != nil {
 		return APIResponse{}, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", headers["User-Agent"].(string))
+	req.Header.Set("User-Agent", c.userAgent)
+
 	if command != "login" {
-		req.Header.Set("X-chkp-sid", c.sid)
+		req.Header.Set("X-chkp-sid", sid)
 	}
 
 	response, err := client.client.Do(req)
