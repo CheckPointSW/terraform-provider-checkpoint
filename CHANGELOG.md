@@ -1,3 +1,14 @@
+## 2.0.0 (June 23, 2022)
+
+ENHANCEMENTS
+
+* Add support to connect Smart-1 Cloud using `cloud_mgmt_id` or via environment variable `CHECKPOINT_CLOUD_MGMT_ID`.
+* Mark sensitive fields in all resources.
+
+BUG FIXES
+
+* Fix bugs in VPN resoucres.
+
 ## 1.9.1 (June 16, 2022)
 
 BUG FIXES
