@@ -7,7 +7,7 @@ ENHANCEMENTS
 
 BUG FIXES
 
-* Fix bugs in VPN resoucres.
+* Fix bugs in VPN resources.
 
 ## 1.9.1 (June 16, 2022)
 
