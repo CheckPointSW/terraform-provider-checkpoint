@@ -49,20 +49,6 @@ func resourceManagementTacacsGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object",
-				Default:     "standard",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -102,14 +88,6 @@ func createManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("comments"); ok {
 		tacacsGroupPayload["comments"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("details_level"); ok {
-		tacacsGroupPayload["details-level"] = v.(string)
-	}
-
-	if v, ok := d.GetOk("groups"); ok {
-		tacacsGroupPayload["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
@@ -203,26 +181,6 @@ func readManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("comments", v)
 	}
 
-	if v := tacacsGroup["details-level"]; v != nil {
-		_ = d.Set("details_level", v)
-	}
-
-	if tacacsGroup["groups"] != nil {
-		groupsJson, ok := tacacsGroup["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
 	if v := tacacsGroup["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}
@@ -272,19 +230,6 @@ func updateManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("comments"); ok {
 		tacacsGroup["comments"] = d.Get("comments")
-	}
-
-	if ok := d.HasChange("details_level"); ok {
-		tacacsGroup["details-level"] = d.Get("details_level")
-	}
-
-	if d.HasChange("groups") {
-		if v, ok := d.GetOk("groups"); ok {
-			tacacsGroup["groups"] = v.(*schema.Set).List()
-		} else {
-			oldGroups, _ := d.GetChange("groups")
-			tacacsGroup["groups"] = map[string]interface{}{"remove": oldGroups.(*schema.Set).List()}
-		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
