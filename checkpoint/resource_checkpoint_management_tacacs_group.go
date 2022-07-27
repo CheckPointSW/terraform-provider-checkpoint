@@ -13,6 +13,9 @@ func resourceManagementTacacsGroup() *schema.Resource {
 		Read:   readManagementTacacsGroup,
 		Update: updateManagementTacacsGroup,
 		Delete: deleteManagementTacacsGroup,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -46,7 +49,7 @@ func resourceManagementTacacsGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
-			"details-level": {
+			"details_level": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object",
@@ -79,47 +82,47 @@ func resourceManagementTacacsGroup() *schema.Resource {
 func createManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	tacacsGroup := make(map[string]interface{})
+	tacacsGroupPayload := make(map[string]interface{})
 
 	if v, ok := d.GetOk("name"); ok {
-		tacacsGroup["name"] = v.(string)
+		tacacsGroupPayload["name"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("members"); ok {
-		tacacsGroup["members"] = v.(*schema.Set).List()
+		tacacsGroupPayload["members"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		tacacsGroup["tags"] = v.(*schema.Set).List()
+		tacacsGroupPayload["tags"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOk("color"); ok {
-		tacacsGroup["color"] = v.(string)
+		tacacsGroupPayload["color"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("comments"); ok {
-		tacacsGroup["comments"] = v.(string)
+		tacacsGroupPayload["comments"] = v.(string)
 	}
 
-	if v, ok := d.GetOk("details-level"); ok {
-		tacacsGroup["details-level"] = v.(string)
+	if v, ok := d.GetOk("details_level"); ok {
+		tacacsGroupPayload["details-level"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("groups"); ok {
-		tacacsGroup["groups"] = v.(*schema.Set).List()
+		tacacsGroupPayload["groups"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
-		tacacsGroup["ignore-warnings"] = v.(bool)
+		tacacsGroupPayload["ignore-warnings"] = v.(bool)
 	}
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
-		tacacsGroup["ignore-errors"] = v.(bool)
+		tacacsGroupPayload["ignore-errors"] = v.(bool)
 	}
 
-	log.Println("Create TacacsGroup - Map = ", tacacsGroup)
+	log.Println("Create TacacsGroup - Map = ", tacacsGroupPayload)
 
-	addTacacsGroupRes, err := client.ApiCall("add-tacacs-group", tacacsGroup, client.GetSessionID(), true, false)
+	addTacacsGroupRes, err := client.ApiCall("add-tacacs-group", tacacsGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTacacsGroupRes.Success {
 		if addTacacsGroupRes.ErrorMsg != "" {
 			return fmt.Errorf(addTacacsGroupRes.ErrorMsg)
@@ -201,7 +204,7 @@ func readManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := tacacsGroup["details-level"]; v != nil {
-		_ = d.Set("details-level", v)
+		_ = d.Set("details_level", v)
 	}
 
 	if tacacsGroup["groups"] != nil {
@@ -271,8 +274,8 @@ func updateManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 		tacacsGroup["comments"] = d.Get("comments")
 	}
 
-	if ok := d.HasChange("details-level"); ok {
-		tacacsGroup["details-level"] = d.Get("details-level")
+	if ok := d.HasChange("details_level"); ok {
+		tacacsGroup["details-level"] = d.Get("details_level")
 	}
 
 	if d.HasChange("groups") {

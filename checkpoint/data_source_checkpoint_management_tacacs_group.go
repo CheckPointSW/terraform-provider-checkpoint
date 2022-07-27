@@ -11,14 +11,19 @@ func dataSourceManagementTacacsGroup() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceManagementTacacsGroupRead,
 		Schema: map[string]*schema.Schema{
+			"uid": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Object unique identifier.",
+			},
 			"name": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Object name. Must be unique in the domain",
 			},
 			"members": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Computed:    true,
 				Description: "Collection of tacacs servers identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -26,7 +31,7 @@ func dataSourceManagementTacacsGroup() *schema.Resource {
 			},
 			"tags": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Computed:    true,
 				Description: "Collection of tag identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -34,24 +39,22 @@ func dataSourceManagementTacacsGroup() *schema.Resource {
 			},
 			"color": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Color of the object. Should be one of existing colors.",
-				Default:     "black",
 			},
 			"comments": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Comments string.",
 			},
-			"details-level": {
+			"details_level": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object",
-				Default:     "standard",
 			},
 			"groups": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Computed:    true,
 				Description: "Collection of group identifiers.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -59,15 +62,13 @@ func dataSourceManagementTacacsGroup() *schema.Resource {
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Computed:    true,
 				Description: "Apply changes ignoring warnings.",
-				Default:     false,
 			},
 			"ignore_errors": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Computed:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-				Default:     false,
 			},
 		},
 	}
@@ -149,7 +150,7 @@ func dataSourceManagementTacacsGroupRead(d *schema.ResourceData, m interface{}) 
 	}
 
 	if v := tacacsGroup["details-level"]; v != nil {
-		_ = d.Set("details-level", v)
+		_ = d.Set("details_level", v)
 	}
 
 	if tacacsGroup["groups"] != nil {
