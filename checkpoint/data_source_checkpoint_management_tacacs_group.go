@@ -47,29 +47,6 @@ func dataSourceManagementTacacsGroup() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
-			"details_level": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation of the object",
-			},
-			"groups": {
-				Type:        schema.TypeSet,
-				Computed:    true,
-				Description: "Collection of group identifiers.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"ignore_warnings": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Apply changes ignoring warnings.",
-			},
-			"ignore_errors": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
-			},
 		},
 	}
 }
@@ -147,34 +124,6 @@ func dataSourceManagementTacacsGroupRead(d *schema.ResourceData, m interface{}) 
 
 	if v := tacacsGroup["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := tacacsGroup["details-level"]; v != nil {
-		_ = d.Set("details_level", v)
-	}
-
-	if tacacsGroup["groups"] != nil {
-		groupsJson, ok := tacacsGroup["groups"].([]interface{})
-		if ok {
-			groupsIds := make([]string, 0)
-			if len(groupsJson) > 0 {
-				for _, groups := range groupsJson {
-					groups := groups.(map[string]interface{})
-					groupsIds = append(groupsIds, groups["name"].(string))
-				}
-			}
-			_ = d.Set("groups", groupsIds)
-		}
-	} else {
-		_ = d.Set("groups", nil)
-	}
-
-	if v := tacacsGroup["ignore-warnings"]; v != nil {
-		_ = d.Set("ignore_warnings", v)
-	}
-
-	if v := tacacsGroup["ignore-errors"]; v != nil {
-		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil
