@@ -232,6 +232,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_connect_cloud_services":                         resourceManagementConnectCloudServices(),
 			"checkpoint_management_disconnect_cloud_services":                      resourceManagementDisconnectCloudServices(),
 			"checkpoint_management_tacacs_group":                                   resourceManagementTacacsGroup(),
+			"checkpoint_management_tacacs_server":                                  resourceManagementTacacsServer(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
