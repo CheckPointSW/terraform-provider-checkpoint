@@ -6,7 +6,7 @@ description: |-
 This resource allows you to execute Check Point Tacacs Server.
 ---
 
-# checkpoint_management_tacacs_server
+# Resource: checkpoint_management_tacacs_server
 
 This resource allows you to execute Check Point Tacacs Server.
 
