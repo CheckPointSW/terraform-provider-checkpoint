@@ -28,7 +28,8 @@ data "checkpoint_management_tacacs_group" "data_tacacs_group" {
 The following arguments are supported:
 
 * `name` - (Optional) Object name.
-* `uid` - (Optional) Collection of tacacs servers identified by the name or UID.members blocks are documented below.
+* `uid` - (Optional) Object unique identifier.
+* `members` - Collection of tacacs servers identified by the name or UID.members blocks are documented below.
 * `tags` - Collection of tag identifiers.tags blocks are documented below.
 * `color` - Color of the object. Should be one of existing colors.
 * `comments` - Comments string.
