@@ -332,6 +332,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cloud_services":                            dataSourceManagementCloudServices(),
 			"checkpoint_management_tacacs_group":                              dataSourceManagementTacacsGroup(),
 			"checkpoint_management_tag":                                       dataSourceManagementTag(),
+			"checkpoint_management_threat_layer":                              dataSourceManagementThreatLayer(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
