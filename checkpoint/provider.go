@@ -237,6 +237,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_lsm_cluster":                                    resourceManagementLsmCluster(),
 			"checkpoint_management_command_unlock_object":                          resourceManagementUnlockObject(),
 			"checkpoint_management_threat_layer":                                   resourceManagementThreatLayer(),
+			"checkpoint_management_radius_server":                                  resourceManagementRadiusServer(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -333,6 +334,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_tacacs_group":                              dataSourceManagementTacacsGroup(),
 			"checkpoint_management_tag":                                       dataSourceManagementTag(),
 			"checkpoint_management_threat_layer":                              dataSourceManagementThreatLayer(),
+			"checkpoint_management_radius_server":                             dataSourceManagementRadiusServer(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
