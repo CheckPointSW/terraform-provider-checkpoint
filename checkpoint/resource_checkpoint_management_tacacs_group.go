@@ -258,7 +258,8 @@ func deleteManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	tacacsGroupPayload := map[string]interface{}{
-		"uid": d.Id(),
+		"uid":             d.Id(),
+		"ignore-warnings": "true",
 	}
 
 	log.Println("Delete TacacsGroup")
