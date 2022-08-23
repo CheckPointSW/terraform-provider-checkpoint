@@ -339,6 +339,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_threat_layer":                              dataSourceManagementThreatLayer(),
 			"checkpoint_management_radius_server":                             dataSourceManagementRadiusServer(),
 			"checkpoint_management_radius_group":                              dataSourceManagementRadiusGroup(),
+			"checkpoint_management_automatic_purge":                           dataSourceManagementAutomaticPurge(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
