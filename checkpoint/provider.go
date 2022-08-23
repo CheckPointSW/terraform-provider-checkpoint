@@ -240,6 +240,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_radius_server":                                  resourceManagementRadiusServer(),
 			"checkpoint_management_radius_group":                                   resourceManagementRadiusGroup(),
 			"checkpoint_management_service_gtp":                                    resourceManagementServiceGtp(),
+			"checkpoint_management_administrator":                                  resourceManagementAdministrator(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
