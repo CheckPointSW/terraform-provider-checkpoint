@@ -341,6 +341,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_radius_group":                              dataSourceManagementRadiusGroup(),
 			"checkpoint_management_automatic_purge":                           dataSourceManagementAutomaticPurge(),
 			"checkpoint_management_api_settings":                              dataSourceManagementApiSettings(),
+			"checkpoint_management_ips_update_schedule":                       dataSourceManagementIpsUpdateSchedule(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
