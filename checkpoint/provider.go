@@ -243,6 +243,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_administrator":                                  resourceManagementAdministrator(),
 			"checkpoint_management_dynamic_global_network_object":                  resourceManagementDynamicGlobalNetworkObject(),
 			"checkpoint_management_set_policy_settings":                            resourceManagementSetPolicySettings(),
+			"checkpoint_management_set_threat_advanced_settings":                   resourceManagementSetThreatAdvancedSettings(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -344,6 +345,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_automatic_purge":                           dataSourceManagementAutomaticPurge(),
 			"checkpoint_management_api_settings":                              dataSourceManagementApiSettings(),
 			"checkpoint_management_ips_update_schedule":                       dataSourceManagementIpsUpdateSchedule(),
+			"checkpoint_management_task":                                      dataSourceManagementTask(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
