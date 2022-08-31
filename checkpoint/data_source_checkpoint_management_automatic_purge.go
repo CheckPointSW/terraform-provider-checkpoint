@@ -38,8 +38,9 @@ func dataSourceManagementAutomaticPurge() *schema.Resource {
 				Description: "When \"keep-sessions-by-days = true\" this sets the number of days to keep the sessions.",
 			},
 			"scheduling": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
+				MaxItems:    1,
 				Description: "When to purge sessions that do not meet the \"keep\" criteria. Note: when the automatic purge feature is enabled, this field must be set.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -116,6 +117,7 @@ func dataSourceManagementAutomaticPurgeRead(d *schema.ResourceData, m interface{
 
 	if automaticPurge["scheduling"] != nil {
 		schedulingMap := automaticPurge["scheduling"].(map[string]interface{})
+		schedulingList := make([]interface{}, 0)
 
 		schedulingMapToReturn := make(map[string]interface{})
 
@@ -134,8 +136,8 @@ func dataSourceManagementAutomaticPurgeRead(d *schema.ResourceData, m interface{
 		if v, _ := schedulingMap["next-check"]; v != nil {
 			schedulingMapToReturn["next_check"] = v
 		}
-
-		_ = d.Set("scheduling", []interface{}{schedulingMapToReturn})
+		schedulingList = append(schedulingList, schedulingMapToReturn)
+		_ = d.Set("scheduling", schedulingList)
 	} else {
 		_ = d.Set("scheduling", nil)
 	}
