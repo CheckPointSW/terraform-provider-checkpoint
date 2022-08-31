@@ -346,6 +346,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_api_settings":                              dataSourceManagementApiSettings(),
 			"checkpoint_management_ips_update_schedule":                       dataSourceManagementIpsUpdateSchedule(),
 			"checkpoint_management_task":                                      dataSourceManagementTask(),
+			"checkpoint_management_objects":                                   dataSourceManagementObjects(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
