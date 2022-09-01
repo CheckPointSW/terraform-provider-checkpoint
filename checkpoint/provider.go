@@ -349,6 +349,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_objects":                                   dataSourceManagementObjects(),
 			"checkpoint_management_login_message":                             dataSourceManagementLoginMessage(),
 			"checkpoint_management_policy_settings":                           dataSourceManagementPolicySettings(),
+			"checkpoint_management_threat_advanced_settings":                  dataSourceManagementThreatAdvancedSettings(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
