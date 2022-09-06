@@ -244,6 +244,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_dynamic_global_network_object":                  resourceManagementDynamicGlobalNetworkObject(),
 			"checkpoint_management_set_policy_settings":                            resourceManagementSetPolicySettings(),
 			"checkpoint_management_set_threat_advanced_settings":                   resourceManagementSetThreatAdvancedSettings(),
+			"checkpoint_management_lsv_profile":                                    resourceManagementLsvProfile(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
