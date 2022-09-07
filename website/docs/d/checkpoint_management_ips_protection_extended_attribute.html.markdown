@@ -14,7 +14,7 @@ This resource allows you to execute Check Point Ips Protection Extended Attribut
 
 ```hcl
 data "checkpoint_management_ips_protection_extended_attribute" "data_ips_protection_extended_attribute" {
-	name = "Example"
+	name = "File Type"
 }
 ```
 
@@ -24,13 +24,8 @@ The following arguments are supported:
 
 * `name` - (Optional) Object name.
 * `uid` - (Optional) Object unique identifier.
-* `object` - The Object content.
+* `values` - The Object content. Values blocks are documented below.
 
-`object` supports the following:
-* `name` - Object name.
-* `uid` - Object unique identifier.
-* `values` - The values of the object.
- 
 `values` supports the following:
 * `name` - Object name.
 * `uid` - Object unique identifier.
