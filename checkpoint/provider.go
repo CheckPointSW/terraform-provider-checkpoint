@@ -353,6 +353,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_threat_advanced_settings":                  dataSourceManagementThreatAdvancedSettings(),
 			"checkpoint_management_smart_task_trigger":                        dataSourceManagementSmartTaskTrigger(),
 			"checkpoint_management_lsv_profile":                               dataSourceManagementLsvProfile(),
+			"checkpoint_management_ips_protection_extended_attribute":         dataSourceManagementIpsProtectionExtendedAttribute(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
