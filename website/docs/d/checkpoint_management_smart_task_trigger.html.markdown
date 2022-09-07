@@ -14,8 +14,8 @@ Use this data source to get information on an existing Check Point Smart Task Tr
 
 
 ```hcl
-data "checkpoint_management_data_host" "data_host" {
-    name = "Example"
+data "checkpoint_management_smart_task_trigger" "data_smart_task_trigger" {
+    name = "After Approve"
 }
 ```
 
