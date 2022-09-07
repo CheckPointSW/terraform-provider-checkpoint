@@ -75,10 +75,10 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 
 	showTaskRes, err := client.ApiCall("show-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		fmt.Errorf(err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	if !showTaskRes.Success {
-		fmt.Errorf(showTaskRes.ErrorMsg)
+		return fmt.Errorf(showTaskRes.ErrorMsg)
 	}
 
 	task := showTaskRes.GetData()

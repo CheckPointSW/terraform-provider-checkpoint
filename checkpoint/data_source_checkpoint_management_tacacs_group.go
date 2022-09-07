@@ -67,10 +67,10 @@ func dataSourceManagementTacacsGroupRead(d *schema.ResourceData, m interface{}) 
 
 	showTacacsGroupRes, err := client.ApiCall("show-tacacs-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		fmt.Errorf(err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	if !showTacacsGroupRes.Success {
-		fmt.Errorf(err.Error())
+		return fmt.Errorf(err.Error())
 	}
 
 	tacacsGroup := showTacacsGroupRes.GetData()

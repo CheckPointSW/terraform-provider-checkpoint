@@ -66,10 +66,10 @@ func dataSourceManagementApiSettingsRead(d *schema.ResourceData, m interface{}) 
 
 	showApiSettingsRes, err := client.ApiCall("show-api-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		fmt.Errorf(err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	if !showApiSettingsRes.Success {
-		fmt.Errorf(showApiSettingsRes.ErrorMsg)
+		return fmt.Errorf(showApiSettingsRes.ErrorMsg)
 	}
 
 	apiSettings := showApiSettingsRes.GetData()

@@ -96,10 +96,10 @@ func dataSourceManagementThreatAdvancedSettingsRead(d *schema.ResourceData, m in
 
 	showThreatAdvancedSettingsRes, err := client.ApiCall("show-threat-advanced-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		fmt.Errorf(err.Error())
+		return fmt.Errorf(err.Error())
 	}
 	if !showThreatAdvancedSettingsRes.Success {
-		fmt.Errorf(showThreatAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf(showThreatAdvancedSettingsRes.ErrorMsg)
 	}
 
 	threatAdvancedSettings := showThreatAdvancedSettingsRes.GetData()
