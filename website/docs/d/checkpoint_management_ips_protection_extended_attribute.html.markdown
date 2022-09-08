@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_ips_protection_extended_attribute"
 sidebar_current: "docs-checkpoint-data-source-checkpoint-management-ips-protection-extended-attribute"
 description: |-
-This resource allows you to execute Check Point Ips Protection Extended Attribute.
+Use this data source to get information on an existing Check Point Ips Protection Extended Attribute.
 ---
 
 # Data Source: checkpoint_management_ips_protection_extended_attribute
 
-This resource allows you to execute Check Point Ips Protection Extended Attribute.
+Use this data source to get information on an existing Check Point Ips Protection Extended Attribute.
 
 ## Example Usage
 
