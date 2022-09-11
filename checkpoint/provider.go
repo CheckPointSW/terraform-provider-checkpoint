@@ -245,6 +245,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_set_policy_settings":                            resourceManagementSetPolicySettings(),
 			"checkpoint_management_set_threat_advanced_settings":                   resourceManagementSetThreatAdvancedSettings(),
 			"checkpoint_management_lsv_profile":                                    resourceManagementLsvProfile(),
+			"checkpoint_management_login_to_domain":                                resourceManagementLoginToDomain(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
