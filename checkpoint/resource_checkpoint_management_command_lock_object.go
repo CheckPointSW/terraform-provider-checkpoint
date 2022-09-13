@@ -80,6 +80,7 @@ func createManagementLockObject(d *schema.ResourceData, m interface{}) error {
 			_ = d.Set("name", v)
 		}
 	}
+
 	return readManagementLockObject(d, m)
 }
 
