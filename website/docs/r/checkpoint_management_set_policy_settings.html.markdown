@@ -1,12 +1,12 @@
 ---
 layout: "checkpoint"
-page_title: "checkpoint_management_set_policy_settings"
-sidebar_current: "docs-checkpoint-resource-checkpoint-management-set-policy-settings"
+page_title: "checkpoint_management_command_set_policy_settings"
+sidebar_current: "docs-checkpoint-resource-checkpoint-management-command-set-policy-settings"
 description: |-
 This resource allows you to execute Check Point Set Policy Settings.
 ---
 
-# Resource: checkpoint_management_set_policy_settings
+# Resource: checkpoint_management_command_set_policy_settings
 
 This resource allows you to execute Check Point Set Policy Settings.
 
@@ -14,7 +14,7 @@ This resource allows you to execute Check Point Set Policy Settings.
 
 
 ```hcl
-resource "checkpoint_management_set_policy_settings" "example" {
+resource "checkpoint_management_command_set_policy_settings" "example" {
   last_in_cell = "none"
   none_object_behavior = "warning"
 }
