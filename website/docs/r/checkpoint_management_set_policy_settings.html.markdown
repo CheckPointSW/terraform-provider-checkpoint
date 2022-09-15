@@ -6,7 +6,7 @@ description: |-
 This resource allows you to execute Check Point Set Policy Settings.
 ---
 
-# checkpoint_management_set_policy_settings
+# Resource: checkpoint_management_set_policy_settings
 
 This resource allows you to execute Check Point Set Policy Settings.
 
