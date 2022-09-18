@@ -247,6 +247,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_lsv_profile":                                    resourceManagementLsvProfile(),
 			"checkpoint_management_login_to_domain":                                resourceManagementLoginToDomain(),
 			"checkpoint_management_command_lock_object":                            resourceManagementLockObject(),
+			"checkpoint_management_command_gaia_api":                               resourceManagementGaiaApi(),
+			"checkpoint_management_command_import_smart_task":                      resourceManagementImportSmartTask(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
