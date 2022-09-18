@@ -249,6 +249,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_command_lock_object":                            resourceManagementLockObject(),
 			"checkpoint_management_command_gaia_api":                               resourceManagementGaiaApi(),
 			"checkpoint_management_command_import_smart_task":                      resourceManagementImportSmartTask(),
+			"checkpoint_management_command_get_interfaces":                         resourceManagementGetInterfaces(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
