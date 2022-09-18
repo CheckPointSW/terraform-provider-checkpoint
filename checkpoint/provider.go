@@ -252,6 +252,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_command_get_interfaces":                         resourceManagementGetInterfaces(),
 			"checkpoint_management_command_abort_get_interfaces":                   resourceManagementAbortGetInterfaces(),
 			"checkpoint_management_command_export_management":                      resourceManagementExportManagement(),
+			"checkpoint_management_command_export_smart_task":                      resourceManagementExportSmartTask(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
