@@ -30,14 +30,14 @@ The following arguments are supported:
 * `httpi_non_standard_ports` - (Optional) Enable HTTP Inspection on non standard ports for Threat Prevention blades. 
 * `internal_error_fail_mode` - (Optional) In case of internal system error, allow or block all connections. 
 * `log_unification_timeout` - (Optional) Session unification timeout for logs (minutes). 
-* `resource_classification` - (Optional) Allow (Background) or Block (Hold) requests until categorization is complete.resource_classification blocks are documented below.
+* `resource_classification` - (Optional) Allow (Background) or Block (Hold) requests until categorization is complete.resource_classification blocks are documented below. resource_classification is type list.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 
 
 `resource_classification` supports the following:
 
-* `custom_settings` - (Optional) On Custom mode, custom resources classification per service.custom_settings blocks are documented below.
+* `custom_settings` - (Optional) On Custom mode, custom resources classification per service.custom_settings blocks are documented below. custom_settings is type list.
 * `mode` - (Optional) Set all services to the same mode or choose a custom mode. 
 * `web_service_fail_mode` - (Optional) Block connections when the web service is unavailable. 
 
