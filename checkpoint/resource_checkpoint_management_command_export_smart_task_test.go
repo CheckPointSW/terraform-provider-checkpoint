@@ -9,7 +9,7 @@ import (
 
 func TestAccCheckpointManagementExportSmartTask_basic(t *testing.T) {
 
-	commandName := "checkpoint_management_command_export_management.export"
+	commandName := "checkpoint_management_command_export_smart_task.export"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "web_api" {
