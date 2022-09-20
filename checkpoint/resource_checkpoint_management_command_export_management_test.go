@@ -23,7 +23,7 @@ func TestAccCheckpointManagementExportManagement_basic(t *testing.T) {
 			{
 				Config: testAccManagementExportManagementConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttrPair(commandName, "file_path", commandName, "file_path"),
 				),
 			},
 		},
@@ -34,7 +34,7 @@ func TestAccCheckpointManagementExportManagement_basic(t *testing.T) {
 func testAccManagementExportManagementConfig() string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_command_export_management" "export" {
-  file_path = "var/log/domian1_backup.tgz"
+  file_path = "/var/log/domian1_backup.tgz"
 }
 `)
 }
