@@ -1,3 +1,37 @@
+## 2.1.0 (September 20, 2022)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_command_get_interfaces`
+* **New Resource:** `resource_checkpoint_management_command_abort_get_interfaces`
+* **New Data Source:** `data_source_checkpoint_management_automatic_purge`
+* **New Data Source:** `data_source_checkpoint_management_api_settings`
+* **New Resource:** `resource_checkpoint_management_command_export_management`
+* **New Resource:** `resource_checkpoint_management_command_import_management`
+* **New Resource:** `resource_checkpoint_management_command_export_smart_task`
+* **New Resource:** `resource_checkpoint_management_command_import_smart_task`
+* **New Data Source:** `data_source_checkpoint_management_smart_task_trigger`
+* **New Resource:** `resource_checkpoint_management_command_gaia_api`
+* **New Resource:** `resource_checkpoint_management_command_lock_object`
+* **New Resource:** `resource_checkpoint_management_command_unlock_object`
+* **New Resource:** `resource_checkpoint_management_command_login_to_domain`
+* **New Resource:** `resource_checkpoint_management_command_vsx_run_operation`
+* **New Data Source:** `data_source_checkpoint_management_ips_update_schedule`
+* **New Data Source:** `data_source_checkpoint_management_ips_protection_extended_attribute`
+* **New Resource:** `resource_checkpoint_management_command_set_policy_settings`
+* **New Data Source:** `data_source_checkpoint_management_policy_settings`
+* **New Data Source:** `data_source_checkpoint_management_threat_advanced_settings`
+* **New Resource:** `resource_checkpoint_management_command_set_threat_advanced_settings`
+* **New Data Source:** `data_source_checkpoint_management_login_message`
+* **New Data Source:** `data_source_checkpoint_management_objects`
+* **New Resource:** `resource_checkpoint_management_command_set_global_properties`
+* **New Data Source:** `data_source_checkpoint_management_task`
+* **New Data Source:** `data_source_checkpoint_management_global_domain`
+
+
+
+
+
 ## 2.0.0 (June 23, 2022)
 
 ENHANCEMENTS
