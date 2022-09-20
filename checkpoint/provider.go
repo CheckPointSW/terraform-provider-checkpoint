@@ -245,7 +245,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_command_set_policy_settings":                    resourceManagementSetPolicySettings(),
 			"checkpoint_management_command_set_threat_advanced_settings":           resourceManagementSetThreatAdvancedSettings(),
 			"checkpoint_management_lsv_profile":                                    resourceManagementLsvProfile(),
-			"checkpoint_management_login_to_domain":                                resourceManagementLoginToDomain(),
+			"checkpoint_management_command_login_to_domain":                        resourceManagementLoginToDomain(),
 			"checkpoint_management_command_lock_object":                            resourceManagementLockObject(),
 			"checkpoint_management_command_gaia_api":                               resourceManagementGaiaApi(),
 			"checkpoint_management_command_import_smart_task":                      resourceManagementImportSmartTask(),
