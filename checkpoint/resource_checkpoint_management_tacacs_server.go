@@ -22,6 +22,7 @@ func resourceManagementTacacsServer() *schema.Resource {
 			"secret_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "The server's secret key. Required only when \"server-type\" was selected to be \"TACACS+\".",
 			},
 			"server": {
@@ -184,10 +185,6 @@ func readManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("name", v)
 	}
 
-	if v := tacacsServer["secret-key"]; v != nil {
-		_ = d.Set("secret_key", v)
-	}
-
 	if v := tacacsServer["server"]; v != nil {
 		_ = d.Set("server", v)
 	}
@@ -230,14 +227,6 @@ func readManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 
 	if v := tacacsServer["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := tacacsServer["ignore-warnings"]; v != nil {
-		_ = d.Set("ignore_warnings", v)
-	}
-
-	if v := tacacsServer["ignore-errors"]; v != nil {
-		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil
