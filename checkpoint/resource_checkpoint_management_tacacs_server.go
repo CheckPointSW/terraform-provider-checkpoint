@@ -142,7 +142,7 @@ func createManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 		tacacsServer["ignore-errors"] = v.(bool)
 	}
 
-	log.Println("Create TacacsServer - Map = ", tacacsServer)
+	log.Println("Create Tacacs Server - Map = ", tacacsServer)
 
 	addTacacsServerRes, err := client.ApiCall("add-tacacs-server", tacacsServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTacacsServerRes.Success {
