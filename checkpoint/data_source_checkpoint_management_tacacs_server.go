@@ -79,71 +79,6 @@ func dataSourceManagementTacacsServer() *schema.Resource {
 							Computed:    true,
 							Description: "Object unique identifier.",
 						},
-						//"aggressive_aging": {
-						//	Type:        schema.TypeList,
-						//	Computed:    true,
-						//	MaxItems:    1,
-						//	Description: "Sets short (aggressive) timeouts for idle connections.",
-						//	Elem: &schema.Resource{
-						//		Schema: map[string]*schema.Schema{
-						//			"default_timeout": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Default aggressive aging timeout in seconds.",
-						//			},
-						//			"enabled": {
-						//				Type:        schema.TypeBool,
-						//				Computed:    true,
-						//				Description: "N/A",
-						//			},
-						//			"timeout": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Aggressive aging timeout in seconds.",
-						//			},
-						//			"use_default_timeout": {
-						//				Type:        schema.TypeBool,
-						//				Computed:    true,
-						//				Description: "N/A",
-						//			},
-						//			"keep_connection_open_after_policy_installation": {
-						//				Type:        schema.TypeBool,
-						//				Computed:    true,
-						//				Description: "Keep connections open after policy has been installed even if they are not allowed under the new policy. This overrides the settings in the Connection Persistence page. If you change this property, the change will not affect open connections, but only future connections.",
-						//			},
-						//			"match_for_any": {
-						//				Type:        schema.TypeBool,
-						//				Computed:    true,
-						//				Description: "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and protocol.",
-						//			},
-						//			"port": {
-						//				Type:        schema.TypeString,
-						//				Computed:    true,
-						//				Description: "The number of the port used to provide this service.",
-						//			},
-						//			"session_timeout": {
-						//				Type:        schema.TypeFloat,
-						//				Computed:    true,
-						//				Description: "Time (in seconds) before the session times out.",
-						//			},
-						//			"source_port": {
-						//				Type:        schema.TypeString,
-						//				Computed:    true,
-						//				Description: "Port number for the client side service. If specified, only those Source port Numbers will be Accepted, Dropped, or Rejected during packet inspection. Otherwise, the source port is not inspected.",
-						//			},
-						//			"sync_connection_on_cluster": {
-						//				Type:        schema.TypeBool,
-						//				Computed:    true,
-						//				Description: "Enables state-synchronized High Availability or Load Sharing on a ClusterXL or OPSEC-certified cluster.",
-						//			},
-						//			"use_default_session_timeout": {
-						//				Type:        schema.TypeString,
-						//				Computed:    true,
-						//				Description: "Use default virtual session timeout.",
-						//			},
-						//		},
-						//	},
-						//},
 					},
 				},
 			},
@@ -242,56 +177,8 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 			serviceMapToReturn["uid"] = v
 		}
 
-		//if serviceMap["aggressive-aging"] != nil {
-		//	aggressiveAgingMap := serviceMap["aggressive-aging"].(map[string]interface{})
-		//
-		//	var aggressiveAgingListToReturn []map[string]interface{}
-		//
-		//	aggressiveAgingMapToReturn := make(map[string]interface{})
-		//
-		//	if v, _ := aggressiveAgingMap["default-timeout"]; v != nil {
-		//		aggressiveAgingMapToReturn["default_timeout"] = v
-		//	}
-		//	if v, _ := aggressiveAgingMap["enabled"]; v != nil {
-		//		aggressiveAgingMapToReturn["enabled"] = v
-		//	}
-		//	if v, _ := aggressiveAgingMap["timeout"]; v != nil {
-		//		aggressiveAgingMapToReturn["timeout"] = v
-		//	}
-		//	if v, _ := aggressiveAgingMap["use-default-timeout"]; v != nil {
-		//		aggressiveAgingMapToReturn["use_default_timeout"] = v
-		//	}
-		//	aggressiveAgingListToReturn = append(aggressiveAgingListToReturn, aggressiveAgingMapToReturn)
-		//	serviceMapToReturn["aggressive_aging"] = aggressiveAgingListToReturn
-		//}
-		//
-		//if v, _ := serviceMap["keep-connections-open-after-policy-installation"]; v != nil {
-		//	serviceMapToReturn["keep_connections_open_after_policy_installation"] = v
-		//}
-		//if v, _ := serviceMap["match-for-any"]; v != nil {
-		//	serviceMapToReturn["match_for_any"] = v
-		//}
-		//if v, _ := serviceMap["port"]; v != nil {
-		//	serviceMapToReturn["port"] = v
-		//}
-		//if v, _ := serviceMap["session-timeout"]; v != nil {
-		//	serviceMapToReturn["session_timeout"] = v
-		//}
-		//if v, _ := serviceMap["source-port"]; v != nil {
-		//	serviceMapToReturn["source_port"] = v
-		//}
-		//if v, _ := serviceMap["sync-connections-on-cluster"]; v != nil {
-		//	serviceMapToReturn["sync_connections_on_cluster"] = v
-		//}
-		//if v, _ := serviceMap["use-default-session-timeout"]; v != nil {
-		//	serviceMapToReturn["use_default_session_timeout"] = v
-		//}
-		//log.Println("service map = ", serviceMapToReturn)
-		err = d.Set("service", serviceMapToReturn)
-		if err != nil {
-			return fmt.Errorf(err.Error())
-		}
-		//log.Println("service second = ", serviceMapToReturn)
+		_ = d.Set("service", serviceMapToReturn)
+
 	} else {
 		_ = d.Set("service", nil)
 	}
