@@ -361,6 +361,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_lsv_profile":                               dataSourceManagementLsvProfile(),
 			"checkpoint_management_ips_protection_extended_attribute":         dataSourceManagementIpsProtectionExtendedAttribute(),
 			"checkpoint_management_global_domain":                             dataSourceManagementGlobalDomain(),
+			"checkpoint_management_tacacs_server":                             dataSourceManagementTacacsServer(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
