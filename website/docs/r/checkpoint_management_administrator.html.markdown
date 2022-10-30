@@ -50,7 +50,7 @@ The following arguments are supported:
 * `name` - (Required) Object name. Should be unique in the domain.
 * `password` - (Required) Administrator password.
 * `authentication_method` - (Required) Authentication method.
-* `permission_profile` - (Required) Administrator permissions profile. Permissions profile should not be provided when multi-domain-profile is set to "Multi-Domain Super User" or "Domain Super User". In SMC, permissions_profile.domain must be "SMC User".
+* `permission_profile` - (Required) Administrator permissions profile. Permissions profile should not be provided when multi-domain-profile is set to "Multi-Domain Super User" or "Domain Super User". In SMC, permissions_profile with single object, domain must be "SMC User".
 * `email` - (Optional) Administrator email.
 * `expiration_date` - (Optional) Format: YYYY-MM-DD, YYYY-mm-ddThh:mm:ss.
 * `multi_domain_profile` - (Optional) Administrator multi-domain profile. Only in MDS.
