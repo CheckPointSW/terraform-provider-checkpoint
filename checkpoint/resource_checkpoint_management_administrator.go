@@ -291,18 +291,7 @@ func readManagementAdministrator(d *schema.ResourceData, m interface{}) error {
 	if v := administrator["must-change-password"]; v != nil {
 		_ = d.Set("must_change_password", v)
 	}
-
-	//if administrator["permissions-profile"] != nil {
-	//	if permissionsProfile, ok := administrator["permissions-profile"].(map[string]interface{}); ok {
-	//		_ = d.Set("permissions_profile", permissionsProfile["name"])
-	//	} else {
-	//		return fmt.Errorf("administrator has multiple permissions profiles")
-	//	}
-	//
-	//} else {
-	//	_ = d.Set("permissions_profile", nil)
-	//}
-
+	
 	if administrator["permissions-profile"] != nil {
 		var permissionsProfileListToReturn []map[string]interface{}
 
