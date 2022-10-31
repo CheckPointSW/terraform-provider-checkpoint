@@ -21,7 +21,7 @@ resource "checkpoint_management_administrator" "admin" {
     profile = "Read Only All"
   }
 
-  multi_domain_profile = "Domain Level Only"
+  multi_domain_profile = "domain level only"
   password = "1233"
 
 }
