@@ -272,8 +272,12 @@ func readManagementAdministrator(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("expiration_date", v)
 	}
 
-	if v := administrator["multi-domain-profile"]; v != nil {
-		_ = d.Set("multi_domain_profile", v)
+	if administrator["multi-domain-profile"] != nil {
+		if multiDomainProfileMap, ok := administrator["multi-domain-profile"].(map[string]interface{}); ok {
+			if v, _ := multiDomainProfileMap["name"]; v != nil {
+				_ = d.Set("multi_domain_profile", v)
+			}
+		}
 	}
 
 	if v := administrator["must-change-password"]; v != nil {
@@ -291,7 +295,7 @@ func readManagementAdministrator(d *schema.ResourceData, m interface{}) error {
 	if v := administrator["must-change-password"]; v != nil {
 		_ = d.Set("must_change_password", v)
 	}
-	
+
 	if administrator["permissions-profile"] != nil {
 		var permissionsProfileListToReturn []map[string]interface{}
 
