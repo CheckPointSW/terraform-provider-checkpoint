@@ -252,6 +252,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_command_import_management":                      resourceManagementImportManagement(),
 			"checkpoint_management_command_set_global_properties":                  resourceManagementSetGlobalProperties(),
 			"checkpoint_management_administrator":                                  resourceManagementAdministrator(),
+			"checkpoint_management_oracle_cloud_data_center_server":                resourceManagementOracleCloudDataCenterServer(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
