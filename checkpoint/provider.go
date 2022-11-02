@@ -367,6 +367,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_tacacs_server":                             dataSourceManagementTacacsServer(),
 			"checkpoint_management_administrator":                             dataSourceManagementAdministrator(),
 			"checkpoint_management_nutanix_data_center_server":                dataSourceManagementNutanixDataCenterServer(),
+			"checkpoint_management_oracle_cloud_data_center_server":           dataSourceManagementOracleCloudDataCenterServer(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
