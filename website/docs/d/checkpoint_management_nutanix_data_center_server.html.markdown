@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-Resource-checkpoint-management-nutanix-data-ce
 description: |- Use this data source to get information on an existing Nutanix data center server.
 ---
 
-# Resource: checkpoint_management_nutanix_data_center_server
+# Data Source: checkpoint_management_nutanix_data_center_server
 
 Use this data source to get information on an existing Nutanix Data Center Server.
 
