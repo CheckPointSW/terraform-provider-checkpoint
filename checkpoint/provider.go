@@ -253,6 +253,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_command_set_global_properties":                  resourceManagementSetGlobalProperties(),
 			"checkpoint_management_administrator":                                  resourceManagementAdministrator(),
 			"checkpoint_management_oracle_cloud_data_center_server":                resourceManagementOracleCloudDataCenterServer(),
+			"checkpoint_management_nutanix_data_center_server":                     resourceManagementNutanixDataCenterServer(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -365,6 +366,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_global_domain":                             dataSourceManagementGlobalDomain(),
 			"checkpoint_management_tacacs_server":                             dataSourceManagementTacacsServer(),
 			"checkpoint_management_administrator":                             dataSourceManagementAdministrator(),
+			"checkpoint_management_nutanix_data_center_server":                dataSourceManagementNutanixDataCenterServer(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
