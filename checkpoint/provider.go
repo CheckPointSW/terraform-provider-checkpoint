@@ -369,6 +369,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_administrator":                             dataSourceManagementAdministrator(),
 			"checkpoint_management_nutanix_data_center_server":                dataSourceManagementNutanixDataCenterServer(),
 			"checkpoint_management_oracle_cloud_data_center_server":           dataSourceManagementOracleCloudDataCenterServer(),
+			"checkpoint_management_azure_ad_content":                          dataSourceManagementAzureAdContent(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
