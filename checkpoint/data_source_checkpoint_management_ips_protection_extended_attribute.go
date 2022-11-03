@@ -21,44 +21,6 @@ func dataSourceManagementIpsProtectionExtendedAttribute() *schema.Resource {
 				Optional:    true,
 				Description: "Object name.",
 			},
-			//"object": {
-			//	Type:        schema.TypeMap,
-			//	Computed:    true,
-			//	Description: "N/A",
-			//	Elem: &schema.Resource{
-			//		Schema: map[string]*schema.Schema{
-			//			"name": {
-			//				Type:        schema.TypeString,
-			//				Computed:    true,
-			//				Description: "Object name. Must be unique in the domain.",
-			//			},
-			//			"uid": {
-			//				Type:        schema.TypeString,
-			//				Computed:    true,
-			//				Description: "Object unique identifier.",
-			//			},
-			//			"values": {
-			//				Type:        schema.TypeList,
-			//				Computed:    true,
-			//				Description: "N/A",
-			//				Elem: &schema.Resource{
-			//					Schema: map[string]*schema.Schema{
-			//						"name": {
-			//							Type:        schema.TypeString,
-			//							Computed:    true,
-			//							Description: "Object name. Must be unique in the domain.",
-			//						},
-			//						"uid": {
-			//							Type:        schema.TypeString,
-			//							Computed:    true,
-			//							Description: "Object unique identifier.",
-			//						},
-			//					},
-			//				},
-			//			},
-			//		},
-			//	},
-			//},
 			"values": {
 				Type:        schema.TypeList,
 				Computed:    true,
