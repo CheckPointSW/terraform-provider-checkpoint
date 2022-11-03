@@ -254,6 +254,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_administrator":                                  resourceManagementAdministrator(),
 			"checkpoint_management_oracle_cloud_data_center_server":                resourceManagementOracleCloudDataCenterServer(),
 			"checkpoint_management_nutanix_data_center_server":                     resourceManagementNutanixDataCenterServer(),
+			"checkpoint_management_azure_ad":                                       resourceManagementAzureAd(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
