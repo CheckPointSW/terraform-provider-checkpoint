@@ -15,6 +15,10 @@ This resource allows you to execute Check Point Azure Ad.
 
 ```hcl
 resource "checkpoint_management_azure_ad" "example" {
+  name = "example"
+  password = "123"
+  user_authentication = "user-authentication"
+  username = "example"
   application_id = "a8662b33-306f-42ba-9ffb-a0ac27c8903f"
   application_key = "EjdJ2JcNGpw3[GV8:PMN_s2KH]JhtlpO"
   directory_id = "19c063a8-3bee-4ea5-b984-e344asds37f7"
