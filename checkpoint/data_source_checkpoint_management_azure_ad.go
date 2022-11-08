@@ -25,6 +25,18 @@ func dataSourceManagementAzureAd() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Azure AD connection properties.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"value": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 			"tags": {
 				Type:        schema.TypeSet,
