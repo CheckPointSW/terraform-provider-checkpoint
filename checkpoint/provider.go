@@ -85,6 +85,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_NAME", ""),
 				Description: "Session unique name.",
 			},
+			"session_description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_DESCRIPTION", ""),
+				Description: "A description of the session's purpose.",
+			},
 			"cloud_mgmt_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -390,6 +396,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	proxyPort := data.Get("proxy_port").(int)
 	apiKey := data.Get("api_key").(string)
 	sessionName := data.Get("session_name").(string)
+	sessionDescription := data.Get("session_description").(string)
 	cloudMgmtId := data.Get("cloud_mgmt_id").(string)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
@@ -428,7 +435,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, apiKey, domain, sessionName)
+			s, err = login(mgmt, username, password, apiKey, domain, sessionName, sessionDescription)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
@@ -441,7 +448,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "", "", "")
+		_, err := login(gaia, username, password, "", "", "", "")
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -452,7 +459,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string, sessionName string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string, sessionName string, sessionDescription string) (Session, error) {
 	log.Printf("Perform login")
 	var loginRes checkpoint.APIResponse
 	var err error
@@ -460,6 +467,10 @@ func login(client *checkpoint.ApiClient, username string, pwd string, apiKey str
 	payload := make(map[string]interface{})
 	if sessionName != "" {
 		payload["session-name"] = sessionName
+	}
+
+	if sessionDescription != "" {
+		payload["session-description"] = sessionDescription
 	}
 
 	if apiKey != "" {
