@@ -1,3 +1,36 @@
+## 2.2.0 (November 8, 2022)
+
+FEATURES
+* **New Resource:** `resource_checkpoint_management_administrator`
+* **New Resource:** `resource_checkpoint_management_azure_ad`
+* **New Resource:** `resource_checkpoint_management_lsv_profile`
+* **New Resource:** `resource_checkpoint_management_tacacs_group`
+* **New Resource:** `resource_checkpoint_management_tacacs_server`
+* **New Resource:** `resource_checkpoint_management_tag`
+* **New Resource:** `resource_checkpoint_management_threat_layer`
+* **New Resource:** `resource_checkpoint_management_nutanix_data_center_server`
+* **New Resource:** `resource_checkpoint_management_oracle_cloud_data_center_server`
+* **New Resource:** `resource_checkpoint_management_radius_server`
+* **New Resource:** `resource_checkpoint_management_radius_group`
+* **New Data Source:** `data_source_checkpoint_management_administrator`
+* **New Data Source:** `data_source_checkpoint_management_azure_ad`
+* **New Data Source:** `data_source_checkpoint_management_azure_ad_content`
+* **New Data Source:** `data_source_checkpoint_management_lsv_profile`
+* **New Data Source:** `data_source_checkpoint_management_tacacs_group`
+* **New Data Source:** `data_source_checkpoint_management_tacacs_server`
+* **New Data Source:** `data_source_checkpoint_management_tag`
+* **New Data Source:** `data_source_checkpoint_management_threat_layer`
+* **New Data Source:** `data_source_checkpoint_management_nutanix_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_oracle_cloud_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_radius_server`
+* **New Data Source:** `data_source_checkpoint_management_radius_group`
+
+ENHANCEMENTS
+* Add support to new parameters of `checkpoint_management_simple_gateway`, `checkpoint_management_simple_cluster` from API V1.9.
+* Add support to set session description using `session_description` or via environment variable `CHECKPOINT_SESSION_DESCRIPTION`.
+
+
+
 ## 2.1.0 (September 20, 2022)
 
 FEATURES
