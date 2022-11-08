@@ -268,9 +268,9 @@ $ mv discard $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ discard
 ```
 
-### approve_session
+### Approve session
 
-Please use the following for approve_session:
+Please use the following for approve session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/approve_session
@@ -279,9 +279,9 @@ $ mv approve_session $GOPATH/src/github.com/terraform-providers/terraform-provid
 $ approve_session "SESSION_UID"
 ```
 
-### reject_session
+### Reject session
 
-Please use the following for reject_session:
+Please use the following for reject session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/reject_session
@@ -290,9 +290,9 @@ $ mv reject_session $GOPATH/src/github.com/terraform-providers/terraform-provide
 $ reject_session "SESSION_UID" "REJECT_REASON"
 ```
 
-### submit_session
+### Submit session
 
-Please use the following for submit_session:
+Please use the following for submit session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/submit_session
