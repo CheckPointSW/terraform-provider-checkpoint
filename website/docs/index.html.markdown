@@ -100,6 +100,7 @@ The following arguments are supported:
   the `CHECKPOINT_SESSION_NAME` environment variable.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
+* `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
 
 ## Authentication
 
@@ -172,6 +173,7 @@ $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
+$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
  ```
 
 Usage with api key:
@@ -188,6 +190,7 @@ $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
+$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
  ```
 
 Then configure the Check Point Provider as following:
@@ -259,7 +262,7 @@ $ terraform apply && publish && logout_from_session
 
 ### Discard
 
-Please use the following for Discard:
+Please use the following for discard:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/discard
@@ -268,9 +271,9 @@ $ mv discard $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ discard
 ```
 
-### approve_session
+### Approve session
 
-Please use the following for approve_session:
+Please use the following for approve session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/approve_session
@@ -279,9 +282,9 @@ $ mv approve_session $GOPATH/src/github.com/terraform-providers/terraform-provid
 $ approve_session "SESSION_UID"
 ```
 
-### reject_session
+### Reject session
 
-Please use the following for reject_session:
+Please use the following for reject session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/reject_session
@@ -290,9 +293,9 @@ $ mv reject_session $GOPATH/src/github.com/terraform-providers/terraform-provide
 $ reject_session "SESSION_UID" "REJECT_REASON"
 ```
 
-### submit_session
+### Submit session
 
-Please use the following for submit_session:
+Please use the following for submit session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/submit_session

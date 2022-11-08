@@ -26,6 +26,14 @@ func dataSourceManagementTag() *schema.Resource {
 				Computed:    true,
 				Description: "Color of the object. Should be one of existing colors",
 			},
+			"tags": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Collection of tag identifiers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"comments": {
 				Type:        schema.TypeString,
 				Computed:    true,

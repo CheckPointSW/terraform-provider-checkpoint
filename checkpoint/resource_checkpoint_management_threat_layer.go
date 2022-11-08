@@ -59,6 +59,16 @@ func resourceManagementThreatLayer() *schema.Resource {
 				Default:     false,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 			},
+			"ips_layer": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"parent_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "N/A",
+			},
 		},
 	}
 }
@@ -166,6 +176,14 @@ func readManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v := threatLayer["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := threatLayer["ips-layer"]; v != nil {
+		_ = d.Set("ips_layer", v)
+	}
+
+	if v := threatLayer["parent-layer"]; v != nil {
+		_ = d.Set("parent_layer", v)
 	}
 
 	return nil

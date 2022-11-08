@@ -39,6 +39,16 @@ func dataSourceManagementThreatLayer() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"ips_layer": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"parent_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "N/A",
+			},
 		},
 	}
 }
@@ -99,6 +109,14 @@ func dataSourceManagementThreatLayerRead(d *schema.ResourceData, m interface{}) 
 
 	if v := threatLayer["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := threatLayer["ips-layer"]; v != nil {
+		_ = d.Set("ips_layer", v)
+	}
+
+	if v := threatLayer["parent-layer"]; v != nil {
+		_ = d.Set("parent_layer", v)
 	}
 
 	return nil

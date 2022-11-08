@@ -32,163 +32,575 @@ The following arguments are supported:
 
 * `name` - (Optional) Object name.
 * `uid` - (Optional) Object unique identifier.
-* `ipv4_address` - IPv4 address. 
-* `ipv6_address` - IPv6 address.
-* `interfaces` - Gateway interfaces. interfaces blocks are documented below.
-* `anti_bot` - Anti-Bot blade enabled. 
-* `anti_virus` - Anti-Virus blade enabled. 
+* `advanced_settings` - N/Aadvanced_settings blocks are documented below.
+* `anti_bot` - Anti-Bot blade enabled.
+* `anti_virus` - Anti-Virus blade enabled.
 * `application_control` - Application Control blade enabled.
+* `application_control_and_url_filtering_settings` - Gateway Application Control and URL filtering settings.application_control_and_url_filtering_settings blocks are documented below.
 * `content_awareness` - Content Awareness blade enabled.
+* `enable_https_inspection` - Enable HTTPS Inspection after defining an outbound inspection certificate. <br>To define the outbound certificate use outbound inspection certificate API.
+* `fetch_policy` - Security management server(s) to fetch the policy from.fetch_policy blocks are documented below.
+* `firewall` - Firewall blade enabled.
+* `firewall_settings` - N/Afirewall_settings blocks are documented below.
+* `hit_count` - Hit count tracks the number of connections each rule matches.
+* `https_inspection` - HTTPS inspection.https_inspection blocks are documented below.
 * `icap_server` - ICAP Server enabled.
+* `identity_awareness` - Identity awareness blade enabled.
+* `identity_awareness_settings` - Gateway Identity Awareness settings.identity_awareness_settings blocks are documented below.
+* `interfaces` - Network interfaces.interfaces blocks are documented below.
+* `ipv4_address` - IPv4 address.
+* `ipv6_address` - IPv6 address.
 * `ips` - Intrusion Prevention System blade enabled.
+* `ips_update_policy` - Specifies whether the IPS will be downloaded from the Management or directly to the Gateway.
+* `nat_hide_internal_interfaces` - Hide internal networks behind the Gateway's external IP.
+* `nat_settings` - NAT settings.nat_settings blocks are documented below.
+* `one_time_password` - N/A
+* `os_name` - Gateway platform operating system.
+* `platform_portal_settings` - Platform portal settings.platform_portal_settings blocks are documented below.
+* `proxy_settings` - Proxy Server for Gateway.proxy_settings blocks are documented below.
+* `qos` - QoS.
+* `save_logs_locally` - Save logs locally on the gateway.
+* `send_alerts_to_server` - Server(s) to send alerts to.send_alerts_to_server blocks are documented below.
+* `send_logs_to_backup_server` - Backup server(s) to send logs to.send_logs_to_backup_server blocks are documented below.
+* `send_logs_to_server` - Server(s) to send logs to.send_logs_to_server blocks are documented below.
+* `tags` - Collection of tag identifiers.tags blocks are documented below.
 * `threat_emulation` - Threat Emulation blade enabled.
 * `threat_extraction` - Threat Extraction blade enabled.
+* `threat_prevention_mode` - The mode of Threat Prevention to use. When using Autonomous Threat Prevention, disabling the Threat Prevention blades is not allowed.
 * `url_filtering` - URL Filtering blade enabled.
-* `firewall` - Firewall blade enabled.
-* `firewall_settings` - Firewall settings. firewall_settings blocks are documented below.
-* `vpn` - VPN blade enabled.
-* `vpn_settings` - Gateway VPN settings. vpn_settings blocks are documented below.
-* `dynamic_ip` - Dynamic IP address.
+* `usercheck_portal_settings` - UserCheck portal settings.usercheck_portal_settings blocks are documented below.
 * `version` - Gateway platform version.
-* `os_name` - Operating system name.
-* `hardware` - Gateway platform hardware name.
-* `one_time_password` - Secure internal connection one time password. 
-* `sic_name` - Secure Internal Communication name.
-* `sic_state` - Secure Internal Communication state.
-* `save_logs_locally` - Enable save logs locally.
-* `send_alerts_to_server` - Collection of Server(s) to send alerts to identified by the name.
-* `send_logs_to_backup_server` - Collection of Backup server(s) to send logs to identified by the name.
-* `send_logs_to_server` - Collection of Server(s) to send logs to identified by the name.
-* `logs_settings` - Logs settings. logs_settings blocks are documented below.
-* `color` - Color of the object.
-* `comments` - Comments string. 
-* `tags` - Collection of tags identified by name.
+* `vpn` - VPN blade enabled.
+* `vpn_settings` - Gateway VPN settings.vpn_settings blocks are documented below.
+* `zero_phishing` - Zero Phishing blade enabled.
+* `zero_phishing_fqdn` - Zero Phishing gateway FQDN.
+* `logs_settings` - Logs settings that apply to Quantum Security Gateways that run Gaia OS.logs_settings blocks are documented below.
+* `show_portals_certificate` - Indicates whether to show the portals certificate value in the reply.
+* `color` - Color of the object. Should be one of existing colors.
+* `comments` - Comments string.
+* `groups` - Collection of group identifiers.groups blocks are documented below.
+* `ignore_errors` - Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+
+
+`advanced_settings` supports the following:
+
+* `connection_persistence` - Handling established connections when installing a new policy.
+* `sam` - SAM.sam blocks are documented below.
+
+
+`application_control_and_url_filtering_settings` supports the following:
+
+* `global_settings_mode` - Whether to override global settings or not.
+* `override_global_settings` - override global settings object.override_global_settings blocks are documented below.
+
+
+`firewall_settings` supports the following:
+
+* `auto_calculate_connections_hash_table_size_and_memory_pool` - N/A
+* `auto_maximum_limit_for_concurrent_connections` - N/A
+* `connections_hash_size` - N/A
+* `maximum_limit_for_concurrent_connections` - N/A
+* `maximum_memory_pool_size` - N/A
+* `memory_pool_size` - N/A
+
+
+`https_inspection` supports the following:
+
+* `bypass_on_failure` - Set to be true in order to bypass all requests (Fail-open) in case of internal system error.bypass_on_failure blocks are documented below.
+* `site_categorization_allow_mode` - Set to 'background' in order to allowed requests until categorization is complete.site_categorization_allow_mode blocks are documented below.
+* `deny_untrusted_server_cert` - Set to be true in order to drop traffic from servers with untrusted server certificate.deny_untrusted_server_cert blocks are documented below.
+* `deny_revoked_server_cert` - Set to be true in order to drop traffic from servers with revoked server certificate (validate CRL).deny_revoked_server_cert blocks are documented below.
+* `deny_expired_server_cert` - Set to be true in order to drop traffic from servers with expired server certificate.deny_expired_server_cert blocks are documented below.
+
+
+`identity_awareness_settings` supports the following:
+
+* `browser_based_authentication` - Enable Browser Based Authentication source.
+* `browser_based_authentication_settings` - Browser Based Authentication settings.browser_based_authentication_settings blocks are documented below.
+* `identity_agent` - Enable Identity Agent source.
+* `identity_agent_settings` - Identity Agent settings.identity_agent_settings blocks are documented below.
+* `identity_collector` - Enable Identity Collector source.
+* `identity_collector_settings` - Identity Collector settings.identity_collector_settings blocks are documented below.
+* `identity_sharing_settings` - Identity sharing settings.identity_sharing_settings blocks are documented below.
+* `proxy_settings` - Identity-Awareness Proxy settings.proxy_settings blocks are documented below.
+* `remote_access` - Enable Remote Access Identity source.
+
 
 `interfaces` supports the following:
-* `name` - Interface name. 
-* `ipv4_address` - IPv4 address. 
-* `ipv6_address` - IPv6 address. 
+
+* `name` - Object name. Must be unique in the domain.
+* `ipv4_address` - IPv4 address.
+* `ipv6_address` - IPv6 address.
+* `network_mask` - IPv4 or IPv6 network mask. If both masks are required use ipv4-network-mask and ipv6-network-mask fields explicitly. Instead of providing mask itself it is possible to specify IPv4 or IPv6 mask length in mask-length field. If both masks length are required use ipv4-mask-length and  ipv6-mask-length fields explicitly.
 * `ipv4_network_mask` - IPv4 network address.
 * `ipv6_network_mask` - IPv6 network address.
 * `ipv4_mask_length` - IPv4 network mask length.
 * `ipv6_mask_length` - IPv6 network mask length.
-* `anti_spoofing` - Anti spoofing.
-* `anti_spoofing_settings` - Anti spoofing settings. anti_spoofing_settings blocks are documented below.
-* `security_zone` - Security zone.
-* `security_zone_settings` - Security zone settings. security_zone_settings blocks are documented below.
-* `topology` - Topology.
-* `topology_settings` - Topology settings. topology_settings blocks are documented below.
-* `topology_automatic_calculation` - Shows the automatic topology calculation..
-* `color` - Color of the object. Should be one of existing colors. 
-* `comments` - Comments string. 
+* `anti_spoofing` - N/A
+* `anti_spoofing_settings` - N/Aanti_spoofing_settings blocks are documented below.
+* `security_zone` - N/A
+* `security_zone_settings` - N/Asecurity_zone_settings blocks are documented below.
+* `tags` - Collection of tag identifiers.tags blocks are documented below.
+* `topology` - N/A
+* `topology_settings` - N/Atopology_settings blocks are documented below.
+* `color` - Color of the object. Should be one of existing colors.
+* `comments` - Comments string.
+* `ignore_errors` - Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+
+
+`nat_settings` supports the following:
+
+* `auto_rule` - Whether to add automatic address translation rules.
+* `ipv4_address` - IPv4 address.
+* `ipv6_address` - IPv6 address.
+* `hide_behind` - Hide behind method. This parameter is forbidden in case "method" parameter is "static".
+* `install_on` - Which gateway should apply the NAT translation.
+* `method` - NAT translation method.
+
+
+`platform_portal_settings` supports the following:
+
+* `portal_web_settings` - Configuration of the portal web settings.portal_web_settings blocks are documented below.
+* `certificate_settings` - Configuration of the portal certificate settings.certificate_settings blocks are documented below.
+* `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`proxy_settings` supports the following:
+
+* `use_custom_proxy` - Use custom proxy settings for this network object.
+* `proxy_server` - N/A
+* `port` - N/A
+
+
+`usercheck_portal_settings` supports the following:
+
+* `enabled` - State of the web portal (enabled or disabled). The supported blades are: {'Application Control', 'URL Filtering', 'Data Loss Prevention', 'Anti Virus', 'Anti Bot', 'Threat Emulation', 'Threat Extraction', 'Data Awareness'}.
+* `portal_web_settings` - Configuration of the portal web settings.portal_web_settings blocks are documented below.
+* `certificate_settings` - Configuration of the portal certificate settings.certificate_settings blocks are documented below.
+* `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`vpn_settings` supports the following:
+
+* `authentication` - Authentication.authentication blocks are documented below.
+* `link_selection` - Link Selection.link_selection blocks are documented below.
+* `maximum_concurrent_ike_negotiations` - N/A
+* `maximum_concurrent_tunnels` - N/A
+* `office_mode` - Office Mode.
+  Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to the Mobile Access Software Blade clients.office_mode blocks are documented below.
+* `remote_access` - Remote Access.remote_access blocks are documented below.
+* `vpn_domain` - Gateway VPN domain identified by the name or UID.
+* `vpn_domain_exclude_external_ip_addresses` - Exclude the external IP addresses from the VPN domain of this Security Gateway.
+* `vpn_domain_type` - Gateway VPN domain type.
+
+
+`logs_settings` supports the following:
+
+* `alert_when_free_disk_space_below` - Enable alert when free disk space is below threshold.
+* `alert_when_free_disk_space_below_threshold` - Alert when free disk space below threshold.
+* `alert_when_free_disk_space_below_type` - Alert when free disk space below type.
+* `before_delete_keep_logs_from_the_last_days` - Enable before delete keep logs from the last days.
+* `before_delete_keep_logs_from_the_last_days_threshold` - Before delete keep logs from the last days threshold.
+* `before_delete_run_script` - Enable Before delete run script.
+* `before_delete_run_script_command` - Before delete run script command.
+* `delete_index_files_older_than_days` - Enable delete index files older than days.
+* `delete_index_files_older_than_days_threshold` - Delete index files older than days threshold.
+* `delete_index_files_when_index_size_above` - Enable delete index files when index size above.
+* `delete_index_files_when_index_size_above_threshold` - Delete index files when index size above threshold.
+* `delete_when_free_disk_space_below` - Enable delete when free disk space below.
+* `delete_when_free_disk_space_below_threshold` - Delete when free disk space below threshold.
+* `detect_new_citrix_ica_application_names` - Enable detect new Citrix ICA application names.
+* `distribute_logs_between_all_active_servers` - Distribute logs between all active servers.
+* `forward_logs_to_log_server` - Enable forward logs to log server.
+* `forward_logs_to_log_server_name` - Forward logs to log server name.
+* `forward_logs_to_log_server_schedule_name` - Forward logs to log server schedule name.
+* `free_disk_space_metrics` - Free disk space metrics.
+* `perform_log_rotate_before_log_forwarding` - Enable perform log rotate before log forwarding.
+* `reject_connections_when_free_disk_space_below_threshold` - Enable reject connections when free disk space below threshold.
+* `reserve_for_packet_capture_metrics` - Reserve for packet capture metrics.
+* `reserve_for_packet_capture_threshold` - Reserve for packet capture threshold.
+* `rotate_log_by_file_size` - Enable rotate log by file size.
+* `rotate_log_file_size_threshold` - Log file size threshold.
+* `rotate_log_on_schedule` - Enable rotate log on schedule.
+* `rotate_log_schedule_name` - Rotate log schedule name.
+* `stop_logging_when_free_disk_space_below` - Enable stop logging when free disk space below.
+* `stop_logging_when_free_disk_space_below_threshold` - Stop logging when free disk space below threshold.
+* `turn_on_qos_logging` - Enable turn on QoS Logging.
+* `update_account_log_every` - Update account log in every amount of seconds.
+
+
+`sam` supports the following:
+
+* `forward_to_other_sam_servers` - Forward SAM clients' requests to other SAM servers.
+* `use_early_versions` - Use early versions compatibility mode.use_early_versions blocks are documented below.
+* `purge_sam_file` - Purge SAM File.purge_sam_file blocks are documented below.
+
+
+`override_global_settings` supports the following:
+
+* `fail_mode` - Fail mode - allow or block all requests.
+* `website_categorization` - Website categorization object.website_categorization blocks are documented below.
+
+
+`bypass_on_failure` supports the following:
+
+* `override_profile` - Override profile of global configuration.
+* `value` - Override value.<br><font color="red">Required only for</font> 'override-profile' is True.
+
+
+`site_categorization_allow_mode` supports the following:
+
+* `override_profile` - Override profile of global configuration.
+* `value` - Override value.<br><font color="red">Required only for</font> 'override-profile' is True.
+
+
+`deny_untrusted_server_cert` supports the following:
+
+* `override_profile` - Override profile of global configuration.
+* `value` - Override value.<br><font color="red">Required only for</font> 'override-profile' is True.
+
+
+`deny_revoked_server_cert` supports the following:
+
+* `override_profile` - Override profile of global configuration.
+* `value` - Override value.<br><font color="red">Required only for</font> 'override-profile' is True.
+
+
+`deny_expired_server_cert` supports the following:
+
+* `override_profile` - Override profile of global configuration.
+* `value` - Override value.<br><font color="red">Required only for</font> 'override-profile' is True.
+
+
+`browser_based_authentication_settings` supports the following:
+
+* `authentication_settings` - Authentication Settings for Browser Based Authentication.authentication_settings blocks are documented below.
+* `browser_based_authentication_portal_settings` - Browser Based Authentication portal settings.browser_based_authentication_portal_settings blocks are documented below.
+
+
+`identity_agent_settings` supports the following:
+
+* `agents_interval_keepalive` - Agents send keepalive period (minutes).
+* `user_reauthenticate_interval` - Agent reauthenticate time interval (minutes).
+* `authentication_settings` - Authentication Settings for Identity Agent.authentication_settings blocks are documented below.
+* `identity_agent_portal_settings` - Identity Agent accessibility settings.identity_agent_portal_settings blocks are documented below.
+
+
+`identity_collector_settings` supports the following:
+
+* `authorized_clients` - Authorized Clients.authorized_clients blocks are documented below.
+* `authentication_settings` - Authentication Settings for Identity Collector.authentication_settings blocks are documented below.
+* `client_access_permissions` - Identity Collector accessibility settings.client_access_permissions blocks are documented below.
+
+
+`identity_sharing_settings` supports the following:
+
+* `share_with_other_gateways` - Enable identity sharing with other gateways.
+* `receive_from_other_gateways` - Enable receiving identity from other gateways.
+* `receive_from` - Gateway(s) to receive identity from.receive_from blocks are documented below.
+
+
+`proxy_settings` supports the following:
+
+* `detect_using_x_forward_for` - Whether to use X-Forward-For HTTP header, which is added by the proxy server to keep track of the original source IP.
+
 
 `anti_spoofing_settings` supports the following:
+
 * `action` - If packets will be rejected (the Prevent option) or whether the packets will be monitored (the Detect option).
+* `exclude_packets` - Don't check packets from excluded network.
+* `excluded_network_name` - Excluded network name.
+* `excluded_network_uid` - Excluded network UID.
+* `spoof_tracking` - Spoof tracking.
+
 
 `security_zone_settings` supports the following:
+
 * `auto_calculated` - Security Zone is calculated according to where the interface leads to.
 * `specific_zone` - Security Zone specified manually.
 
+
 `topology_settings` supports the following:
+
 * `interface_leads_to_dmz` - Whether this interface leads to demilitarized zone (perimeter network).
-* `ip_address_behind_this_interface` - Ip address behind this interface.
 * `specific_network` - Network behind this interface.
 
-`firewall_settings` supports the following:
-* `auto_calculate_connections_hash_table_size_and_memory_pool` - Auto calculate connections hash table size and memory pool. 
-* `auto_maximum_limit_for_concurrent_connections` - Auto maximum limit for concurrent connections.
-* `connections_hash_size` - Connections hash size.
-* `maximum_limit_for_concurrent_connections` - Maximum limit for concurrent connections.
-* `maximum_memory_pool_size` - Maximum memory pool size.
-* `memory_pool_size` - Memory pool size.
 
-`vpn_settings` supports the following:
-* `authentication` - authentication blocks are documented below. 
-* `link_selection` - Link selection blocks are documented below. 
-* `maximum_concurrent_ike_negotiations` - Maximum concurrent ike negotiations.
-* `maximum_concurrent_tunnels` - Maximum concurrent tunnels.
-* `office_mode` - Office Mode. Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to the Mobile Access Software Blade clients. office_mode blocks are documented below.
-* `remote_access` - remote_access blocks are documented below.
-* `vpn_domain` - Gateway VPN domain identified by the name.
-* `vpn_domain_type` - Gateway VPN domain type.
+`portal_web_settings` supports the following:
+
+* `aliases` - List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
+* `main_url` - The main URL for the web portal.
+
+
+`certificate_settings` supports the following:
+
+* `base64_certificate` - The certificate file encoded in Base64 with padding.
+  This file must be in the *.p12 format.
+* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`portal_web_settings` supports the following:
+
+* `aliases` - List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
+* `main_url` - The main URL for the web portal.
+
+
+`certificate_settings` supports the following:
+
+* `base64_certificate` - The certificate file encoded in Base64 with padding.
+  This file must be in the *.p12 format.
+* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
 
 `authentication` supports the following:
-* `authentication_clients` - Collection of VPN Authentication clients identified by the name. 
+
+* `authentication_clients` - Collection of VPN Authentication clients identified by the name or UID.authentication_clients blocks are documented below.
+
 
 `link_selection` supports the following:
-* `ip_selection` - IP selection. 
-* `dns_resolving_hostname` - DNS Resolving Hostname. Must be set when "ip-selection" was selected to be "dns-resolving-from-hostname". 
-* `ip_address` - IP Address. Must be set when "ip-selection" was selected to be "use-selected-address-from-topology" or "use-statically-nated-ip".
+
+* `dns_resolving_hostname` - DNS Resolving Hostname. Must be set when "ip-selection" was selected to be "dns-resolving-from-hostname".
+
 
 `office_mode` supports the following:
-* `mode` - Office Mode Permissions. When selected to be "off", all the other definitions are irrelevant.
-* `group` - Group. Identified by name. Must be set when "office-mode-permissions" was selected to be "group".
-* `allocate_ip_address_from` - Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success. allocate_ip_address_from blocks are documented below.
+
+* `mode` - Office Mode Permissions.
+  When selected to be "off", all the other definitions are irrelevant.
+* `group` - Group. Identified by name or UID.
+  Must be set when "office-mode-permissions" was selected to be "group".
+* `allocate_ip_address_from` - Allocate IP address Method.
+  Allocate IP address by sequentially trying the given methods until success.allocate_ip_address_from blocks are documented below.
 * `support_multiple_interfaces` - Support connectivity enhancement for gateways with multiple external interfaces.
 * `perform_anti_spoofing` - Perform Anti-Spoofing on Office Mode addresses.
-* `anti_spoofing_additional_addresses` - Additional IP Addresses for Anti-Spoofing. Identified by name. Must be set when "perform-anti-spoofings" is true.
+* `anti_spoofing_additional_addresses` - Additional IP Addresses for Anti-Spoofing.
+  Identified by name or UID.
+  Must be set when "perform-anti-spoofings" is true.
 
-`allocate_ip_address_from` supports the following:
-* `radius_server` - Radius server used to authenticate the user.
-* `use_allocate_method` - Use Allocate Method.
-* `allocate_method` - Using either Manual (IP Pool) or Automatic (DHCP). Must be set when "use-allocate-method" is true.
-* `manual_network` - Manual Network. Identified by name. Must be set when "allocate-method" was selected to be "manual".
-* `dhcp_server` - DHCP Server. Identified by name. Must be set when "allocate-method" was selected to be "automatic".
-* `virtual_ip_address` - Virtual IPV4 address for DHCP server replies. Must be set when "allocate-method" was selected to be "automatic".
-* `dhcp_mac_address` - Calculated MAC address for DHCP allocation. Must be set when "allocate-method" was selected to be "automatic".
-* `optional_parameters` - This configuration applies to all Office Mode methods except Automatic (using DHCP) and ipassignment.conf entries which contain this data. optional_parameters blocks are documented below.
-
-`optional_parameters` supports the following:
-* `use_primary_dns_server` - Use Primary DNS Server.
-* `primary_dns_server` - Primary DNS Server. Identified by name. Must be set when "use-primary-dns-server" is true and can not be set when "use-primary-dns-server" is false.
-* `use_first_backup_dns_server` - Use First Backup DNS Server.
-* `first_backup_dns_server` - First Backup DNS Server. Identified by name. Must be set when "use-first-backup-dns-server" is true and can not be set when "use-first-backup-dns-server" is false.
-* `use_second_backup_dns_server` - Use Second Backup DNS Server.
-* `second_backup_dns_server` - Second Backup DNS Server. Identified by name. Must be set when "use-second-backup-dns-server" is true and can not be set when "use-second-backup-dns-server" is false.
-* `dns_suffixes` - DNS Suffixes.
-* `use_primary_wins_server` - Use Primary WINS Server.
-* `primary_wins_server` - Primary WINS Server. Identified by name. Must be set when "use-primary-wins-server" is true and can not be set when "use-primary-wins-server" is false.
-* `use_first_backup_wins_server` - Use First Backup WINS Server.
-* `first_backup_wins_server` - First Backup WINS Server. Identified by name. Must be set when "use-first-backup-wins-server" is true and can not be set when "use-first-backup-wins-server" is false.
-* `use_second_backup_wins_server` - Use Second Backup WINS Server.
-* `second_backup_wins_server` - Second Backup WINS Server. Identified by name. Must be set when "use-second-backup-wins-server" is true and can not be set when "use-second-backup-wins-server" is false.
-* `ip_lease_duration` - IP Lease Duration in Minutes. The value must be in the range 2-32767.
 
 `remote_access` supports the following:
+
 * `support_l2tp` - Support L2TP (relevant only when office mode is active).
-* `l2tp_auth_method` - L2TP Authentication Method. Must be set when "support-l2tp" is true.
-* `l2tp_certificate` - L2TP Certificate. Must be set when "l2tp-auth-method" was selected to be "certificate". Insert "defaultCert" when you want to use the default certificate.
+* `l2tp_auth_method` - L2TP Authentication Method.
+  Must be set when "support-l2tp" is true.
+* `l2tp_certificate` - L2TP Certificate.
+  Must be set when "l2tp-auth-method" was selected to be "certificate".
+  Insert "defaultCert" when you want to use the default certificate.
 * `allow_vpn_clients_to_route_traffic` - Allow VPN clients to route traffic.
 * `support_nat_traversal_mechanism` - Support NAT traversal mechanism (UDP encapsulation).
-* `nat_traversal_service` - Allocated NAT traversal UDP service. Identified by name. Must be set when "support-nat-traversal-mechanism" is true.
+* `nat_traversal_service` - Allocated NAT traversal UDP service. Identified by name or UID.
+  Must be set when "support-nat-traversal-mechanism" is true.
 * `support_visitor_mode` - Support Visitor Mode.
-* `visitor_mode_service` - TCP Service for Visitor Mode. Identified by name. Must be set when "support-visitor-mode" is true.
-* `visitor_mode_interface` - Interface for Visitor Mode. Must be set when "support-visitor-mode" is true. Insert IPV4 Address of existing interface or "All IPs" when you want all interfaces.
+* `visitor_mode_service` - TCP Service for Visitor Mode. Identified by name or UID.
+  Must be set when "support-visitor-mode" is true.
+* `visitor_mode_interface` - Interface for Visitor Mode.
+  Must be set when "support-visitor-mode" is true.
+  Insert IPV4 Address of existing interface or "All IPs" when you want all interfaces.
 
-`logs_settings` supports the following:
-* `free_disk_space_metrics` - Free disk space metrics. 
-* `accept_syslog_messages` - Enable accept syslog messages. 
-* `alert_when_free_disk_space_below` - Enable alert when free disk space is below threshold. 
-* `alert_when_free_disk_space_below_threshold` - Alert when free disk space below threshold. 
-* `alert_when_free_disk_space_below_type` - Alert when free disk space below type. 
-* `before_delete_keep_logs_from_the_last_days` - Enable before delete keep logs from the last days. 
-* `before_delete_keep_logs_from_the_last_days_threshold` - Before delete keep logs from the last days threshold. 
-* `before_delete_run_script` - Enable Before delete run script. 
-* `before_delete_run_script_command` - Before delete run script command. 
-* `delete_index_files_older_than_days` - Enable delete index files older than days. 
-* `delete_index_files_older_than_days_threshold` - Delete index files older than days threshold. 
-* `delete_when_free_disk_space_below` - Enable delete when free disk space below. 
-* `delete_when_free_disk_space_below_threshold` - Delete when free disk space below threshold. 
-* `detect_new_citrix_ica_application_names` - Enable detect new citrix ica application names. 
-* `enable_log_indexing` - Enable log indexing. 
-* `forward_logs_to_log_server` - Enable forward logs to log server. 
-* `forward_logs_to_log_server_name` - Forward logs to log server name. 
-* `forward_logs_to_log_server_schedule_name` - Forward logs to log server schedule name. 
-* `rotate_log_by_file_size` - Enable rotate log by file size. 
-* `rotate_log_file_size_threshold` - Log file size threshold. 
-* `rotate_log_on_schedule` - Enable rotate log on schedule. 
-* `rotate_log_schedule_name` - Rotate log schedule name. 
-* `stop_logging_when_free_disk_space_below` - Enable stop logging when free disk space below. 
-* `stop_logging_when_free_disk_space_below_threshold` - Stop logging when free disk space below threshold. 
-* `turn_on_qos_logging` - Enable turn on qos logging. 
-* `update_account_log_every` - Update account log in every amount of seconds.
+
+`use_early_versions` supports the following:
+
+* `enabled` - Use early versions compatibility mode.
+* `compatibility_mode` - Early versions compatibility mode.
+
+
+`purge_sam_file` supports the following:
+
+* `enabled` - Purge SAM File.
+* `purge_when_size_reaches_to` - Purge SAM File When it Reaches to.
+
+
+`website_categorization` supports the following:
+
+* `mode` - Website categorization mode.
+* `custom_mode` - Custom mode object.custom_mode blocks are documented below.
+
+
+`authentication_settings` supports the following:
+
+* `authentication_method` - Authentication method.
+* `identity_provider` - Identity provider object identified by the name or UID. Must be set when "authentication-method" was selected to be "identity provider".identity_provider blocks are documented below.
+* `radius` - Radius server object identified by the name or UID. Must be set when "authentication-method" was selected to be "radius".
+* `users_directories` - Users directories.users_directories blocks are documented below.
+
+
+`browser_based_authentication_portal_settings` supports the following:
+
+* `portal_web_settings` - Configuration of the portal web settings.portal_web_settings blocks are documented below.
+* `certificate_settings` - Configuration of the portal certificate settings.certificate_settings blocks are documented below.
+* `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`authentication_settings` supports the following:
+
+* `authentication_method` - Authentication method.
+* `radius` - Radius server object identified by the name or UID. Must be set when "authentication-method" was selected to be "radius".
+* `users_directories` - Users directories.users_directories blocks are documented below.
+
+
+`identity_agent_portal_settings` supports the following:
+
+* `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`authorized_clients` supports the following:
+
+* `client` - Host / Network Group Name or UID.
+* `client_secret` - Client Secret.
+
+
+`authentication_settings` supports the following:
+
+* `users_directories` - Users directories.users_directories blocks are documented below.
+
+
+`client_access_permissions` supports the following:
+
+* `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`internal_access_settings` supports the following:
+
+* `undefined` - Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `dmz` - Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `vpn` - Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`internal_access_settings` supports the following:
+
+* `undefined` - Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `dmz` - Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `vpn` - Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`allocate_ip_address_from` supports the following:
+
+* `radius_server` - Radius server used to authenticate the user.
+* `use_allocate_method` - Use Allocate Method.
+* `allocate_method` - Using either Manual (IP Pool) or Automatic (DHCP).
+  Must be set when "use-allocate-method" is true.
+* `manual_network` - Manual Network. Identified by name or UID.
+  Must be set when "allocate-method" was selected to be "manual".
+* `dhcp_server` - DHCP Server. Identified by name or UID.
+  Must be set when "allocate-method" was selected to be "automatic".
+* `virtual_ip_address` - Virtual IPV4 address for DHCP server replies.
+  Must be set when "allocate-method" was selected to be "automatic".
+* `dhcp_mac_address` - Calculated MAC address for DHCP allocation.
+  Must be set when "allocate-method" was selected to be "automatic".
+* `optional_parameters` - This configuration applies to all Office Mode methods except Automatic (using DHCP) and ipassignment.conf entries which contain this data.optional_parameters blocks are documented below.
+
+
+`custom_mode` supports the following:
+
+* `social_networking_widgets` - Social networking widgets mode.
+* `url_filtering` - URL filtering mode.
+
+
+`users_directories` supports the following:
+
+* `external_user_profile` - External user profile.
+* `internal_users` - Internal users.
+* `users_from_external_directories` - Users from external directories.
+* `specific` - LDAP AU objects identified by the name or UID. Must be set when "users-from-external-directories" was selected to be "specific".specific blocks are documented below.
+
+
+`portal_web_settings` supports the following:
+
+* `aliases` - List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
+* `main_url` - The main URL for the web portal.
+
+
+`certificate_settings` supports the following:
+
+* `base64_certificate` - The certificate file encoded in Base64 with padding.
+  This file must be in the *.p12 format.
+* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`users_directories` supports the following:
+
+* `external_user_profile` - External user profile.
+* `internal_users` - Internal users.
+* `users_from_external_directories` - Users from external directories.
+* `specific` - LDAP AU objects identified by the name or UID. Must be set when "users-from-external-directories" was selected to be "specific".specific blocks are documented below.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`users_directories` supports the following:
+
+* `external_user_profile` - External user profile.
+* `internal_users` - Internal users.
+* `users_from_external_directories` - Users from external directories.
+* `specific` - LDAP AU objects identified by the name or UID. Must be set when "users-from-external-directories" was selected to be "specific".specific blocks are documented below.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`optional_parameters` supports the following:
+
+* `use_primary_dns_server` - Use Primary DNS Server.
+* `primary_dns_server` - Primary DNS Server. Identified by name or UID.
+  Must be set when "use-primary-dns-server" is true and can not be set when "use-primary-dns-server" is false.
+* `use_first_backup_dns_server` - Use First Backup DNS Server.
+* `first_backup_dns_server` - First Backup DNS Server. Identified by name or UID.
+  Must be set when "use-first-backup-dns-server" is true and can not be set when "use-first-backup-dns-server" is false.
+* `use_second_backup_dns_server` - Use Second Backup DNS Server.
+* `second_backup_dns_server` - Second Backup DNS Server. Identified by name or UID.
+  Must be set when "use-second-backup-dns-server" is true and can not be set when "use-second-backup-dns-server" is false.
+* `dns_suffixes` - DNS Suffixes.
+* `use_primary_wins_server` - Use Primary WINS Server.
+* `primary_wins_server` - Primary WINS Server. Identified by name or UID.
+  Must be set when "use-primary-wins-server" is true and can not be set when "use-primary-wins-server" is false.
+* `use_first_backup_wins_server` - Use First Backup WINS Server.
+* `first_backup_wins_server` - First Backup WINS Server. Identified by name or UID.
+  Must be set when "use-first-backup-wins-server" is true and can not be set when "use-first-backup-wins-server" is false.
+* `use_second_backup_wins_server` - Use Second Backup WINS Server.
+* `second_backup_wins_server` - Second Backup WINS Server. Identified by name or UID.
+  Must be set when "use-second-backup-wins-server" is true and can not be set when "use-second-backup-wins-server" is false.
+
+
+`internal_access_settings` supports the following:
+
+* `undefined` - Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `dmz` - Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `vpn` - Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`internal_access_settings` supports the following:
+
+* `undefined` - Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `dmz` - Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `vpn` - Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`internal_access_settings` supports the following:
+
+* `undefined` - Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `dmz` - Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `vpn` - Controls portal access settings for interfaces that are part of a VPN Encryption Domain. 

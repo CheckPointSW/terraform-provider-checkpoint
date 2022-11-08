@@ -98,7 +98,7 @@ func createManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 		tacacsGroupPayload["ignore-errors"] = v.(bool)
 	}
 
-	log.Println("Create TacacsGroup - Map = ", tacacsGroupPayload)
+	log.Println("Create Tacacs Group - Map = ", tacacsGroupPayload)
 
 	addTacacsGroupRes, err := client.ApiCall("add-tacacs-group", tacacsGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTacacsGroupRes.Success {
@@ -135,7 +135,7 @@ func readManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 
 	tacacsGroup := showTacacsGroupRes.GetData()
 
-	log.Println("Read TacacsGroup - Show JSON = ", tacacsGroup)
+	log.Println("Read Tacacs Group - Show JSON = ", tacacsGroup)
 
 	if v := tacacsGroup["name"]; v != nil {
 		_ = d.Set("name", v)
@@ -179,14 +179,6 @@ func readManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 
 	if v := tacacsGroup["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := tacacsGroup["ignore-warnings"]; v != nil {
-		_ = d.Set("ignore_warnings", v)
-	}
-
-	if v := tacacsGroup["ignore-errors"]; v != nil {
-		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil
@@ -240,7 +232,7 @@ func updateManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 		tacacsGroup["ignore-errors"] = v.(bool)
 	}
 
-	log.Println("Update TacacsGroup - Map = ", tacacsGroup)
+	log.Println("Update Tacacs Group - Map = ", tacacsGroup)
 
 	updateTacacsGroupRes, err := client.ApiCall("set-tacacs-group", tacacsGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTacacsGroupRes.Success {
@@ -262,7 +254,7 @@ func deleteManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 		"ignore-warnings": "true",
 	}
 
-	log.Println("Delete TacacsGroup")
+	log.Println("Delete Tacacs Group")
 
 	deleteTacacsGroupRes, err := client.ApiCall("delete-tacacs-group", tacacsGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTacacsGroupRes.Success {

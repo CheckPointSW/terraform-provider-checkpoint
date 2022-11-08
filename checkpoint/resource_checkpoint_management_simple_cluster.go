@@ -39,6 +39,995 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Description: "Cluster mode.",
 				Default:     "cluster-xl-ha",
 			},
+			"advanced_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "N/A",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_persistence": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Handling established connections when installing a new policy.",
+							Default:     "rematch-connections",
+						},
+						"sam": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "SAM.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"forward_to_other_sam_servers": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Forward SAM clients' requests to other SAM servers.",
+										Default:     false,
+									},
+									"use_early_versions": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Use early versions compatibility mode.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Use early versions compatibility mode.",
+													Default:     false,
+												},
+												"compatibility_mode": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Early versions compatibility mode.",
+													Default:     "auth_opsec",
+												},
+											},
+										},
+									},
+									"purge_sam_file": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Purge SAM File.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Purge SAM File.",
+													Default:     false,
+												},
+												"purge_when_size_reaches_to": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Purge SAM File When it Reaches to.",
+													Default:     100,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"enable_https_inspection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable HTTPS Inspection after defining an outbound inspection certificate. <br>To define the outbound certificate use outbound inspection certificate API.",
+			},
+			"fetch_policy": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Security management server(s) to fetch the policy from.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"hit_count": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Hit count tracks the number of connections each rule matches.",
+				Default:     true,
+			},
+			"https_inspection": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "HTTPS inspection.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bypass_on_failure": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Set to be true in order to bypass all requests (Fail-open) in case of internal system error.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"override_profile": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override profile of global configuration.",
+									},
+									"value": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override value.<br><font color=\"red\">Required only for</font> 'override-profile' is True.",
+									},
+								},
+							},
+						},
+						"site_categorization_allow_mode": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Set to 'background' in order to allowed requests until categorization is complete.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"override_profile": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override profile of global configuration.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Override value.<br><font color=\"red\">Required only for</font> 'override-profile' is True.",
+									},
+								},
+							},
+						},
+						"deny_untrusted_server_cert": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Set to be true in order to drop traffic from servers with untrusted server certificate.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"override_profile": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override profile of global configuration.",
+									},
+									"value": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override value.<br><font color=\"red\">Required only for</font> 'override-profile' is True.",
+									},
+								},
+							},
+						},
+						"deny_revoked_server_cert": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Set to be true in order to drop traffic from servers with revoked server certificate (validate CRL).",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"override_profile": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override profile of global configuration.",
+									},
+									"value": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override value.<br><font color=\"red\">Required only for</font> 'override-profile' is True.",
+									},
+								},
+							},
+						},
+						"deny_expired_server_cert": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Set to be true in order to drop traffic from servers with expired server certificate.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"override_profile": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override profile of global configuration.",
+									},
+									"value": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Override value.<br><font color=\"red\">Required only for</font> 'override-profile' is True.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"identity_awareness": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Identity awareness blade enabled.",
+			},
+			"identity_awareness_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Gateway Identity Awareness settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"browser_based_authentication": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable Browser Based Authentication source.",
+						},
+						"browser_based_authentication_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Browser Based Authentication settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"authentication_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Authentication Settings for Browser Based Authentication.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"authentication_method": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Authentication method.",
+													Default:     "username and password",
+												},
+												"identity_provider": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Description: "Identity provider object identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"identity provider\".",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"radius": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Radius server object identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"radius\".",
+												},
+												"users_directories": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Users directories.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"external_user_profile": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "External user profile.",
+																Default:     true,
+															},
+															"internal_users": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "Internal users.",
+																Default:     true,
+															},
+															"users_from_external_directories": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Users from external directories.",
+																Default:     "all gateways directories",
+															},
+															"specific": {
+																Type:        schema.TypeSet,
+																Optional:    true,
+																Description: "LDAP AU objects identified by the name or UID. Must be set when \"users-from-external-directories\" was selected to be \"specific\".",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"browser_based_authentication_portal_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Browser Based Authentication portal settings.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"portal_web_settings": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Configuration of the portal web settings.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"aliases": {
+																Type:        schema.TypeSet,
+																Optional:    true,
+																Description: "List of URL aliases that are redirected to the main portal URL.",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+															"main_url": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "The main URL for the web portal.",
+															},
+														},
+													},
+												},
+												"certificate_settings": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Configuration of the portal certificate settings.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"base64_certificate": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
+															},
+															"base64_password": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Password (encoded in Base64 with padding) for the certificate file.",
+															},
+														},
+													},
+												},
+												"accessibility": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Configuration of the portal access settings.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"allow_access_from": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Allowed access to the web portal (based on interfaces, or security policy).",
+															},
+															"internal_access_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Configuration of the additional portal access settings for internal interfaces only.",
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"undefined": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.",
+																		},
+																		"dmz": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.",
+																		},
+																		"vpn": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for interfaces that are part of a VPN Encryption Domain.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"identity_agent": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable Identity Agent source.",
+						},
+						"identity_agent_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Identity Agent settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"agents_interval_keepalive": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Agents send keepalive period (minutes).",
+										Default:     5,
+									},
+									"user_reauthenticate_interval": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Agent reauthenticate time interval (minutes).",
+										Default:     480,
+									},
+									"authentication_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Authentication Settings for Identity Agent.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"authentication_method": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Authentication method.",
+													Default:     "username and password",
+												},
+												"radius": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Radius server object identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"radius\".",
+												},
+												"users_directories": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Users directories.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"external_user_profile": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "External user profile.",
+																Default:     true,
+															},
+															"internal_users": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "Internal users.",
+																Default:     true,
+															},
+															"users_from_external_directories": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Users from external directories.",
+																Default:     "all gateways directories",
+															},
+															"specific": {
+																Type:        schema.TypeSet,
+																Optional:    true,
+																Description: "LDAP AU objects identified by the name or UID. Must be set when \"users-from-external-directories\" was selected to be \"specific\".",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"identity_agent_portal_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Identity Agent accessibility settings.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"accessibility": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Configuration of the portal access settings.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"allow_access_from": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Allowed access to the web portal (based on interfaces, or security policy).",
+															},
+															"internal_access_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Configuration of the additional portal access settings for internal interfaces only.",
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"undefined": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.",
+																		},
+																		"dmz": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.",
+																		},
+																		"vpn": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for interfaces that are part of a VPN Encryption Domain.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"identity_collector": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable Identity Collector source.",
+						},
+						"identity_collector_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Identity Collector settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"authorized_clients": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Authorized Clients.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"client": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Host / Network Group Name or UID.",
+												},
+												"client_secret": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Client Secret.",
+												},
+											},
+										},
+									},
+									"authentication_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Authentication Settings for Identity Collector.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"users_directories": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Users directories.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"external_user_profile": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "External user profile.",
+																Default:     true,
+															},
+															"internal_users": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "Internal users.",
+																Default:     true,
+															},
+															"users_from_external_directories": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Users from external directories.",
+																Default:     "all gateways directories",
+															},
+															"specific": {
+																Type:        schema.TypeSet,
+																Optional:    true,
+																Description: "LDAP AU objects identified by the name or UID. Must be set when \"users-from-external-directories\" was selected to be \"specific\".",
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"client_access_permissions": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Identity Collector accessibility settings.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"accessibility": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: "Configuration of the portal access settings.",
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"allow_access_from": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Allowed access to the web portal (based on interfaces, or security policy).",
+															},
+															"internal_access_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: "Configuration of the additional portal access settings for internal interfaces only.",
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"undefined": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.",
+																		},
+																		"dmz": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.",
+																		},
+																		"vpn": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Controls portal access settings for interfaces that are part of a VPN Encryption Domain.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"identity_sharing_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Identity sharing settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"share_with_other_gateways": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Enable identity sharing with other gateways.",
+									},
+									"receive_from_other_gateways": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Enable receiving identity from other gateways.",
+									},
+									"receive_from": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Gateway(s) to receive identity from.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+						"proxy_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Identity-Awareness Proxy settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"detect_using_x_forward_for": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Whether to use X-Forward-For HTTP header, which is added by the proxy server to keep track of the original source IP.",
+										Default:     false,
+									},
+								},
+							},
+						},
+						"remote_access": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable Remote Access Identity source.",
+						},
+					},
+				},
+			},
+			"ips_update_policy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specifies whether the IPS will be downloaded from the Management or directly to the Gateway.",
+				Default:     "gateway automatic update",
+			},
+			"nat_hide_internal_interfaces": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Hide internal networks behind the Gateway's external IP.",
+			},
+			"nat_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "NAT settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auto_rule": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to add automatic address translation rules.",
+							Default:     false,
+						},
+						"ipv4_address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IPv4 address.",
+						},
+						"ipv6_address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IPv6 address.",
+						},
+						"hide_behind": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Hide behind method. This parameter is forbidden in case \"method\" parameter is \"static\".",
+						},
+						"install_on": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Which gateway should apply the NAT translation.",
+						},
+						"method": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "NAT translation method.",
+						},
+					},
+				},
+			},
+			"platform_portal_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Platform portal settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"portal_web_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal web settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"aliases": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "List of URL aliases that are redirected to the main portal URL.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"main_url": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The main URL for the web portal.",
+									},
+								},
+							},
+						},
+						"certificate_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal certificate settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"base64_certificate": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
+									},
+									"base64_password": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Password (encoded in Base64 with padding) for the certificate file.",
+									},
+								},
+							},
+						},
+						"accessibility": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal access settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"allow_access_from": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Allowed access to the web portal (based on interfaces, or security policy).",
+									},
+									"internal_access_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Configuration of the additional portal access settings for internal interfaces only.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"undefined": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.",
+												},
+												"dmz": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.",
+												},
+												"vpn": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for interfaces that are part of a VPN Encryption Domain.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"proxy_settings": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Proxy Server for Gateway.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"use_custom_proxy": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Use custom proxy settings for this network object.",
+							Default:     false,
+						},
+						"proxy_server": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "N/A",
+						},
+						"port": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "N/A",
+							Default:     80,
+						},
+					},
+				},
+			},
+			"qos": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "QoS.",
+			},
+			"usercheck_portal_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "UserCheck portal settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "State of the web portal (enabled or disabled). The supported blades are: {'Application Control', 'URL Filtering', 'Data Loss Prevention', 'Anti Virus', 'Anti Bot', 'Threat Emulation', 'Threat Extraction', 'Data Awareness'}.",
+						},
+						"portal_web_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal web settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"aliases": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "List of URL aliases that are redirected to the main portal URL.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"main_url": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The main URL for the web portal.",
+									},
+								},
+							},
+						},
+						"certificate_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal certificate settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"base64_certificate": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
+									},
+									"base64_password": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Password (encoded in Base64 with padding) for the certificate file.",
+									},
+								},
+							},
+						},
+						"accessibility": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Configuration of the portal access settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"allow_access_from": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Allowed access to the web portal (based on interfaces, or security policy).",
+									},
+									"internal_access_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Configuration of the additional portal access settings for internal interfaces only.",
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"undefined": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.",
+												},
+												"dmz": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.",
+												},
+												"vpn": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Controls portal access settings for interfaces that are part of a VPN Encryption Domain.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"zero_phishing": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Zero Phishing blade enabled.",
+			},
+			"zero_phishing_fqdn": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Zero Phishing gateway FQDN.",
+			},
 			"interfaces": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -781,6 +1770,377 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		cluster["cluster-mode"] = v.(string)
 	}
 
+	if v, ok := d.GetOk("advanced_settings"); ok {
+
+		advancedSettingsList := v.([]interface{})
+
+		if len(advancedSettingsList) > 0 {
+
+			advancedSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("advanced_settings.0.connection_persistence"); ok {
+				advancedSettingsPayload["connection-persistence"] = v.(string)
+			}
+			if _, ok := d.GetOk("advanced_settings.0.sam"); ok {
+
+				samPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("advanced_settings.0.sam.0.forward_to_other_sam_servers"); ok {
+					samPayload["forward-to-other-sam-servers"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("advanced_settings.0.sam.0.use_early_versions"); ok {
+					samPayload["use-early-versions"] = v
+				}
+				if v, ok := d.GetOk("advanced_settings.0.sam.0.purge_sam_file"); ok {
+					samPayload["purge-sam-file"] = v
+				}
+				advancedSettingsPayload["sam"] = samPayload
+			}
+			cluster["advanced-settings"] = advancedSettingsPayload
+		}
+	}
+
+	if v, ok := d.GetOkExists("enable_https_inspection"); ok {
+		cluster["enable-https-inspection"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("fetch_policy"); ok {
+		cluster["fetch-policy"] = v.(*schema.Set).List()
+	}
+
+	if v, ok := d.GetOkExists("hit_count"); ok {
+		cluster["hit-count"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("https_inspection"); ok {
+
+		httpsInspectionList := v.([]interface{})
+
+		if len(httpsInspectionList) > 0 {
+
+			httpsInspectionPayload := make(map[string]interface{})
+
+			if _, ok := d.GetOk("https_inspection.0.bypass_on_failure"); ok {
+
+				bypassOnFailurePayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection.0.bypass_on_failure.0.override_profile"); ok {
+					bypassOnFailurePayload["override-profile"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("https_inspection.0.bypass_on_failure.0.value"); ok {
+					bypassOnFailurePayload["value"] = strconv.FormatBool(v.(bool))
+				}
+				httpsInspectionPayload["bypass-on-failure"] = bypassOnFailurePayload
+			}
+			if _, ok := d.GetOk("https_inspection.0.site_categorization_allow_mode"); ok {
+
+				siteCategorizationAllowModePayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection.0.site_categorization_allow_mode.0.override_profile"); ok {
+					siteCategorizationAllowModePayload["override-profile"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("https_inspection.0.site_categorization_allow_mode.0.value"); ok {
+					siteCategorizationAllowModePayload["value"] = v.(string)
+				}
+				httpsInspectionPayload["site-categorization-allow-mode"] = siteCategorizationAllowModePayload
+			}
+			if _, ok := d.GetOk("https_inspection.0.deny_untrusted_server_cert"); ok {
+
+				denyUntrustedServerCertPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection.0.deny_untrusted_server_cert.0.override_profile"); ok {
+					denyUntrustedServerCertPayload["override-profile"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("https_inspection.0.deny_untrusted_server_cert.0.value"); ok {
+					denyUntrustedServerCertPayload["value"] = strconv.FormatBool(v.(bool))
+				}
+				httpsInspectionPayload["deny-untrusted-server-cert"] = denyUntrustedServerCertPayload
+			}
+			if _, ok := d.GetOk("https_inspection.0.deny_revoked_server_cert"); ok {
+
+				denyRevokedServerCertPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection.0.deny_revoked_server_cert.0.override_profile"); ok {
+					denyRevokedServerCertPayload["override-profile"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("https_inspection.0.deny_revoked_server_cert.0.value"); ok {
+					denyRevokedServerCertPayload["value"] = strconv.FormatBool(v.(bool))
+				}
+				httpsInspectionPayload["deny-revoked-server-cert"] = denyRevokedServerCertPayload
+			}
+			if _, ok := d.GetOk("https_inspection.0.deny_expired_server_cert"); ok {
+
+				denyExpiredServerCertPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection.0.deny_expired_server_cert.0.override_profile"); ok {
+					denyExpiredServerCertPayload["override-profile"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("https_inspection.0.deny_expired_server_cert.0.value"); ok {
+					denyExpiredServerCertPayload["value"] = strconv.FormatBool(v.(bool))
+				}
+				httpsInspectionPayload["deny-expired-server-cert"] = denyExpiredServerCertPayload
+			}
+			cluster["https-inspection"] = httpsInspectionPayload
+		}
+	}
+
+	if v, ok := d.GetOkExists("identity_awareness"); ok {
+		cluster["identity-awareness"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("identity_awareness_settings"); ok {
+
+		identityAwarenessSettingsList := v.([]interface{})
+
+		if len(identityAwarenessSettingsList) > 0 {
+
+			identityAwarenessSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("identity_awareness_settings.0.browser_based_authentication"); ok {
+				identityAwarenessSettingsPayload["browser-based-authentication"] = v.(bool)
+			}
+			if _, ok := d.GetOk("identity_awareness_settings.0.browser_based_authentication_settings"); ok {
+
+				browserBasedAuthenticationSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("identity_awareness_settings.0.browser_based_authentication_settings.0.authentication_settings"); ok {
+					browserBasedAuthenticationSettingsPayload["authentication-settings"] = v
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings"); ok {
+					browserBasedAuthenticationSettingsPayload["browser-based-authentication-portal-settings"] = v
+				}
+				identityAwarenessSettingsPayload["browser-based-authentication-settings"] = browserBasedAuthenticationSettingsPayload
+			}
+			if v, ok := d.GetOk("identity_awareness_settings.0.identity_agent"); ok {
+				identityAwarenessSettingsPayload["identity-agent"] = v.(bool)
+			}
+			if _, ok := d.GetOk("identity_awareness_settings.0.identity_agent_settings"); ok {
+
+				identityAgentSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_agent_settings.0.agents_interval_keepalive"); ok {
+					identityAgentSettingsPayload["agents-interval-keepalive"] = v
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_agent_settings.0.user_reauthenticate_interval"); ok {
+					identityAgentSettingsPayload["user-reauthenticate-interval"] = v
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_agent_settings.0.authentication_settings"); ok {
+					identityAgentSettingsPayload["authentication-settings"] = v
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_agent_settings.0.identity_agent_portal_settings"); ok {
+					identityAgentSettingsPayload["identity-agent-portal-settings"] = v
+				}
+				identityAwarenessSettingsPayload["identity-agent-settings"] = identityAgentSettingsPayload
+			}
+			if v, ok := d.GetOk("identity_awareness_settings.0.identity_collector"); ok {
+				identityAwarenessSettingsPayload["identity-collector"] = v.(bool)
+			}
+			if _, ok := d.GetOk("identity_awareness_settings.0.identity_collector_settings"); ok {
+
+				identityCollectorSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_collector_settings.0.authorized_clients"); ok {
+					identityCollectorSettingsPayload["authorized-clients"] = v.(*schema.Set).List()
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_collector_settings.0.authentication_settings"); ok {
+					identityCollectorSettingsPayload["authentication-settings"] = v
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_collector_settings.0.client_access_permissions"); ok {
+					identityCollectorSettingsPayload["client-access-permissions"] = v
+				}
+				identityAwarenessSettingsPayload["identity-collector-settings"] = identityCollectorSettingsPayload
+			}
+			if _, ok := d.GetOk("identity_awareness_settings.0.identity_sharing_settings"); ok {
+
+				identitySharingSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_sharing_settings.0.share_with_other_gateways"); ok {
+					identitySharingSettingsPayload["share-with-other-gateways"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_sharing_settings.0.receive_from_other_gateways"); ok {
+					identitySharingSettingsPayload["receive-from-other-gateways"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("identity_awareness_settings.0.identity_sharing_settings.0.receive_from"); ok {
+					identitySharingSettingsPayload["receive-from"] = v.(*schema.Set).List()
+				}
+				identityAwarenessSettingsPayload["identity-sharing-settings"] = identitySharingSettingsPayload
+			}
+			if _, ok := d.GetOk("identity_awareness_settings.0.proxy_settings"); ok {
+
+				proxySettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("identity_awareness_settings.0.proxy_settings.0.detect_using_x_forward_for"); ok {
+					proxySettingsPayload["detect-using-x-forward-for"] = strconv.FormatBool(v.(bool))
+				}
+				identityAwarenessSettingsPayload["proxy-settings"] = proxySettingsPayload
+			}
+			if v, ok := d.GetOk("identity_awareness_settings.0.remote_access"); ok {
+				identityAwarenessSettingsPayload["remote-access"] = v.(bool)
+			}
+			cluster["identity-awareness-settings"] = identityAwarenessSettingsPayload
+		}
+	}
+
+	if v, ok := d.GetOk("ips_update_policy"); ok {
+		cluster["ips-update-policy"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("nat_hide_internal_interfaces"); ok {
+		cluster["nat-hide-internal-interfaces"] = v.(bool)
+	}
+
+	if _, ok := d.GetOk("nat_settings"); ok {
+
+		res := make(map[string]interface{})
+
+		if v, ok := d.GetOk("nat_settings.auto_rule"); ok {
+			res["auto-rule"] = v
+		}
+		if v, ok := d.GetOk("nat_settings.ipv4_address"); ok {
+			res["ipv4-address"] = v.(string)
+		}
+		if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
+			res["ipv6-address"] = v.(string)
+		}
+		if v, ok := d.GetOk("nat_settings.hide_behind"); ok {
+			res["hide-behind"] = v.(string)
+		}
+		if v, ok := d.GetOk("nat_settings.install_on"); ok {
+			res["install-on"] = v.(string)
+		}
+		if v, ok := d.GetOk("nat_settings.method"); ok {
+			res["method"] = v.(string)
+		}
+		cluster["nat-settings"] = res
+	}
+
+	if v, ok := d.GetOk("platform_portal_settings"); ok {
+
+		platformPortalSettingsList := v.([]interface{})
+
+		if len(platformPortalSettingsList) > 0 {
+
+			platformPortalSettingsPayload := make(map[string]interface{})
+
+			if _, ok := d.GetOk("platform_portal_settings.0.portal_web_settings"); ok {
+
+				portalWebSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("platform_portal_settings.0.portal_web_settings.0.aliases"); ok {
+					portalWebSettingsPayload["aliases"] = v.(*schema.Set).List()
+				}
+				if v, ok := d.GetOk("platform_portal_settings.0.portal_web_settings.0.main_url"); ok {
+					portalWebSettingsPayload["main-url"] = v.(string)
+				}
+				platformPortalSettingsPayload["portal-web-settings"] = portalWebSettingsPayload
+			}
+			if _, ok := d.GetOk("platform_portal_settings.0.certificate_settings"); ok {
+
+				certificateSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("platform_portal_settings.0.certificate_settings.0.base64_certificate"); ok {
+					certificateSettingsPayload["base64-certificate"] = v.(string)
+				}
+				if v, ok := d.GetOk("platform_portal_settings.0.certificate_settings.0.base64_password"); ok {
+					certificateSettingsPayload["base64-password"] = v.(string)
+				}
+				platformPortalSettingsPayload["certificate-settings"] = certificateSettingsPayload
+			}
+			if _, ok := d.GetOk("platform_portal_settings.0.accessibility"); ok {
+
+				accessibilityPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.allow_access_from"); ok {
+					accessibilityPayload["allow-access-from"] = v.(string)
+				}
+				if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings"); ok {
+					accessibilityPayload["internal-access-settings"] = v
+				}
+				platformPortalSettingsPayload["accessibility"] = accessibilityPayload
+			}
+			cluster["platform-portal-settings"] = platformPortalSettingsPayload
+		}
+	}
+
+	if _, ok := d.GetOk("proxy_settings"); ok {
+
+		res := make(map[string]interface{})
+
+		if v, ok := d.GetOk("proxy_settings.use_custom_proxy"); ok {
+			res["use-custom-proxy"] = v
+		}
+		if v, ok := d.GetOk("proxy_settings.proxy_server"); ok {
+			res["proxy-server"] = v.(string)
+		}
+		if v, ok := d.GetOk("proxy_settings.port"); ok {
+			res["port"] = v
+		}
+		cluster["proxy-settings"] = res
+	}
+
+	if v, ok := d.GetOkExists("qos"); ok {
+		cluster["qos"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("usercheck_portal_settings"); ok {
+
+		usercheckPortalSettingsList := v.([]interface{})
+
+		if len(usercheckPortalSettingsList) > 0 {
+
+			usercheckPortalSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("usercheck_portal_settings.0.enabled"); ok {
+				usercheckPortalSettingsPayload["enabled"] = v.(bool)
+			}
+			if _, ok := d.GetOk("usercheck_portal_settings.0.portal_web_settings"); ok {
+
+				portalWebSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("usercheck_portal_settings.0.portal_web_settings.0.aliases"); ok {
+					portalWebSettingsPayload["aliases"] = v.(*schema.Set).List()
+				}
+				if v, ok := d.GetOk("usercheck_portal_settings.0.portal_web_settings.0.main_url"); ok {
+					portalWebSettingsPayload["main-url"] = v.(string)
+				}
+				usercheckPortalSettingsPayload["portal-web-settings"] = portalWebSettingsPayload
+			}
+			if _, ok := d.GetOk("usercheck_portal_settings.0.certificate_settings"); ok {
+
+				certificateSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("usercheck_portal_settings.0.certificate_settings.0.base64_certificate"); ok {
+					certificateSettingsPayload["base64-certificate"] = v.(string)
+				}
+				if v, ok := d.GetOk("usercheck_portal_settings.0.certificate_settings.0.base64_password"); ok {
+					certificateSettingsPayload["base64-password"] = v.(string)
+				}
+				usercheckPortalSettingsPayload["certificate-settings"] = certificateSettingsPayload
+			}
+			if _, ok := d.GetOk("usercheck_portal_settings.0.accessibility"); ok {
+
+				accessibilityPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.allow_access_from"); ok {
+					accessibilityPayload["allow-access-from"] = v.(string)
+				}
+				if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.internal_access_settings"); ok {
+					accessibilityPayload["internal-access-settings"] = v
+				}
+				usercheckPortalSettingsPayload["accessibility"] = accessibilityPayload
+			}
+			cluster["usercheck-portal-settings"] = usercheckPortalSettingsPayload
+		}
+	}
+
+	if v, ok := d.GetOkExists("zero_phishing"); ok {
+		cluster["zero-phishing"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("zero_phishing_fqdn"); ok {
+		cluster["zero-phishing-fqdn"] = v.(string)
+	}
+
 	if v, ok := d.GetOk("interfaces"); ok {
 		interfacesList := v.([]interface{})
 		if len(interfacesList) > 0 {
@@ -1296,6 +2656,458 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("cluster_mode", v)
 	}
 
+	if cluster["advanced-settings"] != nil {
+
+		advancedSettingsMap, ok := cluster["advanced-settings"].(map[string]interface{})
+
+		if ok {
+			advancedSettingsMapToReturn := make(map[string]interface{})
+
+			if v := advancedSettingsMap["connection-persistence"]; v != nil {
+				advancedSettingsMapToReturn["connection_persistence"] = v
+			}
+			if v, ok := advancedSettingsMap["sam"]; ok {
+
+				samMap, ok := v.(map[string]interface{})
+				if ok {
+					samMapToReturn := make(map[string]interface{})
+
+					if v, _ := samMap["forward-to-other-sam-servers"]; v != nil {
+						samMapToReturn["forward_to_other_sam_servers"] = v
+					}
+					if v, _ := samMap["use-early-versions"]; v != nil {
+						samMapToReturn["use_early_versions"] = v
+					}
+					if v, _ := samMap["purge-sam-file"]; v != nil {
+						samMapToReturn["purge_sam_file"] = v
+					}
+					advancedSettingsMapToReturn["sam"] = []interface{}{samMapToReturn}
+				}
+			}
+			_ = d.Set("advanced_settings", []interface{}{advancedSettingsMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("advanced_settings", nil)
+	}
+
+	if v := cluster["enable-https-inspection"]; v != nil {
+		_ = d.Set("enable_https_inspection", v)
+	}
+
+	if cluster["fetch-policy"] != nil {
+		fetchPolicyJson, ok := cluster["fetch-policy"].([]interface{})
+		if ok {
+			fetchPolicyIds := make([]string, 0)
+			if len(fetchPolicyJson) > 0 {
+				for _, fetch_policy := range fetchPolicyJson {
+					fetch_policy := fetch_policy.(map[string]interface{})
+					fetchPolicyIds = append(fetchPolicyIds, fetch_policy["name"].(string))
+				}
+			}
+			_ = d.Set("fetch_policy", fetchPolicyIds)
+		}
+	} else {
+		_ = d.Set("fetch_policy", nil)
+	}
+
+	if v := cluster["hit-count"]; v != nil {
+		_ = d.Set("hit_count", v)
+	}
+
+	if cluster["https-inspection"] != nil {
+
+		httpsInspectionMap, ok := cluster["https-inspection"].(map[string]interface{})
+
+		if ok {
+			httpsInspectionMapToReturn := make(map[string]interface{})
+
+			if v, ok := httpsInspectionMap["bypass-on-failure"]; ok {
+
+				bypassOnFailureMap, ok := v.(map[string]interface{})
+				if ok {
+					bypassOnFailureMapToReturn := make(map[string]interface{})
+
+					if v, _ := bypassOnFailureMap["override-profile"]; v != nil {
+						bypassOnFailureMapToReturn["override_profile"] = v
+					}
+					if v, _ := bypassOnFailureMap["value"]; v != nil {
+						bypassOnFailureMapToReturn["value"] = v
+					}
+					httpsInspectionMapToReturn["bypass_on_failure"] = []interface{}{bypassOnFailureMapToReturn}
+				}
+			}
+			if v, ok := httpsInspectionMap["site-categorization-allow-mode"]; ok {
+
+				siteCategorizationAllowModeMap, ok := v.(map[string]interface{})
+				if ok {
+					siteCategorizationAllowModeMapToReturn := make(map[string]interface{})
+
+					if v, _ := siteCategorizationAllowModeMap["override-profile"]; v != nil {
+						siteCategorizationAllowModeMapToReturn["override_profile"] = v
+					}
+					if v, _ := siteCategorizationAllowModeMap["value"]; v != nil {
+						siteCategorizationAllowModeMapToReturn["value"] = v
+					}
+					httpsInspectionMapToReturn["site_categorization_allow_mode"] = []interface{}{siteCategorizationAllowModeMapToReturn}
+				}
+			}
+			if v, ok := httpsInspectionMap["deny-untrusted-server-cert"]; ok {
+
+				denyUntrustedServerCertMap, ok := v.(map[string]interface{})
+				if ok {
+					denyUntrustedServerCertMapToReturn := make(map[string]interface{})
+
+					if v, _ := denyUntrustedServerCertMap["override-profile"]; v != nil {
+						denyUntrustedServerCertMapToReturn["override_profile"] = v
+					}
+					if v, _ := denyUntrustedServerCertMap["value"]; v != nil {
+						denyUntrustedServerCertMapToReturn["value"] = v
+					}
+					httpsInspectionMapToReturn["deny_untrusted_server_cert"] = []interface{}{denyUntrustedServerCertMapToReturn}
+				}
+			}
+			if v, ok := httpsInspectionMap["deny-revoked-server-cert"]; ok {
+
+				denyRevokedServerCertMap, ok := v.(map[string]interface{})
+				if ok {
+					denyRevokedServerCertMapToReturn := make(map[string]interface{})
+
+					if v, _ := denyRevokedServerCertMap["override-profile"]; v != nil {
+						denyRevokedServerCertMapToReturn["override_profile"] = v
+					}
+					if v, _ := denyRevokedServerCertMap["value"]; v != nil {
+						denyRevokedServerCertMapToReturn["value"] = v
+					}
+					httpsInspectionMapToReturn["deny_revoked_server_cert"] = []interface{}{denyRevokedServerCertMapToReturn}
+				}
+			}
+			if v, ok := httpsInspectionMap["deny-expired-server-cert"]; ok {
+
+				denyExpiredServerCertMap, ok := v.(map[string]interface{})
+				if ok {
+					denyExpiredServerCertMapToReturn := make(map[string]interface{})
+
+					if v, _ := denyExpiredServerCertMap["override-profile"]; v != nil {
+						denyExpiredServerCertMapToReturn["override_profile"] = v
+					}
+					if v, _ := denyExpiredServerCertMap["value"]; v != nil {
+						denyExpiredServerCertMapToReturn["value"] = v
+					}
+					httpsInspectionMapToReturn["deny_expired_server_cert"] = []interface{}{denyExpiredServerCertMapToReturn}
+				}
+			}
+			_ = d.Set("https_inspection", []interface{}{httpsInspectionMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("https_inspection", nil)
+	}
+
+	if v := cluster["identity-awareness"]; v != nil {
+		_ = d.Set("identity_awareness", v)
+	}
+
+	if cluster["identity-awareness-settings"] != nil {
+
+		identityAwarenessSettingsMap, ok := cluster["identity-awareness-settings"].(map[string]interface{})
+
+		if ok {
+			identityAwarenessSettingsMapToReturn := make(map[string]interface{})
+
+			if v := identityAwarenessSettingsMap["browser-based-authentication"]; v != nil {
+				identityAwarenessSettingsMapToReturn["browser_based_authentication"] = v
+			}
+			if v, ok := identityAwarenessSettingsMap["browser-based-authentication-settings"]; ok {
+
+				browserBasedAuthenticationSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					browserBasedAuthenticationSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := browserBasedAuthenticationSettingsMap["authentication-settings"]; v != nil {
+						browserBasedAuthenticationSettingsMapToReturn["authentication_settings"] = v
+					}
+					if v, _ := browserBasedAuthenticationSettingsMap["browser-based-authentication-portal-settings"]; v != nil {
+						browserBasedAuthenticationSettingsMapToReturn["browser_based_authentication_portal_settings"] = v
+					}
+					identityAwarenessSettingsMapToReturn["browser_based_authentication_settings"] = []interface{}{browserBasedAuthenticationSettingsMapToReturn}
+				}
+			}
+			if v := identityAwarenessSettingsMap["identity-agent"]; v != nil {
+				identityAwarenessSettingsMapToReturn["identity_agent"] = v
+			}
+			if v, ok := identityAwarenessSettingsMap["identity-agent-settings"]; ok {
+
+				identityAgentSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					identityAgentSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := identityAgentSettingsMap["agents-interval-keepalive"]; v != nil {
+						identityAgentSettingsMapToReturn["agents_interval_keepalive"] = v
+					}
+					if v, _ := identityAgentSettingsMap["user-reauthenticate-interval"]; v != nil {
+						identityAgentSettingsMapToReturn["user_reauthenticate_interval"] = v
+					}
+					if v, _ := identityAgentSettingsMap["authentication-settings"]; v != nil {
+						identityAgentSettingsMapToReturn["authentication_settings"] = v
+					}
+					if v, _ := identityAgentSettingsMap["identity-agent-portal-settings"]; v != nil {
+						identityAgentSettingsMapToReturn["identity_agent_portal_settings"] = v
+					}
+					identityAwarenessSettingsMapToReturn["identity_agent_settings"] = []interface{}{identityAgentSettingsMapToReturn}
+				}
+			}
+			if v := identityAwarenessSettingsMap["identity-collector"]; v != nil {
+				identityAwarenessSettingsMapToReturn["identity_collector"] = v
+			}
+			if v, ok := identityAwarenessSettingsMap["identity-collector-settings"]; ok {
+
+				identityCollectorSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					identityCollectorSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := identityCollectorSettingsMap["authorized-clients"]; v != nil {
+						identityCollectorSettingsMapToReturn["authorized_clients"] = v
+					}
+					if v, _ := identityCollectorSettingsMap["authentication-settings"]; v != nil {
+						identityCollectorSettingsMapToReturn["authentication_settings"] = v
+					}
+					if v, _ := identityCollectorSettingsMap["client-access-permissions"]; v != nil {
+						identityCollectorSettingsMapToReturn["client_access_permissions"] = v
+					}
+					identityAwarenessSettingsMapToReturn["identity_collector_settings"] = []interface{}{identityCollectorSettingsMapToReturn}
+				}
+			}
+			if v, ok := identityAwarenessSettingsMap["identity-sharing-settings"]; ok {
+
+				identitySharingSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					identitySharingSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := identitySharingSettingsMap["share-with-other-gateways"]; v != nil {
+						identitySharingSettingsMapToReturn["share_with_other_gateways"] = v
+					}
+					if v, _ := identitySharingSettingsMap["receive-from-other-gateways"]; v != nil {
+						identitySharingSettingsMapToReturn["receive_from_other_gateways"] = v
+					}
+					if v, _ := identitySharingSettingsMap["receive-from"]; v != nil {
+						identitySharingSettingsMapToReturn["receive_from"] = v
+					}
+					identityAwarenessSettingsMapToReturn["identity_sharing_settings"] = []interface{}{identitySharingSettingsMapToReturn}
+				}
+			}
+			if v, ok := identityAwarenessSettingsMap["proxy-settings"]; ok {
+
+				proxySettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					proxySettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := proxySettingsMap["detect-using-x-forward-for"]; v != nil {
+						proxySettingsMapToReturn["detect_using_x_forward_for"] = v
+					}
+					identityAwarenessSettingsMapToReturn["proxy_settings"] = []interface{}{proxySettingsMapToReturn}
+				}
+			}
+			if v := identityAwarenessSettingsMap["remote-access"]; v != nil {
+				identityAwarenessSettingsMapToReturn["remote_access"] = v
+			}
+			_ = d.Set("identity_awareness_settings", []interface{}{identityAwarenessSettingsMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("identity_awareness_settings", nil)
+	}
+
+	if v := cluster["ips-update-policy"]; v != nil {
+		_ = d.Set("ips_update_policy", v)
+	}
+
+	if v := cluster["nat-hide-internal-interfaces"]; v != nil {
+		_ = d.Set("nat_hide_internal_interfaces", v)
+	}
+
+	if cluster["nat-settings"] != nil {
+
+		natSettingsMap := cluster["nat-settings"].(map[string]interface{})
+
+		natSettingsMapToReturn := make(map[string]interface{})
+
+		if v, _ := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		}
+		if v, _ := natSettingsMap["ipv4-address"]; v != nil && v != "" {
+			natSettingsMapToReturn["ipv4_address"] = v
+		}
+		if v, _ := natSettingsMap["ipv6-address"]; v != nil && v != "" {
+			natSettingsMapToReturn["ipv6_address"] = v
+		}
+		if v, _ := natSettingsMap["hide-behind"]; v != nil {
+			natSettingsMapToReturn["hide_behind"] = v
+		}
+		if v, _ := natSettingsMap["install-on"]; v != nil {
+			natSettingsMapToReturn["install_on"] = v
+		}
+		if v, _ := natSettingsMap["method"]; v != nil {
+			natSettingsMapToReturn["method"] = v
+		}
+		_ = d.Set("nat_settings", natSettingsMapToReturn)
+	} else {
+		_ = d.Set("nat_settings", nil)
+	}
+
+	if cluster["platform-portal-settings"] != nil {
+
+		platformPortalSettingsMap, ok := cluster["platform-portal-settings"].(map[string]interface{})
+
+		if ok {
+			platformPortalSettingsMapToReturn := make(map[string]interface{})
+
+			if v, ok := platformPortalSettingsMap["portal-web-settings"]; ok {
+
+				portalWebSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					portalWebSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := portalWebSettingsMap["aliases"]; v != nil {
+						portalWebSettingsMapToReturn["aliases"] = v
+					}
+					if v, _ := portalWebSettingsMap["main-url"]; v != nil {
+						portalWebSettingsMapToReturn["main_url"] = v
+					}
+					platformPortalSettingsMapToReturn["portal_web_settings"] = []interface{}{portalWebSettingsMapToReturn}
+				}
+			}
+			if v, ok := platformPortalSettingsMap["certificate-settings"]; ok {
+
+				certificateSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					certificateSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := certificateSettingsMap["base64-certificate"]; v != nil {
+						certificateSettingsMapToReturn["base64_certificate"] = v
+					}
+					if v, _ := certificateSettingsMap["base64-password"]; v != nil {
+						certificateSettingsMapToReturn["base64_password"] = v
+					}
+					platformPortalSettingsMapToReturn["certificate_settings"] = []interface{}{certificateSettingsMapToReturn}
+				}
+			}
+			if v, ok := platformPortalSettingsMap["accessibility"]; ok {
+
+				accessibilityMap, ok := v.(map[string]interface{})
+				if ok {
+					accessibilityMapToReturn := make(map[string]interface{})
+
+					if v, _ := accessibilityMap["allow-access-from"]; v != nil {
+						accessibilityMapToReturn["allow_access_from"] = v
+					}
+					if v, _ := accessibilityMap["internal-access-settings"]; v != nil {
+						accessibilityMapToReturn["internal_access_settings"] = v
+					}
+					platformPortalSettingsMapToReturn["accessibility"] = []interface{}{accessibilityMapToReturn}
+				}
+			}
+			_ = d.Set("platform_portal_settings", []interface{}{platformPortalSettingsMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("platform_portal_settings", nil)
+	}
+
+	if cluster["proxy-settings"] != nil {
+
+		proxySettingsMap := cluster["proxy-settings"].(map[string]interface{})
+
+		proxySettingsMapToReturn := make(map[string]interface{})
+
+		if v, _ := proxySettingsMap["use-custom-proxy"]; v != nil {
+			proxySettingsMapToReturn["use_custom_proxy"] = strconv.FormatBool(v.(bool))
+		}
+		if v, _ := proxySettingsMap["proxy-server"]; v != nil {
+			proxySettingsMapToReturn["proxy_server"] = v
+		}
+		if v, _ := proxySettingsMap["port"]; v != nil {
+			proxySettingsMapToReturn["port"] = v
+		}
+		_ = d.Set("proxy_settings", proxySettingsMapToReturn)
+	} else {
+		_ = d.Set("proxy_settings", nil)
+	}
+
+	if v := cluster["qos"]; v != nil {
+		_ = d.Set("qos", v)
+	}
+
+	if cluster["usercheck-portal-settings"] != nil {
+
+		usercheckPortalSettingsMap, ok := cluster["usercheck-portal-settings"].(map[string]interface{})
+
+		if ok {
+			usercheckPortalSettingsMapToReturn := make(map[string]interface{})
+
+			if v := usercheckPortalSettingsMap["enabled"]; v != nil {
+				usercheckPortalSettingsMapToReturn["enabled"] = v
+			}
+			if v, ok := usercheckPortalSettingsMap["portal-web-settings"]; ok {
+
+				portalWebSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					portalWebSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := portalWebSettingsMap["aliases"]; v != nil {
+						portalWebSettingsMapToReturn["aliases"] = v
+					}
+					if v, _ := portalWebSettingsMap["main-url"]; v != nil {
+						portalWebSettingsMapToReturn["main_url"] = v
+					}
+					usercheckPortalSettingsMapToReturn["portal_web_settings"] = []interface{}{portalWebSettingsMapToReturn}
+				}
+			}
+			if v, ok := usercheckPortalSettingsMap["certificate-settings"]; ok {
+
+				certificateSettingsMap, ok := v.(map[string]interface{})
+				if ok {
+					certificateSettingsMapToReturn := make(map[string]interface{})
+
+					if v, _ := certificateSettingsMap["base64-certificate"]; v != nil {
+						certificateSettingsMapToReturn["base64_certificate"] = v
+					}
+					if v, _ := certificateSettingsMap["base64-password"]; v != nil {
+						certificateSettingsMapToReturn["base64_password"] = v
+					}
+					usercheckPortalSettingsMapToReturn["certificate_settings"] = []interface{}{certificateSettingsMapToReturn}
+				}
+			}
+			if v, ok := usercheckPortalSettingsMap["accessibility"]; ok {
+
+				accessibilityMap, ok := v.(map[string]interface{})
+				if ok {
+					accessibilityMapToReturn := make(map[string]interface{})
+
+					if v, _ := accessibilityMap["allow-access-from"]; v != nil {
+						accessibilityMapToReturn["allow_access_from"] = v
+					}
+					if v, _ := accessibilityMap["internal-access-settings"]; v != nil {
+						accessibilityMapToReturn["internal_access_settings"] = v
+					}
+					usercheckPortalSettingsMapToReturn["accessibility"] = []interface{}{accessibilityMapToReturn}
+				}
+			}
+			_ = d.Set("usercheck_portal_settings", []interface{}{usercheckPortalSettingsMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("usercheck_portal_settings", nil)
+	}
+
+	if v := cluster["zero-phishing"]; v != nil {
+		_ = d.Set("zero_phishing", v)
+	}
+
+	if v := cluster["zero-phishing-fqdn"]; v != nil {
+		_ = d.Set("zero_phishing_fqdn", v)
+	}
+
 	if v := cluster["interfaces"]; v != nil {
 		interfacesList := v.(map[string]interface{})["objects"].([]interface{})
 		if len(interfacesList) > 0 {
@@ -1784,6 +3596,403 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 	if ok := d.HasChange("cluster_mode"); ok {
 		cluster["cluster-mode"] = d.Get("cluster_mode").(string)
+	}
+
+	if d.HasChange("advanced_settings") {
+
+		if v, ok := d.GetOk("advanced_settings"); ok {
+
+			advancedSettingsList := v.([]interface{})
+
+			if len(advancedSettingsList) > 0 {
+
+				advancedSettingsPayload := make(map[string]interface{})
+
+				if d.HasChange("advanced_settings.0.connection_persistence") {
+					advancedSettingsPayload["connection-persistence"] = d.Get("advanced_settings.0.connection_persistence").(string)
+				}
+				if d.HasChange("advanced_settings.0.sam") {
+
+					samPayload := make(map[string]interface{})
+
+					if d.HasChange("advanced_settings.0.sam.0.forward_to_other_sam_servers") {
+						samPayload["forward-to-other-sam-servers"] = d.Get("advanced_settings.0.sam.0.forward_to_other_sam_servers")
+					}
+					if d.HasChange("advanced_settings.0.sam.0.use_early_versions") {
+						samPayload["use-early-versions"] = d.Get("advanced_settings.0.sam.0.use_early_versions")
+					}
+					if d.HasChange("advanced_settings.0.sam.0.purge_sam_file") {
+						samPayload["purge-sam-file"] = d.Get("advanced_settings.0.sam.0.purge_sam_file")
+					}
+					advancedSettingsPayload["sam"] = samPayload
+				}
+				cluster["advanced-settings"] = advancedSettingsPayload
+			}
+		}
+	}
+
+	if v, ok := d.GetOkExists("enable_https_inspection"); ok {
+		cluster["enable-https-inspection"] = v.(bool)
+	}
+
+	if d.HasChange("fetch_policy") {
+		if v, ok := d.GetOk("fetch_policy"); ok {
+			cluster["fetch_policy"] = v.(*schema.Set).List()
+		} else {
+			oldFetch_Policy, _ := d.GetChange("fetch_policy")
+			cluster["fetch-policy"] = map[string]interface{}{"remove": oldFetch_Policy.(*schema.Set).List()}
+		}
+	}
+
+	if v, ok := d.GetOkExists("hit_count"); ok {
+		cluster["hit-count"] = v.(bool)
+	}
+
+	if d.HasChange("https_inspection") {
+
+		if v, ok := d.GetOk("https_inspection"); ok {
+
+			httpsInspectionList := v.([]interface{})
+
+			if len(httpsInspectionList) > 0 {
+
+				httpsInspectionPayload := make(map[string]interface{})
+
+				if d.HasChange("https_inspection.0.bypass_on_failure") {
+
+					bypassOnFailurePayload := make(map[string]interface{})
+
+					if d.HasChange("https_inspection.0.bypass_on_failure.0.override_profile") {
+						bypassOnFailurePayload["override-profile"] = d.Get("https_inspection.0.bypass_on_failure.0.override_profile")
+					}
+					if d.HasChange("https_inspection.0.bypass_on_failure.0.value") {
+						bypassOnFailurePayload["value"] = d.Get("https_inspection.0.bypass_on_failure.0.value")
+					}
+					httpsInspectionPayload["bypass-on-failure"] = bypassOnFailurePayload
+				}
+				if d.HasChange("https_inspection.0.site_categorization_allow_mode") {
+
+					siteCategorizationAllowModePayload := make(map[string]interface{})
+
+					if d.HasChange("https_inspection.0.site_categorization_allow_mode.0.override_profile") {
+						siteCategorizationAllowModePayload["override-profile"] = d.Get("https_inspection.0.site_categorization_allow_mode.0.override_profile")
+					}
+					if d.HasChange("https_inspection.0.site_categorization_allow_mode.0.value") {
+						siteCategorizationAllowModePayload["value"] = d.Get("https_inspection.0.site_categorization_allow_mode.0.value").(string)
+					}
+					httpsInspectionPayload["site-categorization-allow-mode"] = siteCategorizationAllowModePayload
+				}
+				if d.HasChange("https_inspection.0.deny_untrusted_server_cert") {
+
+					denyUntrustedServerCertPayload := make(map[string]interface{})
+
+					if d.HasChange("https_inspection.0.deny_untrusted_server_cert.0.override_profile") {
+						denyUntrustedServerCertPayload["override-profile"] = d.Get("https_inspection.0.deny_untrusted_server_cert.0.override_profile")
+					}
+					if d.HasChange("https_inspection.0.deny_untrusted_server_cert.0.value") {
+						denyUntrustedServerCertPayload["value"] = d.Get("https_inspection.0.deny_untrusted_server_cert.0.value")
+					}
+					httpsInspectionPayload["deny-untrusted-server-cert"] = denyUntrustedServerCertPayload
+				}
+				if d.HasChange("https_inspection.0.deny_revoked_server_cert") {
+
+					denyRevokedServerCertPayload := make(map[string]interface{})
+
+					if d.HasChange("https_inspection.0.deny_revoked_server_cert.0.override_profile") {
+						denyRevokedServerCertPayload["override-profile"] = d.Get("https_inspection.0.deny_revoked_server_cert.0.override_profile")
+					}
+					if d.HasChange("https_inspection.0.deny_revoked_server_cert.0.value") {
+						denyRevokedServerCertPayload["value"] = d.Get("https_inspection.0.deny_revoked_server_cert.0.value")
+					}
+					httpsInspectionPayload["deny-revoked-server-cert"] = denyRevokedServerCertPayload
+				}
+				if d.HasChange("https_inspection.0.deny_expired_server_cert") {
+
+					denyExpiredServerCertPayload := make(map[string]interface{})
+
+					if d.HasChange("https_inspection.0.deny_expired_server_cert.0.override_profile") {
+						denyExpiredServerCertPayload["override-profile"] = d.Get("https_inspection.0.deny_expired_server_cert.0.override_profile")
+					}
+					if d.HasChange("https_inspection.0.deny_expired_server_cert.0.value") {
+						denyExpiredServerCertPayload["value"] = d.Get("https_inspection.0.deny_expired_server_cert.0.value")
+					}
+					httpsInspectionPayload["deny-expired-server-cert"] = denyExpiredServerCertPayload
+				}
+				cluster["https-inspection"] = httpsInspectionPayload
+			}
+		}
+	}
+
+	if v, ok := d.GetOkExists("identity_awareness"); ok {
+		cluster["identity-awareness"] = v.(bool)
+	}
+
+	if d.HasChange("identity_awareness_settings") {
+
+		if v, ok := d.GetOk("identity_awareness_settings"); ok {
+
+			identityAwarenessSettingsList := v.([]interface{})
+
+			if len(identityAwarenessSettingsList) > 0 {
+
+				identityAwarenessSettingsPayload := make(map[string]interface{})
+
+				if d.HasChange("identity_awareness_settings.0.browser_based_authentication") {
+					identityAwarenessSettingsPayload["browser-based-authentication"] = d.Get("identity_awareness_settings.0.browser_based_authentication").(bool)
+				}
+				if d.HasChange("identity_awareness_settings.0.browser_based_authentication_settings") {
+
+					browserBasedAuthenticationSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("identity_awareness_settings.0.browser_based_authentication_settings.0.authentication_settings") {
+						browserBasedAuthenticationSettingsPayload["authentication-settings"] = d.Get("identity_awareness_settings.0.browser_based_authentication_settings.0.authentication_settings")
+					}
+					if d.HasChange("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings") {
+						browserBasedAuthenticationSettingsPayload["browser-based-authentication-portal-settings"] = d.Get("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings")
+					}
+					identityAwarenessSettingsPayload["browser-based-authentication-settings"] = browserBasedAuthenticationSettingsPayload
+				}
+				if d.HasChange("identity_awareness_settings.0.identity_agent") {
+					identityAwarenessSettingsPayload["identity-agent"] = d.Get("identity_awareness_settings.0.identity_agent").(bool)
+				}
+				if d.HasChange("identity_awareness_settings.0.identity_agent_settings") {
+
+					identityAgentSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("identity_awareness_settings.0.identity_agent_settings.0.agents_interval_keepalive") {
+						identityAgentSettingsPayload["agents-interval-keepalive"] = d.Get("identity_awareness_settings.0.identity_agent_settings.0.agents_interval_keepalive")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_agent_settings.0.user_reauthenticate_interval") {
+						identityAgentSettingsPayload["user-reauthenticate-interval"] = d.Get("identity_awareness_settings.0.identity_agent_settings.0.user_reauthenticate_interval")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_agent_settings.0.authentication_settings") {
+						identityAgentSettingsPayload["authentication-settings"] = d.Get("identity_awareness_settings.0.identity_agent_settings.0.authentication_settings")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_agent_settings.0.identity_agent_portal_settings") {
+						identityAgentSettingsPayload["identity-agent-portal-settings"] = d.Get("identity_awareness_settings.0.identity_agent_settings.0.identity_agent_portal_settings")
+					}
+					identityAwarenessSettingsPayload["identity-agent-settings"] = identityAgentSettingsPayload
+				}
+				if d.HasChange("identity_awareness_settings.0.identity_collector") {
+					identityAwarenessSettingsPayload["identity-collector"] = d.Get("identity_awareness_settings.0.identity_collector").(bool)
+				}
+				if d.HasChange("identity_awareness_settings.0.identity_collector_settings") {
+
+					identityCollectorSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("identity_awareness_settings.0.identity_collector_settings.0.authorized_clients") {
+						identityCollectorSettingsPayload["authorized-clients"] = d.Get("identity_awareness_settings.0.identity_collector_settings.0.authorized_clients").(*schema.Set).List()
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_collector_settings.0.authentication_settings") {
+						identityCollectorSettingsPayload["authentication-settings"] = d.Get("identity_awareness_settings.0.identity_collector_settings.0.authentication_settings")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_collector_settings.0.client_access_permissions") {
+						identityCollectorSettingsPayload["client-access-permissions"] = d.Get("identity_awareness_settings.0.identity_collector_settings.0.client_access_permissions")
+					}
+					identityAwarenessSettingsPayload["identity-collector-settings"] = identityCollectorSettingsPayload
+				}
+				if d.HasChange("identity_awareness_settings.0.identity_sharing_settings") {
+
+					identitySharingSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("identity_awareness_settings.0.identity_sharing_settings.0.share_with_other_gateways") {
+						identitySharingSettingsPayload["share-with-other-gateways"] = d.Get("identity_awareness_settings.0.identity_sharing_settings.0.share_with_other_gateways")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_sharing_settings.0.receive_from_other_gateways") {
+						identitySharingSettingsPayload["receive-from-other-gateways"] = d.Get("identity_awareness_settings.0.identity_sharing_settings.0.receive_from_other_gateways")
+					}
+					if d.HasChange("identity_awareness_settings.0.identity_sharing_settings.0.receive_from") {
+						identitySharingSettingsPayload["receive-from"] = d.Get("identity_awareness_settings.0.identity_sharing_settings.0.receive_from").(*schema.Set).List()
+					}
+					identityAwarenessSettingsPayload["identity-sharing-settings"] = identitySharingSettingsPayload
+				}
+				if d.HasChange("identity_awareness_settings.0.proxy_settings") {
+
+					proxySettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("identity_awareness_settings.0.proxy_settings.0.detect_using_x_forward_for") {
+						proxySettingsPayload["detect-using-x-forward-for"] = d.Get("identity_awareness_settings.0.proxy_settings.0.detect_using_x_forward_for")
+					}
+					identityAwarenessSettingsPayload["proxy-settings"] = proxySettingsPayload
+				}
+				if d.HasChange("identity_awareness_settings.0.remote_access") {
+					identityAwarenessSettingsPayload["remote-access"] = d.Get("identity_awareness_settings.0.remote_access").(bool)
+				}
+				cluster["identity-awareness-settings"] = identityAwarenessSettingsPayload
+			}
+		}
+	}
+
+	if ok := d.HasChange("ips_update_policy"); ok {
+		cluster["ips-update-policy"] = d.Get("ips_update_policy")
+	}
+
+	if v, ok := d.GetOkExists("nat_hide_internal_interfaces"); ok {
+		cluster["nat-hide-internal-interfaces"] = v.(bool)
+	}
+
+	if d.HasChange("nat_settings") {
+
+		if _, ok := d.GetOk("nat_settings"); ok {
+
+			res := make(map[string]interface{})
+
+			if v, ok := d.GetOk("nat_settings.auto_rule"); ok {
+				res["auto-rule"] = v
+			}
+			if v, ok := d.GetOk("nat_settings.ipv4_address"); ok {
+				res["ipv4-address"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
+				res["ipv6-address"] = v.(string)
+			}
+			if d.HasChange("nat_settings.hide_behind") {
+				res["hide-behind"] = d.Get("nat_settings.hide_behind")
+			}
+			if d.HasChange("nat_settings.install_on") {
+				res["install-on"] = d.Get("nat_settings.install_on")
+			}
+			if d.HasChange("nat_settings.method") {
+				res["method"] = d.Get("nat_settings.method")
+			}
+			cluster["nat-settings"] = res
+		}
+	}
+
+	if d.HasChange("platform_portal_settings") {
+
+		if v, ok := d.GetOk("platform_portal_settings"); ok {
+
+			platformPortalSettingsList := v.([]interface{})
+
+			if len(platformPortalSettingsList) > 0 {
+
+				platformPortalSettingsPayload := make(map[string]interface{})
+
+				if d.HasChange("platform_portal_settings.0.portal_web_settings") {
+
+					portalWebSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("platform_portal_settings.0.portal_web_settings.0.aliases") {
+						portalWebSettingsPayload["aliases"] = d.Get("platform_portal_settings.0.portal_web_settings.0.aliases").(*schema.Set).List()
+					}
+					if d.HasChange("platform_portal_settings.0.portal_web_settings.0.main_url") {
+						portalWebSettingsPayload["main-url"] = d.Get("platform_portal_settings.0.portal_web_settings.0.main_url").(string)
+					}
+					platformPortalSettingsPayload["portal-web-settings"] = portalWebSettingsPayload
+				}
+				if d.HasChange("platform_portal_settings.0.certificate_settings") {
+
+					certificateSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("platform_portal_settings.0.certificate_settings.0.base64_certificate") {
+						certificateSettingsPayload["base64-certificate"] = d.Get("platform_portal_settings.0.certificate_settings.0.base64_certificate").(string)
+					}
+					if d.HasChange("platform_portal_settings.0.certificate_settings.0.base64_password") {
+						certificateSettingsPayload["base64-password"] = d.Get("platform_portal_settings.0.certificate_settings.0.base64_password").(string)
+					}
+					platformPortalSettingsPayload["certificate-settings"] = certificateSettingsPayload
+				}
+				if d.HasChange("platform_portal_settings.0.accessibility") {
+
+					accessibilityPayload := make(map[string]interface{})
+
+					if d.HasChange("platform_portal_settings.0.accessibility.0.allow_access_from") {
+						accessibilityPayload["allow-access-from"] = d.Get("platform_portal_settings.0.accessibility.0.allow_access_from").(string)
+					}
+					if d.HasChange("platform_portal_settings.0.accessibility.0.internal_access_settings") {
+						accessibilityPayload["internal-access-settings"] = d.Get("platform_portal_settings.0.accessibility.0.internal_access_settings")
+					}
+					platformPortalSettingsPayload["accessibility"] = accessibilityPayload
+				}
+				cluster["platform-portal-settings"] = platformPortalSettingsPayload
+			}
+		}
+	}
+
+	if d.HasChange("proxy_settings") {
+
+		if _, ok := d.GetOk("proxy_settings"); ok {
+
+			res := make(map[string]interface{})
+
+			if d.HasChange("proxy_settings.use_custom_proxy") {
+				res["use-custom-proxy"] = d.Get("proxy_settings.use_custom_proxy")
+			}
+			if d.HasChange("proxy_settings.proxy_server") {
+				res["proxy-server"] = d.Get("proxy_settings.proxy_server")
+			}
+			if d.HasChange("proxy_settings.port") {
+				res["port"] = d.Get("proxy_settings.port")
+			}
+			cluster["proxy-settings"] = res
+		}
+	}
+
+	if v, ok := d.GetOkExists("qos"); ok {
+		cluster["qos"] = v.(bool)
+	}
+
+	if d.HasChange("usercheck_portal_settings") {
+
+		if v, ok := d.GetOk("usercheck_portal_settings"); ok {
+
+			usercheckPortalSettingsList := v.([]interface{})
+
+			if len(usercheckPortalSettingsList) > 0 {
+
+				usercheckPortalSettingsPayload := make(map[string]interface{})
+
+				if d.HasChange("usercheck_portal_settings.0.enabled") {
+					usercheckPortalSettingsPayload["enabled"] = d.Get("usercheck_portal_settings.0.enabled").(bool)
+				}
+				if d.HasChange("usercheck_portal_settings.0.portal_web_settings") {
+
+					portalWebSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("usercheck_portal_settings.0.portal_web_settings.0.aliases") {
+						portalWebSettingsPayload["aliases"] = d.Get("usercheck_portal_settings.0.portal_web_settings.0.aliases").(*schema.Set).List()
+					}
+					if d.HasChange("usercheck_portal_settings.0.portal_web_settings.0.main_url") {
+						portalWebSettingsPayload["main-url"] = d.Get("usercheck_portal_settings.0.portal_web_settings.0.main_url").(string)
+					}
+					usercheckPortalSettingsPayload["portal-web-settings"] = portalWebSettingsPayload
+				}
+				if d.HasChange("usercheck_portal_settings.0.certificate_settings") {
+
+					certificateSettingsPayload := make(map[string]interface{})
+
+					if d.HasChange("usercheck_portal_settings.0.certificate_settings.0.base64_certificate") {
+						certificateSettingsPayload["base64-certificate"] = d.Get("usercheck_portal_settings.0.certificate_settings.0.base64_certificate").(string)
+					}
+					if d.HasChange("usercheck_portal_settings.0.certificate_settings.0.base64_password") {
+						certificateSettingsPayload["base64-password"] = d.Get("usercheck_portal_settings.0.certificate_settings.0.base64_password").(string)
+					}
+					usercheckPortalSettingsPayload["certificate-settings"] = certificateSettingsPayload
+				}
+				if d.HasChange("usercheck_portal_settings.0.accessibility") {
+
+					accessibilityPayload := make(map[string]interface{})
+
+					if d.HasChange("usercheck_portal_settings.0.accessibility.0.allow_access_from") {
+						accessibilityPayload["allow-access-from"] = d.Get("usercheck_portal_settings.0.accessibility.0.allow_access_from").(string)
+					}
+					if d.HasChange("usercheck_portal_settings.0.accessibility.0.internal_access_settings") {
+						accessibilityPayload["internal-access-settings"] = d.Get("usercheck_portal_settings.0.accessibility.0.internal_access_settings")
+					}
+					usercheckPortalSettingsPayload["accessibility"] = accessibilityPayload
+				}
+				cluster["usercheck-portal-settings"] = usercheckPortalSettingsPayload
+			}
+		}
+	}
+
+	if v, ok := d.GetOkExists("zero_phishing"); ok {
+		cluster["zero-phishing"] = v.(bool)
+	}
+
+	if ok := d.HasChange("zero_phishing_fqdn"); ok {
+		cluster["zero-phishing-fqdn"] = d.Get("zero_phishing_fqdn")
 	}
 
 	if d.HasChange("interfaces") {
