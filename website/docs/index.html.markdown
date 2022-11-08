@@ -100,6 +100,7 @@ The following arguments are supported:
   the `CHECKPOINT_SESSION_NAME` environment variable.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
+* `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
 
 ## Authentication
 
@@ -172,6 +173,7 @@ $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
+$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
  ```
 
 Usage with api key:
@@ -188,6 +190,7 @@ $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
+$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
  ```
 
 Then configure the Check Point Provider as following:
@@ -259,7 +262,7 @@ $ terraform apply && publish && logout_from_session
 
 ### Discard
 
-Please use the following for Discard:
+Please use the following for discard:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/discard
