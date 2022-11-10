@@ -57,7 +57,7 @@ func dataSourceManagementGaiaBestPractice() *schema.Resource {
 							Computed:    true,
 							Description: "The name of the regulation.",
 						},
-						"regulation_description": {
+						"requirement_description": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The description of the requirement.",
