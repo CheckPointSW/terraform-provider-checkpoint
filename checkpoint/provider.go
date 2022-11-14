@@ -262,6 +262,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_nutanix_data_center_server":                     resourceManagementNutanixDataCenterServer(),
 			"checkpoint_management_azure_ad":                                       resourceManagementAzureAd(),
 			"checkpoint_management_gaia_best_practice":                             resourceManagementGaiaBestPractice(),
+			"checkpoint_management_dynamic_global_network_object":                  resourceManagementDynamicGlobalNetworkObject(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
