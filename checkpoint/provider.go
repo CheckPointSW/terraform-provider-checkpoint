@@ -380,6 +380,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_azure_ad_content":                          dataSourceManagementAzureAdContent(),
 			"checkpoint_management_azure_ad":                                  dataSourceManagementAzureAd(),
 			"checkpoint_management_gaia_best_practice":                        dataSourceManagementGaiaBestPractice(),
+			"checkpoint_management_dynamic_global_network_object":             dataSourceManagementDynamicGlobalNetworkObject(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
