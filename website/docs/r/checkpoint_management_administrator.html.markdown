@@ -6,7 +6,7 @@ description: |-
 This resource allows you to add/update/delete Check Point Administrator.
 ---
 
-# Resource: checkpoint_management_host
+# Resource: checkpoint_management_administrator
 
 This resource allows you to add/update/delete Check Point Administrator.
 

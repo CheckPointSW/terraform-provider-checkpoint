@@ -261,6 +261,9 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_oracle_cloud_data_center_server":                resourceManagementOracleCloudDataCenterServer(),
 			"checkpoint_management_nutanix_data_center_server":                     resourceManagementNutanixDataCenterServer(),
 			"checkpoint_management_azure_ad":                                       resourceManagementAzureAd(),
+			"checkpoint_management_gaia_best_practice":                             resourceManagementGaiaBestPractice(),
+			"checkpoint_management_dynamic_global_network_object":                  resourceManagementDynamicGlobalNetworkObject(),
+			"checkpoint_management_global_assignment":                              resourceManagementGlobalAssignment(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_data_host":                                 dataSourceManagementHost(),
@@ -377,6 +380,9 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_oracle_cloud_data_center_server":           dataSourceManagementOracleCloudDataCenterServer(),
 			"checkpoint_management_azure_ad_content":                          dataSourceManagementAzureAdContent(),
 			"checkpoint_management_azure_ad":                                  dataSourceManagementAzureAd(),
+			"checkpoint_management_gaia_best_practice":                        dataSourceManagementGaiaBestPractice(),
+			"checkpoint_management_dynamic_global_network_object":             dataSourceManagementDynamicGlobalNetworkObject(),
+			"checkpoint_management_global_assignment":                         dataSourceManagementGlobalAssignment(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
