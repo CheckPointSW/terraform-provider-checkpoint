@@ -41,6 +41,39 @@ func dataSourceManagementCloudServices() *schema.Resource {
 				Computed:    true,
 				Description: "The Management Server's public URL.",
 			},
+			"tenant_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Tenant ID of Infinity Portal.",
+			},
+			"gateways_onboarding_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Computed:    true,
+				Description: "Gateways on-boarding to Infinity Portal settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Indicate whether Gateways will be connected to Infinity Portal automatically or only after policy installation.",
+						},
+						"participant_gateways": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Which Gateways will be connected to Infinity Portal.",
+						},
+						"specific_gateways": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Collection of targets identified by Name or UID.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -62,7 +95,7 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 
 	if v := showCloudServicesRes["status"]; v != nil {
 		_ = d.Set("status", v)
-	}else{
+	} else {
 		_ = d.Set("status", nil)
 	}
 
@@ -77,14 +110,48 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 			}
 			_ = d.Set("connected_at", connectedAtState)
 		}
-	}else{
+	} else {
 		_ = d.Set("connected_at", nil)
 	}
 
 	if v := showCloudServicesRes["management-url"]; v != nil {
 		_ = d.Set("management_url", v)
-	}else{
+	} else {
 		_ = d.Set("management_url", nil)
+	}
+
+	if v := showCloudServicesRes["tenant-id"]; v != nil {
+		_ = d.Set("tenant_id", v)
+	} else {
+		_ = d.Set("tenant_id", nil)
+	}
+
+	if v := showCloudServicesRes["gateways-onboarding-settings"]; v != nil {
+		gatewaysOnboardingSettingsMap := v.(map[string]interface{})
+		gatewaysOnboardingSettings := make(map[string]interface{})
+
+		if v := gatewaysOnboardingSettingsMap["connection-method"]; v != nil {
+			gatewaysOnboardingSettings["connection_method"] = v.(string)
+		}
+
+		if v := gatewaysOnboardingSettingsMap["participant-gateways"]; v != nil {
+			gatewaysOnboardingSettings["participant_gateways"] = v.(string)
+		}
+
+		if v := gatewaysOnboardingSettingsMap["specific-gateways"]; v != nil {
+			specificGatewaysJson, _ := v.([]interface{})
+			specificGatewaysRes := make([]string, 0)
+			if len(specificGatewaysJson) > 0 {
+				for _, gw := range specificGatewaysJson {
+					gw := gw.(map[string]interface{})
+					specificGatewaysRes = append(specificGatewaysRes, gw["name"].(string))
+				}
+			}
+			gatewaysOnboardingSettings["specific_gateways"] = specificGatewaysRes
+		}
+		_ = d.Set("gateways_onboarding_settings", []interface{}{gatewaysOnboardingSettings})
+	} else {
+		_ = d.Set("gateways_onboarding_settings", nil)
 	}
 
 	d.SetId("show-cloud-services-" + acctest.RandString(5))

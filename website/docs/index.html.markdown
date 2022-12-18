@@ -90,17 +90,17 @@ The following arguments are supported:
   the `CHECKPOINT_TIMEOUT` environment variable. Default value is `10` seconds.
 * `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT`
   environment variable. Default value is `443`.
-* `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
-  the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
 * `proxy_host` - (Optional) Proxy host used for proxy connections. this can also be defined via
   the `CHECKPOINT_PROXY_HOST` environment variable.
 * `proxy_port` - (Optional) Proxy port used for proxy connections. this can also be defined via
   the `CHECKPOINT_PROXY_PORT` environment variable.
 * `session_name` - (Optional) Session unique name. this can also be defined via
   the `CHECKPOINT_SESSION_NAME` environment variable.
+* `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
+* `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
+  the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
-* `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
 
 ## Authentication
 
@@ -304,7 +304,7 @@ $ mv submit_session $GOPATH/src/github.com/terraform-providers/terraform-provide
 $ submit_session "SESSION_UID"
 ```
 
-if no session_uid is provided it will submit the current session.
+if no `session_uid` is provided it will submit the current session.
 
 ### Install Policy
 
@@ -354,3 +354,12 @@ $ terraform import checkpoint_management_host.host 9423d36f-2d66-4754-b9e2-e7f44
 
 For more information about `terraform import` command, please
 refer [here](https://www.terraform.io/docs/import/usage.html).
+
+## Tips & Best Practices
+
+This section describes best practices for working with the Check Point provider.
+
+* Use one or more dedicated users for provider operations to make sure minimum permissions are granted.
+* Keep on object name uniqueness in your environment.
+* Use object name when reference to an object (avoid use of object UID).
+* Use post apply scripts (e.g. publish, install policy) to run actions after apply your changes. Terraform runs in parallel and because of that we can't predict the order of when changes will execute so running post apply scripts will ensure to run last after all changes submitted successfully.

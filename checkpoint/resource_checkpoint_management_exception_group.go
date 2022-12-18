@@ -140,23 +140,45 @@ func createManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 			for i := range appliedThreatRulesList {
 
-				Payload := make(map[string]interface{})
+				appliedThreatRule := make(map[string]interface{})
 
 				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".layer"); ok {
-					Payload["layer"] = v.(string)
+					appliedThreatRule["layer"] = v.(string)
 				}
 				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".name"); ok {
-					Payload["name"] = v.(string)
+					appliedThreatRule["name"] = v.(string)
 				}
 				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".rule_number"); ok {
-					Payload["rule-number"] = v.(string)
+					appliedThreatRule["rule-number"] = v.(string)
 				}
-				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position"); ok {
-					Payload["position"] = v.(string)
+				if _, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position"); ok {
+					if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position.top"); ok {
+						if v.(string) == "top" {
+							appliedThreatRule["position"] = "top"
+						} else {
+							appliedThreatRule["position"] = map[string]interface{}{"top": v.(string)}
+						}
+					}
+
+					if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position.above"); ok {
+						appliedThreatRule["position"] = map[string]interface{}{"above": v.(string)}
+					}
+
+					if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position.below"); ok {
+						appliedThreatRule["position"] = map[string]interface{}{"below": v.(string)}
+					}
+
+					if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position.bottom"); ok {
+						if v.(string) == "bottom" {
+							appliedThreatRule["position"] = "bottom" // entire rule-base
+						} else {
+							appliedThreatRule["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+						}
+					}
 				}
-				appliedThreatRulesPayload = append(appliedThreatRulesPayload, Payload)
+				appliedThreatRulesPayload = append(appliedThreatRulesPayload, appliedThreatRule)
 			}
-			exceptionGroup["appliedThreatRules"] = appliedThreatRulesPayload
+			exceptionGroup["applied-threat-rules"] = appliedThreatRulesPayload
 		}
 	}
 
