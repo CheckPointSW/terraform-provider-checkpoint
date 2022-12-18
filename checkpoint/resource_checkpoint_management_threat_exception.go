@@ -37,7 +37,7 @@ func resourceManagementThreatException() *schema.Resource {
 			},
 			"layer": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
 			"position": {
