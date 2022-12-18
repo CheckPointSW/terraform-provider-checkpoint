@@ -67,7 +67,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 							Default:     "aes-256",
 						},
 						"ike_p1_rekey_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 							Default:     1440,
@@ -94,7 +94,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 							Default:     "aes-128",
 						},
 						"ike_p2_use_pfs": {
-							Type:        schema.TypeBool,
+							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.",
 							Default:     false,
@@ -106,7 +106,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 							Default:     "group-2",
 						},
 						"ike_p2_rekey_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 							Default:     1440,
@@ -166,7 +166,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"internal_gateway": {
 							Type:        schema.TypeString,
-							Required: true,
+							Required:    true,
 							Description: "Internally managed Check Point gateway identified by name or UID, or 'Any' for all internal-gateways participants in this community.",
 						},
 						"external_gateway": {
@@ -209,7 +209,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Default:     "aes-256",
 									},
 									"ike_p1_rekey_time": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 										Default:     1440,
@@ -236,7 +236,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Default:     "aes-128",
 									},
 									"ike_p2_use_pfs": {
-										Type:        schema.TypeBool,
+										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.",
 										Default:     false,
@@ -248,7 +248,7 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Default:     "group-2",
 									},
 									"ike_p2_rekey_time": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 										Default:     1440,
@@ -335,7 +335,7 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 			res["encryption-algorithm"] = v.(string)
 		}
 		if v, ok := d.GetOk("ike_phase_1.ike_p1_rekey_time"); ok {
-			res["ike-p1-rekey-time"] = v.(int)
+			res["ike-p1-rekey-time"] = v.(string)
 		}
 		vpnCommunityMeshed["ike-phase-1"] = res
 	}
@@ -351,13 +351,13 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 			res["encryption-algorithm"] = v.(string)
 		}
 		if v, ok := d.GetOk("ike_phase_2.ike_p2_use_pfs"); ok {
-			res["ike-p2-use-pfs"] = v.(bool)
+			res["ike-p2-use-pfs"] = v.(string)
 		}
 		if v, ok := d.GetOk("ike_phase_2.ike_p2_pfs_dh_grp"); ok {
-			res["ike-p2-pfs-dh-grp"] = v.(bool)
+			res["ike-p2-pfs-dh-grp"] = v.(string)
 		}
 		if v, ok := d.GetOk("ike_phase_2.ike_p2_rekey_time"); ok {
-			res["ike-p2-rekey-time"] = v.(int)
+			res["ike-p2-rekey-time"] = v.(string)
 		}
 		vpnCommunityMeshed["ike-phase-2"] = res
 	}
@@ -445,7 +445,7 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 						ikePhase1Payload["diffie-hellman-group"] = v.(string)
 					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
-						ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
+						ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
 					}
 					payload["ike-phase-1"] = ikePhase1Payload
 				}
@@ -458,13 +458,13 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 						ikePhase2Payload["data-integrity"] = v.(string)
 					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
-						ikePhase2Payload["ike-p2-use-pfs"] = v.(bool)
+						ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
-						ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(bool)
+						ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
-						ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
+						ikePhase2Payload["ike-p2-rekey-time"] = v.(string)
 					}
 					payload["ike-phase-2"] = ikePhase2Payload
 				}
@@ -581,7 +581,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 			ikePhase1MapToReturn["encryption_algorithm"] = v
 		}
 		if v := ikePhase1Map["ike-p1-rekey-time"]; v != nil {
-			ikePhase1MapToReturn["ike_p1_rekey_time"] = v
+			ikePhase1MapToReturn["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 		}
 		_, ikePhase1InConf := d.GetOk("ike_phase_1")
 		defaultIkePhase1 := map[string]interface{}{"encryption_algorithm": "aes-256", "diffie_hellman_group": "group-2", "data_integrity": "sha1"}
@@ -608,13 +608,13 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 			ikePhase2MapToReturn["encryption_algorithm"] = v
 		}
 		if v := ikePhase2Map["ike-p2-use-pfs"]; v != nil {
-			ikePhase2MapToReturn["ike_p2_use_pfs"] = v
+			ikePhase2MapToReturn["ike_p2_use_pfs"] = strconv.FormatBool(v.(bool))
 		}
 		if v := ikePhase2Map["ike-p2-pfs-dh-grp"]; v != nil {
 			ikePhase2MapToReturn["ike_p2_pfs_dh_grp"] = v
 		}
 		if v := ikePhase2Map["ike-p2-rekey-time"]; v != nil {
-			ikePhase2MapToReturn["ike_p2_rekey_time"] = v
+			ikePhase2MapToReturn["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 		}
 		_, ikePhase2InConf := d.GetOk("ike_phase_2")
 		defaultIkePhase2 := map[string]interface{}{"encryption_algorithm": "aes-128", "data_integrity": "sha1"}
@@ -631,24 +631,24 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 	if vpnCommunityMeshed["override-vpn-domains"] != nil {
 		overrideVpnDomainsList := vpnCommunityMeshed["override-vpn-domains"].([]interface{})
 		var overrideVpnDomainsListToReturn []map[string]interface{}
-			if len(overrideVpnDomainsList) > 0 {
-				for i := range overrideVpnDomainsList {
+		if len(overrideVpnDomainsList) > 0 {
+			for i := range overrideVpnDomainsList {
 
-					overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
+				overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
 
-					overrideVpnDomainsMapToAdd := make(map[string]interface{})
+				overrideVpnDomainsMapToAdd := make(map[string]interface{})
 
-					if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
-						overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
-					}
-					if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
-						overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
-					}
-					overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
+				if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
+					overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
 				}
+				if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
+					overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
+				}
+				overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
 			}
+		}
 		_ = d.Set("override_vpn_domains", overrideVpnDomainsListToReturn)
-	}else{
+	} else {
 		_ = d.Set("override_vpn_domains", nil)
 	}
 
@@ -685,7 +685,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 			}
 		}
 		_ = d.Set("shared_secrets", sharedSecretsListToReturn)
-	}else{
+	} else {
 		_ = d.Set("shared_secrets", nil)
 	}
 
@@ -708,7 +708,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 							if obj["name"] != nil {
 								internalGatewayName = obj["name"].(string)
 							}
-						}else if val, ok := v.(string); ok {
+						} else if val, ok := v.(string); ok {
 							internalGatewayName = val
 						}
 						granularEncryptionState["internal_gateway"] = internalGatewayName
@@ -721,7 +721,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 							if obj["name"] != nil {
 								externalGatewayName = obj["name"].(string)
 							}
-						}else if val, ok := v.(string); ok {
+						} else if val, ok := v.(string); ok {
 							externalGatewayName = val
 						}
 						granularEncryptionState["external_gateway"] = externalGatewayName
@@ -748,7 +748,7 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 							ikePhase1State["diffie_hellman_group"] = v
 						}
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
-							ikePhase1State["ike_p1_rekey_time"] = v
+							ikePhase1State["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
 						granularEncryptionState["ike_phase_1"] = ikePhase1State
 					}
@@ -763,20 +763,20 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 							ikePhase2State["data_integrity"] = v
 						}
 						if v := ikePhase2Show["ike-p2-use-pfs"]; v != nil {
-							ikePhase2State["ike_p2_use_pfs"] = v
+							ikePhase2State["ike_p2_use_pfs"] = strconv.FormatBool(v.(bool))
 						}
 						if v := ikePhase2Show["ike-p2-pfs-dh-grp"]; v != nil {
 							ikePhase2State["ike_p2_pfs_dh_grp"] = v
 						}
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
-							ikePhase2State["ike_p2_rekey_time"] = v
+							ikePhase2State["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
 						granularEncryptionState["ike_phase_2"] = ikePhase2State
 					}
 					granularEncryptionsState = append(granularEncryptionsState, granularEncryptionState)
 				}
 				_ = d.Set("granular_encryptions", granularEncryptionsState)
-			}else{
+			} else {
 				_ = d.Set("granular_encryptions", nil)
 			}
 		}
@@ -1001,7 +1001,7 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 							ikePhase1Payload["diffie-hellman-group"] = v.(string)
 						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
-							ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
+							ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
 						}
 						payload["ike-phase-1"] = ikePhase1Payload
 					}
@@ -1014,10 +1014,10 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 							ikePhase2Payload["data-integrity"] = v.(string)
 						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
-							ikePhase2Payload["ike-p2-use-pfs"] = v.(bool)
+							ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
-							ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(bool)
+							ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
 							ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
@@ -1028,7 +1028,7 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 				}
 				vpnCommunityMeshed["granular-encryptions"] = granularEncryptionsPayload
 			}
-		}else{
+		} else {
 			granularEncryptions, _ := d.GetChange("granular_encryptions")
 			oldValues := granularEncryptions.([]interface{})
 			if len(oldValues) > 0 {
