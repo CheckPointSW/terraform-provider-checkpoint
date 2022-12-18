@@ -1,3 +1,20 @@
+## 2.3.0 (December 18, 2022)
+
+FEATURES
+* **New Resource:** `resource_checkpoint_management_gaia_best_practice`
+* **New Resource:** `resource_checkpoint_management_dynamic_global_network_object`
+* **New Resource:** `resource_checkpoint_management_global_assignment`
+* **New Data Source:** `data_source_checkpoint_management_gaia_best_practice`
+* **New Data Source:** `data_source_checkpoint_management_dynamic_global_network_object`
+* **New Data Source:** `data_source_checkpoint_management_global_assignment`
+
+ENHANCEMENTS
+* Add support to new fields `tenant_id` and `gateways_onboarding_settings` in `data_source_checkpoint_management_cloud_services`.
+* Add Tips & Best Practices section in provider documentation.
+
+BUG FIXES
+* Fix bugs in VPN resources, `resource_checkpoint_management_exception_group`, `resource_checkpoint_management_threat_exception`.
+
 ## 2.2.0 (November 8, 2022)
 
 FEATURES
@@ -29,8 +46,6 @@ ENHANCEMENTS
 * Add support to new parameters of `checkpoint_management_simple_gateway`, `checkpoint_management_simple_cluster` from API V1.9.
 * Add support to set session description using `session_description` or via environment variable `CHECKPOINT_SESSION_DESCRIPTION`.
 
-
-
 ## 2.1.0 (September 20, 2022)
 
 FEATURES
@@ -60,9 +75,6 @@ FEATURES
 * **New Data Source:** `data_source_checkpoint_management_ips_update_schedule`
 * **New Data Source:** `data_source_checkpoint_management_smart_task_trigger`
 * **New Data Source:** `data_source_checkpoint_management_api_settings`
-
-
-
 
 ## 2.0.0 (June 23, 2022)
 
