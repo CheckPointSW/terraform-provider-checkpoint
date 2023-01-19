@@ -91,6 +91,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_DESCRIPTION", ""),
 				Description: "A description of the session's purpose.",
 			},
+			"session_timeout": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_TIMEOUT", -1),
+				Description: "A timeout for the Check Point session in seconds. Can be 10-3600",
+			},
 			"cloud_mgmt_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -403,6 +409,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	apiKey := data.Get("api_key").(string)
 	sessionName := data.Get("session_name").(string)
 	sessionDescription := data.Get("session_description").(string)
+	sessionTimeout := data.Get("session_timeout").(int)
 	cloudMgmtId := data.Get("cloud_mgmt_id").(string)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
@@ -441,7 +448,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		mgmt := checkpoint.APIClient(args)
 		if ok := CheckSession(mgmt, s.Uid); !ok {
 			// session is not valid, need to perform login
-			s, err = login(mgmt, username, password, apiKey, domain, sessionName, sessionDescription)
+			s, err = login(mgmt, username, password, apiKey, domain, sessionName, sessionDescription, sessionTimeout)
 			if err != nil {
 				log.Println("Failed to perform login")
 				return nil, err
@@ -454,7 +461,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		return mgmt, nil
 	case checkpoint.GaiaContext:
 		gaia := checkpoint.APIClient(args)
-		_, err := login(gaia, username, password, "", "", "", "")
+		_, err := login(gaia, username, password, "", "", "", "", sessionTimeout)
 		if err != nil {
 			log.Println("Failed to perform login")
 			return nil, err
@@ -465,7 +472,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	}
 }
 
-func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string, sessionName string, sessionDescription string) (Session, error) {
+func login(client *checkpoint.ApiClient, username string, pwd string, apiKey string, domain string, sessionName string, sessionDescription string, sessionTimeout int) (Session, error) {
 	log.Printf("Perform login")
 	var loginRes checkpoint.APIResponse
 	var err error
@@ -477,6 +484,10 @@ func login(client *checkpoint.ApiClient, username string, pwd string, apiKey str
 
 	if sessionDescription != "" {
 		payload["session-description"] = sessionDescription
+	}
+
+	if sessionTimeout != -1 {
+		payload["session-timeout"] = sessionTimeout
 	}
 
 	if apiKey != "" {

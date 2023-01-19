@@ -99,6 +99,8 @@ The following arguments are supported:
 * `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
 * `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
   the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
+* `session_timeout` - (Optional) The timeout in seconds for the session established in Check Point. This can also be defined via
+  the `CHECKPOINT_SESSION_TIMEOUT` environment variable. The default for the value is `600`. The timeout can be `10` - `3600`.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
 
@@ -170,6 +172,7 @@ $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
 $ export CHECKPOINT_SESSION_NAME="Terraform session"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
@@ -187,6 +190,7 @@ $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
 $ export CHECKPOINT_SESSION_NAME="Terraform session"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
