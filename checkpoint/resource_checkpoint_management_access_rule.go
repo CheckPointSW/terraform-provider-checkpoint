@@ -1070,7 +1070,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(bool)
 				}
 				if d.HasChange("user_check.0.interaction") {
-					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(bool)
+					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(string)
 				}
 
 				accessRule["user-check"] = userCheckPayload
