@@ -330,8 +330,8 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	if time["end"] != nil {
 		defaultEndMap := map[string]interface{}{
-			"date":     "01-Jan-1970",
-			"time":     "00:00",
+			"date": "01-Jan-1970",
+			"time": "00:00",
 		}
 		endMap := time["end"].(map[string]interface{})
 
@@ -390,8 +390,8 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	if time["start"] != nil {
 
 		defaultStartMap := map[string]interface{}{
-			"date":     "01-Jan-1970",
-			"time":     "00:00",
+			"date": "01-Jan-1970",
+			"time": "00:00",
 		}
 		startMap := time["start"].(map[string]interface{})
 
@@ -506,8 +506,8 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("end") {
 		defaultEndMap := map[string]interface{}{
-			"date":     "01-Jan-1970",
-			"time":     "00:00",
+			"date": "01-Jan-1970",
+			"time": "00:00",
 		}
 
 		res := make(map[string]interface{})
@@ -561,8 +561,8 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("start") {
 		defaultStartMap := map[string]interface{}{
-			"date":     "01-Jan-1970",
-			"time":     "00:00",
+			"date": "01-Jan-1970",
+			"time": "00:00",
 		}
 		res := make(map[string]interface{})
 
@@ -580,7 +580,7 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	}
 
-	if d.HasChange("start_now"){
+	if d.HasChange("start_now") {
 		time["start-now"] = d.Get("start_now")
 	}
 

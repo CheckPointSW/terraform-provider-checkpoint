@@ -867,14 +867,14 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 	if domainPermissionsProfile["access-control"] != nil {
 
 		defaultEventsAndReports := map[string]interface{}{
-			"show-policy": "custom",
-			"dlp-policy":      "write",
-			"geo-control-policy":      "write",
-			"nat-policy":     "true",
-			"qos-policy":     "true",
-			"access-control-objects-and-settings":     "true",
-			"app-control-and-url-filtering-update":     "true",
-			"install-policy":     "true",
+			"show-policy":                          "custom",
+			"dlp-policy":                           "write",
+			"geo-control-policy":                   "write",
+			"nat-policy":                           "true",
+			"qos-policy":                           "true",
+			"access-control-objects-and-settings":  "true",
+			"app-control-and-url-filtering-update": "true",
+			"install-policy":                       "true",
 		}
 
 		accessControlMap, ok := domainPermissionsProfile["access-control"].(map[string]interface{})
