@@ -1058,7 +1058,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 					customFrequencyConfigPayLoad := make(map[string]interface{})
 
 					if d.HasChange("user_check.0.custom_frequency.0.every") {
-						customFrequencyConfigPayLoad["every"] = d.Get("user_check.0.custom_frequency.0.every")
+						customFrequencyConfigPayLoad["every"] = d.Get("user_check.0.custom_frequency.0.every").(int)
 					}
 					if d.HasChange("user_check.0.custom_frequency.0.unit") {
 						customFrequencyConfigPayLoad["unit"] = d.Get("user_check.0.custom_frequency.0.unit").(string)
@@ -1067,7 +1067,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 					userCheckPayload["custom-frequency"] = customFrequencyConfigPayLoad
 				}
 				if d.HasChange("user_check.0.frequency") {
-					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(bool)
+					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(string)
 				}
 				if d.HasChange("user_check.0.interaction") {
 					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(string)
