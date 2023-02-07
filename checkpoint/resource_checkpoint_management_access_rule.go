@@ -1058,7 +1058,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 					customFrequencyConfigPayLoad := make(map[string]interface{})
 
 					if d.HasChange("user_check.0.custom_frequency.0.every") {
-						customFrequencyConfigPayLoad["every"] = d.Get("user_check.0.custom_frequency.0.every").(int)
+						customFrequencyConfigPayLoad["every"] = d.Get("user_check.0.custom_frequency.0.every")
 					}
 					if d.HasChange("user_check.0.custom_frequency.0.unit") {
 						customFrequencyConfigPayLoad["unit"] = d.Get("user_check.0.custom_frequency.0.unit").(string)
