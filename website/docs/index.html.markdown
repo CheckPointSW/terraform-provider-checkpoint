@@ -310,6 +310,21 @@ $ submit_session "SESSION_UID"
 
 if no `session_uid` is provided it will submit the current session.
 
+### Verify Policy
+
+The following arguments are supported:
+
+* `policy-package` - (Required) The name of the Policy Package to be installed.
+
+Please use the following for Verify policy:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/verify_policy
+$ go build verify_policy.go
+$ mv verify_policy $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ terraform apply && verify_policy -policy-package <package name>
+```
+
 ### Install Policy
 
 The following arguments are supported:
