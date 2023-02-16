@@ -314,7 +314,7 @@ if no `session_uid` is provided it will submit the current session.
 
 The following arguments are supported:
 
-* `policy-package` - (Required) The name of the Policy Package to be installed.
+* `policy-package` - (Required) The name of the Policy Package to be Verified.
 
 Please use the following for Verify policy:
 
