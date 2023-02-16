@@ -208,7 +208,7 @@ resource "checkpoint_management_network" "network" {
   name         = "network"
   subnet4      = "192.0.2.0"
   mask_length4 = "24"
-  # ...   
+  # ...
 }
 ```
 
@@ -314,7 +314,7 @@ if no `session_uid` is provided it will submit the current session.
 
 The following arguments are supported:
 
-* `policy-package` - (Required) The name of the Policy Package to be Verified.
+* `policy-package` - (Required) Policy package identified by the name or UID to be verified.
 
 Please use the following for Verify policy:
 
