@@ -12,7 +12,7 @@ func main() {
 
 	var policyPackage string
 
-	flag.StringVar(&policyPackage, "policy-package", "", "The name of the Policy Package to be verified.")
+	flag.StringVar(&policyPackage, "policy-package", "", "Policy package identified by the name or UID to be verified.")
 	flag.Parse()
 
 	apiClient, err := commands.InitClient()
