@@ -12,7 +12,7 @@ func main() {
 
 	var policyPackage string
 
-	flag.StringVar(&policyPackage, "policy-package", "", "The name of the Policy Package to be installed.")
+	flag.StringVar(&policyPackage, "policy-package", "", "The name of the Policy Package to be verified.")
 	flag.Parse()
 
 	apiClient, err := commands.InitClient()
