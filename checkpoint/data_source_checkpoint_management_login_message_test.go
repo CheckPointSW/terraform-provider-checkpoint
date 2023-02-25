@@ -38,3 +38,4 @@ data "checkpoint_management_login_message" "login" {
 }
 `)
 }
+

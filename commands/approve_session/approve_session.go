@@ -8,7 +8,7 @@ import (
 
 func main() {
 	apiClient, err := commands.InitClient()
-	if err != nil {
+	if err != nil{
 		fmt.Println("Approve Session error: " + err.Error())
 		os.Exit(1)
 	}

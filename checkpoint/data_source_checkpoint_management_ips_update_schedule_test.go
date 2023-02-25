@@ -38,3 +38,4 @@ data "checkpoint_management_ips_update_schedule" "ips_update" {
 }
 `)
 }
+

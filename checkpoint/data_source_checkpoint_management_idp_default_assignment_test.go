@@ -20,7 +20,8 @@ func TestAccDataSourceCheckpointManagementIdpDefaultAssignment_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementIdpDefaultAssignmentConfig(),
-				Check:  resource.ComposeTestCheckFunc(),
+				Check: resource.ComposeTestCheckFunc(
+				),
 			},
 		},
 	})
