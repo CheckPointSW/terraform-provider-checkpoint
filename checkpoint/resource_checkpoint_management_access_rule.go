@@ -1067,10 +1067,10 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 					userCheckPayload["custom-frequency"] = customFrequencyConfigPayLoad
 				}
 				if d.HasChange("user_check.0.frequency") {
-					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(bool)
+					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(string)
 				}
-				if d.HasChange("user_check.0.web_server") {
-					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(bool)
+				if d.HasChange("user_check.0.interaction") {
+					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(string)
 				}
 
 				accessRule["user-check"] = userCheckPayload
