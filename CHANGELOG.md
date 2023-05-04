@@ -1,3 +1,13 @@
+## 2.4.0 (May 4, 2023)
+
+ENHANCEMENTS
+* Add support to set session timeout using `session_timeout` or via the `CHECKPOINT_SESSION_TIMEOUT` environment variable.
+* Add `verify-policy` post apply script.
+
+BUG FIXES
+* Fix `user_check` field in `resource_checkpoint_management_access_rule`.
+* Fix `sts_external_id` field in `resource_checkpoint_management_aws_data_center_server`.
+
 ## 2.3.0 (December 18, 2022)
 
 FEATURES
