@@ -1367,7 +1367,13 @@ func deleteManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	threatProfilePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		threatProfilePayload["ignore-errors"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		threatProfilePayload["ignore-warnings"] = v.(bool)
+	}
 	deleteThreatProfileRes, err := client.ApiCall("delete-threat-profile", threatProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {

@@ -614,7 +614,13 @@ func deleteManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 	threatIocFeedPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		threatIocFeedPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		threatIocFeedPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ThreatIocFeed")
 
 	deleteThreatIocFeedRes, err := client.ApiCall("delete-threat-ioc-feed", threatIocFeedPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -258,6 +258,14 @@ func deleteManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) e
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		groupWithExclusionPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		groupWithExclusionPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete GroupWithExclusion")
 
 	deleteGroupWithExclusionRes, err := client.ApiCall("delete-group-with-exclusion", groupWithExclusionPayload, client.GetSessionID(), true, client.IsProxyUsed())

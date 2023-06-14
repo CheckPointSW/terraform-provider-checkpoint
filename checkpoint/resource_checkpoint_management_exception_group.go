@@ -356,17 +356,20 @@ func updateManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 				Payload := make(map[string]interface{})
 
-				if d.HasChange("applied_threat_rules." + strconv.Itoa(i) + ".layer") {
-					Payload["layer"] = d.Get("applied_threat_rules." + strconv.Itoa(i) + ".layer")
+				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".layer"); ok {
+					Payload["layer"] = v
 				}
-				if d.HasChange("applied_threat_rules." + strconv.Itoa(i) + ".name") {
-					Payload["name"] = d.Get("applied_threat_rules." + strconv.Itoa(i) + ".name")
+
+				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".name"); ok {
+					Payload["name"] = v
 				}
-				if d.HasChange("applied_threat_rules." + strconv.Itoa(i) + ".rule_number") {
-					Payload["rule-number"] = d.Get("applied_threat_rules." + strconv.Itoa(i) + ".rule_number")
+
+				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".rule_number"); ok {
+					Payload["rule_number"] = v
 				}
-				if d.HasChange("applied_threat_rules." + strconv.Itoa(i) + ".position") {
-					Payload["position"] = d.Get("applied_threat_rules." + strconv.Itoa(i) + ".position")
+
+				if v, ok := d.GetOk("applied_threat_rules." + strconv.Itoa(i) + ".position"); ok {
+					Payload["position"] = v
 				}
 				appliedThreatRulesPayload = append(appliedThreatRulesPayload, Payload)
 			}
@@ -429,6 +432,14 @@ func deleteManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 
 	exceptionGroupPayload := map[string]interface{}{
 		"uid": d.Id(),
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		exceptionGroupPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		exceptionGroupPayload["ignore-errors"] = v.(bool)
 	}
 
 	log.Println("Delete ExceptionGroup")

@@ -352,7 +352,13 @@ func deleteManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 	vmwareDataCenterServerPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		vmwareDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		vmwareDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete vmwareDataCenterServer")
 
 	deleteVMwareDataCenterServerRes, err := client.ApiCall("delete-data-center-server", vmwareDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

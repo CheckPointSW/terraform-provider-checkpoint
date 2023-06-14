@@ -257,7 +257,13 @@ func deleteManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 	serviceRpcPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceRpcPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceRpcPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ServiceRpc")
 
 	deleteServiceRpcRes, err := client.ApiCall("delete-service-rpc", serviceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -261,6 +261,14 @@ func deleteManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		applicationSiteGroupPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		applicationSiteGroupPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete ApplicationSiteGroup")
 
 	deleteApplicationSiteGroupRes, err := client.ApiCall("delete-application-site-group", applicationSiteGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())

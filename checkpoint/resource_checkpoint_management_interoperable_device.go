@@ -811,6 +811,13 @@ func deleteManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		interoperableDevicePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		interoperableDevicePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete InteroperableDevice")
 
 	deleteInteroperableDeviceRes, err := client.ApiCall("delete-interoperable-device", interoperableDevicePayload, client.GetSessionID(), true, client.IsProxyUsed())

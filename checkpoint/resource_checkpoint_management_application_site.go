@@ -368,6 +368,14 @@ func deleteManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		applicationSitePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		applicationSitePayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete ApplicationSite")
 
 	deleteApplicationSiteRes, err := client.ApiCall("delete-application-site", applicationSitePayload, client.GetSessionID(), true, client.IsProxyUsed())

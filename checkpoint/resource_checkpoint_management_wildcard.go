@@ -291,7 +291,13 @@ func deleteManagementWildcard(d *schema.ResourceData, m interface{}) error {
 	wildcardPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		wildcardPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		wildcardPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete Wildcard")
 
 	deleteWildcardRes, err := client.ApiCall("delete-wildcard", wildcardPayload, client.GetSessionID(), true, client.IsProxyUsed())

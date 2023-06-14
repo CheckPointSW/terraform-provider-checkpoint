@@ -348,6 +348,14 @@ func deleteManagementAciDataCenterServer(d *schema.ResourceData, m interface{}) 
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		aciDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		aciDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete aciDataCenterServer")
 
 	deleteAciDataCenterServerRes, err := client.ApiCall("delete-data-center-server", aciDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

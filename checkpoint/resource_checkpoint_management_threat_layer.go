@@ -246,7 +246,13 @@ func deleteManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 	threatLayerPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		threatLayerPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		threatLayerPayload["ignore-errors"] = v.(bool)
+	}
 	deleteThreatLayerRes, err := client.ApiCall("delete-threat-layer", threatLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatLayerRes.Success {
 		if deleteThreatLayerRes.ErrorMsg != "" {

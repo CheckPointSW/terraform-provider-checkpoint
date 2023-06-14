@@ -325,7 +325,13 @@ func deleteManagementMulticastAddressRange(d *schema.ResourceData, m interface{}
 	multicastAddressRangePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		multicastAddressRangePayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		multicastAddressRangePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete MulticastAddressRange")
 
 	deleteMulticastAddressRangeRes, err := client.ApiCall("delete-multicast-address-range", multicastAddressRangePayload, client.GetSessionID(), true, client.IsProxyUsed())

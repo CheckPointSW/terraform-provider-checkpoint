@@ -223,7 +223,13 @@ func deleteManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 	securityZonePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		securityZonePayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		securityZonePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete SecurityZone")
 
 	deleteSecurityZoneRes, err := client.ApiCall("delete-security-zone", securityZonePayload, client.GetSessionID(), true, client.IsProxyUsed())

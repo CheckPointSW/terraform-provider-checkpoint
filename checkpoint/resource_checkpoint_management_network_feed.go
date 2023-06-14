@@ -574,7 +574,13 @@ func deleteManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 	networkFeedPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		networkFeedPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		networkFeedPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete NetworkFeed")
 
 	deleteNetworkFeedRes, err := client.ApiCall("delete-network-feed", networkFeedPayload, client.GetSessionID(), true, client.IsProxyUsed())

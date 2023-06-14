@@ -420,6 +420,14 @@ func deleteManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		opsecApplicationPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		opsecApplicationPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete OpsecApplication")
 
 	deleteOpsecApplicationRes, err := client.ApiCall("delete-opsec-application", opsecApplicationPayload, client.GetSessionID(), true, client.IsProxyUsed())

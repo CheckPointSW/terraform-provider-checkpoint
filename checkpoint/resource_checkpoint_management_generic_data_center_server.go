@@ -324,6 +324,14 @@ func deleteManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		genericDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		genericDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete genericDataCenterServer")
 
 	deleteGenericDataCenterServerRes, err := client.ApiCall("delete-data-center-server", genericDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

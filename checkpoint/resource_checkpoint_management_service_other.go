@@ -510,6 +510,13 @@ func deleteManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	serviceOtherPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceOtherPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceOtherPayload["ignore-errors"] = v.(bool)
+	}
 
 	log.Println("Delete ServiceOther")
 

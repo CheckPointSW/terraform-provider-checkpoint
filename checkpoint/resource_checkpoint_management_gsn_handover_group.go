@@ -283,6 +283,14 @@ func deleteManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		gsnHandoverGroupPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		gsnHandoverGroupPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete GsnHandoverGroup")
 
 	deleteGsnHandoverGroupRes, err := client.ApiCall("delete-gsn-handover-group", gsnHandoverGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -809,7 +809,12 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 	hostPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		hostPayload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		hostPayload["ignore-warnings"] = v.(bool)
+	}
 	deleteHostRes, err := client.ApiCall("delete-host", hostPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHostRes.Success {
 		if deleteHostRes.ErrorMsg != "" {

@@ -359,6 +359,14 @@ func deleteManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		accessLayerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		accessLayerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete AccessLayer")
 
 	deleteAccessLayerRes, err := client.ApiCall("delete-access-layer", accessLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())

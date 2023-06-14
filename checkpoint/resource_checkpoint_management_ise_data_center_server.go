@@ -348,6 +348,14 @@ func deleteManagementIseDataCenterServer(d *schema.ResourceData, m interface{}) 
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		iseDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		iseDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete iseDataCenterServer")
 
 	deleteIseDataCenterServerRes, err := client.ApiCall("delete-data-center-server", iseDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

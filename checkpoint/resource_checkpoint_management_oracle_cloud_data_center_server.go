@@ -333,6 +333,14 @@ func deleteManagementOracleCloudDataCenterServer(d *schema.ResourceData, m inter
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		oracleCloudDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		oracleCloudDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	deleteOracleCloudDataCenterServerRes, err := client.ApiCall("delete-data-center-server", oracleCloudDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteOracleCloudDataCenterServerRes.Success {
 		if deleteOracleCloudDataCenterServerRes.ErrorMsg != "" {

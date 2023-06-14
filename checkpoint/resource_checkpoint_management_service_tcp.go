@@ -470,6 +470,12 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		payload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		payload["ignore-warnings"] = v.(bool)
+	}
 	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceTcpRes.Success {
 		return fmt.Errorf(deleteServiceTcpRes.ErrorMsg)

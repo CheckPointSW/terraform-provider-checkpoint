@@ -1148,6 +1148,13 @@ func deleteManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		vpnCommunityStarPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		vpnCommunityStarPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete VpnCommunityStar")
 
 	deleteVpnCommunityStarRes, err := client.ApiCall("delete-vpn-community-star", vpnCommunityStarPayload, client.GetSessionID(), true, client.IsProxyUsed())

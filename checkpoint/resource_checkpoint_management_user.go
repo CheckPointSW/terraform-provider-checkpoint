@@ -606,7 +606,13 @@ func deleteManagementUser(d *schema.ResourceData, m interface{}) error {
 	userPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete User")
 
 	deleteUserRes, err := client.ApiCall("delete-user", userPayload, client.GetSessionID(), true, client.IsProxyUsed())

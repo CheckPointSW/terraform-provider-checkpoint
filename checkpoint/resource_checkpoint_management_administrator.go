@@ -491,6 +491,13 @@ func deleteManagementAdministrator(d *schema.ResourceData, m interface{}) error 
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		administratorPayload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		administratorPayload["ignore-warnings"] = v.(bool)
+	}
+
 	deleteAdministratorRes, err := client.ApiCall("delete-administrator", administratorPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAdministratorRes.Success {
 		if deleteAdministratorRes.ErrorMsg != "" {

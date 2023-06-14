@@ -35,11 +35,11 @@ func TestAccDataSourceCheckpointManagementCheckpointHost_basic(t *testing.T) {
 }
 
 func testAccDataSourceManagementCheckpointHostConfig(name string, ipv4Address string) string {
-	return fmt.Sprintf(`
-resource "checkpoint_management_checkpoint_host" "checkpoint_host" {
-	name = "%s"
-	ipv4_address = "%s"
-}
+	return fmt.Sprintf(
+		`resource "checkpoint_management_checkpoint_host" "checkpoint_host" {
+	     name = "%s"
+	    ipv4_address = "%s"
+       }
 
 data "checkpoint_management_checkpoint_host" "data_checkpoint_host" {
 	name = "${checkpoint_management_checkpoint_host.checkpoint_host.name}"

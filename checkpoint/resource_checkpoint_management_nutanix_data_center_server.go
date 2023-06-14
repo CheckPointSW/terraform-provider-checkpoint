@@ -337,6 +337,14 @@ func deleteManagementNutanixDataCenterServer(d *schema.ResourceData, m interface
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		nutanixDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		nutanixDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete nutanixDataCenterServer")
 
 	deleteNutanixDataCenterServerRes, err := client.ApiCall("delete-data-center-server", nutanixDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

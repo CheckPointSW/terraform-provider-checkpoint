@@ -241,6 +241,14 @@ func deleteManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		applicationSiteCategoryPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		applicationSiteCategoryPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete ApplicationSiteCategory")
 
 	deleteApplicationSiteCategoryRes, err := client.ApiCall("delete-application-site-category", applicationSiteCategoryPayload, client.GetSessionID(), true, client.IsProxyUsed())

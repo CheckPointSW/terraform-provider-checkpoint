@@ -223,7 +223,13 @@ func deleteManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 	dynamicObjectPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		dynamicObjectPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		dynamicObjectPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete DynamicObject")
 
 	deleteDynamicObjectRes, err := client.ApiCall("delete-dynamic-object", dynamicObjectPayload, client.GetSessionID(), true, client.IsProxyUsed())

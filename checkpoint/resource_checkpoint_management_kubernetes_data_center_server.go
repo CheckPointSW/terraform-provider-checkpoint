@@ -311,6 +311,14 @@ func deleteManagementKubernetesDataCenterServer(d *schema.ResourceData, m interf
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		kubernetesDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		kubernetesDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete kubernetesDataCenterServer")
 
 	deleteKubernetesDataCenterServerRes, err := client.ApiCall("delete-data-center-server", kubernetesDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

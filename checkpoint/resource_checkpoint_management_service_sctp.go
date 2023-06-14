@@ -451,7 +451,13 @@ func deleteManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 	serviceSctpPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceSctpPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceSctpPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ServiceSctp")
 
 	deleteServiceSctpRes, err := client.ApiCall("delete-service-sctp", serviceSctpPayload, client.GetSessionID(), true, client.IsProxyUsed())

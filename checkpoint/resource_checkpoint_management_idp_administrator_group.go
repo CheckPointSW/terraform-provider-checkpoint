@@ -358,7 +358,13 @@ func deleteManagementIdpAdministratorGroup(d *schema.ResourceData, m interface{}
 	idpAdministratorGroupPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		idpAdministratorGroupPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		idpAdministratorGroupPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete IdpAdministratorGroup")
 
 	deleteIdpAdministratorGroupRes, err := client.ApiCall("delete-idp-administrator-group", idpAdministratorGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())

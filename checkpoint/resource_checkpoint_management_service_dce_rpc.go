@@ -257,7 +257,13 @@ func deleteManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 	serviceDceRpcPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceDceRpcPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceDceRpcPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ServiceDceRpc")
 
 	deleteServiceDceRpcRes, err := client.ApiCall("delete-service-dce-rpc", serviceDceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())

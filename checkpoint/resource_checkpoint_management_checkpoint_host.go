@@ -1511,6 +1511,14 @@ func deleteManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		checkpointHostPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		checkpointHostPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete CheckpointHost")
 
 	deleteCheckpointHostRes, err := client.ApiCall("delete-checkpoint-host", checkpointHostPayload, client.GetSessionID(), true, client.IsProxyUsed())

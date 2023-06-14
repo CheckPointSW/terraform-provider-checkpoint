@@ -355,6 +355,14 @@ func deleteManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		azureAdPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		azureAdPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete AzureAd")
 
 	deleteAzureAdRes, err := client.ApiCall("delete-azure-ad", azureAdPayload, client.GetSessionID(), true, client.IsProxyUsed())

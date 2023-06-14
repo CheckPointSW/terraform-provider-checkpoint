@@ -355,6 +355,13 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		packagePayload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		packagePayload["ignore-warnings"] = v.(bool)
+	}
+
 	deletePackageRes, err := client.ApiCall("delete-package", packagePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deletePackageRes.Success {
 		if deletePackageRes.ErrorMsg != "" {

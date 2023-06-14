@@ -1093,7 +1093,13 @@ func deleteManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 	vpnCommunityMeshedPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		vpnCommunityMeshedPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		vpnCommunityMeshedPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete VpnCommunityMeshed")
 
 	deleteVpnCommunityMeshedRes, err := client.ApiCall("delete-vpn-community-meshed", vpnCommunityMeshedPayload, client.GetSessionID(), true, client.IsProxyUsed())

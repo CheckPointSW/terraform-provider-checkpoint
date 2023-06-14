@@ -2698,14 +2698,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 	if cluster["fetch-policy"] != nil {
 		fetchPolicyJson, ok := cluster["fetch-policy"].([]interface{})
 		if ok {
-			fetchPolicyIds := make([]string, 0)
-			if len(fetchPolicyJson) > 0 {
-				for _, fetch_policy := range fetchPolicyJson {
-					fetch_policy := fetch_policy.(map[string]interface{})
-					fetchPolicyIds = append(fetchPolicyIds, fetch_policy["name"].(string))
-				}
-			}
-			_ = d.Set("fetch_policy", fetchPolicyIds)
+			_ = d.Set("fetch_policy", fetchPolicyJson)
 		}
 	} else {
 		_ = d.Set("fetch_policy", nil)
@@ -4508,7 +4501,13 @@ func deleteManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		payload["ignore-warnings"] = v
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		payload["ignore-errors"] = v
+	}
 	deleteClusterRes, err := client.ApiCall("delete-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteClusterRes.Success {
 		if deleteClusterRes.ErrorMsg != "" {

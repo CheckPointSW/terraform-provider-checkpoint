@@ -354,6 +354,14 @@ func deleteManagementDomain(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		domainPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		domainPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete Domain")
 
 	deleteDomainRes, err := client.ApiCall("delete-domain", domainPayload, client.GetSessionID(), true, client.IsProxyUsed())
