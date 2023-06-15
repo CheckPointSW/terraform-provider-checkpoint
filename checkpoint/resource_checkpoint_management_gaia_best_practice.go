@@ -402,6 +402,14 @@ func deleteManagementGaiaBestPractice(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		gaiaBestPracticePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		gaiaBestPracticePayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete GaiaBestPractice")
 
 	deleteGaiaBestPracticeRes, err := client.ApiCall("delete-gaia-best-practice", gaiaBestPracticePayload, client.GetSessionID(), true, client.IsProxyUsed())

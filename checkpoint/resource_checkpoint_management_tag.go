@@ -223,7 +223,13 @@ func deleteManagementTag(d *schema.ResourceData, m interface{}) error {
 	tagPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		tagPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		tagPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete Tag")
 
 	deleteTagRes, err := client.ApiCall("delete-tag", tagPayload, client.GetSessionID(), true, client.IsProxyUsed())

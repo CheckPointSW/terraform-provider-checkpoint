@@ -274,7 +274,13 @@ func deleteManagementServiceIcmp6(d *schema.ResourceData, m interface{}) error {
 	serviceIcmp6Payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceIcmp6Payload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceIcmp6Payload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ServiceIcmp6")
 
 	deleteServiceIcmp6Res, err := client.ApiCall("delete-service-icmp6", serviceIcmp6Payload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -357,7 +357,12 @@ func deleteManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	lsvProfilePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		lsvProfilePayload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		lsvProfilePayload["ignore-warnings"] = v.(bool)
+	}
 	deleteLsvProfileRes, err := client.ApiCall("delete-lsv-profile", lsvProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteLsvProfileRes.Success {
 		if deleteLsvProfileRes.ErrorMsg != "" {

@@ -355,6 +355,13 @@ func deleteManagementNuageDataCenterServer(d *schema.ResourceData, m interface{}
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		nuageDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		nuageDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete nuageDataCenterServer")
 
 	deleteNuageDataCenterServerRes, err := client.ApiCall("delete-data-center-server", nuageDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

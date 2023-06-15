@@ -387,6 +387,14 @@ func deleteManagementDataCenterQuery(d *schema.ResourceData, m interface{}) erro
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		dataCenterQueryPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		dataCenterQueryPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete DataCenterQuery")
 
 	deleteDataCenterQueryRes, err := client.ApiCall("delete-data-center-query", dataCenterQueryPayload, client.GetSessionID(), true, client.IsProxyUsed())

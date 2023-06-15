@@ -715,7 +715,9 @@ func deleteManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	if v, ok := d.GetOk("rule_name"); ok {
 		threatExceptionPayload["rule-name"] = v
 	}
-
+	/**
+	adambar - we did not add ignore-warnings/erros since it is not supported by the API in the delete method.
+	*/
 	deleteThreatExceptionRes, err := client.ApiCall("delete-threat-exception", threatExceptionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatExceptionRes.Success {
 		if deleteThreatExceptionRes.ErrorMsg != "" {

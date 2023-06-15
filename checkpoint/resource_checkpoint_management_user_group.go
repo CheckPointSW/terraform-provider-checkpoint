@@ -265,7 +265,13 @@ func deleteManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 	userGroupPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userGroupPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userGroupPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete UserGroup")
 
 	deleteUserGroupRes, err := client.ApiCall("delete-user-group", userGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())

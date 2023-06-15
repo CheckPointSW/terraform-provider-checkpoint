@@ -486,6 +486,12 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	payload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		payload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		payload["ignore-warnings"] = v.(bool)
+	}
 	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceUdpRes.Success {
 		return fmt.Errorf(deleteServiceUdpRes.ErrorMsg)

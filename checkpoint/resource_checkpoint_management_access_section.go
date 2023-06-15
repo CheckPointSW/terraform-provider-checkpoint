@@ -236,6 +236,14 @@ func deleteManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 		"layer": d.Get("layer"),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		accessSectionPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		accessSectionPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete AccessSection")
 
 	deleteAccessSectionRes, err := client.ApiCall("delete-access-section", accessSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())

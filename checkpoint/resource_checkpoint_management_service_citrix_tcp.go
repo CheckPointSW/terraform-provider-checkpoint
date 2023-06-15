@@ -228,6 +228,13 @@ func deleteManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 	serviceCitrixTcpPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceCitrixTcpPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceCitrixTcpPayload["ignore-errors"] = v.(bool)
+	}
 
 	log.Println("Delete ServiceCitrixTcp")
 

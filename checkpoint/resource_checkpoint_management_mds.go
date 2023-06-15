@@ -428,7 +428,13 @@ func deleteManagementMds(d *schema.ResourceData, m interface{}) error {
 	mdsPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		mdsPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		mdsPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete Mds")
 
 	deleteMdsRes, err := client.ApiCall("delete-mds", mdsPayload, client.GetSessionID(), true, client.IsProxyUsed())

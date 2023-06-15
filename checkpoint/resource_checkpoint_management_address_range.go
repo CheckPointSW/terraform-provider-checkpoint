@@ -411,6 +411,13 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		addressRangePayload["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		addressRangePayload["ignore-warnings"] = v.(bool)
+	}
+
 	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAddressRangeRes.Success {
 		if deleteAddressRangeRes.ErrorMsg != "" {

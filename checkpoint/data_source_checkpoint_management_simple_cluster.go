@@ -1954,14 +1954,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 	if cluster["fetch-policy"] != nil {
 		fetchPolicyJson, ok := cluster["fetch-policy"].([]interface{})
 		if ok {
-			fetchPolicyIds := make([]string, 0)
-			if len(fetchPolicyJson) > 0 {
-				for _, fetch_policy := range fetchPolicyJson {
-					fetch_policy := fetch_policy.(map[string]interface{})
-					fetchPolicyIds = append(fetchPolicyIds, fetch_policy["name"].(string))
-				}
-			}
-			_ = d.Set("fetch_policy", fetchPolicyIds)
+			_ = d.Set("fetch_policy", fetchPolicyJson)
 		}
 	} else {
 		_ = d.Set("fetch_policy", nil)

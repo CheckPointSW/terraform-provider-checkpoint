@@ -364,6 +364,14 @@ func deleteManagementAzureDataCenterServer(d *schema.ResourceData, m interface{}
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		azureDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		azureDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete azureDataCenterServer")
 
 	deleteAzureDataCenterServerRes, err := client.ApiCall("delete-data-center-server", azureDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -279,7 +279,13 @@ func deleteManagementGcpDataCenterServer(d *schema.ResourceData, m interface{}) 
 	gcpDataCenterServerPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		gcpDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		gcpDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete gcpDataCenterServer")
 
 	deleteGcpDataCenterServerRes, err := client.ApiCall("delete-data-center-server", gcpDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -449,7 +449,13 @@ func deleteManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	trustedClientPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		trustedClientPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		trustedClientPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete TrustedClient")
 
 	deleteTrustedClientRes, err := client.ApiCall("delete-trusted-client", trustedClientPayload, client.GetSessionID(), true, client.IsProxyUsed())

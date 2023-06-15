@@ -485,7 +485,13 @@ func deleteManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	mdPermissionsProfilePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		mdPermissionsProfilePayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		mdPermissionsProfilePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete MdPermissionsProfile")
 
 	deleteMdPermissionsProfileRes, err := client.ApiCall("delete-md-permissions-profile", mdPermissionsProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())

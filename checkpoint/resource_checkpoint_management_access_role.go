@@ -568,6 +568,14 @@ func deleteManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		accessRolePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		accessRolePayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete AccessRole")
 
 	deleteAccessRoleRes, err := client.ApiCall("delete-access-role", accessRolePayload, client.GetSessionID(), true, client.IsProxyUsed())

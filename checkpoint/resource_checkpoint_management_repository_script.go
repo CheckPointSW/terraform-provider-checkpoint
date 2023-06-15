@@ -260,6 +260,13 @@ func deleteManagementRepositoryScript(d *schema.ResourceData, m interface{}) err
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		repositoryScriptPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		repositoryScriptPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete RepositoryScript")
 
 	deleteRepositoryScriptRes, err := client.ApiCall("delete-repository-script", repositoryScriptPayload, client.GetSessionID(), true, client.IsProxyUsed())

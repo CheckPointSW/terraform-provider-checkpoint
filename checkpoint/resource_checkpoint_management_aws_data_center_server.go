@@ -134,7 +134,7 @@ func createManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 	}
 
 	if v, ok := d.GetOk("sts_external_id"); ok {
-		awsDataCenterServer["sts-external-id"] = v.(string)
+		awsDataCenterServer["custom-value"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -350,6 +350,14 @@ func deleteManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	awsDataCenterServerPayload := map[string]interface{}{
 		"uid": d.Id(),
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		awsDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		awsDataCenterServerPayload["ignore-errors"] = v.(bool)
 	}
 
 	log.Println("Delete awsDataCenterServer")

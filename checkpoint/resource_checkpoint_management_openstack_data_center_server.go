@@ -342,6 +342,14 @@ func deleteManagementOpenStackDataCenterServer(d *schema.ResourceData, m interfa
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		openstackDataCenterServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		openstackDataCenterServerPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete openstackDataCenterServer")
 
 	deleteOpenStackDataCenterServerRes, err := client.ApiCall("delete-data-center-server", openstackDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())

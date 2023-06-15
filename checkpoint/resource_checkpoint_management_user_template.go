@@ -573,7 +573,13 @@ func deleteManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 	userTemplatePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userTemplatePayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userTemplatePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete UserTemplate")
 
 	deleteUserTemplateRes, err := client.ApiCall("delete-user-template", userTemplatePayload, client.GetSessionID(), true, client.IsProxyUsed())

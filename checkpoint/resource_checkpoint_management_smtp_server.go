@@ -363,6 +363,13 @@ func deleteManagementSmtpServer(d *schema.ResourceData, m interface{}) error {
 	smtpServerPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		smtpServerPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		smtpServerPayload["ignore-errors"] = v.(bool)
+	}
 
 	log.Println("Delete SmtpServer")
 

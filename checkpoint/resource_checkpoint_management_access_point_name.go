@@ -299,7 +299,13 @@ func deleteManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 	accessPointNamePayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		accessPointNamePayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		accessPointNamePayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete AccessPointName")
 
 	deleteAccessPointNameRes, err := client.ApiCall("delete-access-point-name", accessPointNamePayload, client.GetSessionID(), true, client.IsProxyUsed())

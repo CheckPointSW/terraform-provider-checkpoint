@@ -260,7 +260,13 @@ func deleteManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 	timeGroupPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		timeGroupPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		timeGroupPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete TimeGroup")
 
 	deleteTimeGroupRes, err := client.ApiCall("delete-time-group", timeGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())

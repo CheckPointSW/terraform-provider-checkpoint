@@ -220,7 +220,13 @@ func deleteManagementDynamicGlobalNetworkObject(d *schema.ResourceData, m interf
 	dynamicGlobalNetworkObjectPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		dynamicGlobalNetworkObjectPayload["ignore-warnings"] = v.(bool)
+	}
 
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		dynamicGlobalNetworkObjectPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete DynamicGlobalNetworkObject")
 
 	deleteDynamicGlobalNetworkObjectRes, err := client.ApiCall("delete-dynamic-global-network-object", dynamicGlobalNetworkObjectPayload, client.GetSessionID(), true, client.IsProxyUsed())

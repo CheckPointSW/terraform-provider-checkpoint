@@ -1,3 +1,19 @@
+## 2.5.0 (June 13, 2023)
+
+FEATURES
+* **New Resource:** `resouce_checkpoint_management_service_gtp`
+* **New Resource:** `resouce_checkpoint_management_smart_task`
+* **New Resource:** `resouce_checkpoint_management_server_certificate`
+* **New Data Source:** `data_source_checkpoint_management_threat_rule_exception_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_smart_task`
+* **New Data Source:** `data_source_checkpoint_management_service_gtp`
+* **New Data Source:** `data_source_checkpoint_management_server_certificate`
+
+BUG FIXES
+* Fix issue in `fetch_policy` field in the read function of `checkpoint_management_simple_cluster` resource and data source.
+* Fix issue in `applied_threat_rules` field in `checkpoint_management_exception_group` update function.
+* Add the `ignore_warnings` and `ignore_errors` flags to multiple resources if they were missing.
+
 ## 2.4.0 (May 4, 2023)
 
 ENHANCEMENTS

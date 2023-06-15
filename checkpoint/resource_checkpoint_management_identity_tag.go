@@ -229,6 +229,14 @@ func deleteManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		identityTagPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		identityTagPayload["ignore-errors"] = v.(bool)
+	}
+
 	log.Println("Delete IdentityTag")
 
 	deleteIdentityTagRes, err := client.ApiCall("delete-identity-tag", identityTagPayload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -248,6 +248,13 @@ func deleteManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 		"uid": d.Id(),
 	}
 
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		serviceCompoundTcpPayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		serviceCompoundTcpPayload["ignore-errors"] = v.(bool)
+	}
 	log.Println("Delete ServiceCompoundTcp")
 
 	deleteServiceCompoundTcpRes, err := client.ApiCall("delete-service-compound-tcp", serviceCompoundTcpPayload, client.GetSessionID(), true, client.IsProxyUsed())
