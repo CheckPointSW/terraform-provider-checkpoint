@@ -1,4 +1,4 @@
-## 2.5.0 (June 13, 2023)
+## 2.5.0 (June 15, 2023)
 
 FEATURES
 * **New Resource:** `resouce_checkpoint_management_service_gtp`
@@ -8,6 +8,9 @@ FEATURES
 * **New Data Source:** `data_source_checkpoint_management_smart_task`
 * **New Data Source:** `data_source_checkpoint_management_service_gtp`
 * **New Data Source:** `data_source_checkpoint_management_server_certificate`
+
+ENHANCEMENTS
+* Add support to auto publish mode using `auto_publish_batch_size` or via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable to configure the number of batch size to automatically run publish.
 
 BUG FIXES
 * Fix issue in `fetch_policy` field in the read function of `checkpoint_management_simple_cluster` resource and data source.
