@@ -26,6 +26,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -40,6 +41,7 @@ const (
 	WebContext       string        = "web_api"
 	DefaultProxyPort               = -1
 	DefaultProxyHost               = ""
+	AutoPublishBatchSize  int      = 100
 )
 
 // Check Point API Client (Management/GAIA)
@@ -59,11 +61,17 @@ type ApiClient struct {
 	debugFile               string
 	httpDebugLevel          string
 	context                 string
-	autoPublish             bool
 	timeout                 time.Duration
 	sleep                   time.Duration
 	userAgent               string
 	cloudMgmtId             string
+	autoPublishBatchSize    int
+	activeCallsLock		    sync.Mutex
+	autoPublishLock 		sync.Mutex
+	totalCallsLock 		    sync.Mutex
+	duringPublish           bool
+	activeCallsCtr 		    int
+	totalCallsCtr 		    int
 }
 
 // Api Client constructor
@@ -116,7 +124,7 @@ func APIClient(apiCA ApiClientArgs) *ApiClient {
 		debugFile:               apiCA.DebugFile,
 		httpDebugLevel:          apiCA.HttpDebugLevel,
 		context:                 apiCA.Context,
-		autoPublish:             apiCA.AutoPublish,
+		autoPublishBatchSize:    apiCA.AutoPublishBatchSize,
 		timeout:                 apiCA.Timeout,
 		sleep:                   apiCA.Sleep,
 		userAgent:               apiCA.UserAgent,
@@ -132,10 +140,6 @@ func (c *ApiClient) GetPort() int {
 // Returns the context of API client
 func (c *ApiClient) GetContext() string {
 	return c.context
-}
-
-func (c *ApiClient) GetAutoPublish() bool {
-	return c.autoPublish
 }
 
 // Returns the fingerprint of API client
@@ -176,6 +180,36 @@ func (c *ApiClient) SetTimeout(timeout time.Duration) {
 // Returns session id
 func (c *ApiClient) GetSessionID() string {
 	return c.sid
+}
+
+// Returns number of batch size
+func (c *ApiClient) GetAutoPublishBatchSize() int {
+	return c.autoPublishBatchSize
+}
+
+func (c *ApiClient) SetAutoPublishBatchSize(autoPublishBatchSize int) {
+	c.autoPublishBatchSize = autoPublishBatchSize
+}
+
+func (c *ApiClient) increaseActiveCalls() {
+	c.activeCallsLock.Lock()
+	c.activeCallsCtr++
+	c.activeCallsLock.Unlock()
+}
+
+func (c *ApiClient) decreaseActiveCalls() {
+	c.activeCallsLock.Lock()
+	c.activeCallsCtr--
+	c.activeCallsLock.Unlock()
+}
+
+func (c *ApiClient) ResetTotalCallsCounter() {
+	c.totalCallsCtr = 0
+}
+
+func (c *ApiClient) DisableAutoPublish() {
+	c.autoPublishBatchSize = -1
+	c.totalCallsCtr = 0
 }
 
 // Deprecated: Do not use.
@@ -253,7 +287,7 @@ func (c *ApiClient) commonLoginLogic(credentials map[string]interface{}, continu
 		}
 	}
 
-	loginRes, errCall := c.ApiCall("login", credentials, "", false, false)
+	loginRes, errCall := c.apiCall("login", credentials, "", false, c.IsProxyUsed(), true)
 	if errCall != nil {
 		return loginRes, errCall
 	}
@@ -285,6 +319,14 @@ side-effects: updates the class's uid and server variables
 
 */
 func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool) (APIResponse, error) {
+	return c.apiCall(command,payload,sid,waitForTask,useProxy,false)
+}
+
+func (c *ApiClient) ApiCallSimple(command string, payload map[string]interface{}) (APIResponse, error) {
+	return c.apiCall(command, payload, c.sid,true, c.IsProxyUsed(),false)
+}
+
+func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool, internal bool) (APIResponse, error) {
 	fp, errFP := getFingerprint(c.server, c.port)
 	if errFP != nil {
 		return APIResponse{}, errFP
@@ -357,21 +399,55 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 		req.Header.Set("X-chkp-sid", sid)
 	}
 
+	if !internal && c.autoPublishBatchSize > 0 {
+		waitToRun := true
+		for waitToRun {
+			if c.totalCallsCtr + 1 <= c.autoPublishBatchSize && !c.duringPublish {
+				c.totalCallsLock.Lock()
+				if c.totalCallsCtr + 1 <= c.autoPublishBatchSize && !c.duringPublish {
+					c.totalCallsCtr++
+					waitToRun = false
+				}
+				c.totalCallsLock.Unlock()
+			}
+			if waitToRun {
+				time.Sleep(time.Second)
+			}
+		}
+		c.increaseActiveCalls()
+	}
+
 	response, err := client.client.Do(req)
+
 	if err != nil {
+		if !internal && c.autoPublishBatchSize > 0 {
+			c.decreaseActiveCalls()
+		}
 		return APIResponse{}, err
 	}
 
 	res, err := fromHTTPResponse(response, "")
 	if err != nil {
+		if !internal && c.autoPublishBatchSize > 0 {
+			c.decreaseActiveCalls()
+		}
 		return APIResponse{}, err
 	}
 
 	if !res.Success {
+		resCode := ""
+		resMsg := ""
+		if code := res.GetData()["code"]; code != nil {
+			resCode = code.(string)
+		}
+		if msg := res.GetData()["message"]; msg != nil {
+			resMsg = msg.(string)
+		}
+
 		fullErrorMsg := "failed to execute API call" +
 			"\nStatus: " + res.StatusCode +
-			"\nCode: " + res.GetData()["code"].(string) +
-			"\nMessage: " + res.GetData()["message"].(string)
+			"\nCode: " + resCode +
+			"\nMessage: " + resMsg
 
 		if errorMsg := res.data["errors"]; errorMsg != nil {
 			fullErrorMsg += "\nErrors: "
@@ -419,6 +495,9 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 		if _, ok := res.data["task-id"]; ok {
 			res, err = c.waitForTask(res.data["task-id"].(string))
 			if err != nil {
+				if !internal && c.autoPublishBatchSize > 0 {
+					c.decreaseActiveCalls()
+				}
 				return APIResponse{}, err
 			}
 		} else if _, ok := res.data["tasks"]; ok {
@@ -428,6 +507,36 @@ func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid 
 			}
 		}
 	}
+
+	if !internal && c.autoPublishBatchSize > 0 {
+		c.decreaseActiveCalls()
+		if c.totalCallsCtr > 0 && c.totalCallsCtr % c.autoPublishBatchSize == 0 && !c.duringPublish {
+			c.autoPublishLock.Lock()
+			if c.totalCallsCtr > 0 && c.totalCallsCtr % c.autoPublishBatchSize == 0 && !c.duringPublish {
+				c.duringPublish = true
+				c.autoPublishLock.Unlock()
+				for c.activeCallsCtr > 0 {
+					//	 Waiting for other calls to finish
+					fmt.Println("Waiting to start auto publish (Active calls " + strconv.Itoa(c.activeCallsCtr) + ")")
+					time.Sleep(time.Second)
+				}
+				// Going to publish
+				fmt.Println("Start auto publish...")
+				publishRes, _ := c.apiCall("publish", map[string]interface{}{},c.GetSessionID(),true,c.IsProxyUsed(), true)
+
+				if !publishRes.Success {
+					fmt.Println("Auto publish failed. Message: " + publishRes.ErrorMsg)
+				}else{
+					fmt.Println("Auto publish finished successfully")
+				}
+				c.totalCallsCtr = 0
+				c.duringPublish = false
+			}else{
+				c.autoPublishLock.Unlock()
+			}
+		}
+	}
+
 	return res, nil
 }
 
@@ -527,7 +636,7 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 	payload["limit"] = objLimit
 	payload["offset"] = iterations * objLimit
 	payload["details-level"] = detailsLevel
-	apiRes, err := c.ApiCall(command, payload, "", false, false)
+	apiRes, err := c.apiCall(command, payload, c.sid, false, c.IsProxyUsed(), true)
 
 	if err != nil {
 		print(err.Error())
@@ -581,7 +690,7 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 		payload["limit"] = objLimit
 		payload["offset"] = iterations * objLimit
 		payload["details-level"] = detailsLevel
-		apiRes, err = c.ApiCall(command, payload, "", false, false)
+		apiRes, err = c.apiCall(command, payload, c.sid, false, c.IsProxyUsed(), true)
 
 		if err != nil {
 			print("Error communicating with server, please check your connection.")
@@ -613,7 +722,7 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 	payload := map[string]interface{}{"task-id": taskId, "details-level": "full"}
 
 	for !taskComplete {
-		taskResult, err = c.ApiCall("show-task", payload, c.sid, false, false)
+		taskResult, err = c.apiCall("show-task", payload, c.sid, false, c.IsProxyUsed(), true)
 
 		if err != nil {
 			return APIResponse{}, err
@@ -625,7 +734,7 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 			if attemptsCounter < 5 {
 				attemptsCounter++
 				time.Sleep(c.sleep)
-				taskResult, err = c.ApiCall("show-task", payload, c.sid, false, false)
+				taskResult, err = c.apiCall("show-task", payload, c.sid, false, c.IsProxyUsed(), true)
 
 				if err != nil {
 					return APIResponse{}, err
@@ -679,7 +788,7 @@ func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 		"task-id":       tasks,
 		"details-level": "full",
 	}
-	taskRes, err := c.ApiCall("show-task", payload, c.GetSessionID(), false, c.proxyHost != "")
+	taskRes, err := c.apiCall("show-task", payload, c.GetSessionID(), false, c.IsProxyUsed(), true)
 
 	if err != nil {
 		fmt.Println("Problem showing tasks, try again")

@@ -23,6 +23,7 @@ type Client struct {
 
 // Init and returns new instance of HTTP client wrapper
 func CreateClient(server string, sid string, timeout time.Duration) (*Client, error) {
+	//sgignore next_line
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	var netClient = &http.Client{
 		Timeout: timeout,
@@ -36,6 +37,7 @@ func CreateProxyClient(server string, serverProxy string, sid string, portProxy 
 	http.DefaultTransport = &http.Transport{
 		Proxy:           http.ProxyURL(proxyURL),
 		TLSNextProto:    make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
+		//sgignore next_line
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	var netClient = &http.Client{

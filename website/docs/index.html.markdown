@@ -103,6 +103,7 @@ The following arguments are supported:
   the `CHECKPOINT_SESSION_TIMEOUT` environment variable. The default for the value is `600`. The timeout can be `10` - `3600`.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
+* `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. this can also be defined via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
 
 ## Authentication
 
@@ -170,13 +171,14 @@ $ export CHECKPOINT_CONTEXT="web_api"
 $ export CHECKPOINT_DOMAIN="Domain Name"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
-$ export CHECKPOINT_SESSION_NAME="Terraform session"
+$ export CHECKPOINT_SESSION_NAME="Terraform session name"
+$ export CHECKPOINT_SESSION_DESCRIPTION="Terraform session description"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
-$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
+$ export CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE=100
  ```
 
 Usage with api key:
@@ -188,13 +190,14 @@ $ export CHECKPOINT_CONTEXT="web_api"
 $ export CHECKPOINT_DOMAIN="Domain Name"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
-$ export CHECKPOINT_SESSION_NAME="Terraform session"
+$ export CHECKPOINT_SESSION_NAME="Terraform session name"
+$ export CHECKPOINT_SESSION_DESCRIPTION="Terraform session description"
 $ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
 $ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
-$ export CHECKPOINT_SESSION_DESCRIPTION="session description"
+$ export CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE=100
  ```
 
 Then configure the Check Point Provider as following:
@@ -215,7 +218,7 @@ resource "checkpoint_management_network" "network" {
 Or for GAIA API:
 
 ```bash
-$ export CHECKPOINT_SERVER=192.0.2.1
+$ export CHECKPOINT_SERVER="192.0.2.1"
 $ export CHECKPOINT_USERNAME="gaia_user"
 $ export CHECKPOINT_PASSWORD="gaia_password"
 $ export CHECKPOINT_CONTEXT="gaia_api"
@@ -237,7 +240,7 @@ resource "checkpoint_hostname" "hostname" {
 
 ## Post Apply/Destroy commands
 
-As of right now, Terraform does not provide native support for publish and install-policy, so both of them are handled
+As of right now, Terraform does not provide native support for publish and install-policy, so both of them and more post apply actions are handled
 out-of-band.
 
 In order to use post Apply/Destroy commands, the authentication method must be via environment variables.
@@ -252,6 +255,22 @@ $ go build publish.go
 $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
 $ terraform apply && publish
 ```
+### Install Policy
+
+The following arguments are supported:
+
+* `policy-package` - (Required) The name of the Policy Package to be installed.
+* `target` - (Required) On what targets to execute this command. Targets may be identified by their name, or object
+  unique identifier. Multiple targets can be added.
+
+Please use the following for install policy:
+
+```bash
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
+$ go build install_policy.go
+$ mv install_policy $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
+$ terraform apply && install_policy -policy-package <package name> -target <target name or uid>
+```
 
 ### Logout
 
@@ -262,6 +281,13 @@ $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/co
 $ go build logout.go
 $ mv logout $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/logout_from_session
 $ terraform apply && publish && logout_from_session
+```
+
+### Example usage
+Publish & Install Policy & Logout from session
+
+```bash
+$ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway" && logout_from_session
 ```
 
 ### Discard
@@ -325,36 +351,13 @@ $ mv verify_policy $GOPATH/src/github.com/terraform-providers/terraform-provider
 $ terraform apply && verify_policy -policy-package <package name>
 ```
 
-### Install Policy
-
-The following arguments are supported:
-
-* `policy-package` - (Required) The name of the Policy Package to be installed.
-* `target` - (Required) On what targets to execute this command. Targets may be identified by their name, or object
-  unique identifier. Multiple targets can be added.
-
-Please use the following for install policy:
-
-```bash
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
-$ go build install_policy.go
-$ mv install_policy $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
-$ terraform apply && install_policy -policy-package <package name> -target <target name or uid>
-```
-
-### Example usage
-
-```bash
-$ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway" && logout_from_session
-```
-
 ## Import Resources
 
 In order to import resource, use the `terraform import` command with object unique identifier.
 
 Example:
 
-Host object with UID `9423d36f-2d66-4754-b9e2-e7f4493756d4`
+For existing Host object with UID `9423d36f-2d66-4754-b9e2-e7f4493756d4`
 
 Write resource configuration block
 
@@ -381,4 +384,5 @@ This section describes best practices for working with the Check Point provider.
 * Use one or more dedicated users for provider operations to make sure minimum permissions are granted.
 * Keep on object name uniqueness in your environment.
 * Use object name when reference to an object (avoid use of object UID).
-* Use post apply scripts (e.g. publish, install policy) to run actions after apply your changes. Terraform runs in parallel and because of that we can't predict the order of when changes will execute so running post apply scripts will ensure to run last after all changes submitted successfully.
+* Use post apply scripts (e.g. publish, install policy, logout) to run actions after apply your changes. Terraform runs in parallel and because of that we can't predict the order of when changes will execute, running post apply scripts will ensure to run last after all changes submitted successfully.
+* Create implicit / explicit dependencies between resources or modules. Terraform uses this dependency information to determine the correct order in which to create the different resources. To do so, it creates a dependency graph of all of the resources defined by the configuration. For more information, please refer [here](https://developer.hashicorp.com/terraform/tutorials/configuration-language/dependencies#dependencies).

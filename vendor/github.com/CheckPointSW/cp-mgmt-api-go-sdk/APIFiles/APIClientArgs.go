@@ -16,11 +16,11 @@ type ApiClientArgs struct {
 	AcceptServerCertificate bool
 	DebugFile               string
 	Context                 string
-	AutoPublish				bool
 	Timeout 				time.Duration
 	Sleep 				    time.Duration
 	UserAgent			    string
 	CloudMgmtId             string
+	AutoPublishBatchSize	int
 }
 
 /*
@@ -39,8 +39,12 @@ AcceptServerCertificate: indicates that the client should automatically accept a
 DebugFile: name of debug file
 Context: which API to use - Management API = web_api (default) or GAIA API = gaia_api
 Timeout: HTTP Client timeout value
+Sleep: Interval size in seconds of the task update
+UserAgent: User agent will be use in api call request header
+CloudMgmtId: Smart-1 Cloud management UID
+AutoPublishBatchSize: Number of batch size for auto publish
 */
-func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration, userAgent string, cloudMgmtId string) ApiClientArgs {
+func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration, userAgent string, cloudMgmtId string, autoPublishBatchSize int) ApiClientArgs {
 
 	return ApiClientArgs{
 		Port: port,
@@ -58,5 +62,6 @@ func APIClientArgs(port int, fingerprint string, sid string, server string, prox
 		Sleep: sleep,
 		UserAgent: userAgent,
 		CloudMgmtId: cloudMgmtId,
+		AutoPublishBatchSize: autoPublishBatchSize,
 	}
 }

@@ -58,6 +58,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	port := checkpoint.DefaultPort
 	timeout := checkpoint.TimeOut
 	proxyPort := checkpoint.DefaultProxyPort
+	autoPublishBatchSize := -1
 
 	// Get credentials from Environment variables
 	server := os.Getenv("CHECKPOINT_SERVER")
@@ -70,6 +71,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 	proxyPortStr := os.Getenv("CHECKPOINT_PROXY_PORT")
 	apiKey := os.Getenv("CHECKPOINT_API_KEY")
 	cloudMgmtId := os.Getenv("CHECKPOINT_CLOUD_MGMT_ID")
+	autoPublishBatchSizeVal := os.Getenv("CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE")
 
 	var err error
 	if portVal != "" {
@@ -96,6 +98,13 @@ func InitClient() (checkpoint.ApiClient, error) {
 
 	if sessionFileName == "" {
 		sessionFileName = DefaultFilename
+	}
+
+	if autoPublishBatchSizeVal != "" {
+		autoPublishBatchSize, err = strconv.Atoi(timeoutVal)
+		if err != nil {
+			return checkpoint.ApiClient{}, fmt.Errorf("failed to parse CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE to integer")
+		}
 	}
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
@@ -125,6 +134,7 @@ func InitClient() (checkpoint.ApiClient, error) {
 		Sleep:                   checkpoint.SleepTime,
 		UserAgent:               "Terraform",
 		CloudMgmtId:             cloudMgmtId,
+		AutoPublishBatchSize:    autoPublishBatchSize,
 	}
 
 	s, err := GetSession(sessionFileName)

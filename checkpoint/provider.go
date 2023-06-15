@@ -103,6 +103,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_CLOUD_MGMT_ID", ""),
 				Description: "Smart-1 Cloud management UID",
 			},
+			"auto_publish_batch_size": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE", -1),
+				Description: "Number of batch size to automatically run publish",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_host":                                           resourceManagementHost(),
@@ -411,6 +417,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	sessionDescription := data.Get("session_description").(string)
 	sessionTimeout := data.Get("session_timeout").(int)
 	cloudMgmtId := data.Get("cloud_mgmt_id").(string)
+	autoPublishBatchSize := data.Get("auto_publish_batch_size").(int)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, (username and password) OR api_key)")
@@ -432,6 +439,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		Sleep:                   checkpoint.SleepTime,
 		UserAgent:               "Terraform",
 		CloudMgmtId:             cloudMgmtId,
+		AutoPublishBatchSize:    autoPublishBatchSize,
 	}
 
 	switch context {
