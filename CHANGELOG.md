@@ -1,3 +1,9 @@
+## 2.5.1 (June 18, 2023)
+
+BUG FIXES
+* Fix issue in `resource_checkpoint_management_simple_cluster`.
+* Fix issue in `resource_checkpoint_management_aws_data_center_server`.
+
 ## 2.5.0 (June 15, 2023)
 
 FEATURES
