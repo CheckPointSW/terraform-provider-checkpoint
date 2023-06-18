@@ -134,7 +134,7 @@ func createManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 	}
 
 	if v, ok := d.GetOk("sts_external_id"); ok {
-		awsDataCenterServer["custom-value"] = v.(string)
+		awsDataCenterServer["sts-external-id"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
