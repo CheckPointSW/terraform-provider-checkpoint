@@ -132,8 +132,9 @@ func dataSourceManagementShowUpdatableObjectsRepositoryContent() *schema.Resourc
 							},
 						},
 						"updatable_object": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
+							MaxItems:    1,
 							Description: "The imported management object (if exists).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -151,30 +152,6 @@ func dataSourceManagementShowUpdatableObjectsRepositoryContent() *schema.Resourc
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Object type.",
-									},
-									"domain": {
-										Type:        schema.TypeMap,
-										Computed:    true,
-										Description: "Information about the domain that holds the Object.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"name": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Object name.",
-												},
-												"uid": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Object unique identifier.",
-												},
-												"domain_type": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Domain type.",
-												},
-											},
-										},
 									},
 								},
 							},
@@ -304,6 +281,7 @@ func dataSourceManagementShowUpdatableObjectsRepositoryContentRead(d *schema.Res
 					if v := additionalPropertiesJson["uri"]; v != nil {
 						additionalPropertiesState["uri"] = v
 					}
+
 					objectState["additional_properties"] = additionalPropertiesState
 				}
 
@@ -323,29 +301,14 @@ func dataSourceManagementShowUpdatableObjectsRepositoryContentRead(d *schema.Res
 						updatableObjectState["type"] = v
 					}
 
-					if v := updatableObjectJson["domain"]; v != nil {
-						domainJson := v.(map[string]interface{})
-						domainState := make(map[string]interface{})
-
-						if v := domainJson["name"]; v != nil {
-							domainState["name"] = v
-						}
-
-						if v := domainJson["uid"]; v != nil {
-							domainState["uid"] = v
-						}
-
-						if v := domainJson["domain-type"]; v != nil {
-							domainState["domain_type"] = v
-						}
-						updatableObjectState["domain"] = domainState
-					}
-					objectState["updatable_object"] = updatableObjectState
+					objectState["updatable_object"] = []interface{}{updatableObjectState}
 				}
 
 				objectsListState = append(objectsListState, objectState)
 			}
+
 			_ = d.Set("objects", objectsListState)
+
 		} else {
 			_ = d.Set("objects", objectsList)
 		}

@@ -33,6 +33,12 @@ func resourceManagementPublish() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"run_publish_on_destroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Destroy publish resource will run publish when flag set to true",
+			},
 		},
 	}
 }
@@ -62,6 +68,11 @@ func readManagementPublish(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteManagementPublish(d *schema.ResourceData, m interface{}) error {
+	if runPublish, ok := d.GetOkExists("run_publish_on_destroy"); ok {
+		if runPublish.(bool) {
+			_ = createManagementPublish(d, m)
+		}
+	}
 	d.SetId("")
 	return nil
 }
