@@ -1,3 +1,18 @@
+## 2.6.0 (August 14, 2023)
+
+FEATURES
+* **New Resource:** `resouce_checkpoint_management_lsm_gateway`
+* **New Resource:** `resouce_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_lsm_gateway`
+* **New Data Source:** `data_source_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_updatable_object`
+
+BUG FIXES
+* Fix data source `checkpoint_management_show_updatable_objects_repository_content`  
+
+ENHANCEMENTS
+* Add new flag `run_publish_on_destroy`to `checkpoint_management_publish` which indicates whether to run publish on destroy.
+
 ## 2.5.1 (June 18, 2023)
 
 BUG FIXES
