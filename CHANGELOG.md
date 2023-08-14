@@ -1,10 +1,19 @@
-## 2.5.1 (June 18, 2023)
+## 2.6.0 (August 14, 2023)
+
+FEATURES
+* **New Resource:** `resouce_checkpoint_management_lsm_gateway`
+* **New Resource:** `resouce_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_lsm_gateway`
+* **New Data Source:** `data_source_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_updatable_object`
 
 BUG FIXES
-* Fix issue in `resource_checkpoint_management_simple_cluster`.
-* Fix issue in `resource_checkpoint_management_aws_data_center_server`.
+* Fix data source `checkpoint_management_show_updatable_objects_repository_content`  
 
-## 2.5.0 (June 15, 2023)
+ENHANCEMENTS
+* Add new flag `run_publish_on_destroy`to `checkpoint_management_publish` which indicates whether to run publish on destroy.
+
+## 2.5.0 (June 13, 2023)
 
 FEATURES
 * **New Resource:** `resouce_checkpoint_management_service_gtp`
@@ -14,9 +23,6 @@ FEATURES
 * **New Data Source:** `data_source_checkpoint_management_smart_task`
 * **New Data Source:** `data_source_checkpoint_management_service_gtp`
 * **New Data Source:** `data_source_checkpoint_management_server_certificate`
-
-ENHANCEMENTS
-* Add support to auto publish mode using `auto_publish_batch_size` or via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable to configure the number of batch size to automatically run publish.
 
 BUG FIXES
 * Fix issue in `fetch_policy` field in the read function of `checkpoint_management_simple_cluster` resource and data source.
