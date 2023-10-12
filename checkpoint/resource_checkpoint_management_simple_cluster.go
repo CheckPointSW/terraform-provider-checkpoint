@@ -39,6 +39,12 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Description: "Cluster mode.",
 				Default:     "cluster-xl-ha",
 			},
+			"geo_mode": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Cluster High Availability Geo mode. This setting applies only to a cluster deployed in a cloud. Available when the cluster mode equals \"cluster-xl-ha\".",
+				Default:     true,
+			},
 			"advanced_settings": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1770,6 +1776,10 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		cluster["cluster-mode"] = v.(string)
 	}
 
+	if v, ok := d.GetOk("geo_mode"); ok {
+		cluster["geo-mode"] = v.(bool)
+	}
+
 	if v, ok := d.GetOk("advanced_settings"); ok {
 
 		advancedSettingsList := v.([]interface{})
@@ -2654,6 +2664,10 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 
 	if v := cluster["cluster-mode"]; v != nil {
 		_ = d.Set("cluster_mode", v)
+	}
+
+	if v := cluster["geo-mode"]; v != nil {
+		_ = d.Set("geo_mode", v)
 	}
 
 	if cluster["advanced-settings"] != nil {
@@ -3589,6 +3603,10 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 	if ok := d.HasChange("cluster_mode"); ok {
 		cluster["cluster-mode"] = d.Get("cluster_mode").(string)
+	}
+
+	if ok := d.HasChanges("geo_mode"); ok {
+		cluster["geo-mode"] = d.Get("geo_mode").(bool)
 	}
 
 	if d.HasChange("advanced_settings") {
