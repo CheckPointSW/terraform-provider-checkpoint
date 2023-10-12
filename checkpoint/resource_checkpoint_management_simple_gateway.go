@@ -4835,7 +4835,7 @@ func deleteManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	gatewayPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	
+
 	if v, ok := d.GetOk("ignore_warnings"); ok {
 		gatewayPayload["ignore-warnings"] = v
 	}

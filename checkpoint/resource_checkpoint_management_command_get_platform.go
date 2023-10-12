@@ -48,7 +48,6 @@ func createManagementGetPlatform(d *schema.ResourceData, m interface{}) error {
 
 func readManagementGetPlatform(d *schema.ResourceData, m interface{}) error {
 
-
 	return nil
 }
 
