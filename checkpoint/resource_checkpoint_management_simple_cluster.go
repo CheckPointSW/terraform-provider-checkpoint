@@ -1775,7 +1775,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 		cluster["cluster-mode"] = v.(string)
 	}
 
-	if v, ok := d.GetOk("geo_mode"); ok {
+	if v, ok := d.GetOkExists("geo_mode"); ok {
 		cluster["geo-mode"] = v.(bool)
 	}
 
