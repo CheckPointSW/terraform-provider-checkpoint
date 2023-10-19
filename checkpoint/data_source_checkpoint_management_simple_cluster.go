@@ -41,7 +41,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable Geo mode for cross-az clusters.",
+				Description: "Cluster High Availability Geo mode. This setting applies only to a cluster deployed in a cloud. Available when the cluster mode equals \"cluster-xl-ha\".",
 			},
 			"advanced_settings": {
 				Type:        schema.TypeList,
