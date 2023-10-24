@@ -39,7 +39,6 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 			},
 			"geo_mode": {
 				Type:        schema.TypeBool,
-				Optional:    true,
 				Computed:    true,
 				Description: "Cluster High Availability Geo mode. This setting applies only to a cluster deployed in a cloud. Available when the cluster mode equals \"cluster-xl-ha\".",
 			},
