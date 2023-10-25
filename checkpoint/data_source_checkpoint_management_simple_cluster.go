@@ -37,6 +37,11 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 				Computed:    true,
 				Description: "Cluster mode.",
 			},
+			"geo_mode": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Cluster High Availability Geo mode. This setting applies only to a cluster deployed in a cloud. Available when the cluster mode equals \"cluster-xl-ha\".",
+			},
 			"advanced_settings": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -1910,6 +1915,10 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 
 	if v := cluster["cluster-mode"]; v != nil {
 		_ = d.Set("cluster_mode", v)
+	}
+
+	if v := cluster["geo-mode"]; v != nil {
+		_ = d.Set("geo_mode", v)
 	}
 
 	if cluster["advanced-settings"] != nil {
