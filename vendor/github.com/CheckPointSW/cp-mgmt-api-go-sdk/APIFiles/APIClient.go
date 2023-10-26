@@ -314,19 +314,24 @@ waitForTask: determines the behavior when the API server responds with a "task-i
 	when wait_for_task=False, it is up to the user to call the "show-task" API and check
 	the status of the command.
 useProxy: Determines if the user wants to use the proxy server and port provider.
+method: HTTP request method - POST by default
 return: APIResponse object
 side-effects: updates the class's uid and server variables
 
 */
-func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool) (APIResponse, error) {
-	return c.apiCall(command,payload,sid,waitForTask,useProxy,false)
+func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool, method ...string) (APIResponse, error) {
+	return c.apiCall(command,payload,sid,waitForTask,useProxy,false,method...)
 }
 
 func (c *ApiClient) ApiCallSimple(command string, payload map[string]interface{}) (APIResponse, error) {
 	return c.apiCall(command, payload, c.sid,true, c.IsProxyUsed(),false)
 }
 
-func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool, internal bool) (APIResponse, error) {
+func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool, internal bool, method ...string) (APIResponse, error) {
+	req_method:= "POST"
+	if len(method) > 0 {
+		req_method = method[0]
+	}
 	fp, errFP := getFingerprint(c.server, c.port)
 	if errFP != nil {
 		return APIResponse{}, errFP
@@ -387,7 +392,7 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 
 	spotReader := bytes.NewReader(_data)
 
-	req, err := http.NewRequest("POST", url, spotReader)
+	req, err := http.NewRequest(req_method, url, spotReader)
 	if err != nil {
 		return APIResponse{}, err
 	}
