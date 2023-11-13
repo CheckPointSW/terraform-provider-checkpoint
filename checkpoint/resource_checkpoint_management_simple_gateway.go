@@ -127,7 +127,6 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Hit count tracks the number of connections each rule matches.",
-				Default:     true,
 			},
 			"https_inspection": {
 				Type:        schema.TypeList,
@@ -2827,9 +2826,17 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		if ok {
 			fetchPolicyIds := make([]string, 0)
 			if len(fetchPolicyJson) > 0 {
-				for _, fetch_policy := range fetchPolicyJson {
-					fetch_policy := fetch_policy.(map[string]interface{})
-					fetchPolicyIds = append(fetchPolicyIds, fetch_policy["name"].(string))
+				fetchPolicyIdentifier := ""
+				for _, fetchPolicy := range fetchPolicyJson {
+					if fetchPolicyObject, ok := fetchPolicy.(map[string]interface{}); ok {
+						fetchPolicyIdentifier = fetchPolicyObject["name"].(string)
+					} else {
+						fetchPolicyIdentifier = fetchPolicy.(string)
+					}
+
+					if fetchPolicyIdentifier != "" {
+						fetchPolicyIds = append(fetchPolicyIds, fetchPolicyIdentifier)
+					}
 				}
 			}
 			_ = d.Set("fetch_policy", fetchPolicyIds)
@@ -4835,7 +4842,7 @@ func deleteManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	gatewayPayload := map[string]interface{}{
 		"uid": d.Id(),
 	}
-	
+
 	if v, ok := d.GetOk("ignore_warnings"); ok {
 		gatewayPayload["ignore-warnings"] = v
 	}
