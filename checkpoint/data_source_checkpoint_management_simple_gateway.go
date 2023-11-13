@@ -1915,8 +1915,8 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		if ok {
 			fetchPolicyIds := make([]string, 0)
 			if len(fetchPolicyJson) > 0 {
-				fetchPolicyIdentifier := ""
 				for _, fetchPolicy := range fetchPolicyJson {
+					fetchPolicyIdentifier := ""
 					if fetchPolicyObject, ok := fetchPolicy.(map[string]interface{}); ok {
 						fetchPolicyIdentifier = fetchPolicyObject["name"].(string)
 					} else {
