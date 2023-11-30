@@ -137,7 +137,6 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Hit count tracks the number of connections each rule matches.",
-				Default:     true,
 			},
 			"https_inspection": {
 				Type:        schema.TypeList,

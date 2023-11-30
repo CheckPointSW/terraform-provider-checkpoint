@@ -80,30 +80,30 @@ The following arguments are supported:
   the `CHECKPOINT_USERNAME` environment variable.
 * `password` - (Optional) Check Point Management admin password. It must be provided, but can also be defined via
   the `CHECKPOINT_PASSWORD` environment variable.
-* `api_key` - (Optional) Check Point Management admin api key. this can also be defined via
+* `api_key` - (Optional) Check Point Management admin api key. This can also be defined via
   the `CHECKPOINT_API_KEY` environment variable.
 * `context` - (Optional) Check Point access context - `web_api` or `gaia_api`. This can also be defined via
   the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
 * `domain` - (Optional) Login to specific domain. Domain can be identified by name or UID. This can also be defined via
   the `CHECKPOINT_DOMAIN` environment variable.
 * `timeout` - (Optional) Timeout in seconds for the Go SDK to complete a transaction. This can also be defined via
-  the `CHECKPOINT_TIMEOUT` environment variable. Default value is `10` seconds.
+  the `CHECKPOINT_TIMEOUT` environment variable. Default value is `120` seconds.
 * `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT`
   environment variable. Default value is `443`.
-* `proxy_host` - (Optional) Proxy host used for proxy connections. this can also be defined via
+* `proxy_host` - (Optional) Proxy host used for proxy connections. This can also be defined via
   the `CHECKPOINT_PROXY_HOST` environment variable.
-* `proxy_port` - (Optional) Proxy port used for proxy connections. this can also be defined via
+* `proxy_port` - (Optional) Proxy port used for proxy connections. This can also be defined via
   the `CHECKPOINT_PROXY_PORT` environment variable.
-* `session_name` - (Optional) Session unique name. this can also be defined via
+* `session_name` - (Optional) Session unique name. This can also be defined via
   the `CHECKPOINT_SESSION_NAME` environment variable.
-* `session_description` - (Optional) A description of the session's purpose. this can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
-* `session_file_name` - (Optional) Session file name used to store the current session id. this can also be defined via
+* `session_description` - (Optional) Session purpose description. This can also be defined via the `CHECKPOINT_SESSION_DESCRIPTION` environment variable.
+* `session_file_name` - (Optional) Session file name used to store the current session id. This can also be defined via
   the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
-* `session_timeout` - (Optional) The timeout in seconds for the session established in Check Point. This can also be defined via
+* `session_timeout` - (Optional) Timeout in seconds for the session established in Check Point. This can also be defined via
   the `CHECKPOINT_SESSION_TIMEOUT` environment variable. The default for the value is `600`. The timeout can be `10` - `3600`.
-* `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. this can also be defined via
+* `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. This can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
-* `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. this can also be defined via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
+* `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. This can also be defined via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
 
 ## Authentication
 
