@@ -2,39 +2,20 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 )
 
 func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceManagementCMEGWConfigurationsRead,
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "A name of an account.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
-			},
-			"status_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Result status code.",
-			},
 			"result": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Response data - contains all GW configurations",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -45,7 +26,7 @@ func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 						"version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The version of the configuration.",
+							Description: "The GW version.",
 						},
 						"sic_key": {
 							Type:        schema.TypeString,
@@ -60,39 +41,127 @@ func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 						"related_account": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Number of the deletion_tolerance.",
+							Description: "Related account name (aws/azure/gcp accounts)",
 						},
 						"blades": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
+							MaxItems:    1,
 							Computed:    true,
-							Description: "Active blades",
+							Description: "Dictionary of activated/deactivated blades on the GW.",
 							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{},
+								Schema: map[string]*schema.Schema{
+									"ips": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "IPS blade",
+									},
+									"identity_awareness": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Identity Awareness blade",
+									},
+									"content_awareness": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Content Awareness blade",
+									},
+									"https_inspection": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "HTTPS Inspection blade",
+									},
+									"application_control": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Application Control blade",
+									},
+									"url_filtering": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "URL Filtering blade",
+									},
+									"anti_bot": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Anti-Bot blade",
+									},
+									"anti_virus": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Anti-Virus blade",
+									},
+									"threat_emulation": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Threat Emulation blade",
+									},
+									"ipsec_vpn": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "IPsec VPN blade",
+									},
+									"vpn": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "VPN blade",
+									},
+									"autonomous_threat_prevention": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Autonomous Threat Prevention blade.",
+									},
+								},
 							},
 						},
-					},
-				},
-			},
-			"error": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"details": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error detials.",
+						"repository_gateway_scripts": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Description: "List of objects that each contains name/UID of a script that exists in the scripts repository" +
+								" on the Management server.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Script name",
+									},
+									"uid": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Script uid",
+									},
+									"parameters": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Script parameters (separated by space)",
+									},
+								},
+							},
 						},
-						"error_code": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Error code.",
+						"send_logs_to_server": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Description: "Primary Log Servers names to which logs are sent. Defined Log Server will act as Log and" +
+								" Alert Servers. Must be defined as part of Log Servers parameters.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
-						"message": {
-							Type:        schema.TypeString,
+						"send_logs_to_backup_server": {
+							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Error message.",
+							Description: "Backup Log Servers names to which logs are sent in case Primary Log Servers are unavailable.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"send_alerts_to_server": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Alert Log Servers names to which alerts are sent.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 					},
 				},
@@ -104,116 +173,95 @@ func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 func dataSourceManagementCMEGWConfigurationsRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	var url string = "cme-api/v1/gwConfigurations"
-	var filter bool = false
+	log.Println("Read cme GW configurations")
 
-	if v, ok := d.GetOk("name"); ok {
-		url += "/" + v.(string)
-		filter = true
-	}
+	url := CmeApiPath + "/gwConfigurations"
 
 	cmeGWConfigurationsRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !cmeGWConfigurationsRes.Success {
-		return fmt.Errorf(cmeGWConfigurationsRes.ErrorMsg)
-	}
-	cmeGWConfigurationsJson := cmeGWConfigurationsRes.GetData()
-	log.Println("Read cme GW configuration - Show JSON = ", cmeGWConfigurationsJson)
 
-	cmeGWConfigurationsToReturn := make(map[string]interface{})
-
-	var has_error bool = false
-	var err_message string
-
-	if v := cmeGWConfigurationsJson["status-code"]; v != nil {
-		_ = d.Set("status_code", int(math.Round(v.(float64))))
+	gwConfigurations := cmeGWConfigurationsRes.GetData()
+	if checkIfRequestFailed(gwConfigurations) {
+		errMessage := buildErrorMessage(gwConfigurations)
+		return fmt.Errorf(errMessage)
 	}
 
-	if cmeGWConfigurationsJson["result"] != nil {
-		if !filter {
-			cmeGWConfigurationsResultList, ok := cmeGWConfigurationsJson["result"].([]interface{})
-			var objectDictToReturn []map[string]interface{}
+	d.SetId("cme-gw-configurations-" + acctest.RandString(10))
 
-			if ok {
-				for i := range cmeGWConfigurationsResultList {
-					cmeGWConfigurationsResultJson := cmeGWConfigurationsResultList[i].(map[string]interface{})
-					tempObject := readSingleConfiguration(cmeGWConfigurationsResultJson)
-					objectDictToReturn = append(objectDictToReturn, tempObject)
-				}
-				log.Println("gw configurations = ", objectDictToReturn)
-
-				cmeGWConfigurationsToReturn["result"] = objectDictToReturn
-			}
-		} else {
-			cmeGWConfigurationsResultList, ok := cmeGWConfigurationsJson["result"]
-			var objectDictToReturn []map[string]interface{}
-
-			if ok {
-				cmeGWConfigurationsResultJson := cmeGWConfigurationsResultList.(map[string]interface{})
-				tempObject := readSingleConfiguration(cmeGWConfigurationsResultJson)
-				objectDictToReturn = append(objectDictToReturn, tempObject)
-
-				cmeGWConfigurationsToReturn["result"] = objectDictToReturn
-			}
-		}
-	} else if cmeGWConfigurationsJson["error"] != nil {
-		errorResult, ok := cmeGWConfigurationsJson["error"]
-
-		if ok {
-			errorResultJson := errorResult.(map[string]interface{})
+	gwConfigurationsList := gwConfigurations["result"].([]interface{})
+	var gwConfigurationsListToReturn []map[string]interface{}
+	if len(gwConfigurationsList) > 0 {
+		for i := range gwConfigurationsList {
+			singleGWConfiguration := gwConfigurationsList[i].(map[string]interface{})
 			tempObject := make(map[string]interface{})
+			tempObject["name"] = singleGWConfiguration["name"]
+			tempObject["version"] = singleGWConfiguration["version"]
+			tempObject["sic_key"] = singleGWConfiguration["sic_key"]
+			tempObject["policy"] = singleGWConfiguration["policy"]
+			tempObject["related_account"] = singleGWConfiguration["related_account"]
 
-			if v := errorResultJson["details"]; v != nil {
-				tempObject["details"] = v.(string)
-				err_message = v.(string)
-				has_error = true
+			var bladesListToReturn []map[string]interface{}
+			bladesMapToAdd := make(map[string]interface{})
+			if singleGWConfiguration["blades"] != nil {
+				bladesMap := singleGWConfiguration["blades"].(map[string]interface{})
+				bladesMapToAdd["ips"] = bladesMap["ips"]
+				bladesMapToAdd["identity_awareness"] = bladesMap["identity-awareness"]
+				bladesMapToAdd["content_awareness"] = bladesMap["content-awareness"]
+				bladesMapToAdd["https_inspection"] = bladesMap["https-inspection"]
+				bladesMapToAdd["application_control"] = bladesMap["application-control"]
+				bladesMapToAdd["url_filtering"] = bladesMap["url-filtering"]
+				bladesMapToAdd["anti_bot"] = bladesMap["anti-bot"]
+				bladesMapToAdd["anti_virus"] = bladesMap["anti-virus"]
+				bladesMapToAdd["threat_emulation"] = bladesMap["threat-emulation"]
+				bladesMapToAdd["ipsec_vpn"] = bladesMap["ipsec-vpn"]
+				bladesMapToAdd["vpn"] = bladesMap["vpn"]
+				bladesMapToAdd["autonomous_threat_prevention"] = bladesMap["autonomous-threat-prevention"]
+			} else {
+				bladesMapToAdd["ips"] = false
+				bladesMapToAdd["identity_awareness"] = false
+				bladesMapToAdd["content_awareness"] = false
+				bladesMapToAdd["https_inspection"] = false
+				bladesMapToAdd["application_control"] = false
+				bladesMapToAdd["url_filtering"] = false
+				bladesMapToAdd["anti_bot"] = false
+				bladesMapToAdd["anti_virus"] = false
+				bladesMapToAdd["threat_emulation"] = false
+				bladesMapToAdd["ipsec_vpn"] = false
+				bladesMapToAdd["vpn"] = false
+				bladesMapToAdd["autonomous_threat_prevention"] = false
 			}
-			if v := errorResultJson["error_code"]; v != nil {
-				var error_code string = strconv.Itoa(int(math.Round(v.(float64))))
-				tempObject["error_code"] = error_code
-				has_error = true
-			}
-			if v := errorResultJson["message"]; v != nil {
-				tempObject["message"] = v.(string)
-				has_error = true
-			}
+			bladesListToReturn = append(bladesListToReturn, bladesMapToAdd)
+			tempObject["blades"] = bladesListToReturn
 
-			cmeGWConfigurationsToReturn["error"] = tempObject
+			if singleGWConfiguration["repository-gateway-scripts"] != nil {
+				scriptsList := singleGWConfiguration["repository-gateway-scripts"].([]interface{})
+				if len(scriptsList) > 0 {
+					var scriptsListToReturn []map[string]interface{}
+					for i := range scriptsList {
+						scriptMap := scriptsList[i].(map[string]interface{})
+						scriptMapToAdd := make(map[string]interface{})
+						scriptMapToAdd["name"] = scriptMap["name"]
+						scriptMapToAdd["uid"] = scriptMap["uid"]
+						scriptMapToAdd["parameters"] = scriptMap["parameters"]
+						scriptsListToReturn = append(scriptsListToReturn, scriptMapToAdd)
+					}
+					tempObject["repository_gateway_scripts"] = scriptsListToReturn
+				} else {
+					tempObject["repository_gateway_scripts"] = scriptsList
+				}
+			}
+			tempObject["send_logs_to_server"] = singleGWConfiguration["send-logs-to-server"]
+			tempObject["send_logs_to_backup_server"] = singleGWConfiguration["send-logs-to-backup-server"]
+			tempObject["send_alerts_to_server"] = singleGWConfiguration["send-alerts-to-server"]
+
+			gwConfigurationsListToReturn = append(gwConfigurationsListToReturn, tempObject)
 		}
+		_ = d.Set("result", gwConfigurationsListToReturn)
 	} else {
-		cmeGWConfigurationsToReturn["result"] = map[string]interface{}{}
-		cmeGWConfigurationsToReturn["error"] = map[string]interface{}{}
+		_ = d.Set("result", []interface{}{})
 	}
-
-	d.SetId(generateId())
-	_ = d.Set("result", cmeGWConfigurationsToReturn["result"])
-	_ = d.Set("error", cmeGWConfigurationsToReturn["error"])
-
-	if has_error {
-		return fmt.Errorf(err_message)
-	}
-
 	return nil
-}
-
-func readSingleConfiguration(cmeGWConfigurationsResultJson map[string]interface{}) map[string]interface{} {
-	tempObject := make(map[string]interface{})
-	blades := make(map[string]interface{})
-
-	for key, value := range cmeGWConfigurationsResultJson {
-		switch key {
-		case "name", "version", "sic_key", "policy", "related_account":
-			tempObject[key] = value.(string)
-		default:
-			if key != "one-time-password" {
-				blades[key] = strconv.FormatBool(value.(bool))
-				tempObject["blades"] = blades
-			}
-		}
-	}
-
-	return tempObject
 }

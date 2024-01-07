@@ -2,12 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
+	"strconv"
 )
 
 func resourceManagementCMEAccountsAWS() *schema.Resource {
@@ -24,18 +23,24 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Unique account name for identification.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
+			},
+			"platform": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The platform of the account.",
 			},
 			"regions": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Comma-separated list of AWS regions, in which tahe gateways are being deployed.",
+				Description: "Comma-separated list of AWS regions, in which the gateways are being deployed.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"gw_configurations": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of GW configurations attached to the account",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -44,73 +49,32 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The credentials file.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"deletion_tolerance": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(int)
-					if v < 0 {
-						errs = append(errs, fmt.Errorf("%v must not be a number lower then 0", key))
-					}
-					return
-				},
 			},
 			"access_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "AWS access key.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" || len(v) > 30 {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "AWS secret key.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" || len(v) > 50 {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
+				Sensitive:   true,
 			},
 			"sts_role": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "AWS sts role.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" || len(v) > 50 {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"sts_external_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "AWS sts external id, must exist with sts role.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" || len(v) > 50 {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"scan_gateways": {
 				Type:        schema.TypeBool,
@@ -127,6 +91,11 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 				Optional:    true,
 				Description: "Set true in order to scan load balancers access and NAT rules with AWS TGW.",
 			},
+			"scan_subnets": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Set true in order to scan subnets with AWS GWLB.",
+			},
 			"communities": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -134,11 +103,6 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-			},
-			"scan_subnets": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Set true in order to scan subnets with AWS GWLB.",
 			},
 			"sub_accounts": {
 				Type:        schema.TypeList,
@@ -150,190 +114,172 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Unique account name for identification.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
 						},
 						"credentials_file": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "The credentials file.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
 						},
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "AWS access key.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" || len(v) > 30 {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "AWS secret key.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" || len(v) > 50 {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
+							Sensitive:   true,
 						},
 						"sts_role": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "AWS sts role.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" || len(v) > 50 {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
 						},
 						"sts_external_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "AWS sts external id, must exist with sts role.",
-							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								v := val.(string)
-								if v == "" || len(v) > 50 {
-									errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-								}
-								return
-							},
 						},
 					},
 				},
 			},
-			"status_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Result status code.",
-			},
-			"result": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{},
-				},
-			},
-			"error": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"details": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error detials.",
-						},
-						"error_code": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Error code.",
-						},
-						"message": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error message.",
-						},
-					},
-				},
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The account's domain name in MDS environment.",
 			},
 		},
 	}
 }
 
-func createManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountAWS(d, m)
-}
-
-func updateManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountAWS(d, m)
-}
-
 func readManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
-	d.SetId(generateId())
-	_ = d.Set("status_code", 200)
-	return nil
-}
-
-func deleteManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
-	var name string
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
-	}
-
-	res, err := deleteAccount(name, m)
-
-	if res != nil {
-		if v, ok := res["result"]; ok {
-			_ = d.Set("result", v)
-		}
-		if v, ok := res["error"]; ok {
-			_ = d.Set("error", v)
-		}
-	}
-
-	if err != nil {
-		return err
-	}
-
-	_ = d.Set("status_code", 200)
-	d.SetId("")
-	return nil
-}
-
-func createUpdateAccountAWS(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var name string
-	var method string = "POST"
 
-	url := "cme-api/v1/accounts/aws"
-
-	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
+	log.Println("Read cme AWS account - name = ", name)
 
-	isExist, err := checkAccountExisting(name, m)
+	url := CmeApiPath + "/accounts/" + name
+
+	AWSAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-
-	var updateAccount bool = false
-	if isExist {
-		method = "PUT"
-		url += "/" + name
-		updateAccount = true
-	} else {
-		payload["name"] = name
+	account := AWSAccountRes.GetData()
+	if checkIfRequestFailed(account) {
+		if cmeObjectNotFound(account) {
+			d.SetId("")
+			return nil
+		}
+		errMessage := buildErrorMessage(account)
+		return fmt.Errorf(errMessage)
 	}
 
+	AWSAccount := account["result"].(map[string]interface{})
+
+	_ = d.Set("name", AWSAccount["name"])
+
+	_ = d.Set("platform", AWSAccount["platform"])
+
+	_ = d.Set("regions", AWSAccount["regions"])
+
+	_ = d.Set("gw_configurations", AWSAccount["gw_configurations"])
+
+	_ = d.Set("credentials_file", AWSAccount["credentials_file"])
+
+	_ = d.Set("deletion_tolerance", AWSAccount["deletion_tolerance"])
+
+	_ = d.Set("access_key", AWSAccount["access_key"])
+
+	_ = d.Set("sts_role", AWSAccount["sts_role"])
+
+	_ = d.Set("sts_external_id", AWSAccount["sts_external_id"])
+
+	if AWSAccount["sync"] != nil {
+		syncMap := AWSAccount["sync"].(map[string]interface{})
+		_ = d.Set("scan_gateways", syncMap["gateway"])
+		_ = d.Set("scan_vpn", syncMap["vpn"])
+		_ = d.Set("scan_load_balancers", syncMap["lb"])
+		_ = d.Set("scan_subnets", syncMap["scan-subnets"])
+	} else {
+		_ = d.Set("scan_gateways", nil)
+		_ = d.Set("scan_vpn", nil)
+		_ = d.Set("scan_load_balancers", nil)
+		_ = d.Set("scan_subnets", nil)
+	}
+	_ = d.Set("communities", AWSAccount["communities"])
+
+	if AWSAccount["sub_accounts"] != nil {
+		subAccountsMap := AWSAccount["sub_accounts"].(map[string]interface{})
+		if len(subAccountsMap) > 0 {
+			var subAccountsListToReturn []map[string]interface{}
+			for key, value := range subAccountsMap {
+				subAccountMap := value.(map[string]interface{})
+				subAccountMapToAdd := make(map[string]interface{})
+				subAccountMapToAdd["name"] = key
+				subAccountMapToAdd["credentials_file"] = subAccountMap["credentials_file"]
+				subAccountMapToAdd["access_key"] = subAccountMap["access_key"]
+				if v, _ := subAccountMap["secret_key"]; v != nil {
+					if v, ok := d.GetOk("sub_accounts"); ok {
+						subAccountsList := v.([]interface{})
+						if len(subAccountsList) > 0 {
+							for i := range subAccountsList {
+								if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".name"); ok {
+									if key == v.(string) {
+										if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".secret_key"); ok {
+											subAccountMapToAdd["secret_key"] = v
+											break
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+					subAccountMapToAdd["secret_key"] = nil
+				}
+				subAccountMapToAdd["sts_role"] = subAccountMap["sts_role"]
+				subAccountMapToAdd["sts_external_id"] = subAccountMap["sts_external_id"]
+				subAccountsListToReturn = append(subAccountsListToReturn, subAccountMapToAdd)
+			}
+			_ = d.Set("sub_accounts", subAccountsListToReturn)
+		} else {
+			_ = d.Set("sub_accounts", []interface{}{})
+		}
+	} else {
+		_ = d.Set("sub_accounts", nil)
+	}
+	_ = d.Set("domain", AWSAccount["domain"])
+
+	return nil
+}
+
+func createManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
+
+	if v, ok := d.GetOk("name"); ok {
+		payload["name"] = v.(string)
+	}
+	if v, ok := d.GetOk("scan_gateways"); ok {
+		payload["scan_gateways"] = v.(bool)
+	}
+	if v, ok := d.GetOk("scan_vpn"); ok {
+		payload["scan_vpn"] = v.(bool)
+	}
+	if v, ok := d.GetOk("scan_load_balancers"); ok {
+		payload["scan_load_balancers"] = v.(bool)
+	}
+	if v, ok := d.GetOk("scan_subnets"); ok {
+		payload["scan_subnets"] = v.(bool)
+	}
 	if v, ok := d.GetOk("regions"); ok {
 		payload["regions"] = v.([]interface{})
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected regions when creating new account")
 	}
 	if v, ok := d.GetOk("credentials_file"); ok {
 		payload["credentials_file"] = v.(string)
@@ -353,88 +299,188 @@ func createUpdateAccountAWS(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("sts_external_id"); ok {
 		payload["sts_external_id"] = v.(string)
 	}
-	if v, ok := d.GetOk("scan_gateways"); ok {
-		payload["scan_gateways"] = v.(bool)
-	}
-	if v, ok := d.GetOk("scan_vpn"); ok {
-		payload["scan_vpn"] = v.(bool)
-	}
-	if v, ok := d.GetOk("scan_load_balancers"); ok {
-		payload["scan_load_balancers"] = v.(bool)
-	}
 	if v, ok := d.GetOk("communities"); ok {
 		payload["communities"] = v.([]interface{})
 	}
-	if v, ok := d.GetOk("scan_subnets"); ok {
-		payload["scan_subnets"] = v.(bool)
-	}
 	if v, ok := d.GetOk("sub_accounts"); ok {
-		var tempList []map[string]interface{}
-		for _, subAccount := range v.([]interface{}) {
-			tempObject := make(map[string]interface{})
-			for key, value := range subAccount.(map[string]interface{}) {
-				strValue := value.(string)
-				if strValue != "" {
-					tempObject[key] = strValue
+		subAccountsList := v.([]interface{})
+		if len(subAccountsList) > 0 {
+			var subAccountsPayload []map[string]interface{}
+			for i := range subAccountsList {
+				tempObject := make(map[string]interface{})
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".name"); ok {
+					tempObject["name"] = v.(string)
 				}
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".credentials_file"); ok {
+					tempObject["credentials_file"] = v.(string)
+				}
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".access_key"); ok {
+					tempObject["access_key"] = v.(string)
+				}
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".secret_key"); ok {
+					tempObject["secret_key"] = v.(string)
+				}
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".sts_role"); ok {
+					tempObject["sts_role"] = v.(string)
+				}
+				if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".sts_external_id"); ok {
+					tempObject["sts_external_id"] = v.(string)
+				}
+				subAccountsPayload = append(subAccountsPayload, tempObject)
 			}
-			tempList = append(tempList, tempObject)
+			payload["sub_accounts"] = subAccountsPayload
+		} else {
+			payload["sub_accounts"] = subAccountsList
 		}
-		payload["sub_accounts"] = tempList
 	}
+	if v, ok := d.GetOk("domain"); ok {
+		payload["domain"] = v.(string)
+	}
+	log.Println("Create cme AWS account - name = ", payload["name"])
 
-	log.Println("Set cme AWS account - Map = ", payload)
+	url := CmeApiPath + "/accounts/aws"
 
-	cmeAccoutsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), method)
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !cmeAccoutsRes.Success {
-		return fmt.Errorf(cmeAccoutsRes.ErrorMsg)
+
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
 	}
 
-	cmeAccountsJson := cmeAccoutsRes.GetData()
-	cmeAccountsToReturn := make(map[string]interface{})
+	d.SetId("cme-aws-account-" + d.Get("name").(string) + "-" + acctest.RandString(10))
 
-	var has_error bool = false
-	var err_message string
+	return readManagementCMEAccountsAWS(d, m)
+}
 
-	if cmeAccountsJson["error"] != nil {
-		errorResult, ok := cmeAccountsJson["error"]
+func updateManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
 
-		if ok {
-			errorResultJson := errorResult.(map[string]interface{})
-			tempObject := make(map[string]interface{})
-
-			if v := errorResultJson["details"]; v != nil {
-				tempObject["details"] = v.(string)
-				err_message = v.(string)
-				has_error = true
+	if d.HasChange("scan_gateways") {
+		payload["scan_gateways"] = d.Get("scan_gateways")
+	}
+	if d.HasChange("scan_vpn") {
+		payload["scan_vpn"] = d.Get("scan_vpn")
+	}
+	if d.HasChange("scan_load_balancers") {
+		payload["scan_load_balancers"] = d.Get("scan_load_balancers")
+	}
+	if d.HasChange("scan_subnets") {
+		payload["scan_subnets"] = d.Get("scan_subnets")
+	}
+	if d.HasChange("regions") {
+		payload["regions"] = d.Get("regions")
+	}
+	if d.HasChange("credentials_file") {
+		payload["credentials_file"] = d.Get("credentials_file")
+	}
+	if d.HasChange("deletion_tolerance") {
+		payload["deletion_tolerance"] = d.Get("deletion_tolerance")
+	}
+	if d.HasChange("access_key") {
+		payload["access_key"] = d.Get("access_key")
+	}
+	if d.HasChange("secret_key") {
+		payload["secret_key"] = d.Get("secret_key")
+	}
+	if d.HasChange("sts_role") {
+		payload["sts_role"] = d.Get("sts_role")
+	}
+	if d.HasChange("sts_external_id") {
+		payload["sts_external_id"] = d.Get("sts_external_id")
+	}
+	if d.HasChange("communities") {
+		payload["communities"] = d.Get("communities")
+	}
+	if d.HasChange("sub_accounts") {
+		if v, ok := d.GetOk("sub_accounts"); ok {
+			subAccountsList := v.([]interface{})
+			if len(subAccountsList) > 0 {
+				var subAccountsPayload []map[string]interface{}
+				for i := range subAccountsList {
+					tempObject := make(map[string]interface{})
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".name"); ok {
+						tempObject["name"] = v.(string)
+					}
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".credentials_file"); ok {
+						tempObject["credentials_file"] = v.(string)
+					}
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".access_key"); ok {
+						tempObject["access_key"] = v.(string)
+					}
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".secret_key"); ok {
+						tempObject["secret_key"] = v.(string)
+					}
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".sts_role"); ok {
+						tempObject["sts_role"] = v.(string)
+					}
+					if v, ok := d.GetOk("sub_accounts." + strconv.Itoa(i) + ".sts_external_id"); ok {
+						tempObject["sts_external_id"] = v.(string)
+					}
+					subAccountsPayload = append(subAccountsPayload, tempObject)
+				}
+				payload["sub_accounts"] = subAccountsPayload
+			} else {
+				payload["sub_accounts"] = subAccountsList
 			}
-			if v := errorResultJson["error_code"]; v != nil {
-				var error_code string = strconv.Itoa(int(math.Round(v.(float64))))
-				tempObject["error_code"] = error_code
-				has_error = true
-			}
-			if v := errorResultJson["message"]; v != nil {
-				tempObject["message"] = v
-				has_error = true
-			}
-
-			cmeAccountsToReturn["error"] = tempObject
+		} else {
+			payload["sub_accounts"] = v.([]interface{})
 		}
-	} else {
-		cmeAccountsToReturn["result"] = map[string]interface{}{}
-		cmeAccountsToReturn["error"] = map[string]interface{}{}
+	}
+	if d.HasChange("domain") {
+		payload["domain"] = d.Get("domain")
+	}
+	var name string
+
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
+	}
+	log.Println("Set cme AWS account - name = ", name)
+
+	url := CmeApiPath + "/accounts/aws/" + name
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
+
+	if err != nil {
+		return fmt.Errorf(err.Error())
 	}
 
-	_ = d.Set("result", cmeAccountsToReturn["result"])
-	_ = d.Set("error", cmeAccountsToReturn["error"])
-
-	if has_error {
-		return fmt.Errorf(err_message)
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
 	}
 
 	return readManagementCMEAccountsAWS(d, m)
+}
+
+func deleteManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
+	var name string
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
+	}
+	log.Println("Delete cme AWS account - name = ", name)
+
+	url := CmeApiPath + "/accounts/" + name
+
+	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
+
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+
+	data := res.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
+	}
+
+	d.SetId("")
+	return nil
 }

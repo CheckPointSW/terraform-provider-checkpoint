@@ -2,12 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 )
 
 func resourceManagementCMEAccountsAzure() *schema.Resource {
@@ -24,258 +22,217 @@ func resourceManagementCMEAccountsAzure() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Unique account name for identification.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"subscription": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Azure subscription ID.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"directory_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Azure Active Directory tenant ID.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"application_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The application ID with which the service principal is associated.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"client_secret": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The service principal's client secret.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
+				Sensitive:   true,
 			},
 			"deletion_tolerance": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Default:     3,
 				Description: "The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(int)
-					if v < 0 {
-						errs = append(errs, fmt.Errorf("%v must not be a number lower then 0", key))
-					}
-					return
-				},
 			},
-			"status_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Result status code.",
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The account's domain name in MDS environment.",
 			},
-			"result": {
-				Type:        schema.TypeMap,
+			"platform": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{},
-				},
+				Description: "The platform of the account.",
 			},
-			"error": {
-				Type:        schema.TypeMap,
+			"gw_configurations": {
+				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"details": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error detials.",
-						},
-						"error_code": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Error code.",
-						},
-						"message": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error message.",
-						},
-					},
+				Description: "A list of GW configurations attached to the account",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 		},
 	}
 }
 
-func createManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountAzure(d, m)
-}
-
-func updateManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountAzure(d, m)
-}
-
-func readManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
-	d.SetId(generateId())
-	_ = d.Set("status_code", 200)
-	return nil
-}
-
 func deleteManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	res, err := deleteAccount(name, m)
+	log.Println("Delete cme Azure account - name = ", name)
+	url := CmeApiPath + "/accounts/" + name
 
-	if res != nil {
-		if v, ok := res["result"]; ok {
-			_ = d.Set("result", v)
-		}
-		if v, ok := res["error"]; ok {
-			_ = d.Set("error", v)
-		}
-	}
+	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return err
+		return fmt.Errorf(err.Error())
 	}
 
-	_ = d.Set("status_code", 200)
+	data := res.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
+	}
+
 	d.SetId("")
 	return nil
 }
 
-func createUpdateAccountAzure(d *schema.ResourceData, m interface{}) error {
+func readManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var name string
-	var method string = "POST"
 
-	url := "cme-api/v1/accounts/azure"
-
-	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	isExist, err := checkAccountExisting(name, m)
+	log.Println("Read cme Azure account - name = ", name)
+	url := CmeApiPath + "/accounts/" + name
+
+	AzureAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-
-	var updateAccount bool = false
-	if isExist {
-		method = "PUT"
-		url += "/" + name
-		updateAccount = true
-	} else {
-		payload["name"] = name
+	account := AzureAccountRes.GetData()
+	if checkIfRequestFailed(account) {
+		if cmeObjectNotFound(account) {
+			d.SetId("")
+			return nil
+		}
+		errMessage := buildErrorMessage(account)
+		return fmt.Errorf(errMessage)
 	}
+
+	AzureAccount := account["result"].(map[string]interface{})
+
+	_ = d.Set("name", AzureAccount["name"])
+
+	_ = d.Set("subscription", AzureAccount["subscription"])
+
+	_ = d.Set("directory_id", AzureAccount["directory_id"])
+
+	_ = d.Set("application_id", AzureAccount["application_id"])
+
+	_ = d.Set("deletion_tolerance", AzureAccount["deletion_tolerance"])
+
+	_ = d.Set("domain", AzureAccount["domain"])
+
+	_ = d.Set("platform", AzureAccount["platform"])
+
+	_ = d.Set("gw_configurations", AzureAccount["gw_configurations"])
+
+	return nil
+}
+
+func createManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
 
 	if v, ok := d.GetOk("subscription"); ok {
 		payload["subscription"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected subscription id when creating new account")
 	}
 	if v, ok := d.GetOk("directory_id"); ok {
 		payload["directory_id"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected directory id when creating new account")
 	}
 	if v, ok := d.GetOk("application_id"); ok {
 		payload["application_id"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected application id when creating new account")
 	}
 	if v, ok := d.GetOk("client_secret"); ok {
 		payload["client_secret"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected client secret when creating new account")
 	}
 	if v, ok := d.GetOk("deletion_tolerance"); ok {
 		payload["deletion_tolerance"] = v.(int)
 	}
+	if v, ok := d.GetOk("domain"); ok {
+		payload["domain"] = v.(string)
+	}
+	if v, ok := d.GetOk("name"); ok {
+		payload["name"] = v.(string)
+	}
+	log.Println("Create cme Azure account - name = ", payload["name"])
 
-	log.Println("Set cme Azure account - Map = ", payload)
+	url := CmeApiPath + "/accounts/azure"
 
-	cmeAccoutsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), method)
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !cmeAccoutsRes.Success {
-		return fmt.Errorf(cmeAccoutsRes.ErrorMsg)
+
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
+	}
+	d.SetId("cme-azure-account-" + d.Get("name").(string) + "-" + acctest.RandString(10))
+
+	return readManagementCMEAccountsAzure(d, m)
+}
+
+func updateManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
+
+	if d.HasChange("subscription") {
+		payload["subscription"] = d.Get("subscription")
+	}
+	if d.HasChange("directory_id") {
+		payload["directory_id"] = d.Get("directory_id")
+	}
+	if d.HasChange("application_id") {
+		payload["application_id"] = d.Get("application_id")
+	}
+	if d.HasChange("client_secret") {
+		payload["client_secret"] = d.Get("client_secret")
+	}
+	if d.HasChange("deletion_tolerance") {
+		payload["deletion_tolerance"] = d.Get("deletion_tolerance")
+	}
+	if d.HasChange("domain") {
+		payload["domain"] = d.Get("domain")
 	}
 
-	cmeAccountsJson := cmeAccoutsRes.GetData()
-	cmeAccountsToReturn := make(map[string]interface{})
+	var name string
 
-	var has_error bool = false
-	var err_message string
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
+	}
+	log.Println("Set cme Azure account - name = ", name)
 
-	if cmeAccountsJson["error"] != nil {
-		errorResult, ok := cmeAccountsJson["error"]
+	url := CmeApiPath + "/accounts/azure/" + name
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
-		if ok {
-			errorResultJson := errorResult.(map[string]interface{})
-			tempObject := make(map[string]interface{})
-
-			if v := errorResultJson["details"]; v != nil {
-				tempObject["details"] = v.(string)
-				err_message = v.(string)
-				has_error = true
-			}
-			if v := errorResultJson["error_code"]; v != nil {
-				var error_code string = strconv.Itoa(int(math.Round(v.(float64))))
-				tempObject["error_code"] = error_code
-				has_error = true
-			}
-			if v := errorResultJson["message"]; v != nil {
-				tempObject["message"] = v
-				has_error = true
-			}
-
-			cmeAccountsToReturn["error"] = tempObject
-		}
-	} else {
-		cmeAccountsToReturn["result"] = map[string]interface{}{}
-		cmeAccountsToReturn["error"] = map[string]interface{}{}
+	if err != nil {
+		return fmt.Errorf(err.Error())
 	}
 
-	_ = d.Set("result", cmeAccountsToReturn["result"])
-	_ = d.Set("error", cmeAccountsToReturn["error"])
-
-	if has_error {
-		return fmt.Errorf(err_message)
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
 	}
 
 	return readManagementCMEAccountsAzure(d, m)

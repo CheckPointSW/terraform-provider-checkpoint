@@ -2,12 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
+	"strings"
 )
 
 func resourceManagementCMEAccountsGCP() *schema.Resource {
@@ -24,224 +23,206 @@ func resourceManagementCMEAccountsGCP() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The account name.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"project_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The project id.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
 			},
 			"credentials_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The credentials file.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(string)
-					if v == "" {
-						errs = append(errs, fmt.Errorf("%v must not be an empty string", key))
-					}
-					return
-				},
+			},
+			"credentials_data": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Base64 encoded string that represents the content of the credentials file.",
 			},
 			"deletion_tolerance": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.",
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(int)
-					if v < 0 {
-						errs = append(errs, fmt.Errorf("%v must not be a number lower then 0", key))
-					}
-					return
-				},
 			},
-			"status_code": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Result status code.",
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The account's domain name in MDS environment.",
 			},
-			"result": {
-				Type:        schema.TypeMap,
+			"platform": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{},
-				},
+				Description: "The platform of the account.",
 			},
-			"error": {
-				Type:        schema.TypeMap,
+			"gw_configurations": {
+				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"details": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error detials.",
-						},
-						"error_code": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Error code.",
-						},
-						"message": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error message.",
-						},
-					},
+				Description: "A list of GW configurations attached to the account",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 		},
 	}
 }
 
-func createManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountGCP(d, m)
-}
-
-func updateManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
-	return createUpdateAccountGCP(d, m)
-}
-
-func readManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
-	d.SetId(generateId())
-	_ = d.Set("status_code", 200)
-	return nil
-}
-
 func deleteManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
 	var name string
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	res, err := deleteAccount(name, m)
+	log.Println("Delete cme GCP account - name = ", name)
+	url := CmeApiPath + "/accounts/" + name
 
-	if res != nil {
-		if v, ok := res["result"]; ok {
-			_ = d.Set("result", v)
-		}
-		if v, ok := res["error"]; ok {
-			_ = d.Set("error", v)
-		}
-	}
+	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return err
+		return fmt.Errorf(err.Error())
 	}
 
-	_ = d.Set("status_code", 200)
+	data := res.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
+	}
+
 	d.SetId("")
 	return nil
 }
 
-func createUpdateAccountGCP(d *schema.ResourceData, m interface{}) error {
+func readManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
 	var name string
-	var method string = "POST"
 
-	url := "cme-api/v1/accounts/gcp"
-
-	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
 
-	isExist, err := checkAccountExisting(name, m)
+	log.Println("Read cme GCP account - name = ", name)
+	url := CmeApiPath + "/accounts/" + name
+
+	GCPAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-
-	var updateAccount bool = false
-	if isExist {
-		method = "PUT"
-		url += "/" + name
-		updateAccount = true
-	} else {
-		payload["name"] = name
+	account := GCPAccountRes.GetData()
+	if checkIfRequestFailed(account) {
+		if cmeObjectNotFound(account) {
+			d.SetId("")
+			return nil
+		}
+		errMessage := buildErrorMessage(account)
+		return fmt.Errorf(errMessage)
 	}
+
+	GCPAccount := account["result"].(map[string]interface{})
+
+	_ = d.Set("name", GCPAccount["name"])
+
+	_ = d.Set("project_id", GCPAccount["project_id"])
+
+	credFile := strings.TrimPrefix(GCPAccount["credentials_file"].(string), "$FWDIR/conf/")
+	_ = d.Set("credentials_file", credFile)
+
+	_ = d.Set("credentials_data", GCPAccount["credentials_data"])
+
+	_ = d.Set("deletion_tolerance", GCPAccount["deletion_tolerance"])
+
+	_ = d.Set("domain", GCPAccount["domain"])
+
+	_ = d.Set("platform", GCPAccount["platform"])
+
+	_ = d.Set("gw_configurations", GCPAccount["gw_configurations"])
+
+	return nil
+
+}
+
+func createManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
 
 	if v, ok := d.GetOk("project_id"); ok {
 		payload["project_id"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected project id when creating new account")
 	}
 	if v, ok := d.GetOk("credentials_file"); ok {
 		payload["credentials_file"] = v.(string)
-	} else if !ok && !updateAccount {
-		return fmt.Errorf("expected credentials file when creating new account")
+	}
+	if v, ok := d.GetOk("credentials_data"); ok {
+		payload["credentials_data"] = v.(string)
 	}
 	if v, ok := d.GetOk("deletion_tolerance"); ok {
 		payload["deletion_tolerance"] = v.(int)
 	}
+	if v, ok := d.GetOk("domain"); ok {
+		payload["domain"] = v.(string)
+	}
+	if v, ok := d.GetOk("name"); ok {
+		payload["name"] = v.(string)
+	}
+	log.Println("Create cme GCP account - name = ", payload["name"])
 
-	log.Println("Set cme GCP account - Map = ", payload)
+	url := CmeApiPath + "/accounts/gcp"
 
-	cmeAccoutsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), method)
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !cmeAccoutsRes.Success {
-		return fmt.Errorf(cmeAccoutsRes.ErrorMsg)
+
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
+	}
+	d.SetId("cme-gcp-account-" + d.Get("name").(string) + "-" + acctest.RandString(10))
+
+	return readManagementCMEAccountsGCP(d, m)
+}
+
+func updateManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+	payload := make(map[string]interface{})
+
+	if d.HasChange("project_id") {
+		payload["project_id"] = d.Get("project_id")
+	}
+	if d.HasChange("credentials_file") {
+		payload["credentials_file"] = d.Get("credentials_file")
+	}
+	if d.HasChange("credentials_data") {
+		payload["credentials_data"] = d.Get("credentials_data")
+	}
+	if d.HasChange("deletion_tolerance") {
+		payload["deletion_tolerance"] = d.Get("deletion_tolerance")
+	}
+	if d.HasChange("domain") {
+		payload["domain"] = d.Get("domain")
 	}
 
-	cmeAccountsJson := cmeAccoutsRes.GetData()
-	cmeAccountsToReturn := make(map[string]interface{})
+	var name string
 
-	var has_error bool = false
-	var err_message string
+	if v, ok := d.GetOk("name"); ok {
+		name = v.(string)
+	}
+	log.Println("Set cme GCP account - name = ", name)
 
-	if cmeAccountsJson["error"] != nil {
-		errorResult, ok := cmeAccountsJson["error"]
+	url := CmeApiPath + "/accounts/gcp/" + name
+	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
-		if ok {
-			errorResultJson := errorResult.(map[string]interface{})
-			tempObject := make(map[string]interface{})
-
-			if v := errorResultJson["details"]; v != nil {
-				tempObject["details"] = v.(string)
-				err_message = v.(string)
-				has_error = true
-			}
-			if v := errorResultJson["error_code"]; v != nil {
-				var error_code string = strconv.Itoa(int(math.Round(v.(float64))))
-				tempObject["error_code"] = error_code
-				has_error = true
-			}
-			if v := errorResultJson["message"]; v != nil {
-				tempObject["message"] = v
-				has_error = true
-			}
-
-			cmeAccountsToReturn["error"] = tempObject
-		}
-	} else {
-		cmeAccountsToReturn["result"] = map[string]interface{}{}
-		cmeAccountsToReturn["error"] = map[string]interface{}{}
+	if err != nil {
+		return fmt.Errorf(err.Error())
 	}
 
-	_ = d.Set("result", cmeAccountsToReturn["result"])
-	_ = d.Set("error", cmeAccountsToReturn["error"])
-
-	if has_error {
-		return fmt.Errorf(err_message)
+	data := cmeAccountsRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
 	}
 
 	return readManagementCMEAccountsGCP(d, m)

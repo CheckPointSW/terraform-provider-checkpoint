@@ -6,9 +6,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"io/ioutil"
-	"math/rand"
 	"os"
-	"time"
 )
 
 //var lock sync.Mutex
@@ -154,19 +152,4 @@ func isArgDefault(v string, d *schema.ResourceData, arg string, defaultVal strin
 	_, ok := d.GetOk(arg)
 	isDefault := v == defaultVal && ok
 	return v != defaultVal || isDefault
-}
-
-// Generate a random string
-func generateId() string {
-	const (
-		charset   string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-		stringLen int    = 16
-	)
-	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	randString := make([]byte, stringLen)
-	for i := range randString {
-		randString[i] = charset[seededRand.Intn(len(charset))]
-	}
-	return string(randString)
 }

@@ -2,65 +2,30 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 )
 
 func dataSourceManagementCMEManagement() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceManagementCMEManagementRead,
 		Schema: map[string]*schema.Schema{
-			"status_code": {
-				Type:        schema.TypeInt,
+			"name": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Result status code.",
+				Description: "The name of the management server.",
 			},
-			"result": {
-				Type:        schema.TypeMap,
+			"domain": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"host": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The host address.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of the management.",
-						},
-					},
-				},
+				Description: "The management's domain name in MDS environment.",
 			},
-			"error": {
-				Type:        schema.TypeMap,
+			"host": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"details": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error detials.",
-						},
-						"error_code": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Error code.",
-						},
-						"message": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error message.",
-						},
-					},
-				},
+				Description: "The host of the management server.",
 			},
 		},
 	}
@@ -69,79 +34,30 @@ func dataSourceManagementCMEManagement() *schema.Resource {
 func dataSourceManagementCMEManagementRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 
-	cmeManagementRes, err := client.ApiCall("cme-api/v1/management", nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
+	log.Println("Read cme management")
+	url := CmeApiPath + "/management"
+
+	cmeManagementRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
 		return fmt.Errorf(err.Error())
 	}
-	if !cmeManagementRes.Success {
-		return fmt.Errorf(cmeManagementRes.ErrorMsg)
+
+	data := cmeManagementRes.GetData()
+	if checkIfRequestFailed(data) {
+		errMessage := buildErrorMessage(data)
+		return fmt.Errorf(errMessage)
 	}
 
-	cmeManagementJson := cmeManagementRes.GetData()
-	log.Println("Read cme management - Show JSON = ", cmeManagementJson)
+	d.SetId("cme-management-" + acctest.RandString(10))
 
-	cmeManagementToReturn := make(map[string]interface{})
+	cmeManagementData := data["result"].(map[string]interface{})
 
-	var has_error bool = false
-	var err_message string
+	_ = d.Set("name", cmeManagementData["name"])
 
-	if v := cmeManagementJson["status-code"]; v != nil {
-		_ = d.Set("status_code", int(math.Round(v.(float64))))
-	}
+	_ = d.Set("domain", cmeManagementData["domain"])
 
-	if cmeManagementJson["result"] != nil {
-		cmeManagementResult, ok := cmeManagementJson["result"]
-
-		if ok {
-			cmeVersionResultJson := cmeManagementResult.(map[string]interface{})
-			tempObject := make(map[string]interface{})
-
-			if v := cmeVersionResultJson["host"]; v != nil {
-				tempObject["host"] = v.(string)
-			}
-			if v := cmeVersionResultJson["name"]; v != nil {
-				tempObject["name"] = v.(string)
-			}
-
-			cmeManagementToReturn["result"] = tempObject
-		}
-	} else if cmeManagementJson["error"] != nil {
-		errorResult, ok := cmeManagementJson["error"]
-
-		if ok {
-			errorResultJson := errorResult.(map[string]interface{})
-			tempObject := make(map[string]interface{})
-
-			if v := errorResultJson["details"]; v != nil {
-				tempObject["details"] = v.(string)
-				err_message = v.(string)
-				has_error = true
-			}
-			if v := errorResultJson["error_code"]; v != nil {
-				var error_code string = strconv.Itoa(int(math.Round(v.(float64))))
-				tempObject["error_code"] = error_code
-				has_error = true
-			}
-			if v := errorResultJson["message"]; v != nil {
-				tempObject["message"] = v.(string)
-				has_error = true
-			}
-
-			cmeManagementToReturn["error"] = tempObject
-		}
-	} else {
-		cmeManagementToReturn["result"] = map[string]interface{}{}
-		cmeManagementToReturn["error"] = map[string]interface{}{}
-	}
-
-	d.SetId(generateId())
-	_ = d.Set("result", cmeManagementToReturn["result"])
-	_ = d.Set("error", cmeManagementToReturn["error"])
-
-	if has_error {
-		return fmt.Errorf(err_message)
-	}
+	_ = d.Set("host", cmeManagementData["host"])
 
 	return nil
 }
