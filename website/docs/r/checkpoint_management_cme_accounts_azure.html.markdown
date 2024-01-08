@@ -30,5 +30,10 @@ The following arguments are supported:
 * `directory_id` - (Required) Azure Active Directory tenant ID.
 * `application_id` - (Required) The application ID with which the service principal is associated.
 * `client_secret` - (Required) The service principal's client secret.
-* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.
+* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a GW until
+  its deletion.
 * `domain` - (Optional) The account's domain name in MDS environment.
+
+## Limitations
+
+`client_secret` attribute can be updated only through the created resources in terraform.

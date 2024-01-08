@@ -144,8 +144,8 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWC
 			return fmt.Errorf("policy is %s, expected %s", gwConfiguration["policy"], gwConfigurationPolicyName)
 		}
 		blades := gwConfiguration["blades"].(map[string]interface{})
-		httpsInspection:= blades["https-inspection"]
-		applicationControl:= blades["application-control"]
+		httpsInspection := blades["https-inspection"]
+		applicationControl := blades["application-control"]
 		if httpsInspection != httpsInspectionFlag {
 			return fmt.Errorf("https inspection is %t, expected %t", httpsInspection, httpsInspectionFlag)
 		}

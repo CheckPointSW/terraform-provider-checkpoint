@@ -11,7 +11,7 @@ import (
 
 func TestAccCheckpointManagementCMEManagement_basic(t *testing.T) {
 	var managementObject map[string]interface{}
-	DefaultManagementName:=  "MGMT"
+	DefaultManagementName := "MGMT"
 	resourceName := "checkpoint_management_cme_management.test"
 	ManagementName := "test-management"
 
@@ -37,7 +37,7 @@ func TestAccCheckpointManagementCMEManagement_basic(t *testing.T) {
 				Config: testAccManagementCMEManagementConfig(DefaultManagementName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEManagementExists(resourceName, &managementObject),
-					testAccCheckCheckpointManagementCMEManagementAttributes(&managementObject, DefaultManagementName,"localhost"),
+					testAccCheckCheckpointManagementCMEManagementAttributes(&managementObject, DefaultManagementName, "localhost"),
 				),
 			},
 		},

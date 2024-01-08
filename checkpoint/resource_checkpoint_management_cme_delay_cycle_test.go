@@ -11,7 +11,7 @@ import (
 
 func TestAccCheckpointManagementCMEDelayCycle_basic(t *testing.T) {
 	var delayCycleObject map[string]interface{}
-	DefaultDelayCycle:=  30
+	DefaultDelayCycle := 30
 	resourceName := "checkpoint_management_cme_delay_cycle.test"
 	delayCycleVal := 20
 

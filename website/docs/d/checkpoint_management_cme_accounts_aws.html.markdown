@@ -26,7 +26,8 @@ The following arguments are supported:
 * `platform` - The platform of the account.
 * `gw_configurations` - A list of GW configurations attached to the account.
 * `credentials_file` - The credentials file.
-* `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.
+* `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a GW until its
+  deletion.
 * `access_key` - AWS access key.
 * `secret_key` - AWS secret key.
 * `sts_role` - AWS sts role.
@@ -35,12 +36,13 @@ The following arguments are supported:
 * `scan_vpn` - true/false for scan vpn with AWS TGW.
 * `scan_load_balancers` - true/false for scan load balancers access and NAT rules with AWS TGW.
 * `scan_subnets` - true/false for scan subnets with AWS GWLB.
-* `communities` - Comma-separated list of communities, which are allowed for VPN connections fow AWS TGW that are discovered by this account.
+* `communities` - Comma-separated list of communities, which are allowed for VPN connections fow AWS TGW that are
+  discovered by this account.
 * `sub_accounts` - AWS sub accounts. supports the following:
-  * `name` - Sub account name.
-  * `credentials_file` - Sub account credentials file.
-  * `access_key` - Sub account access key.
-  * `secret_key` - Sub account secret key.
-  * `sts_role` - Sub account sts role.
-  * `sts_external_id` - Sub account sts external id, must exist with sts role.
+    * `name` - Sub account name.
+    * `credentials_file` - Sub account credentials file.
+    * `access_key` - Sub account access key.
+    * `secret_key` - Sub account secret key.
+    * `sts_role` - Sub account sts role.
+    * `sts_external_id` - Sub account sts external id, must exist with sts role.
 * `domain` - The account's domain name in MDS environment.

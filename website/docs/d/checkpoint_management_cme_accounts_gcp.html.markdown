@@ -25,7 +25,8 @@ The following arguments are supported:
 * `project_id` - GCP project id.
 * `credentials_file` - The credentials file.
 * `credentials_data` - Base64 encoded string that represents the content of the credentials file.
-* `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.
+* `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a GW until its
+  deletion.
 * `domain` - The account's domain name in MDS environment.
 * `platform` - The platform of the account.
 * `gw_configurations` - A list of GW configurations attached to the account.

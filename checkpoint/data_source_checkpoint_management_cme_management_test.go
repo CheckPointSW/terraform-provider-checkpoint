@@ -26,7 +26,6 @@ func TestAccDataSourceCheckpointManagementCMEManagement_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "host"),
-
 				),
 			},
 		},

@@ -13,7 +13,7 @@ This resource allows you to update Check Point CME Management.
 
 ```hcl
 resource "checkpoint_management_cme_management" "mgmt" {
-  name   = "quickstart-management"
+  name = "quickstart-management"
 }
 ```
 

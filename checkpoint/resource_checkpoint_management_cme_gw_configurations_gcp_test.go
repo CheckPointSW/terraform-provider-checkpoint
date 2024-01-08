@@ -142,8 +142,8 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsGCPAttributes(gcpGWConfi
 			return fmt.Errorf("policy is %s, expected %s", gwConfiguration["policy"], gwConfigurationPolicyName)
 		}
 		blades := gwConfiguration["blades"].(map[string]interface{})
-		contentAwareness:= blades["content-awareness"]
-		identityAwareness:= blades["identity-awareness"]
+		contentAwareness := blades["content-awareness"]
+		identityAwareness := blades["identity-awareness"]
 		if contentAwareness != contentAwarenessFlag {
 			return fmt.Errorf("content awareness is %t, expected %t", contentAwareness, contentAwarenessFlag)
 		}

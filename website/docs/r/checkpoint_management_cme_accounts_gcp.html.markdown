@@ -25,7 +25,9 @@ The following arguments are supported:
 
 * `name` - (Required) Unique account name for identification.
 * `project_id` - (Required) GCP project id.
-* `credentials_file` - (Optional) The name of a text file containing GCP credentials located in $FWDIR/conf directory for a Management Server or $MDSDIR/conf directory for a Multi-Domain Management Server.
+* `credentials_file` - (Optional) The name of a text file containing GCP credentials located in $FWDIR/conf directory
+  for a Management Server or $MDSDIR/conf directory for a Multi-Domain Management Server.
 * `credentials_data` - (Optional) Base64 encoded string that represents the content of the credentials file.
-* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a GW until its deletion.
+* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a GW until
+  its deletion.
 * `domain` - (Optional) The account's domain name in MDS environment.

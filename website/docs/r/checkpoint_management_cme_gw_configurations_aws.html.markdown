@@ -24,7 +24,7 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_config_aws" {
   send_logs_to_backup_server = ["BLS_B"]
   send_alerts_to_server      = ["ALS_C"]
   repository_gateway_scripts {
-    name = "xyz"
+    name       = "xyz"
     parameters = "param1 param2"
   }
   blades {
@@ -54,45 +54,52 @@ The following arguments are supported:
 * `policy` - (Required) Policy name to be installed on the GW.
 * `related_account` - (Required) The CME account to associate with the GW Configuration.
 * `blades` - (Required) Dictionary of activated/deactivated blades on the GW. supports the following:
-  * `ips` - (Required) IPS blade.
-  * `anti_bot` - (Required) Anti-Bot blade.
-  * `anti_virus` - (Required) Anti-Virus blade.
-  * `https_inspection` - (Required) HTTPS Inspection blade.
-  * `application_control` - (Required) Application Control blade.
-  * `autonomous_threat_prevention` - (Required) ATP blade.
-  * `content_awareness` - (Required) Content Awareness blade.
-  * `identity_awareness` - (Required) Identity Awareness blade.
-  * `ipsec_vpn` - (Required) IPsec VPN blade.
-  * `threat_emulation` - (Required) Threat Emulation blade.
-  * `url_filtering` - (Required) URL Filtering blade.
-  * `vpn` - (Required) VPN blade.
-* `repository_gateway_scripts` - (Optional) List of objects that each contains name/UID of a script that exists in the scripts repository on the Management server. Supports the following:
+    * `ips` - (Required) IPS blade.
+    * `anti_bot` - (Required) Anti-Bot blade.
+    * `anti_virus` - (Required) Anti-Virus blade.
+    * `https_inspection` - (Required) HTTPS Inspection blade.
+    * `application_control` - (Required) Application Control blade.
+    * `autonomous_threat_prevention` - (Required) ATP blade.
+    * `content_awareness` - (Required) Content Awareness blade.
+    * `identity_awareness` - (Required) Identity Awareness blade.
+    * `ipsec_vpn` - (Required) IPsec VPN blade.
+    * `threat_emulation` - (Required) Threat Emulation blade.
+    * `url_filtering` - (Required) URL Filtering blade.
+    * `vpn` - (Required) VPN blade.
+* `repository_gateway_scripts` - (Optional) List of objects that each contains name/UID of a script that exists in the
+  scripts repository on the Management server. Supports the following:
     * `name` - (Required) The name of the script.
     * `parameters` - (Optional) The parameters to pass to the script.
 * `vpn_domain` - (Optional) The group object to be set as the VPN domain for the VPN gateway.
-                  An empty string will automatically set an empty group as the encryption domain.
-                  Always empty string for 'TGW' deployment type.
+  An empty string will automatically set an empty group as the encryption domain.
+  Always empty string for 'TGW' deployment type.
 * `vpn_community` - (Optional) A star community in which to place the VPN gateway as center.
 * `deployment_type` - (Optional) The deployment type of the CloudGuard Security Gateways.
-* `tgw_static_routes` - (Optional) Comma separated list of cidrs, for each cidr a static route will be created on each gateway of the TGW auto scaling group.
-* `tgw_spoke_routes` - (Optional) Comma separated list of spoke cidrs, each spoke cidr that was learned from the TGW over bgp will be re-advertised by the gateways of the TGW auto scaling group to the AWS TGW.
-* `send_logs_to_server` - (Optional) Comma separated list of Primary Log Servers names to which logs are sent. Defined Log Server will act as Log and Alert Servers. Must be defined as part of Log Servers parameters.
-* `send_logs_to_backup_server` - (Optional) Comma separated list of Backup Log Servers names to which logs are sent in case Primary Log Servers are unavailable.
+* `tgw_static_routes` - (Optional) Comma separated list of cidrs, for each cidr a static route will be created on each
+  gateway of the TGW auto scaling group.
+* `tgw_spoke_routes` - (Optional) Comma separated list of spoke cidrs, each spoke cidr that was learned from the TGW
+  over bgp will be re-advertised by the gateways of the TGW auto scaling group to the AWS TGW.
+* `send_logs_to_server` - (Optional) Comma separated list of Primary Log Servers names to which logs are sent. Defined
+  Log Server will act as Log and Alert Servers. Must be defined as part of Log Servers parameters.
+* `send_logs_to_backup_server` - (Optional) Comma separated list of Backup Log Servers names to which logs are sent in
+  case Primary Log Servers are unavailable.
 * `send_alerts_to_server` - (Optional) Comma separated list of Alert Log Servers names to which alerts are sent.
 
 ## How To Use
 
-Make sure this resource creation will be executed in the right execution order. note: terraform execution is not sequential.  
+Make sure this resource creation will be executed in the right execution order. Note: terraform execution is not
+sequential.  
 For example, if you want to create a gateway configuration along with an account, the account should be created first.
-For forcing this dependency, the "related_account" argument should use the account resource like in the following example:
+For forcing this dependency, the "related_account" argument should use the account resource like in the following
+example:
 
 ```hcl
 resource "checkpoint_management_cme_accounts_aws" "aws_account" {
-   ///...
+  ///...
 }
 resource "checkpoint_management_cme_gw_configurations_aws" "gw_config_aws" {
-  name                       = "TestAWSTemplate"
-  related_account            = checkpoint_management_cme_accounts_aws.aws_account.name
+  name            = "TestAWSTemplate"
+  related_account = checkpoint_management_cme_accounts_aws.aws_account.name
   ///...
 }
 ```
