@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-manageme
 description: |- Use this data source to get information on existing Check Point CME Management.
 ---
 
-# checkpoint_management_cme_management
+# Data Source: checkpoint_management_cme_management
 
 Use this data source to get information on existing Check Point CME Management.
 

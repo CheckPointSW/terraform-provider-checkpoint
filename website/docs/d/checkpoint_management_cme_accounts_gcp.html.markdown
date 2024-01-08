@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-accounts
 description: |- Use this data source to get information on an existing Check Point CME GCP Account.
 ---
 
-# checkpoint_management_cme_accounts_gcp
+# Data Source: checkpoint_management_cme_accounts_gcp
 
 Use this data source to get information on an existing Check Point CME GCP Account.
 

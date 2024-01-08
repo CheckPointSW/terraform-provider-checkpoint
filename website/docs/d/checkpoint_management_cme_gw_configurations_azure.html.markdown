@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-gw-confi
 description: |- Use this data source to get information on an existing Check Point CME Azure GW Configurations.
 ---
 
-# checkpoint_management_cme_gw_configurations_azure
+# Data Source: checkpoint_management_cme_gw_configurations_azure
 
 Use this data source to get information on an existing Check Point CME Azure GW Configurations.
 

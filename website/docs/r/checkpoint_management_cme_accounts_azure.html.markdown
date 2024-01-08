@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-accounts-az
 description: |- This resource allows you to add/update/delete Check Point CME Azure Account.
 ---
 
-# checkpoint_management_cme_accounts_azure
+# Resource: checkpoint_management_cme_accounts_azure
 
 This resource allows you to add/update/delete Check Point CME Azure Account.
 

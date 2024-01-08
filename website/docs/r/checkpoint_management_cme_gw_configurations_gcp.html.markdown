@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-gw-configur
 description: |- This resource allows you to add/update/delete Check Point CME GCP GW Configurations.
 ---
 
-# checkpoint_management_cme_gw_configurations_gcp
+# Resource: checkpoint_management_cme_gw_configurations_gcp
 
 This resource allows you to add/update/delete Check Point CME GCP GW Configurations.
 

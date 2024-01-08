@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-gw-confi
 description: |- Use this data source to get information on all Check Point CME GW Configurations.
 ---
 
-# checkpoint_management_cme_gw_configurations
+# Data Source: checkpoint_management_cme_gw_configurations
 
 Use this data source to get information on all Check Point CME GW Configurations.
 

@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-gw-configur
 description: |- This resource allows you to add/update/delete Check Point CME AWS GW Configurations.
 ---
 
-# checkpoint_management_cme_gw_configurations_aws
+# Resource: checkpoint_management_cme_gw_configurations_aws
 
 This resource allows you to add/update/delete Check Point CME AWS GW Configurations.
 

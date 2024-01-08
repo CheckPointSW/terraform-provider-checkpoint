@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-api-vers
 description: |- Use this data source to get information on existing Check Point CME API versions.
 ---
 
-# checkpoint_management_cme_api_versions
+# Data Source: checkpoint_management_cme_api_versions
 
 Use this data source to get information on existing Check Point CME API versions.
 

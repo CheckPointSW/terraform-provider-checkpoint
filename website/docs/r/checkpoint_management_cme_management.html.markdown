@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-management"
 description: |- This resource allows you to update Check Point CME Management.
 ---
 
-# checkpoint_management_cme_management
+# Resource: checkpoint_management_cme_management
 
 This resource allows you to update Check Point CME Management.
 

@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-accounts-gc
 description: |- This resource allows you to add/update/delete Check Point CME GCP Account.
 ---
 
-# checkpoint_management_cme_accounts_gcp
+# Resource: checkpoint_management_cme_accounts_gcp
 
 This resource allows you to add/update/delete Check Point CME GCP Account.
 

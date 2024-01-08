@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-accounts-aw
 description: |- This resource allows you to add/update/delete Check Point CME AWS Account.
 ---
 
-# checkpoint_management_cme_accounts_aws
+# Resource: checkpoint_management_cme_accounts_aws
 
 This resource allows you to add/update/delete Check Point CME AWS Account.
 

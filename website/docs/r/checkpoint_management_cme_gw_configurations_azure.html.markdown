@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-gw-configur
 description: |- This resource allows you to add/update/delete Check Point CME Azure GW Configurations.
 ---
 
-# checkpoint_management_cme_gw_configurations_azure
+# Resource: checkpoint_management_cme_gw_configurations_azure
 
 This resource allows you to add/update/delete Check Point CME Azure GW Configurations.
 

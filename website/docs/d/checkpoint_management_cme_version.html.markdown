@@ -5,7 +5,7 @@ sidebar_current: "docs-checkpoint-data-source-checkpoint-management-cme-version"
 description: |- Use this data source to get information on existing Check Point CME version.
 ---
 
-# checkpoint_management_cme_version
+# Data Source: checkpoint_management_cme_version
 
 Use this data source to get information on existing Check Point CME version.
 
