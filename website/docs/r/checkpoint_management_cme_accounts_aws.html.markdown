@@ -13,20 +13,20 @@ This resource allows you to add/update/delete Check Point CME AWS Account.
 
 ```hcl
 resource "checkpoint_management_cme_accounts_aws" "aws_account" {
-  name                = "TestAWSController"
+  name                = "awsAccount"
   regions             = ["eu-north-1"]
   credentials_file    = "IAM"
   scan_load_balancers = true
-  sts_role            = "abcdabcdabcdabcdabcda"
-  sts_external_id     = "xyzx"
+  sts_role            = "arn:aws:iam::123412341234:role/EXAMPLE"
+  sts_external_id     = "12345"
   sub_accounts {
     name             = "sub_account_a"
     credentials_file = "IAM"
   }
   sub_accounts {
     name       = "sub_account_b"
-    access_key = "aaaaaaaaaaaaaaaahaa"
-    secret_key = "1"
+    access_key = "AKIAIOSFODNN7EXAMPLE"
+    secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
   }
 }
 ```
@@ -35,7 +35,7 @@ resource "checkpoint_management_cme_accounts_aws" "aws_account" {
 
 The following arguments are supported:
 
-* `name` - (Required) Unique account name for identification.
+* `name` - (Required) Unique account name for identification without spaces.
 * `regions` - (Required) Comma-separated list of AWS regions, in which the gateways are being deployed.
 * `credentials_file` - (Optional) One of the following options:
     1. The name of a text file containing AWS credentials located in $FWDIR/conf/ directory for a Management Server or
@@ -64,4 +64,4 @@ The following arguments are supported:
 
 ## Limitations
 
-`secret_key` attribute can be updated only through the created resources in terraform.
+`secret_key` attribute can be managed only through the created resources in terraform.

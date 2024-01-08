@@ -31,7 +31,7 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 			},
 			"regions": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Required:    true,
 				Description: "Comma-separated list of AWS regions, in which the gateways are being deployed.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,

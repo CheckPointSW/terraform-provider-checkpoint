@@ -13,7 +13,7 @@ Use this data source to get information on an existing Check Point CME Azure Acc
 
 ```hcl
 data "checkpoint_management_cme_accounts_azure" "azure_account" {
-  name = "azure-controller"
+  name = "azureAccount"
 }
 ```
 

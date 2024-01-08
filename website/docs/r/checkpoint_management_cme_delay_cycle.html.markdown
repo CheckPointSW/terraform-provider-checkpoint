@@ -5,14 +5,14 @@ sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-delay-cycle
 description: |- This resource allows you to update Check Point CME Delay Cycle.
 ---
 
-# checkpoint_management_cme_management
+# checkpoint_management_cme_delay_cycle
 
 This resource allows you to update Check Point CME Delay Cycle.
 
 ## Example Usage
 
 ```hcl
-resource "checkpoint_management_cme_delay_cycle" "d" {
+resource "checkpoint_management_cme_delay_cycle" "delay_cycle" {
   delay_cycle = 30
 }
 ```

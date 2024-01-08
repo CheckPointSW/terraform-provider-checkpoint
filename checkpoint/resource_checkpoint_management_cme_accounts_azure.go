@@ -25,22 +25,22 @@ func resourceManagementCMEAccountsAzure() *schema.Resource {
 			},
 			"subscription": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Azure subscription ID.",
 			},
 			"directory_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Azure Active Directory tenant ID.",
 			},
 			"application_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The application ID with which the service principal is associated.",
 			},
 			"client_secret": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The service principal's client secret.",
 				Sensitive:   true,
 			},

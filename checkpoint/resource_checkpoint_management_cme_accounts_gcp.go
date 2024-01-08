@@ -26,7 +26,7 @@ func resourceManagementCMEAccountsGCP() *schema.Resource {
 			},
 			"project_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The project id.",
 			},
 			"credentials_file": {

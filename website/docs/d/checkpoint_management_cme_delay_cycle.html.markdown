@@ -12,7 +12,7 @@ Use this data source to get information on existing Check Point CME Delay Cycle.
 ## Example Usage
 
 ```hcl
-data "checkpoint_management_cme_delay_cycle" "d" {
+data "checkpoint_management_cme_delay_cycle" "delay_cycle" {
 }
 ```
 

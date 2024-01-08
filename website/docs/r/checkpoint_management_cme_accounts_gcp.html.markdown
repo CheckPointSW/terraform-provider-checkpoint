@@ -13,7 +13,7 @@ This resource allows you to add/update/delete Check Point CME GCP Account.
 
 ```hcl
 resource "checkpoint_management_cme_accounts_gcp" "gcp_account" {
-  name             = "TestGCPController"
+  name             = "gcpAccount"
   project_id       = "my-project-1"
   credentials_file = "cred_file.json"
 }
@@ -23,7 +23,7 @@ resource "checkpoint_management_cme_accounts_gcp" "gcp_account" {
 
 The following arguments are supported:
 
-* `name` - (Required) Unique account name for identification.
+* `name` - (Required) Unique account name for identification without spaces.
 * `project_id` - (Required) GCP project id.
 * `credentials_file` - (Optional) The name of a text file containing GCP credentials located in $FWDIR/conf directory
   for a Management Server or $MDSDIR/conf directory for a Multi-Domain Management Server.

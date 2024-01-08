@@ -13,7 +13,7 @@ Use this data source to get information on an existing Check Point CME AWS Accou
 
 ```hcl
 data "checkpoint_management_cme_accounts_aws" "aws_account" {
-  name = "aws-controller"
+  name = "awsAccount"
 }
 ```
 

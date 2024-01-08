@@ -26,22 +26,22 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 			},
 			"version": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The GW version.",
 			},
 			"base64_sic_key": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Base64 key for trusted communication between management and GW.",
 			},
 			"policy": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "Policy name to be installed on the GW.",
 			},
 			"related_account": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The CME account to associate with the GW Configuration.",
 			},
 			"blades": {

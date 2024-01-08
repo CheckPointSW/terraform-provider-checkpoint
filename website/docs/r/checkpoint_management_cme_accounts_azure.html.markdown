@@ -13,11 +13,11 @@ This resource allows you to add/update/delete Check Point CME Azure Account.
 
 ```hcl
 resource "checkpoint_management_cme_accounts_azure" "azure_account" {
-  name           = "TestAzureController"
-  directory_id   = "12345678-1234-1234-1234-123456789123"
-  application_id = "12345678-1234-1234-1234-123456789123"
+  name           = "azureAccount"
+  directory_id   = "abcd1234-ab12-cd34-ef56-abcdef123456"
+  application_id = "abcd1234-ab12-cd34-ef56-abcdef123456"
   client_secret  = "mySecret"
-  subscription   = "12345678-1234-1234-1234-123456789123"
+  subscription   = "abcd1234-ab12-cd34-ef56-abcdef123456"
 }
 ```
 
@@ -25,7 +25,7 @@ resource "checkpoint_management_cme_accounts_azure" "azure_account" {
 
 The following arguments are supported:
 
-* `name` - (Required) Unique account name for identification.
+* `name` - (Required) Unique account name for identification without spaces.
 * `subscription` - (Required) Azure subscription ID.
 * `directory_id` - (Required) Azure Active Directory tenant ID.
 * `application_id` - (Required) The application ID with which the service principal is associated.
@@ -36,4 +36,4 @@ The following arguments are supported:
 
 ## Limitations
 
-`client_secret` attribute can be updated only through the created resources in terraform.
+`client_secret` attribute can be managed only through the created resources in terraform.

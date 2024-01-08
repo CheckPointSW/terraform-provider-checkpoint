@@ -13,7 +13,7 @@ Use this data source to get information on an existing Check Point CME GCP GW Co
 
 ```hcl
 data "checkpoint_management_cme_gw_configurations_gcp" "gw_config_gcp" {
-  name = "TestGCPTemplate"
+  name = "gcpGWConfigurations"
 }
 ```
 
@@ -26,7 +26,7 @@ The following arguments are supported:
 * `sic_key` - SIC key for trusted communication between management and GW.
 * `policy` - Policy name to be installed on the GW.
 * `related_account` - Related CME account name associated with the GW Configuration.
-* `blades` - Dictionary of activated/deactivated blades on the GW. supports the following:
+* `blades` - Dictionary of activated/deactivated blades on the GW. Supports the following:
     * `ips` - IPS blade.
     * `anti_bot` - Anti-Bot blade.
     * `anti_virus` - Anti-Virus blade.

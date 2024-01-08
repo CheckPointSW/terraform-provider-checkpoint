@@ -13,8 +13,8 @@ This resource allows you to add/update/delete Check Point CME Azure GW Configura
 
 ```hcl
 resource "checkpoint_management_cme_gw_configurations_azure" "gw_config_azure" {
-  name                       = "TestAzureTemplate"
-  related_account            = "TestAzureController"
+  name                       = "azureGWConfigurations"
+  related_account            = "azureAccount"
   version                    = "R81"
   base64_sic_key             = "MTIzNDU2Nzg="
   policy                     = "Standard"
@@ -22,8 +22,8 @@ resource "checkpoint_management_cme_gw_configurations_azure" "gw_config_azure" {
   send_logs_to_backup_server = ["BLS_B"]
   send_alerts_to_server      = ["ALS_C"]
   repository_gateway_scripts {
-    name       = "xyz"
-    parameters = "param1 param2"
+    name       = "myScript"
+    parameters = "ls -l"
   }
   blades {
     ips                          = true
@@ -46,12 +46,12 @@ resource "checkpoint_management_cme_gw_configurations_azure" "gw_config_azure" {
 
 The following arguments are supported:
 
-* `name` - (Required) The GW configuration name.
+* `name` - (Required) The GW configuration name without spaces.
 * `version` - (Required) The GW version.
 * `base64_sic_key` - (Required) Base64 key for trusted communication between management and GW.
 * `policy` - (Required) Policy name to be installed on the GW.
 * `related_account` - (Required) The CME account to associate with the GW Configuration.
-* `blades` - (Required) Dictionary of activated/deactivated blades on the GW. supports the following:
+* `blades` - (Required) Dictionary of activated/deactivated blades on the GW. Supports the following:
     * `ips` - (Required) IPS blade.
     * `anti_bot` - (Required) Anti-Bot blade.
     * `anti_virus` - (Required) Anti-Virus blade.
@@ -73,22 +73,3 @@ The following arguments are supported:
 * `send_logs_to_backup_server` - (Optional) Comma separated list of Backup Log Servers names to which logs are sent in
   case Primary Log Servers are unavailable.
 * `send_alerts_to_server` - (Optional) Comma separated list of Alert Log Servers names to which alerts are sent.
-
-## How To Use
-
-Make sure this resource creation will be executed in the right execution order. Note: terraform execution is not
-sequential.  
-For example, if you want to create a gateway configuration along with an account, the account should be created first.
-For forcing this dependency, the "related_account" argument should use the account resource like in the following
-example:
-
-```hcl
-resource "checkpoint_management_cme_accounts_azure" "azure_account" {
-  ///...
-}
-resource "checkpoint_management_cme_gw_configurations_azure" "gw_config_azure" {
-  name            = "TestAzureTemplate"
-  related_account = checkpoint_management_cme_accounts_azure.azure_account.name
-  ///...
-}
-```

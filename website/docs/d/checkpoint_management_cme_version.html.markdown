@@ -12,7 +12,7 @@ Use this data source to get information on existing Check Point CME version.
 ## Example Usage
 
 ```hcl
-data "checkpoint_management_cme_version" "v" {
+data "checkpoint_management_cme_version" "cme_version" {
 }
 ```
 
