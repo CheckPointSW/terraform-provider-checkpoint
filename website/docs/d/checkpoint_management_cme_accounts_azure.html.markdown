@@ -9,6 +9,11 @@ description: |- Use this data source to get information on an existing Check Poi
 
 Use this data source to get information on an existing Check Point CME Azure Account.
 
+Available in:
+
+- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
+- CME take 255 and higher.
+
 ## Example Usage
 
 ```hcl

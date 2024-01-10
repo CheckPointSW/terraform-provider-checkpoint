@@ -9,6 +9,11 @@ description: |- This resource allows you to update Check Point CME Delay Cycle.
 
 This resource allows you to update Check Point CME Delay Cycle.
 
+Available in:
+
+- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
+- CME take 255 and higher.
+
 ## Example Usage
 
 ```hcl

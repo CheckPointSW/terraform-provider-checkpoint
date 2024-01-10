@@ -9,6 +9,11 @@ description: |- Use this data source to get information on existing Check Point 
 
 Use this data source to get information on existing Check Point CME version.
 
+Available in:
+
+- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
+- CME take 255 and higher.
+
 ## Example Usage
 
 ```hcl

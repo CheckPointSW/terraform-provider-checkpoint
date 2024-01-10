@@ -9,6 +9,11 @@ description: |- Use this data source to get information on all Check Point CME A
 
 Use this data source to get information on all Check Point CME Accounts.
 
+Available in:
+
+- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
+- CME take 255 and higher.
+
 ## Example Usage
 
 ```hcl

@@ -9,6 +9,11 @@ description: |- This resource allows you to add/update/delete Check Point CME Az
 
 This resource allows you to add/update/delete Check Point CME Azure Account.
 
+Available in:
+
+- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
+- CME take 255 and higher.
+
 ## Example Usage
 
 ```hcl
@@ -36,4 +41,5 @@ The following arguments are supported:
 
 ## Limitations
 
-`client_secret` attribute can be managed only through the created resources in terraform.
+`client_secret` attribute can be set only through terraform. In case the `client_secret` set through autoprov_cfg
+command line or CME API, terraform will not recognize the change.
