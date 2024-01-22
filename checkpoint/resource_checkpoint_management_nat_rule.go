@@ -187,6 +187,10 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 		natRule["name"] = v.(string)
 	}
 
+	if v, ok := d.GetOk("method"); ok {
+		natRule["method"] = v.(string)
+	}
+
 	if v, ok := d.GetOkExists("enabled"); ok {
 		natRule["enabled"] = v.(bool)
 	}
