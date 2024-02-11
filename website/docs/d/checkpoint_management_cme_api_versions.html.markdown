@@ -11,8 +11,8 @@ Use this data source to get information on existing Check Point CME API versions
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,7 +23,7 @@ data "checkpoint_management_cme_api_versions" "api_versions" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
 * `current_version` - Current CME API version.
 * `supported_versions` - CME supported versions.

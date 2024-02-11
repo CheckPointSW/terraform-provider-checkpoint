@@ -11,8 +11,8 @@ Use this data source to get information on existing Check Point CME Delay Cycle.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,6 +23,6 @@ data "checkpoint_management_cme_delay_cycle" "delay_cycle" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
 * `delay_cycle` - Time to wait in seconds after each poll cycle.

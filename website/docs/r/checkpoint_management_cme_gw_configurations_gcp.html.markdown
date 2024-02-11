@@ -2,17 +2,17 @@
 layout: "checkpoint"
 page_title: "checkpoint_management_cme_gw_configurations_gcp"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-cme-gw-configurations-gcp"
-description: |- This resource allows you to add/update/delete Check Point CME GCP GW Configurations.
+description: |- This resource allows you to add/update/delete Check Point CME GCP Gateway Configurations.
 ---
 
 # Resource: checkpoint_management_cme_gw_configurations_gcp
 
-This resource allows you to add/update/delete Check Point CME GCP GW Configurations.
+This resource allows you to add/update/delete Check Point CME GCP Gateway Configurations.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -49,14 +49,14 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "gw_config_gcp" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
-* `name` - (Required) The GW configuration name without spaces.
-* `version` - (Required) The GW version.
-* `base64_sic_key` - (Required) Base64 key for trusted communication between management and GW.
-* `policy` - (Required) Policy name to be installed on the GW.
-* `related_account` - (Required) The CME account to associate with the GW Configuration.
-* `blades` - (Required) Dictionary of activated/deactivated blades on the GW. Supports the following:
+* `name` - (Required) The Gateway configuration name without spaces.
+* `version` - (Required) The Gateway version.
+* `base64_sic_key` - (Required) Base64 key for trusted communication between the Management and the Gateway.
+* `policy` - (Required)  The policy name to install on the Gateway.
+* `related_account` - (Required) The CME account name to associate with the Gateway Configuration.
+* `blades` - (Required) Dictionary of activated/deactivated blades on the Gateway. Supports these blades:
     * `ips` - (Required) IPS blade.
     * `anti_bot` - (Required) Anti-Bot blade.
     * `anti_virus` - (Required) Anti-Virus blade.
@@ -69,12 +69,12 @@ The following arguments are supported:
     * `threat_emulation` - (Required) Threat Emulation blade.
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
-* `repository_gateway_scripts` - (Optional) List of objects that each contains name/UID of a script that exists in the
-  scripts repository on the Management server. Supports the following:
+* `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in
+  the scripts repository on the Management server. Supports these parameters:
     * `name` - (Required) The name of the script.
     * `parameters` - (Optional) The parameters to pass to the script.
-* `send_logs_to_server` - (Optional) Comma separated list of Primary Log Servers names to which logs are sent. Defined
-  Log Server will act as Log and Alert Servers. Must be defined as part of Log Servers parameters.
-* `send_logs_to_backup_server` - (Optional) Comma separated list of Backup Log Servers names to which logs are sent in
-  case Primary Log Servers are unavailable.
-* `send_alerts_to_server` - (Optional) Comma separated list of Alert Log Servers names to which alerts are sent.
+* `send_logs_to_server` - (Optional) Comma-separated list of Primary Log Servers names to which logs are sent.
+  Configured Log Servers act as Log and Alert Servers. Must be defined as a part of Log Servers parameters.
+* `send_logs_to_backup_server` - (Optional) Comma-separated list of Backup Log Servers names to which logs are sent if
+  the Primary Log Servers are unavailable.
+* `send_alerts_to_server` - (Optional) Comma-separated list of Alert Log Servers names to which alerts are sent.

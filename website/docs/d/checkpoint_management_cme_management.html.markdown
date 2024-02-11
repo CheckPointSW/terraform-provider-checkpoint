@@ -11,8 +11,8 @@ Use this data source to get information on existing Check Point CME Management.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "checkpoint_management_cme_management" "mgmt" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
-* `name` - The name of the management server.
-* `domain` - The management's domain name in MDS environment.
-* `host` - The host of the management server.
+* `name` - The name of the Management server.
+* `domain` - The management's domain name in Multi-Domain Security Management Server environment.
+* `host` - The host of the Management server.

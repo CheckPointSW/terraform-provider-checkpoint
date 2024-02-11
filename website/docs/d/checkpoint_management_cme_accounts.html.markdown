@@ -11,8 +11,8 @@ Use this data source to get information on all Check Point CME Accounts.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,15 +23,14 @@ data "checkpoint_management_cme_accounts" "accounts" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
-* `result` - List of all accounts, each with the following data:
+* `result` - List of all accounts, each with this data:
     * `name` - Unique account name for identification.
     * `platform` - The platform of the account.
-    * `gw_configurations` - A list of GW configurations attached to the account.
+    * `gw_configurations` - A list of Gateway configurations attached to the account.
     * `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a GW until its
       deletion.
-    * `domain` - The account's domain name in MDS environment.
+    * `domain` - The account's domain name in Multi-Domain Security Management Server environment.
 
-Note: For getting the full data for each account, use the specific data source of the account platform (
-checkpoint_management_cme_accounts_<aws/azure/gcp>).
+Note: To get the full data for each account, use the specific data source of the account platform (checkpoint_management_cme_accounts_<aws/azure/gcp>).

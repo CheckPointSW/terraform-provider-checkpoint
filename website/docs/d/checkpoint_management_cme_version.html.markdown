@@ -11,8 +11,8 @@ Use this data source to get information on existing Check Point CME version.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,6 +23,6 @@ data "checkpoint_management_cme_version" "cme_version" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
-* `take` - CME take number.
+* `take` - CME Take number.

@@ -11,8 +11,8 @@ This resource allows you to add/update/delete Check Point CME AWS Account.
 
 Available in:
 
-- Check Point Security Management/Multi Domain Management Server R81.10 and higher.
-- CME take 255 and higher.
+- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
+- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -38,36 +38,38 @@ resource "checkpoint_management_cme_accounts_aws" "aws_account" {
 
 ## Argument Reference
 
-The following arguments are supported:
+These arguments are supported:
 
 * `name` - (Required) Unique account name for identification without spaces.
-* `regions` - (Required) Comma-separated list of AWS regions, in which the gateways are being deployed.
-* `credentials_file` - (Optional) One of the following options:
-    1. The name of a text file containing AWS credentials located in $FWDIR/conf/ directory for a Management Server or
+* `regions` - (Required) Comma-separated list of AWS regions in which the Gateways are being deployed.
+* `credentials_file` - (Optional) One of the these options:
+    1. The name of a text file containing AWS credentials that is located in $FWDIR/conf/ directory for a Management
+       Server or
        $MDSDIR/conf/ directory for a Multi-Domain Management Server.
     2. “IAM” to use an IAM role profile
-* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a GW until
-  its deletion.
+* `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a Gateway
+  until its deletion.
 * `access_key` - (Optional) AWS access key.
 * `secret_key` - (Optional) AWS secret key.
-* `sts_role` - (Optional) AWS sts role.
-* `sts_external_id` - (Optional) AWS sts external id, must exist with sts role.
-* `scan_gateways` - (Optional) Set true in order to scan gateways with AWS TGW.
-* `scan_vpn` - (Optional) Set true in order to scan vpn with AWS TGW.
-* `scan_load_balancers` - (Optional) Set true in order to scan load balancers access and NAT rules with AWS TGW.
-* `scan_subnets` - (Optional) Set true in order to scan subnets with AWS GWLB.
-* `communities` - (Optional) Comma-separated list of communities, which are allowed for VPN connections fow AWS TGW that
-  are discovered by this account.
-* `sub_accounts` - (Optional) AWS sub accounts. supports the following:
-    * `name` - (Required) Sub account name.
-    * `credentials_file` - (Optional) Sub account credentials file.
-    * `access_key` - (Optional) Sub account access key.
-    * `secret_key` - (Optional) Sub account secret key.
-    * `sts_role` - (Optional) Sub account sts role.
-    * `sts_external_id` - (Optional) Sub account sts external id, must exist with sts role.
-* `domain` - (Optional) The account's domain name in MDS environment.
+* `sts_role` - (Optional) AWS STS role.
+* `sts_external_id` - (Optional) AWS STS external id. Must exist with STS role.
+* `scan_gateways` - (Optional) Set true in order to scan gateways with AWS Transit Gateway.
+* `scan_vpn` - (Optional) Set true in order to scan VPN with AWS Transit Gateway.
+* `scan_load_balancers` - (Optional) Set true in order to scan load balancers access and NAT rules with AWS Transit
+  Gateway.
+* `scan_subnets` - (Optional) Set true in order to scan subnets with AWS Gateway Load Balancer.
+* `communities` - (Optional) Comma-separated list of communities that are allowed for VPN connections for AWS Transit
+  Gateways that are discovered by this account.
+* `sub_accounts` - (Optional) AWS sub-accounts. Supports these parameters:
+    * `name` - (Required) Sub-account name.
+    * `credentials_file` - (Optional) Sub-account credentials file.
+    * `access_key` - (Optional) Sub-account access key.
+    * `secret_key` - (Optional) Sub-account secret key.
+    * `sts_role` - (Optional) Sub-account STS role.
+    * `sts_external_id` - (Optional) Sub-account STS external id. Must exist with STS role.
+* `domain` - (Optional) The account's domain name in Multi-Domain Security Management Server environment.
 
 ## Limitations
 
-`secret_key` attribute can be set only through terraform. In case the `secret_key` set through autoprov_cfg command line
+`secret_key` attribute can be set only through terraform. If the `secret_key` is set with the autoprov_cfg command line
 or CME API, terraform will not recognize the change.
