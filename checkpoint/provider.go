@@ -111,6 +111,7 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_data_center_object":                             resourceDataCenterObject(),
 			"checkpoint_management_lsm_cluster":                                    resourceManagementLsmCluster(),
 			"checkpoint_management_lsm_gateway":                                    resourceManagementLsmGateway(),
 			"checkpoint_management_service_gtp":                                    resourceManagementServiceGtp(),
@@ -291,6 +292,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cme_gw_configurations_gcp":                      resourceManagementCMEGWConfigurationsGCP(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_data_center_object":                        dataSourceManagementDataCenterObject(),
 			"checkpoint_management_updatable_object":                          dataSourceManagementShowUpdatableObject(),
 			"checkpoint_management_lsm_cluster":                               dataSourceManagementLsmCluster(),
 			"checkpoint_management_lsm_gateway":                               dataSourceManagementLsmGateway(),
