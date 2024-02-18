@@ -1,7 +1,6 @@
 ## 2.7.0 (February 19, 2024)
 
 FEATURES
-* **New Resource:** `checkpoint_management_data_center_object`
 * **New Resource:** `checkpoint_management_cme_accounts_aws`
 * **New Resource:** `checkpoint_management_cme_accounts_azure`
 * **New Resource:** `checkpoint_management_cme_accounts_gcp`
@@ -10,7 +9,7 @@ FEATURES
 * **New Resource:** `checkpoint_management_cme_gw_configurations_gcp`
 * **New Resource:** `checkpoint_management_cme_management`
 * **New Resource:** `checkpoint_management_cme_delay_cycle`
-* **New Data Source:** `checkpoint_management_data_center_object`
+* **New Resource:** `checkpoint_management_data_center_object`
 * **New Data Source:** `checkpoint_management_cme_accounts_aws`
 * **New Data Source:** `checkpoint_management_cme_accounts_azure`
 * **New Data Source:** `checkpoint_management_cme_accounts_gcp`
@@ -23,18 +22,20 @@ FEATURES
 * **New Data Source:** `checkpoint_management_cme_delay_cycle`
 * **New Data Source:** `checkpoint_management_cme_version`
 * **New Data Source:** `checkpoint_management_cme_api_versions`
+* **New Data Source:** `checkpoint_management_data_center_object`
 
 DEPRECATED
 * **Resource:** `resource_checkpoint_management_command_add_data_center_object`
 * **Resource:** `resource_checkpoint_management_command_delete_data_center_object`
 
 BUG FIXES
-* Fix bug in `action` field in `resource_checkpoint_management_access_rule` [https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/165]
-* Fix bug in `method` field in `resource_checkpoint_management_nat_rule` [https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/163]
-* Fix bug in `fetch_policy` field in `resource_checkpoint_management_simple_gateway` [https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/161]
+* Fix bug in `action` field in `resource_checkpoint_management_access_rule` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/165)
+* Fix bug in `method` field in `resource_checkpoint_management_nat_rule` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/163)
+* Fix bug in `fetch_policy` field in `resource_checkpoint_management_simple_gateway` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/161)
 
 ENHANCEMENTS
-* Add `geo_mode` field in `resource_checkpoint_management_simple_cluster` and `data_source_checkpoint_management_simple_cluster` [https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/157]
+* Add `geo_mode` field in `resource_checkpoint_management_simple_cluster` and `data_source_checkpoint_management_simple_cluster` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/157)
+* Add `ForceNew: true` attribute to `layer` field in `resource_checkpoint_management_access_rule` that when the `layer` changes it will first destroy rule and then recreate the resource on a new layer (https://github.com/CheckPointSW/terraform-provider-checkpoint/pull/80)
 * Increase Go SDK default timeout to `120`
 * Use Go SDK v1.7.1
 
