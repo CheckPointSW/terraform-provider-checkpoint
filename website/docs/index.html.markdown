@@ -15,21 +15,23 @@ next-generation firewalls and automate routine Security Management configuration
 configuration errors. With the Check Point provider, DevOps teams can automate their security and transform it into
 DevSecOps workflows.
 
-## Examples usage
-## Terraform 0.12 and earlier:
+## Examples of usage
+To use Check Point provider, copy and paste this code into your Terraform configuration, update provider configuration and run `terraform init`.
 
+## Terraform 0.12 and earlier:
 ```hcl
-# Configure the Check Point Provider
+# Configure Check Point Provider for Management API
 provider "checkpoint" {
   server   = "192.0.2.1"
   username = "aa"
   password = "aaaa"
   context  = "web_api"
+  session_name = "Terraform Session"
 }
 
 # Create network object
 resource "checkpoint_management_network" "network" {
-  name         = "network"
+  name         = "My network"
   subnet4      = "192.0.2.0"
   mask_length4 = "24"
   # ...   
@@ -40,23 +42,32 @@ resource "checkpoint_management_network" "network" {
 terraform {
   required_providers {
     checkpoint = {
-      source  = "checkpointsw/checkpoint"
-      version = "~> 1.6.0"
+      source = "CheckPointSW/checkpoint"
+      version = "X.Y.Z"
     }
   }
 }
 
-# Configure the Check Point Provider
+# Configure Check Point Provider for Management API
 provider "checkpoint" {
   server   = "192.0.2.1"
   username = "aa"
   password = "aaaa"
   context  = "web_api"
+  session_name = "Terraform Session"
+}
+
+# Create network object
+resource "checkpoint_management_network" "network" {
+  name         = "My network"
+  subnet4      = "192.0.2.0"
+  mask_length4 = "24"
+  # ...   
 }
 ```
 
 ```hcl
-# Configure the Check Point Provider for GAIA API
+# Configure Check Point Provider for GAIA API
 provider "checkpoint" {
   server   = "192.0.2.1"
   username = "gaia_user"
@@ -66,7 +77,7 @@ provider "checkpoint" {
 
 # Set machine hostname
 resource "checkpoint_hostname" "hostname" {
-  name = "terrahost"
+  name = "terraform_host"
 }
 ```
 
@@ -80,15 +91,13 @@ The following arguments are supported:
   the `CHECKPOINT_USERNAME` environment variable.
 * `password` - (Optional) Check Point Management admin password. It must be provided, but can also be defined via
   the `CHECKPOINT_PASSWORD` environment variable.
-* `api_key` - (Optional) Check Point Management admin api key. This can also be defined via
+* `api_key` - (Optional) Check Point Management admin API key. It must be provided, but can also be defined via
   the `CHECKPOINT_API_KEY` environment variable.
-* `context` - (Optional) Check Point access context - `web_api` or `gaia_api`. This can also be defined via
-  the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
 * `domain` - (Optional) Login to specific domain. Domain can be identified by name or UID. This can also be defined via
   the `CHECKPOINT_DOMAIN` environment variable.
-* `timeout` - (Optional) Timeout in seconds for the Go SDK to complete a transaction. This can also be defined via
-  the `CHECKPOINT_TIMEOUT` environment variable. Default value is `120` seconds.
-* `port` - (Optional) Port used for connection to the API server. This can also be defined via the `CHECKPOINT_PORT`
+* `context` - (Optional) Check Point access context - `web_api` or `gaia_api`. This can also be defined via
+  the `CHECKPOINT_CONTEXT` environment variable. Default value is `web_api`.
+* `port` - (Optional) Port used for connection with the API server. This can also be defined via the `CHECKPOINT_PORT`
   environment variable. Default value is `443`.
 * `proxy_host` - (Optional) Proxy host used for proxy connections. This can also be defined via
   the `CHECKPOINT_PROXY_HOST` environment variable.
@@ -101,13 +110,15 @@ The following arguments are supported:
   the `CHECKPOINT_SESSION_FILE_NAME` environment variable. default value is `sid.json`.
 * `session_timeout` - (Optional) Timeout in seconds for the session established in Check Point. This can also be defined via
   the `CHECKPOINT_SESSION_TIMEOUT` environment variable. The default for the value is `600`. The timeout can be `10` - `3600`.
+* `timeout` - (Optional) Timeout in seconds for the Go SDK to complete a transaction. This can also be defined via
+  the `CHECKPOINT_TIMEOUT` environment variable. Default value is `120` seconds.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. This can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
 * `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. This can also be defined via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
 
 ## Authentication
 
-The Check Point provider offers providing credentials for authentication. The following methods are supported:
+Check Point Provider offers providing credentials for authentication. The following methods are supported:
 
 - Static credentials
 - Environment variables
@@ -121,32 +132,32 @@ provider "checkpoint" {
   server   = "192.0.2.1"
   username = "aa"
   password = "aaaa"
-  context  = "web_api"
   domain   = "Domain Name"
+  context  = "web_api"
 }
 ```
-Usage with api key:
+
+Usage with API key:
 ```hcl
 provider "checkpoint" {
   server   = "192.0.2.1"
   api_key  = "tBdloE9eOYzzSQicNxS7mA=="
-  context  = "web_api"
   domain   = "Domain Name"
+  context  = "web_api"
 }
 ```
 
-Smart-1 Cloud:
+Usage for Smart-1 Cloud:
 ```hcl
 provider "checkpoint" {
   server   = "chkp-vmnc6s4y.maas.checkpoint.com"
   api_key  = "tBdloE9eOYzzSQicNxS7mA=="
-  context  = "web_api"
   cloud_mgmt_id = "de9a9b08-c7c7-436e-a64a-a54136301701"
+  context  = "web_api"
 }
 ```
 
 Or for GAIA API:
-
 ```hcl
 provider "checkpoint" {
   server   = "192.0.2.1"
@@ -203,12 +214,12 @@ $ export CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE=100
 Then configure the Check Point Provider as following:
 
 ```hcl
-# Configure the Check Point Provider
+# Configure Check Point Provider via environment variables
 provider "checkpoint" {}
 
 # Create network object
 resource "checkpoint_management_network" "network" {
-  name         = "network"
+  name         = "My network"
   subnet4      = "192.0.2.0"
   mask_length4 = "24"
   # ...
@@ -229,25 +240,25 @@ $ export CHECKPOINT_PORT=443
 Then configure the Check Point Provider as following:
 
 ```hcl
-# Configure the Check Point Provider
+# Configure Check Point Provider via environment variables
 provider "checkpoint" {}
 
 # Set machine hostname
 resource "checkpoint_hostname" "hostname" {
-  name = "terrahost"
+  name = "terraform_host"
 }
 ```
 
-## Post Apply/Destroy commands
+## Post Apply / Destroy scripts
 
 As of right now, Terraform does not provide native support for publish and install-policy, so both of them and more post apply actions are handled
 out-of-band.
 
-In order to use post Apply/Destroy commands, the authentication method must be via environment variables.
+In order to use post Apply / Destroy commands, the authentication method must be via environment variables.
 
 ### Publish
 
-Please use the following for publish:
+Please use the following script for Publish:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/publish
@@ -255,15 +266,17 @@ $ go build publish.go
 $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint
 $ terraform apply && publish
 ```
+
+Another option is to use `auto_publish_batch_size` provider argument which automatically runs publish.
+
 ### Install Policy
 
 The following arguments are supported:
 
 * `policy-package` - (Required) The name of the Policy Package to be installed.
-* `target` - (Required) On what targets to execute this command. Targets may be identified by their name, or object
-  unique identifier. Multiple targets can be added.
+* `target` - (Required) On what targets to execute this command. Targets may be identified by their name or object unique identifier. Multiple targets can be added.
 
-Please use the following for install policy:
+Please use the following script for Install Policy:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/install_policy
@@ -274,7 +287,7 @@ $ terraform apply && install_policy -policy-package <package name> -target <targ
 
 ### Logout
 
-Please use the following for logout:
+Please use the following script for Logout:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/logout
@@ -283,8 +296,9 @@ $ mv logout $GOPATH/src/github.com/terraform-providers/terraform-provider-checkp
 $ terraform apply && publish && logout_from_session
 ```
 
-### Example usage
-Publish & Install Policy & Logout from session
+#### Example of usage
+
+Run terraform then Publish & Install Policy & Logout from session
 
 ```bash
 $ terraform apply && publish && install_policy -policy-package "standard" -target "corporate-gateway" && logout_from_session
@@ -292,7 +306,7 @@ $ terraform apply && publish && install_policy -policy-package "standard" -targe
 
 ### Discard
 
-Please use the following for discard:
+Please use the following script for Discard:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/discard
@@ -301,9 +315,9 @@ $ mv discard $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ discard
 ```
 
-### Approve session
+### Approve Session
 
-Please use the following for approve session:
+Please use the following script for Approve Session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/approve_session
@@ -312,9 +326,9 @@ $ mv approve_session $GOPATH/src/github.com/terraform-providers/terraform-provid
 $ approve_session "SESSION_UID"
 ```
 
-### Reject session
+### Reject Session
 
-Please use the following for reject session:
+Please use the following script for Reject Session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/reject_session
@@ -323,9 +337,9 @@ $ mv reject_session $GOPATH/src/github.com/terraform-providers/terraform-provide
 $ reject_session "SESSION_UID" "REJECT_REASON"
 ```
 
-### Submit session
+### Submit Session
 
-Please use the following for submit session:
+Please use the following script for Submit Session:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/submit_session
@@ -342,7 +356,7 @@ The following arguments are supported:
 
 * `policy-package` - (Required) Policy package identified by the name or UID to be verified.
 
-Please use the following for Verify policy:
+Please use the following script for Verify Policy:
 
 ```bash
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint/commands/verify_policy
@@ -359,7 +373,7 @@ Example:
 
 For existing Host object with UID `9423d36f-2d66-4754-b9e2-e7f4493756d4`
 
-Write resource configuration block
+Use the following resource configuration block:
 
 ```hcl
 resource "checkpoint_management_host" "host" {
@@ -368,7 +382,7 @@ resource "checkpoint_management_host" "host" {
 }
 ```
 
-Run the following command
+Run the following command:
 
 ```bash
 $ terraform import checkpoint_management_host.host 9423d36f-2d66-4754-b9e2-e7f4493756d4

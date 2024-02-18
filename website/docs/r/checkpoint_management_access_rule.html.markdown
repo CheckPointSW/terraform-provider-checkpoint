@@ -15,36 +15,15 @@ This resource allows you to add/update/delete Check Point Access Rule.
 
 ```hcl
 resource "checkpoint_management_access_rule" "rule1" {
+  name = "Rule 1"
   layer = "Network"
   position = {top = "top"}
-  name = "test1"
-}
-
-resource "checkpoint_management_access_rule" "rule2" {
-  layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule1.name}
-  name = "test2"
-  enabled = true
-}
-
-resource "checkpoint_management_access_rule" "rule3" {
-  layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule2.name}
-  name = "test3"
-  action = "Accept"
-  action_settings = {
-    enable_identity_captive_portal = true
-  }
-  source = ["DMZNet", "DMZZone", "WirelessZone"]
-  enabled = true
-  destination = ["InternalNet", "CPDShield"]
-  destination_negate = true
-}
-
-resource "checkpoint_management_access_rule" "rule4" {
-  layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule3.name}
-  name = "test4"
+  source = ["Any"]
+  destination = ["Any"]
+  service = ["Any"]
+  content = ["Any"]
+  time = ["Any"]
+  install_on = ["Policy Targets"]
   track = {
     type = "Log"
     accounting = false
@@ -53,23 +32,107 @@ resource "checkpoint_management_access_rule" "rule4" {
     per_connection = true
     per_session = false
   }
+  action_settings = {}
+  custom_fields = {}
+}
+
+resource "checkpoint_management_access_rule" "rule2" {
+  name = "Rule 2"
+  layer = "Network"
+  position = {below = checkpoint_management_access_rule.rule1.name}
+  enabled = true
+  source = ["DMZNet", "DMZZone", "WirelessZone"]
+  destination = ["InternalNet", "CPDShield"]
+  destination_negate = true
+  service = ["Any"]
+  content = ["Any"]
+  time = ["Any"]
+  install_on = ["Policy Targets"]
+  track = {
+    type = "Log"
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = true
+    per_session = false
+  }
+  action_settings = {}
+  custom_fields = {}
+}
+
+resource "checkpoint_management_access_rule" "rule3" {
+  name = "Rule 3"
+  layer = "Network"
+  position = {below = checkpoint_management_access_rule.rule2.name}
+  action = "Accept"
+  action_settings = {
+    enable_identity_captive_portal = true
+  }
+  source = ["DMZNet"]
+  enabled = true
+  destination = ["InternalNet"]
+  destination_negate = true
+  service = ["EDGE"]
+  content = ["Any"]
+  time = ["Weekend"]
+  install_on = ["Policy Targets"]
+  track = {
+    type = "Log"
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = true
+    per_session = false
+  }
+  custom_fields = {}
+}
+
+resource "checkpoint_management_access_rule" "rule4" {
+  name = "Rule 4"
+  layer = "Network"
+  position = {below = checkpoint_management_access_rule.rule3.name}
   enabled = false
+  source = ["Any"]
+  destination = ["Any"]
+  service = ["Any"]
+  content = ["Any"]
+  time = ["Any"]
+  install_on = ["Policy Targets"]
+  track = {
+    type = "Log"
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = true
+    per_session = false
+  }
+  action_settings = {}
+  custom_fields = {}
 }
 
 resource "checkpoint_management_access_rule" "rule5" {
+  name = "Rule 5"
   layer = "Network"
   position = {below = checkpoint_management_access_rule.rule4.name}
-  name = "test5"
   action = "Accept"
   action_settings = {
     enable_identity_captive_portal = false
   }
-}
-
-resource "checkpoint_management_access_rule" "rule6" {
-  layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule5.name}
-  name = "test6"
+  source = ["Any"]
+  destination = ["Any"]
+  service = ["Any"]
+  content = ["Any"]
+  time = ["Any"]
+  install_on = ["Policy Targets"]
+  track = {
+    type = "Log"
+    accounting = false
+    alert = "none"
+    enable_firewall_session = false
+    per_connection = true
+    per_session = false
+  }
+  custom_fields = {}
 }
 ```
 
@@ -80,7 +143,7 @@ The following arguments are supported:
 * `layer` - (Required) Layer that the rule belongs to identified by the name or UID.
 * `position` - (Required) Position in the rulebase. Position blocks are documented below.
 * `name` - (Optional) Rule name.
-* `action` - (Optional) \"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".
+* `action` - (Optional) Valid values: "Accept", "Drop", "Ask", "Inform", "Reject", "User Auth", "Client Auth", "Apply Layer".
 * `action_settings` - (Optional) Action settings. Action settings blocks are documented below.
 * `content` - (Optional) List of processed file types that this rule applies on.
 * `content_direction` - (Optional) On which direction the file types processing is applied.
@@ -89,19 +152,20 @@ The following arguments are supported:
 * `destination` - (Optional) Collection of Network objects identified by the name or UID.
 * `destination_negate` - (Optional) True if negate is set for destination.
 * `enabled` - (Optional) Enable/Disable the rule.
-* `inline_layer` - (Optional) Inline Layer identified by the name or UID. Relevant only if \"Action\" was set to \"Apply Layer\".
+* `inline_layer` - (Optional) Inline Layer identified by the name or UID. Relevant only if "Action" was set to "Apply Layer".
 * `install_on` - (Optional) Which Gateways identified by the name or UID to install the policy on.
 * `service` - (Optional) Collection of Network objects identified by the name or UID.
 * `service_negate` - (Optional) True if negate is set for service.
 * `source` - (Optional) Collection of Network objects identified by the name or UID.
 * `source_negate` - (Optional) True if negate is set for source.
-* `time` - (Optional) List of time objects. For example: \"Weekend\", \"Off-Work\", \"Every-Day\".
+* `time` - (Optional) List of time objects. For example: "Weekend", "Off-Work", "Every-Day".
 * `track` - (Optional) Track Settings. Track Settings blocks are documented below.
 * `user_check` - (Optional) User check settings. User check settings blocks are documented below.
-* `vpn` - (Optional) Communities or Directional.
+* `vpn` - (Optional) VPN community identified by name or UID or "Any" or "All_GwToGw".
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 * `comments` - (Optional) Comments string.
+* `fields_with_uid_identifier` - (Optional) List of resource fields that will use object UIDs as object identifiers. Default is object name.
 
 `position` supports the following:
 

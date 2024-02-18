@@ -5,7 +5,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-	"reflect"
 	"strconv"
 )
 
@@ -254,6 +253,14 @@ func dataSourceManagementAccessRule() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"fields_with_uid_identifier": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of resource fields that will use object UIDs as object identifiers. Default is object name.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -296,7 +303,11 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if v := accessRule["action"]; v != nil {
-		_ = d.Set("action", v.(map[string]interface{})["name"])
+		actionId := resolveObjectIdentifier("action", accessRule["action"], d)
+		if actionId == "Inner Layer" {
+			actionId = "Apply Layer"
+		}
+		_ = d.Set("action", actionId)
 	}
 
 	if accessRule["action-settings"] != nil {
@@ -319,20 +330,8 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if accessRule["content"] != nil {
-		contentJson := accessRule["content"].([]interface{})
-		contentIds := make([]string, 0)
-		if len(contentJson) > 0 {
-			for _, content := range contentJson {
-				content := content.(map[string]interface{})
-				contentIds = append(contentIds, content["name"].(string))
-			}
-		}
-		_, contentInConf := d.GetOk("content")
-		if contentIds[0] == "Any" && !contentInConf {
-			_ = d.Set("content", []interface{}{})
-		} else {
-			_ = d.Set("content", contentIds)
-		}
+		contentIds := resolveListOfIdentifiers("content", accessRule["content"], d)
+		_ = d.Set("content", contentIds)
 	} else {
 		_ = d.Set("content", nil)
 	}
@@ -362,33 +361,14 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		if v, _ := customFieldsMap["field-3"]; v != nil {
 			customFieldsMapToReturn["field_3"] = v
 		}
-
-		_, customFieldsInConf := d.GetOk("custom_fields")
-		defaultCustomField := map[string]interface{}{"field_1": "", "field_2": "", "field_3": ""}
-		if reflect.DeepEqual(defaultCustomField, customFieldsMapToReturn) && !customFieldsInConf {
-			_ = d.Set("custom_fields", map[string]interface{}{})
-		} else {
-			_ = d.Set("custom_fields", customFieldsMapToReturn)
-		}
+		_ = d.Set("custom_fields", customFieldsMapToReturn)
 	} else {
 		_ = d.Set("custom_fields", nil)
 	}
 
 	if accessRule["destination"] != nil {
-		destinationJson := accessRule["destination"].([]interface{})
-		destinationIds := make([]string, 0)
-		if len(destinationJson) > 0 {
-			for _, destination := range destinationJson {
-				destination := destination.(map[string]interface{})
-				destinationIds = append(destinationIds, destination["name"].(string))
-			}
-		}
-		_, destinationInConf := d.GetOk("destination")
-		if destinationIds[0] == "Any" && !destinationInConf {
-			_ = d.Set("destination", []interface{}{})
-		} else {
-			_ = d.Set("destination", destinationIds)
-		}
+		destinationIds := resolveListOfIdentifiers("destination", accessRule["destination"], d)
+		_ = d.Set("destination", destinationIds)
 	}
 
 	if v := accessRule["destination-negate"]; v != nil {
@@ -404,37 +384,13 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if accessRule["install-on"] != nil {
-		installOnJson := accessRule["install-on"].([]interface{})
-		installOnJsonIds := make([]string, 0)
-		if len(installOnJson) > 0 {
-			for _, installOn := range installOnJson {
-				installOn := installOn.(map[string]interface{})
-				installOnJsonIds = append(installOnJsonIds, installOn["name"].(string))
-			}
-		}
-		_, installOnInConf := d.GetOk("install_on")
-		if installOnJsonIds[0] == "Policy Targets" && !installOnInConf {
-			_ = d.Set("install_on", []interface{}{})
-		} else {
-			_ = d.Set("install_on", installOnJsonIds)
-		}
+		installOnIds := resolveListOfIdentifiers("install-on", accessRule["install-on"], d)
+		_ = d.Set("install_on", installOnIds)
 	}
 
 	if accessRule["service"] != nil {
-		serviceJson := accessRule["service"].([]interface{})
-		serviceJsonIds := make([]string, 0)
-		if len(serviceJson) > 0 {
-			for _, service := range serviceJson {
-				service := service.(map[string]interface{})
-				serviceJsonIds = append(serviceJsonIds, service["name"].(string))
-			}
-		}
-		_, serviceInConf := d.GetOk("service")
-		if serviceJsonIds[0] == "Any" && !serviceInConf {
-			_ = d.Set("service", []interface{}{})
-		} else {
-			_ = d.Set("service", serviceJsonIds)
-		}
+		serviceIds := resolveListOfIdentifiers("service", accessRule["service"], d)
+		_ = d.Set("service", serviceIds)
 	}
 
 	if v := accessRule["service-negate"]; v != nil {
@@ -442,20 +398,8 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if accessRule["source"] != nil {
-		sourceJson := accessRule["source"].([]interface{})
-		sourceIds := make([]string, 0)
-		if len(sourceJson) > 0 {
-			for _, source := range sourceJson {
-				source := source.(map[string]interface{})
-				sourceIds = append(sourceIds, source["name"].(string))
-			}
-		}
-		_, sourceInConf := d.GetOk("source")
-		if sourceIds[0] == "Any" && !sourceInConf {
-			_ = d.Set("source", []interface{}{})
-		} else {
-			_ = d.Set("source", sourceIds)
-		}
+		sourceIds := resolveListOfIdentifiers("source", accessRule["source"], d)
+		_ = d.Set("source", sourceIds)
 	}
 
 	if v := accessRule["source-negate"]; v != nil {
@@ -463,20 +407,8 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if accessRule["time"] != nil {
-		timeJson := accessRule["time"].([]interface{})
-		timeIds := make([]string, 0)
-		if len(timeJson) > 0 {
-			for _, time := range timeJson {
-				time := time.(map[string]interface{})
-				timeIds = append(timeIds, time["name"].(string))
-			}
-		}
-		_, timeInConf := d.GetOk("time")
-		if timeIds[0] == "Any" && !timeInConf {
-			_ = d.Set("time", []interface{}{})
-		} else {
-			_ = d.Set("time", timeIds)
-		}
+		timeIds := resolveListOfIdentifiers("time", accessRule["time"], d)
+		_ = d.Set("time", timeIds)
 	}
 	if accessRule["track"] != nil {
 
@@ -551,7 +483,8 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if v := accessRule["vpn"]; v != nil {
-		_ = d.Set("vpn", v.([]interface{})[0].(map[string]interface{})["name"])
+		vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
+		_ = d.Set("vpn", vpnId)
 	}
 
 	if v := accessRule["comments"]; v != nil {

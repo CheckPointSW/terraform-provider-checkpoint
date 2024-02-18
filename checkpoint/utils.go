@@ -153,3 +153,38 @@ func isArgDefault(v string, d *schema.ResourceData, arg string, defaultVal strin
 	isDefault := v == defaultVal && ok
 	return v != defaultVal || isDefault
 }
+
+func resolveListOfIdentifiers(fieldName string, jsonResponse interface{}, d *schema.ResourceData) []string {
+	res := make([]string, 0)
+	key := "name" // by default we use name as object identifier
+
+	if v, ok := d.GetOk("fields_with_uid_identifier"); ok {
+		fieldsSupportUidList := v.(*schema.Set).List()
+		if len(fieldsSupportUidList) > 0 {
+			for _, field := range fieldsSupportUidList {
+				if field == fieldName {
+					key = "uid"
+					break
+				}
+			}
+		}
+	}
+
+	if arr, ok := jsonResponse.([]interface{}); ok {
+		if len(arr) > 0 {
+			for _, obj := range arr {
+				res = append(res, obj.(map[string]interface{})[key].(string))
+			}
+		}
+	} else {
+		if obj, ok := jsonResponse.(map[string]interface{}); ok {
+			res = append(res, obj[key].(string))
+		}
+	}
+
+	return res
+}
+
+func resolveObjectIdentifier(fieldName string, jsonResponse interface{}, d *schema.ResourceData) string {
+	return resolveListOfIdentifiers(fieldName, jsonResponse, d)[0]
+}
