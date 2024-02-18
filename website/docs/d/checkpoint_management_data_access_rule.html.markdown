@@ -13,24 +13,28 @@ Use this data source to get information on an existing Check Point Access Rule.
 
 ```hcl
 resource "checkpoint_management_access_rule" "access_rule" {
-  name        = "My Rule"
-  layer       = "Network"
-  position    = { top = "top" }
-  source      = ["Any"]
+  name = "My Rule"
+  layer = "Network"
+  position = { top = "top" }
+  source = ["Any"]
   destination = ["Any"]
-  service     = ["Any"]
-  track       = {
-    accounting              = false
-    alert                   = "none"
+  service = ["Any"]
+  content = ["Any"]
+  time = ["Any"]
+  install_on = ["Policy Targets"]
+  track = {
+    type = "Log"
+    accounting = false
+    alert = "none"
     enable_firewall_session = false
-    per_connection          = false
-    per_session             = false
-    type                    = "None"
+    per_connection = true
+    per_session = false
   }
+  custom_fields = {}
 }
 
 data "checkpoint_management_data_access_rule" "data_access_rule" {
-  name  = "${checkpoint_management_access_rule.access_rule.name}"
+  name = "${checkpoint_management_access_rule.access_rule.name}"
   layer = "${checkpoint_management_access_rule.access_rule.layer}"
 }
 ```
@@ -57,11 +61,12 @@ The following arguments are supported:
 * `service_negate` - True if negate is set for service.
 * `source` - Collection of Network objects identified by the name or UID.
 * `source_negate` - True if negate is set for source.
-* `time` - List of time objects. For example: \"Weekend\", \"Off-Work\", \"Every-Day\".
+* `time` - List of time objects. For example: "Weekend", "Off-Work", "Every-Day".
 * `track` - Track Settings. Track Settings blocks are documented below.
 * `user_check` - User check settings. User check settings blocks are documented below.
-* `vpn` - Communities or Directional.
+* `vpn` - VPN community identified by name or UID or "Any" or "All_GwToGw".
 * `comments` - Comments string.
+* `fields_with_uid_identifier` - (Optional) List of resource fields that will use object UIDs as object identifiers. Default is object name.
 
 `action_settings` supports the following:
 
