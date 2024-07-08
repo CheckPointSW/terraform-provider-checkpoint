@@ -9,8 +9,8 @@ import (
 
 func TestAcDataSourcecCheckpointManagementDataTypeFileAttributes_basic(t *testing.T) {
 
-	resourceName := "checkpoint_management_data_type_file_type_attributes.test"
-	dataSourceName := "data.checkpoint_management_data_type_file_type_attributes.data_test"
+	resourceName := "checkpoint_management_data_type_file_attributes.test"
+	dataSourceName := "data.checkpoint_management_data_type_file_attributes.data_test"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "web_api" {
@@ -34,7 +34,7 @@ func TestAcDataSourcecCheckpointManagementDataTypeFileAttributes_basic(t *testin
 
 func testAccDataSourceManagementDataTypeFileAttributesConfig(name string, desc string) string {
 	return fmt.Sprintf(`
-resource "checkpoint_management_data_type_file_type_attributes" "test" {
+resource "checkpoint_management_data_type_file_attributes" "test" {
         name = "%s"
         description = "%s"
          match_by_file_name = "true"
@@ -42,8 +42,8 @@ resource "checkpoint_management_data_type_file_type_attributes" "test" {
         match_by_file_size = "true"
         file_size = "12"
 }
-data "checkpoint_management_data_type_file_type_attributes" "data_test" {
-    name = "${checkpoint_management_data_type_file_type_attributes.test.name}"
+data "checkpoint_management_data_type_file_attributes" "data_test" {
+    name = "${checkpoint_management_data_type_file_attributes.test.name}"
 }
 `, name, desc)
 }

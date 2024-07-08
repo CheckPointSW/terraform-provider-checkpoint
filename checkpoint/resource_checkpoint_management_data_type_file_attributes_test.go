@@ -14,7 +14,7 @@ import (
 func TestAccCheckpointManagementDataTypeFileAttributes_basic(t *testing.T) {
 
 	var dataTypeFileAttributesMap map[string]interface{}
-	resourceName := "checkpoint_management_data_type_file_type_attributes.test"
+	resourceName := "checkpoint_management_data_type_file_attributes.test"
 	objName := "tfTestManagementDataTypeFileAttributes_" + acctest.RandString(6)
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
@@ -113,7 +113,7 @@ func testAccCheckCheckpointManagementDataTypeFileAttributesAttributes(dataTypeFi
 
 func testAccManagementDataTypeFileAttributesConfig(name string, matchByFileName bool, fileNameContains string, matchByFileSize bool, fileSize int) string {
 	return fmt.Sprintf(`
-resource "checkpoint_management_data_type_file_type_attributes" "test" {
+resource "checkpoint_management_data_type_file_attributes" "test" {
         name = "%s"
        match_by_file_name = "true"
         file_name_contains = "%s"
