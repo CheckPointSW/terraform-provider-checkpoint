@@ -14,7 +14,7 @@ This resource allows you to execute Check Point Data Type File Attributes.
 
 
 ```hcl
-resource "checkpoint_management_data_type_file_type_attributes" "example" {
+resource "checkpoint_management_data_type_file_attributes" "example" {
   name = "file-attr-obj"
   match_by_file_type = true
   file_groups_list = ["Viewer"]

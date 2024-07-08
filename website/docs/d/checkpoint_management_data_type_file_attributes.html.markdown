@@ -14,7 +14,7 @@ Use this data source to get information on an existing  Check Point Data Type Fi
 
 
 ```hcl
-resource "checkpoint_management_data_type_file_type_attributes" "example" {
+resource "checkpoint_management_data_type_file_attributes" "example" {
   name = "file-attr-obj"
   match_by_file_type = true
   file_groups_list = ["Viewer"]
@@ -24,8 +24,8 @@ resource "checkpoint_management_data_type_file_type_attributes" "example" {
   file_size = 14
 }
 
-data "checkpoint_management_data_type_file_type_attributes" "data" {
-  name = "${checkpoint_management_data_type_file_type_attributes.example.name}"
+data "checkpoint_management_data_type_file_attributes" "data" {
+  name = "${checkpoint_management_data_type_file_attributes.example.name}"
 }
 ```
 
