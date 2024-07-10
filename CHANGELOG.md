@@ -1,6 +1,8 @@
-## 2.7.1 (July 4, 2024)
+## 2.7.1 
 
 FEATURES
+* **New Resource:** `checkpoint_management_limit`
+* **New Resource:** `checkpoint_management_command_set_content_awareness_advanced_settings`
 * **New Resource:** `checkpoint_management_data_type_keywords`
 * **New Resource:** `checkpoint_management_data_type_weighted_keywords`
 * **New Resource:** `checkpoint_management_data_type_patterns`
@@ -15,7 +17,8 @@ FEATURES
 * **New Data Source:** `checkpoint_management_data_type_group`
 * **New Data Source:** `checkpoint_management_data_type_traditional_group`
 * **New Data Source:** `checkpoint_management_data_type_compound_group`
-
+  **New Data Source:** `checkpoint_management_limit`
+  **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
 
 ## 2.7.0 (February 19, 2024)
 
