@@ -111,6 +111,8 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_content_awareness_advanced_settings":            resourceManagementSetContentAwarenessAdvancedSettings(),
+			"checkpoint_management_limit":                                          resourceManagementLimit(),
 			"checkpoint_management_data_type_compound_group":                       resourceManagementDataTypeCompoundGroup(),
 			"checkpoint_management_data_type_traditional_group":                    resourceManagementDataTypeTraditionalGroup(),
 			"checkpoint_management_data_type_group":                                resourceManagementDataTypeGroup(),
@@ -299,6 +301,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cme_gw_configurations_gcp":                      resourceManagementCMEGWConfigurationsGCP(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_content_awareness_advanced_settings":       dataSourceManagementContentAwarenessAdvancedSettings(),
+			"checkpoint_management_limit":                                     dataSourceManagementLimit(),
 			"checkpoint_management_data_type_compound_group":                  dataSourceManagementDataTypeCompoundGroup(),
 			"checkpoint_management_data_type_traditional_group":               dataSourceManagementDataTypeTraditionalGroup(),
 			"checkpoint_management_data_type_group":                           dataResourceManagementDataTypeGroup(),
