@@ -34,6 +34,7 @@ resource "checkpoint_management_access_rule" "rule1" {
   }
   action_settings = {}
   custom_fields = {}
+  vpn = "Any"
 }
 
 resource "checkpoint_management_access_rule" "rule2" {
@@ -58,6 +59,7 @@ resource "checkpoint_management_access_rule" "rule2" {
   }
   action_settings = {}
   custom_fields = {}
+  vpn = "All_GwToGw"
 }
 
 resource "checkpoint_management_access_rule" "rule3" {
@@ -85,6 +87,7 @@ resource "checkpoint_management_access_rule" "rule3" {
     per_session = false
   }
   custom_fields = {}
+  vpn_communities = ["StarCommunity", "MeshedCommunity"]
 }
 
 resource "checkpoint_management_access_rule" "rule4" {
@@ -108,6 +111,10 @@ resource "checkpoint_management_access_rule" "rule4" {
   }
   action_settings = {}
   custom_fields = {}
+  vpn_directional {
+    from = "StarVpn"
+    to = "MeshedCommunity"
+  }
 }
 
 resource "checkpoint_management_access_rule" "rule5" {
@@ -133,6 +140,7 @@ resource "checkpoint_management_access_rule" "rule5" {
     per_session = false
   }
   custom_fields = {}
+  vpn = "Any"
 }
 ```
 
@@ -161,7 +169,9 @@ The following arguments are supported:
 * `time` - (Optional) List of time objects. For example: "Weekend", "Off-Work", "Every-Day".
 * `track` - (Optional) Track Settings. Track Settings blocks are documented below.
 * `user_check` - (Optional) User check settings. User check settings blocks are documented below.
-* `vpn` - (Optional) VPN community identified by name or UID or "Any" or "All_GwToGw".
+* `vpn` - (Optional) VPN community identified by name or "Any" or "All_GwToGw".
+* `vpn_communities` - (Optional) Collection of VPN communities identified by name.
+* `vpn_directional` - (Optional) Collection of VPN directional. VPN directional block documented below.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 * `comments` - (Optional) Comments string.
@@ -205,6 +215,11 @@ The following arguments are supported:
 
 * `every` - (Optional) N/A.
 * `unit` - (Optional) N/A. 
+
+`vpn_directional` supports the following:
+
+* `from` - (Optional) From VPN community.
+* `to` - (Optional) To VPN community.
 
 ## Import
 

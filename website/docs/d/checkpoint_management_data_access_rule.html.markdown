@@ -31,6 +31,7 @@ resource "checkpoint_management_access_rule" "access_rule" {
     per_session = false
   }
   custom_fields = {}
+  vpn = "Any"
 }
 
 data "checkpoint_management_data_access_rule" "data_access_rule" {
@@ -64,7 +65,9 @@ The following arguments are supported:
 * `time` - List of time objects. For example: "Weekend", "Off-Work", "Every-Day".
 * `track` - Track Settings. Track Settings blocks are documented below.
 * `user_check` - User check settings. User check settings blocks are documented below.
-* `vpn` - VPN community identified by name or UID or "Any" or "All_GwToGw".
+* `vpn` - VPN community identified by name or "Any" or "All_GwToGw".
+* `vpn_communities` - Collection of VPN communities identified by name.
+* `vpn_directional` - Collection of VPN directional. VPN directional block documented below.
 * `comments` - Comments string.
 * `fields_with_uid_identifier` - (Optional) List of resource fields that will use object UIDs as object identifiers. Default is object name.
 
@@ -100,6 +103,10 @@ The following arguments are supported:
 * `every`
 * `unit`
 
+`vpn_directional` supports the following:
+
+* `from` - From VPN community.
+* `to` - To VPN community.
 
 
 
