@@ -298,7 +298,7 @@ func resourceManagementAccessRule() *schema.Resource {
 			"vpn_communities": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "VPN communities (used for multiple VPNs, otherwise, use \"vpn\" field)",
+				Description: "Collection of VPN communities identified by name",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -306,7 +306,7 @@ func resourceManagementAccessRule() *schema.Resource {
 			"vpn_directional": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "VPN directional",
+				Description: "Collection of VPN directional",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"from": {
