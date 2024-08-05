@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"strconv"
+	"strings"
 )
 
 func dataSourceManagementAccessRule() *schema.Resource {
@@ -246,7 +247,34 @@ func dataSourceManagementAccessRule() *schema.Resource {
 			"vpn": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Communities or Directional.",
+				Description: "Valid values \"Any\", \"All_GwToGw\" or VPN community name",
+			},
+			"vpn_communities": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "VPN communities (used for multiple VPNs, otherwise, use \"vpn\" field)",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"vpn_directional": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "VPN directional",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"from": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "From VPN community",
+						},
+						"to": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "To VPN community",
+						},
+					},
+				},
 			},
 			"comments": {
 				Type:        schema.TypeString,
@@ -483,8 +511,38 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if v := accessRule["vpn"]; v != nil {
-		vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
-		_ = d.Set("vpn", vpnId)
+		vpnList := v.([]interface{})
+		if len(vpnList) > 0 {
+			vpnType := vpnList[0].(map[string]interface{})["type"].(string)
+			if len(vpnList) == 1 && vpnType != "VpnDirectionalElement" { // BC
+				vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
+				_ = d.Set("vpn", vpnId)
+				_ = d.Set("vpn_communities", nil)
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType != "VpnDirectionalElement" {
+				vpnIds := resolveListOfIdentifiers("vpn", vpnList, d)
+				_ = d.Set("vpn_communities", vpnIds)
+				_ = d.Set("vpn", nil)
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType == "VpnDirectionalElement" {
+				var vpnDirectionalListState []map[string]interface{}
+				for i := range vpnList {
+					vpnDirectionalObj := vpnList[i].(map[string]interface{})
+					if v, _ := vpnDirectionalObj["name"]; v != nil {
+						vpnDirectionalNames := strings.Split(v.(string), "->")
+						vpnDirectionalState := make(map[string]interface{})
+						vpnDirectionalState["from"] = vpnDirectionalNames[0]
+						vpnDirectionalState["to"] = vpnDirectionalNames[1]
+						vpnDirectionalListState = append(vpnDirectionalListState, vpnDirectionalState)
+					}
+				}
+				_ = d.Set("vpn_directional", vpnDirectionalListState)
+				_ = d.Set("vpn_communities", nil)
+				_ = d.Set("vpn", nil)
+			} else {
+				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+			}
+		}
 	}
 
 	if v := accessRule["comments"]; v != nil {
