@@ -28,6 +28,10 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_config_aws" {
   send_logs_to_server        = ["PLS_A"]
   send_logs_to_backup_server = ["BLS_B"]
   send_alerts_to_server      = ["ALS_C"]
+  section_name               = "my_section"
+  x_forwarded_for            = true
+  color                      = "blue"
+  communication_with_servers_behind_nat = "translated-ip-only"
   repository_gateway_scripts {
     name       = "myScript"
     parameters = "ls -l"
@@ -90,3 +94,9 @@ These arguments are supported:
 * `send_logs_to_backup_server` - (Optional) Comma-separated list of Backup Log Servers names to which logs are sent if
   the Primary Log Servers are unavailable.
 * `send_alerts_to_server` - (Optional) Comma-separated list of Alert Log Servers names to which alerts are sent.
+* `section_name` - (Optional) Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.
+* `x_forwarded_for` - (Optional) Enable XFF headers in HTTP / HTTPS requests.
+* `color` - (Optional) Color of the gateways objects in SmartConsole.
+* `communication_with_servers_behind_nat` - (Optional) Gateway behind NAT communications settings with the Check Point Servers(Management, Multi-Domain, Log Servers).
+
+

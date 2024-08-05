@@ -30,6 +30,9 @@ func TestAccDataSourceCheckpointManagementCMEGWConfigurationsGCP_basic(t *testin
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "related_account", resourceName, "related_account"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "version", resourceName, "version"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "x_forwarded_for", resourceName, "x_forwarded_for"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "communication_with_servers_behind_nat", resourceName, "communication_with_servers_behind_nat"),
 				),
 			},
 		},
@@ -50,6 +53,9 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "test" {
   version         = "R81"
   base64_sic_key  = "MTIzNDU2Nzg="
   policy          = "Standard"
+  x_forwarded_for = true
+  color           = "black"
+  communication_with_servers_behind_nat = "translated-ip-only"
   blades {
 	ips                          = false
 	anti_bot                     = false
