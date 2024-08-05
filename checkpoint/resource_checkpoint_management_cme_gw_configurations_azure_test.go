@@ -17,6 +17,12 @@ func TestAccCheckpointManagementCMEGWConfigurationsAzure_basic(t *testing.T) {
 	gwConfigurationVersion := "R81.10"
 	gwConfigurationBase64SIC := "MTIzNDU2Nzg="
 	gwConfigurationPolicy := "Standard"
+	gwConfigurationIpv6 := true
+	gwConfigurationColor := "black"
+	gwConfigurationXForwardedFor := true
+	gwConfigurationCommunicationWithServersBehindNAT := "translated-ip-only"
+
+
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -32,11 +38,13 @@ func TestAccCheckpointManagementCMEGWConfigurationsAzure_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccManagementCMEGWConfigurationsAzureConfig(accountName, gwConfigurationName, gwConfigurationVersion,
-					gwConfigurationBase64SIC, gwConfigurationPolicy),
+					gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationIpv6, gwConfigurationXForwardedFor,
+					gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceName, &azureGWConfiguration),
 					testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(&azureGWConfiguration, gwConfigurationName, accountName, gwConfigurationVersion,
-						gwConfigurationPolicy, true, true),
+						gwConfigurationPolicy, true, true, gwConfigurationIpv6, gwConfigurationXForwardedFor,
+						gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT),
 				),
 			},
 		},
@@ -65,7 +73,8 @@ func testAccCheckpointManagementCMEGWConfigurationsAzureDestroy(s *terraform.Sta
 }
 
 func testAccManagementCMEGWConfigurationsAzureConfig(accountName string, gwConfigurationName string, gwConfigurationVersion string,
-	gwConfigurationBase64SIC string, gwConfigurationPolicy string) string {
+	gwConfigurationBase64SIC string, gwConfigurationPolicy string, gwConfigurationIpv6 bool, gwConfigurationXForwardedFor bool,
+	gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_cme_accounts_azure" "account_test" {
   name           = "%s"
@@ -95,8 +104,13 @@ resource "checkpoint_management_cme_gw_configurations_azure" "gw_configuration_t
 	url_filtering = false
 	vpn = false
   }
+  ipv6 = %t
+  x_forwarded_for = %t
+  color           = "%s"
+  communication_with_servers_behind_nat = "%s"
 }
-`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy)
+`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationIpv6, gwConfigurationXForwardedFor,
+  gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
 }
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -128,7 +142,8 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfNa
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, httpsInspectionFlag bool,
-	applicationControlFlag bool) resource.TestCheckFunc {
+	applicationControlFlag bool, gwConfigurationIpv6 bool, gwConfigurationXForwardedFor bool,
+    gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*azureGWConfiguration)["result"].(map[string]interface{})
 		if gwConfiguration["name"] != gwConfigurationName {
@@ -151,6 +166,18 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWC
 		}
 		if applicationControl != applicationControlFlag {
 			return fmt.Errorf("application control is %t, expected %t", applicationControl, applicationControlFlag)
+		}
+		if gwConfiguration["ipv6"] != gwConfigurationIpv6 {
+			return fmt.Errorf("ipv6 is %t, expected %t", gwConfiguration["ipv6"], gwConfigurationIpv6)
+		}
+		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {
+			return fmt.Errorf("x_forwarded_for is %t, expected %t", gwConfiguration["x_forwarded_for"], gwConfigurationXForwardedFor)
+		}
+		if gwConfiguration["color"] != gwConfigurationColor {
+			return fmt.Errorf("color is %s, expected %s", gwConfiguration["color"], gwConfigurationColor)
+		}
+		if gwConfiguration["communication_with_servers_behind_nat"] != gwConfigurationCommunicationWithServersBehindNAT {
+			return fmt.Errorf("communication_with_servers_behind_nat is %s, expected %s", gwConfiguration["communication_with_servers_behind_nat"], gwConfigurationCommunicationWithServersBehindNAT)
 		}
 		return nil
 	}

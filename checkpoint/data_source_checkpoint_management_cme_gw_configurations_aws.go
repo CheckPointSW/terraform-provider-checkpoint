@@ -38,6 +38,27 @@ func dataSourceManagementCMEGWConfigurationsAWS() *schema.Resource {
 				Computed:    true,
 				Description: "Related account name (aws/azure/gcp accounts)",
 			},
+			"section_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.",
+			},
+			"x_forwarded_for": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable XFF headers in HTTP / HTTPS requests.",
+			},
+			"color": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Color of the gateways objects in SmartConsole.",
+			},
+			"communication_with_servers_behind_nat": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
+					"(Management, Multi-Domain, Log Servers).",
+			},
 			"blades": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -306,6 +327,14 @@ func dataSourceManagementCMEGWConfigurationsAWSRead(d *schema.ResourceData, m in
 	_ = d.Set("send_logs_to_backup_server", AWSGWConfiguration["send-logs-to-backup-server"])
 
 	_ = d.Set("send_alerts_to_server", AWSGWConfiguration["send-alerts-to-server"])
+
+	_ = d.Set("section_name", AWSGWConfiguration["section_name"])
+
+	_ = d.Set("x_forwarded_for", AWSGWConfiguration["x_forwarded_for"])
+
+	_ = d.Set("color", AWSGWConfiguration["color"])
+
+	_ = d.Set("communication_with_servers_behind_nat", AWSGWConfiguration["communication-with-servers-behind-nat"])
 
 	return nil
 }

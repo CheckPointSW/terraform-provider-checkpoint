@@ -157,6 +157,32 @@ func dataSourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"ipv6": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates if the GW is configured to support IPv6.",
+			},
+			"section_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.",
+			},
+			"x_forwarded_for": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable XFF headers in HTTP / HTTPS requests.",
+			},
+			"color": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Color of the gateways objects in SmartConsole.",
+			},
+			"communication_with_servers_behind_nat": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
+					"(Management, Multi-Domain, Log Servers).",
+			},
 		},
 	}
 }
@@ -257,6 +283,16 @@ func dataSourceManagementCMEGWConfigurationsAzureRead(d *schema.ResourceData, m 
 	_ = d.Set("send_logs_to_backup_server", AzureGWConfiguration["send-logs-to-backup-server"])
 
 	_ = d.Set("send_alerts_to_server", AzureGWConfiguration["send-alerts-to-server"])
+
+	_ = d.Set("ipv6", AzureGWConfiguration["ipv6"])
+
+	_ = d.Set("section_name", AzureGWConfiguration["section_name"])
+
+	_ = d.Set("x_forwarded_for", AzureGWConfiguration["x_forwarded_for"])
+
+	_ = d.Set("color", AzureGWConfiguration["color"])
+
+	_ = d.Set("communication_with_servers_behind_nat", AzureGWConfiguration["communication-with-servers-behind-nat"])
 
 	return nil
 }

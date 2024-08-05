@@ -23,6 +23,7 @@ resource "checkpoint_management_cme_accounts_azure" "azure_account" {
   application_id = "abcd1234-ab12-cd34-ef56-abcdef123456"
   client_secret  = "mySecret"
   subscription   = "abcd1234-ab12-cd34-ef56-abcdef123456"
+  environmnet    = "AzureCloud"
 }
 ```
 
@@ -38,6 +39,7 @@ These arguments are supported:
 * `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a Gateway
   until its deletion.
 * `domain` - (Optional) The account's domain name in Multi-Domain Security Management Server environment.
+* `environment` - (Optional) The Azure environmnet.
 
 ## Limitations
 

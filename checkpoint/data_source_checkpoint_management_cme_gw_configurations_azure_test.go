@@ -30,6 +30,10 @@ func TestAccDataSourceCheckpointManagementCMEGWConfigurationsAzure_basic(t *test
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "related_account", resourceName, "related_account"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "version", resourceName, "version"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "ipv6", resourceName, "ipv6"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "x_forwarded_for", resourceName, "x_forwarded_for"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "communication_with_servers_behind_nat", resourceName, "communication_with_servers_behind_nat"),
 				),
 			},
 		},
@@ -52,6 +56,10 @@ resource "checkpoint_management_cme_gw_configurations_azure" "test" {
   version         = "R81"
   base64_sic_key  = "MTIzNDU2Nzg="
   policy          = "Standard"
+  ipv6			= true
+  x_forwarded_for = true
+  color           = "black"
+  communication_with_servers_behind_nat = "translated-ip-only"
   blades {
 	ips                          = false
 	anti_bot                     = false

@@ -34,5 +34,6 @@ These arguments are supported:
 * `deletion_tolerance` - The number of CME cycles to wait when the cloud provider does not return a Gateway until its
   deletion.
 * `domain` - The account's domain name in Multi-Domain Security Management Server environment.
+* `environmnet` - The Azure environmnet.
 * `platform` - The platform of the account.
 * `gw_configurations` - A list of Gateway configurations attached to the account.

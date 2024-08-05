@@ -44,6 +44,27 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 				Required:    true,
 				Description: "The CME account to associate with the GW Configuration.",
 			},
+			"section_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.",
+			},
+			"x_forwarded_for": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable XFF headers in HTTP / HTTPS requests.",
+			},
+			"color": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the gateways objects in SmartConsole.",
+			},
+			"communication_with_servers_behind_nat": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
+					"(Management, Multi-Domain, Log Servers).",
+			},
 			"blades": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -164,6 +185,11 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"ipv6": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates if the GW is configured to support IPv6.",
+			},
 		},
 	}
 }
@@ -264,6 +290,16 @@ func readManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interface{
 
 	_ = d.Set("send_alerts_to_server", AzureGWConfiguration["send-alerts-to-server"])
 
+	_ = d.Set("ipv6", AzureGWConfiguration["ipv6"])
+
+	_ = d.Set("section_name", AzureGWConfiguration["section_name"])
+
+	_ = d.Set("x_forwarded_for", AzureGWConfiguration["x_forwarded_for"])
+
+	_ = d.Set("color", AzureGWConfiguration["color"])
+
+	_ = d.Set("communication_with_servers_behind_nat", AzureGWConfiguration["communication-with-servers-behind-nat"])
+
 	return nil
 
 }
@@ -283,6 +319,21 @@ func createManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 	}
 	if v, ok := d.GetOk("related_account"); ok {
 		payload["related_account"] = v.(string)
+	}
+	if v, ok := d.GetOk("ipv6"); ok {
+		payload["ipv6"] = v.(bool)
+	}
+	if v, ok := d.GetOk("section_name"); ok {
+		payload["section_name"] = v.(string)
+	}
+	if v, ok := d.GetOk("x_forwarded_for"); ok {
+		payload["x_forwarded_for"] = v.(bool)
+	}
+	if v, ok := d.GetOk("color"); ok {
+		payload["color"] = v.(string)
+	}
+	if v, ok := d.GetOk("communication_with_servers_behind_nat"); ok {
+		payload["communication_with_servers_behind_nat"] = v.(string)
 	}
 	if v, ok := d.GetOk("repository_gateway_scripts"); ok {
 		scriptsList := v.([]interface{})
@@ -397,6 +448,21 @@ func updateManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 	}
 	if d.HasChange("related_account") {
 		payload["related_account"] = d.Get("related_account")
+	}
+	if d.HasChange("ipv6") {
+		payload["ipv6"] = d.Get("ipv6")
+	}
+	if d.HasChange("section_name") {
+		payload["section_name"] = d.Get("section_name")
+	}
+	if d.HasChange("x_forwarded_for") {
+		payload["x_forwarded_for"] = d.Get("x_forwarded_for")
+	}
+	if d.HasChange("color") {
+		payload["color"] = d.Get("color")
+	}
+	if d.HasChange("communication_with_servers_behind_nat") {
+		payload["communication_with_servers_behind_nat"] = d.Get("communication_with_servers_behind_nat")
 	}
 	if d.HasChange("repository_gateway_scripts") {
 		if v, ok := d.GetOk("repository_gateway_scripts"); ok {

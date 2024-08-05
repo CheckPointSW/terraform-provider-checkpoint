@@ -17,6 +17,7 @@ func TestAccCheckpointManagementCMEAccountsAzure_basic(t *testing.T) {
 	applicationId := "46707d92-02f4-4817-8116-a4c3b23e6266"
 	clientSecret := "mySecret"
 	subscription := "46707d92-02f4-4817-8116-a4c3b23e6267"
+	environment := "AzureCloud"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -31,11 +32,11 @@ func TestAccCheckpointManagementCMEAccountsAzure_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementCMEAccountAzureDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementCMEAccountsAzureConfig(accountName, directoryId, applicationId, clientSecret, subscription),
+				Config: testAccManagementCMEAccountsAzureConfig(accountName, directoryId, applicationId, clientSecret, subscription, environment),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEAccountsAzureExists(resourceName, &azureAccount),
 					testAccCheckCheckpointManagementCMEAccountsAzureAttributes(&azureAccount, accountName, directoryId, applicationId,
-						subscription, 3),
+						subscription, 3, environment),
 				),
 			},
 		},
@@ -63,7 +64,7 @@ func testAccCheckpointManagementCMEAccountAzureDestroy(s *terraform.State) error
 	return nil
 }
 
-func testAccManagementCMEAccountsAzureConfig(accountName string, directoryId string, applicationId string, clientSecret string, subscription string) string {
+func testAccManagementCMEAccountsAzureConfig(accountName string, directoryId string, applicationId string, clientSecret string, subscription string, environment string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_cme_accounts_azure" "test" {
   name           = "%s"
@@ -71,8 +72,9 @@ resource "checkpoint_management_cme_accounts_azure" "test" {
   application_id = "%s"
   client_secret  = "%s"
   subscription   = "%s"
+  environment    = "%s"
 }
-`, accountName, directoryId, applicationId, clientSecret, subscription)
+`, accountName, directoryId, applicationId, clientSecret, subscription, environment)
 }
 
 func testAccCheckCheckpointManagementCMEAccountsAzureExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -103,7 +105,7 @@ func testAccCheckCheckpointManagementCMEAccountsAzureExists(resourceTfName strin
 }
 
 func testAccCheckCheckpointManagementCMEAccountsAzureAttributes(azureAccount *map[string]interface{}, name string,
-	directoryId string, applicationId string, subscription string, expectedDeletionTolerance int) resource.TestCheckFunc {
+	directoryId string, applicationId string, subscription string, expectedDeletionTolerance int, environment string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		account := (*azureAccount)["result"].(map[string]interface{})
 		if account["name"] != name {
@@ -121,6 +123,9 @@ func testAccCheckCheckpointManagementCMEAccountsAzureAttributes(azureAccount *ma
 		deletionTolerance := int(account["deletion_tolerance"].(float64))
 		if deletionTolerance != expectedDeletionTolerance {
 			return fmt.Errorf("deletion_tolerance is %d, expected %d", deletionTolerance, expectedDeletionTolerance)
+		}
+		if account["environment"] != environment {
+			return fmt.Errorf("environment is %s, expected %s", account["environment"], environment)
 		}
 		return nil
 	}
