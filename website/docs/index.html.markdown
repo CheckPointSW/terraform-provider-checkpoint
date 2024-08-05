@@ -18,7 +18,7 @@ DevSecOps workflows.
 ## Examples of usage
 To use Check Point provider, copy and paste this code into your Terraform configuration, update provider configuration and run `terraform init`.
 
-## Terraform 0.12 and earlier:
+### Terraform 0.12 and earlier:
 ```hcl
 # Configure Check Point Provider for Management API
 provider "checkpoint" {
@@ -37,7 +37,7 @@ resource "checkpoint_management_network" "network" {
   # ...   
 }
 ```
-## Terraform 0.13 and later:
+### Terraform 0.13 and later:
 ```hcl
 terraform {
   required_providers {

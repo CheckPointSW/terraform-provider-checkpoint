@@ -9,9 +9,10 @@ import (
 
 func resourceManagementDeleteDataCenterObject() *schema.Resource {
 	return &schema.Resource{
-		Create: createManagementDeleteDataCenterObject,
-		Read:   readManagementDeleteDataCenterObject,
-		Delete: deleteManagementDeleteDataCenterObject,
+		Create:             createManagementDeleteDataCenterObject,
+		Read:               readManagementDeleteDataCenterObject,
+		Delete:             deleteManagementDeleteDataCenterObject,
+		DeprecationMessage: "This resource is deprecated. please use the `checkpoint_management_data_center_object` resource.",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
