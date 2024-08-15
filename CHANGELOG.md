@@ -1,6 +1,16 @@
 ## 2.7.1 
 
 FEATURES
+
+* **New Resource:** `checkpoint_management_mobile_profile`
+* **New Resource:** `checkpoint_management_passcode_profile`
+* **New Resource:** `checkpoint_management_command_set_app_control_advanced_settings`
+* **New Resource:** `checkpoint_management_command_set_cp_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_command_set_trusted_ca_settings`
+* **New Resource:** `checkpoint_management_command_set_internal_trusted_ca`
+* **New Resource:** `checkpoint_management_external_trusted_ca`
+* **New Resource:** `checkpoint_management_opsec_trusted_ca`
+* **New Resource:** `checkpoint_management_multiple_key_exchanges`
 * **New Resource:** `checkpoint_management_limit`
 * **New Resource:** `checkpoint_management_command_set_content_awareness_advanced_settings`
 * **New Resource:** `checkpoint_management_data_type_keywords`
@@ -10,15 +20,24 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_mobile_profile`
+* **New Data Source:** `checkpoint_management_passcode_profile`
+* **New Data Source:** `checkpoint_management_app_control_advanced_settings`
+* **New Data Source:** `checkpoint_management_cp_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_trusted_ca_settings`
+* **New Data Source:** `checkpoint_management_internal_trusted_ca`
+* **New Data Source:** `checkpoint_management_external_trusted_ca`
+* **New Data Source:** `checkpoint_management_opsec_trusted_ca`
+* **New Data Source:** `checkpoint_management_multiple_key_exchanges`
+* **New Data Source:** `checkpoint_management_limit`
+* **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
 * **New Data Source:** `checkpoint_management_data_type_keywords`
 * **New Data Source:** `checkpoint_management_data_type_weighted_keywords`
 * **New Data Source:** `checkpoint_management_data_type_patterns`
 * **New Data Source:** `checkpoint_management_data_type_file_attributes`
 * **New Data Source:** `checkpoint_management_data_type_group`
 * **New Data Source:** `checkpoint_management_data_type_traditional_group`
-* **New Data Source:** `checkpoint_management_data_type_compound_group`
-  **New Data Source:** `checkpoint_management_limit`
-  **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
+* **New Data Source:** `checkpoint_management_data_type_compound_group` 
 
 ## 2.7.0 (February 19, 2024)
 
