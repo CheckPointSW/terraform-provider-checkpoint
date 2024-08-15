@@ -559,7 +559,7 @@ func login(client *checkpoint.ApiClient, username string, pwd string, apiKey str
 	if err != nil {
 		localRequestsError := "invalid character '<' looking for beginning of value"
 		if strings.Contains(err.Error(), localRequestsError) {
-			return Session{}, fmt.Errorf("login failure: API server needs to be configured to accept requests from all IP addresses")
+			return Session{}, fmt.Errorf("Login to management server failed: API server needs to be configured to accept requests from all IP addresses")
 		}
 		return Session{}, err
 	}

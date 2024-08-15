@@ -293,8 +293,34 @@ func resourceManagementAccessRule() *schema.Resource {
 			"vpn": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Communities or Directional.",
-				Default:     "Any",
+				Description: "Valid values \"Any\", \"All_GwToGw\" or VPN community name",
+			},
+			"vpn_communities": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of VPN communities identified by name",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"vpn_directional": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Collection of VPN directional",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"from": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "From VPN community",
+						},
+						"to": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "To VPN community",
+						},
+					},
+				},
 			},
 			"ignore_warnings": {
 				Type:        schema.TypeBool,
@@ -490,6 +516,12 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			}
 			accessRule["user-check"] = userCheckPayload
 		}
+	}
+	if v, ok := d.GetOk("vpn_directional"); ok {
+		accessRule["vpn"] = v
+	}
+	if v, ok := d.GetOk("vpn_communities"); ok {
+		accessRule["vpn"] = v.(*schema.Set).List()
 	}
 	if v, ok := d.GetOk("vpn"); ok {
 		accessRule["vpn"] = v.(string)
@@ -748,8 +780,44 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := accessRule["vpn"]; v != nil {
-		vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
-		_ = d.Set("vpn", vpnId)
+		vpnList := v.([]interface{})
+		if len(vpnList) > 0 {
+			vpnType := vpnList[0].(map[string]interface{})["type"].(string)
+			if len(vpnList) == 1 && vpnType != "VpnDirectionalElement" { // BC
+				vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
+				_, vpnCommunitiesUsed := d.GetOk("vpn_communities")
+				if vpnCommunitiesUsed {
+					_ = d.Set("vpn", nil)
+					_ = d.Set("vpn_communities", []interface{}{vpnId})
+				} else {
+					_ = d.Set("vpn", vpnId)
+					_ = d.Set("vpn_communities", nil)
+				}
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType != "VpnDirectionalElement" {
+				vpnIds := resolveListOfIdentifiers("vpn", vpnList, d)
+				_ = d.Set("vpn_communities", vpnIds)
+				_ = d.Set("vpn", nil)
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType == "VpnDirectionalElement" {
+				var vpnDirectionalListState []map[string]interface{}
+				for i := range vpnList {
+					vpnDirectionalObj := vpnList[i].(map[string]interface{})
+					if v, _ := vpnDirectionalObj["name"]; v != nil {
+						vpnDirectionalNames := strings.Split(v.(string), "->")
+						vpnDirectionalState := make(map[string]interface{})
+						vpnDirectionalState["from"] = vpnDirectionalNames[0]
+						vpnDirectionalState["to"] = vpnDirectionalNames[1]
+						vpnDirectionalListState = append(vpnDirectionalListState, vpnDirectionalState)
+					}
+				}
+				_ = d.Set("vpn_directional", vpnDirectionalListState)
+				_ = d.Set("vpn_communities", nil)
+				_ = d.Set("vpn", nil)
+			} else {
+				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+			}
+		}
 	}
 
 	if v := accessRule["comments"]; v != nil {
@@ -1021,13 +1089,28 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
+	if d.HasChange("vpn_directional") {
+		if v, ok := d.GetOk("vpn_directional"); ok {
+			accessRule["vpn"] = v
+		}
+	}
+
+	if d.HasChange("vpn_communities") {
+		if v, ok := d.GetOk("vpn_communities"); ok {
+			accessRule["vpn"] = v.(*schema.Set).List()
+		}
+	}
+
 	if d.HasChange("vpn") {
-		accessRule["vpn"] = d.Get("vpn")
+		if v, ok := d.GetOk("vpn"); ok {
+			accessRule["vpn"] = v
+		}
 	}
 
 	if v, ok := d.GetOk("ignore_errors"); ok {
 		accessRule["ignore-errors"] = v.(bool)
 	}
+
 	if v, ok := d.GetOk("ignore_warnings"); ok {
 		accessRule["ignore-warnings"] = v.(bool)
 	}
