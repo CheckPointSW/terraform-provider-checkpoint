@@ -2,6 +2,10 @@
 
 FEATURES
 
+* **New Resource:** `checkpoint_management_resource_smtp`
+* **New Resource:** `checkpoint_management_resource_uri`
+* **New Resource:** `checkpoint_management_resource_ftp`
+* **New Resource:** `checkpoint_management_resource_cifs`
 * **New Resource:** `checkpoint_management_mobile_profile`
 * **New Resource:** `checkpoint_management_passcode_profile`
 * **New Resource:** `checkpoint_management_command_set_app_control_advanced_settings`
@@ -20,6 +24,10 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_resource_smtp`
+* **New Data Source:** `checkpoint_management_resource_uri`
+* **New Data Source:** `checkpoint_management_resource_ftp`
+* **New Data Source:** `checkpoint_management_resource_cifs`
 * **New Data Source:** `checkpoint_management_mobile_profile`
 * **New Data Source:** `checkpoint_management_passcode_profile`
 * **New Data Source:** `checkpoint_management_app_control_advanced_settings`

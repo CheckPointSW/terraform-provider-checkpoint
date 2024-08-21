@@ -111,6 +111,10 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_resource_cifs":                                  resourceManagementResourceCifs(),
+			"checkpoint_management_resource_ftp":                                   resourceManagementResourceFtp(),
+			"checkpoint_management_resource_smtp":                                  resourceManagementResourceSmtp(),
+			"checkpoint_management_resource_uri":                                   resourceManagementResourceUri(),
 			"checkpoint_management_mobile_profile":                                 resourceManagementMobileProfile(),
 			"checkpoint_management_passcode_profile":                               resourceManagementPasscodeProfile(),
 			"checkpoint_management_command_set_trusted_ca_settings":                resourceManagementSetTrustedCaSettings(),
@@ -310,6 +314,10 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cme_gw_configurations_gcp":                      resourceManagementCMEGWConfigurationsGCP(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_resource_cifs":                             dataSourceManagementResourceCifs(),
+			"checkpoint_management_resource_ftp":                              dataSourceManagementResourceFtp(),
+			"checkpoint_management_resource_smtp":                             dataSourceManagementResourceSmtp(),
+			"checkpoint_management_resource_uri":                              dataDourceManagementResourceUri(),
 			"checkpoint_management_mobile_profile":                            dataSourceManagementMobileProfile(),
 			"checkpoint_management_passcode_profile":                          dataSourceManagementPasscodeProfile(),
 			"checkpoint_management_trusted_ca_settings":                       dataSourceManagementSetTrustedCaSettings(),
