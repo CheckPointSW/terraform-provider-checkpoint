@@ -15,7 +15,6 @@ This resource allows you to execute Check Point Resource Cifs.
 
 ```hcl
 resource "checkpoint_management_resource_cifs" "cifs" {
-
   name = "newCifsResource"
   allowed_disk_and_print_shares {
     server_name = "server1"
@@ -28,7 +27,6 @@ resource "checkpoint_management_resource_cifs" "cifs" {
   log_mapped_shares = true
   log_access_violation = true
   block_remote_registry_access = false
-
 }
 ```
 
@@ -37,7 +35,7 @@ resource "checkpoint_management_resource_cifs" "cifs" {
 The following arguments are supported:
 
 * `name` - (Required) Object name. 
-* `allowed_disk_and_print_shares` - (Optional) The list of Allowed Disk and Print Shares. Must be added in pairs.allowed_disk_and_print_shares blocks are documented below.
+* `allowed_disk_and_print_shares` - (Required) The list of Allowed Disk and Print Shares. Must be added in pairs.allowed_disk_and_print_shares blocks are documented below.
 * `log_mapped_shares` - (Optional) Logs each share map attempt. 
 * `log_access_violation` - (Optional) Logs any attempt to violate the restrictions imposed by the Resource. 
 * `block_remote_registry_access` - (Optional) Blocks the ability to remotely manipulate a the window's registry. 
@@ -50,5 +48,5 @@ The following arguments are supported:
 
 `allowed_disk_and_print_shares` supports the following:
 
-* `server_name` - (Optional) Blocks the ability to remotely manipulate a the window's registry. 
-* `share_name` - (Optional) Disk shares. 
+* `server_name` - (Required) Blocks the ability to remotely manipulate a the window's registry. 
+* `share_name` - (Required) Disk shares. 
