@@ -111,6 +111,8 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_override_categorization":                        resourceManagementOverrideCategorization(),
+			"checkpoint_management_interface":                                      resourceManagementInterface(),
 			"checkpoint_management_resource_cifs":                                  resourceManagementResourceCifs(),
 			"checkpoint_management_resource_ftp":                                   resourceManagementResourceFtp(),
 			"checkpoint_management_resource_smtp":                                  resourceManagementResourceSmtp(),
@@ -314,6 +316,8 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cme_gw_configurations_gcp":                      resourceManagementCMEGWConfigurationsGCP(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"checkpoint_management_override_categorization":                   dataSourceManagementOverrideCategorization(),
+			"checkpoint_management_interface":                                 dataSourceManagementInterface(),
 			"checkpoint_management_resource_cifs":                             dataSourceManagementResourceCifs(),
 			"checkpoint_management_resource_ftp":                              dataSourceManagementResourceFtp(),
 			"checkpoint_management_resource_smtp":                             dataSourceManagementResourceSmtp(),

@@ -2,6 +2,8 @@
 
 FEATURES
 
+* **New Resource:** `checkpoint_management_override_categorization`
+* **New Resource:** `checkpoint_management_interface`
 * **New Resource:** `checkpoint_management_resource_smtp`
 * **New Resource:** `checkpoint_management_resource_uri`
 * **New Resource:** `checkpoint_management_resource_ftp`
@@ -24,6 +26,8 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_override_categorization`
+* **New Data Source:** `checkpoint_management_interface`
 * **New Data Source:** `checkpoint_management_resource_smtp`
 * **New Data Source:** `checkpoint_management_resource_uri`
 * **New Data Source:** `checkpoint_management_resource_ftp`
