@@ -4,8 +4,7 @@ page_title: "checkpoint_management_internal_trusted_ca"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-internal-trusted-ca"
 description: |-
 Use this data source to get information on an existing Check Point Internal Trusted Ca.
-Use this data source to get information on an existing Check Point Internal Trusted Ca.
-Use this data source to get information on an existing Check Point Internal Trusted Ca.
+
 ---
 
 # checkpoint_management_internal_trusted_ca
