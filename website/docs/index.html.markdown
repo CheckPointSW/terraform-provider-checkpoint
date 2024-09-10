@@ -401,6 +401,7 @@ The table below shows the compatibility between the Terraform Release version an
 | v2.8.0                    | v1.2            | 279 and higher |
 | v2.7.0                    | v1.1            | 255 and higher |
 
+
 -> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
 
 
