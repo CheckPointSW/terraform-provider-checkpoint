@@ -9,10 +9,8 @@ description: |- Use this data source to get information on an existing Check Poi
 
 Use this data source to get information on an existing Check Point CME AWS Gateway Configurations.
 
-Available in:
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
 
-- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
-- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -60,3 +58,7 @@ These arguments are supported:
 * `send_logs_to_backup_server` - Comma-separated list of Backup Log Servers names to which logs are sent if the Primary
   Log Servers are unavailable.
 * `send_alerts_to_server` - Comma-separated list of Alert Log Servers names to which alerts are sent.
+* `section_name` - Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.
+* `x_forwarded_for` - Enable XFF headers in HTTP / HTTPS requests.
+* `color` - Color of the gateways objects in SmartConsole.
+* `communication_with_servers_behind_nat` - Gateway behind NAT communications settings with the Check Point Servers(Management, Multi-Domain, Log Servers).

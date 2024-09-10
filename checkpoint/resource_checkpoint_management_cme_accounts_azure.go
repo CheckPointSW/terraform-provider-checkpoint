@@ -68,6 +68,11 @@ func resourceManagementCMEAccountsAzure() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"environment": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The Azure account environment.",
+			},
 		},
 	}
 }
@@ -144,6 +149,8 @@ func readManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error
 
 	_ = d.Set("gw_configurations", AzureAccount["gw_configurations"])
 
+	_ = d.Set("environment", AzureAccount["environment"])
+
 	return nil
 }
 
@@ -171,6 +178,9 @@ func createManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) err
 	}
 	if v, ok := d.GetOk("name"); ok {
 		payload["name"] = v.(string)
+	}
+	if v, ok := d.GetOk("environment"); ok {
+		payload["environment"] = v.(string)
 	}
 	log.Println("Create cme Azure account - name = ", payload["name"])
 
@@ -213,6 +223,9 @@ func updateManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) err
 	}
 	if d.HasChange("domain") {
 		payload["domain"] = d.Get("domain")
+	}
+	if d.HasChange("environment") {
+		payload["environment"] = d.Get("environment")
 	}
 
 	var name string

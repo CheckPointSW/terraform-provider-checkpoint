@@ -9,10 +9,8 @@ description: |- Use this data source to get information on an existing Check Poi
 
 Use this data source to get information on an existing Check Point CME AWS Account.
 
-Available in:
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
 
-- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
-- CME Take 255 and higher.
 
 ## Example Usage
 

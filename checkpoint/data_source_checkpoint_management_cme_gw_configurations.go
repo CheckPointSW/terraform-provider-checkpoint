@@ -38,6 +38,27 @@ func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 							Computed:    true,
 							Description: "Configuration policy.",
 						},
+						"section_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of a rule section in the Access and NAT layers in the policy, where to insert the automatically generated rules.",
+						},
+						"x_forwarded_for": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enable XFF headers in HTTP / HTTPS requests.",
+						},
+						"color": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Color of the gateways objects in SmartConsole.",
+						},
+						"communication_with_servers_behind_nat": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Gateway behind NAT communications settings with the Check Point Servers" +
+								"(Management, Multi-Domain, Log Servers).",
+						},
 						"related_account": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -202,6 +223,10 @@ func dataSourceManagementCMEGWConfigurationsRead(d *schema.ResourceData, m inter
 			tempObject["sic_key"] = singleGWConfiguration["sic_key"]
 			tempObject["policy"] = singleGWConfiguration["policy"]
 			tempObject["related_account"] = singleGWConfiguration["related_account"]
+			tempObject["section_name"] = singleGWConfiguration["section_name"]
+			tempObject["x_forwarded_for"] = singleGWConfiguration["x_forwarded_for"]
+			tempObject["color"] = singleGWConfiguration["color"]
+			tempObject["communication_with_servers_behind_nat"] = singleGWConfiguration["communication-with-servers-behind-nat"]
 
 			var bladesListToReturn []map[string]interface{}
 			bladesMapToAdd := make(map[string]interface{})
