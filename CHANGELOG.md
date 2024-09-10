@@ -1,7 +1,13 @@
-## 2.7.1 
+## 2.8.0
 
 FEATURES
-
+* **New Resource:** `checkpoint_management_delete_infinity_idp_object`
+* **New Resource:** `checkpoint_management_delete_infinity_idp`
+* **New Resource:** `checkpoint_management_mobile_access_section`
+* **New Resource:** `checkpoint_management_mobile_access_rule`
+* **New Resource:** `checkpoint_management_mobile_access_profile_section`
+* **New Resource:** `checkpoint_management_mobile_access_profile_rule`
+* **New Resource:** `checkpoint_management_network_probe`
 * **New Resource:** `checkpoint_management_override_categorization`
 * **New Resource:** `checkpoint_management_interface`
 * **New Resource:** `checkpoint_management_resource_smtp`
@@ -26,6 +32,14 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+
+* **New Data Source:** `checkpoint_management_infinity_idp_object`
+* **New Data Source:** `checkpoint_management_infinity_idp`
+* **New Data Source:** `checkpoint_management_mobile_access_section`
+* **New Data Source:** `checkpoint_management_mobile_access_rule`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_section`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_rule`
+* **New Data Source:** `checkpoint_management_network_probe`
 * **New Data Source:** `checkpoint_management_override_categorization`
 * **New Data Source:** `checkpoint_management_interface`
 * **New Data Source:** `checkpoint_management_resource_smtp`
