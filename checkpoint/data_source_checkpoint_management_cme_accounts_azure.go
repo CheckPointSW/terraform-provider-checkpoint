@@ -62,7 +62,7 @@ func dataSourceManagementCMEAccountsAzure() *schema.Resource {
 			},
 			"environment": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "The Azure account environment.",
 			},
 		},
