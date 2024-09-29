@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
 
 //var lock sync.Mutex
@@ -198,4 +199,26 @@ func cleanseCertificate(cert string) string {
 	cert = strings.ReplaceAll(cert, "\n", "")
 
 	return cert
+}
+
+func removeCnPrefix(issueBy string) string {
+
+	issueBy = strings.TrimPrefix(issueBy, "CN=")
+	return issueBy
+
+}
+
+func convertDateFormat(dateStr string) (string, error) {
+	inputLayout := "02-Jan-06"
+	outputLayout := "2006-01-02"
+
+	// Parse the input date string using the input layout
+	t, err := time.Parse(inputLayout, dateStr)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+
+	// Format the parsed time using the output layout
+	return t.Format(outputLayout), nil
 }

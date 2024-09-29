@@ -1,6 +1,13 @@
 ## 2.8.0
 
 FEATURES
+* **New Resource:** `checkpoint_management_vsx_provisioning_tool`
+* **New Resource:** `checkpoint_management_outbound_inspection_certificate`
+* **New Resource:** `checkpoint_management_add_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_delete_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_run_trusted_ca_update`
+* **New Resource:** `checkpoint_management_set_gateway_global_use`
+* **New Resource:** `checkpoint_management_set_https_advanced_settings`
 * **New Resource:** `checkpoint_management_delete_infinity_idp_object`
 * **New Resource:** `checkpoint_management_delete_infinity_idp`
 * **New Resource:** `checkpoint_management_mobile_access_section`
@@ -32,6 +39,11 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_custom_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_outbound_inspection_certificate`
+* **New Data Source:** `checkpoint_management_gateway_global_use`
+* **New Data Source:** `checkpoint_management_https_advanced_settings`
+* **New Data Source:** `checkpoint_management_gateway_capabilities`
 * **New Data Source:** `checkpoint_management_infinity_idp_object`
 * **New Data Source:** `checkpoint_management_infinity_idp`
 * **New Data Source:** `checkpoint_management_mobile_access_section`
