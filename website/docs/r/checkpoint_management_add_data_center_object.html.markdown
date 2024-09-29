@@ -10,6 +10,8 @@ description: |-
 
 This command resource allows you to execute Check Point Add Data Center Object.
 
+#### This resource is deprecated. please use the `checkpoint_management_data_center_object` resource.
+
 ## Example Usage
 
 
