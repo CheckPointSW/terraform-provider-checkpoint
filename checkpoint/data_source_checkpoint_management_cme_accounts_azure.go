@@ -60,6 +60,11 @@ func dataSourceManagementCMEAccountsAzure() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"environment": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The Azure account environment.",
+			},
 		},
 	}
 }
@@ -107,6 +112,8 @@ func dataSourceManagementCMEAccountsAzureRead(d *schema.ResourceData, m interfac
 	_ = d.Set("platform", AzureAccount["platform"])
 
 	_ = d.Set("gw_configurations", AzureAccount["gw_configurations"])
+
+	_ = d.Set("environment", AzureAccount["environment"])
 
 	return nil
 }

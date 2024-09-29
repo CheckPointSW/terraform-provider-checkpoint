@@ -391,6 +391,22 @@ $ terraform import checkpoint_management_host.host 9423d36f-2d66-4754-b9e2-e7f44
 For more information about `terraform import` command, please
 refer [here](https://www.terraform.io/docs/import/usage.html).
 
+## Compatibility with CME
+Check Point Provider supports configuring objects in CME configuration file starting from Security Management/Multi-Domain Security Management Server version R81.10 and higher.
+
+The table below shows the compatibility between the Terraform Release version and the CME API version:
+
+| Terraform Release version | CME API version | CME Take       |
+|---------------------------|-----------------|----------------|
+| v2.8.0                    | v1.2            | 279 and higher |
+| v2.7.0                    | v1.1            | 255 and higher |
+
+
+-> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
+
+
+For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
+
 ## Tips & Best Practices
 
 This section describes best practices for working with the Check Point provider.

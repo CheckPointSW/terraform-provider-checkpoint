@@ -39,7 +39,6 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
-
 * **New Data Source:** `checkpoint_management_custom_trusted_ca_certificate`
 * **New Data Source:** `checkpoint_management_outbound_inspection_certificate`
 * **New Data Source:** `checkpoint_management_gateway_global_use`
@@ -75,7 +74,14 @@ FEATURES
 * **New Data Source:** `checkpoint_management_data_type_file_attributes`
 * **New Data Source:** `checkpoint_management_data_type_group`
 * **New Data Source:** `checkpoint_management_data_type_traditional_group`
-* **New Data Source:** `checkpoint_management_data_type_compound_group` 
+* **New Data Source:** `checkpoint_management_data_type_compound_group`
+
+ENHANCEMENTS
+* Add support to CME API v1.2
+
+BUG FIXES
+* Add support to manage VPN communities in `resource_checkpoint_management_access_rule` by using new fields `vpn_communities` and `vpn_directional`
+
 
 ## 2.7.0 (February 19, 2024)
 

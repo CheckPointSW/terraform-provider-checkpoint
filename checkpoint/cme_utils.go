@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	CmeApiVersion = "v1.1"
+	CmeApiVersion = "v1.2"
 	CmeApiPath    = "cme-api/" + CmeApiVersion
 )
 

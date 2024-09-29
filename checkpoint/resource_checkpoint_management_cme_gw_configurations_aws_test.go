@@ -17,6 +17,10 @@ func TestAccCheckpointManagementCMEGWConfigurationsAWS_basic(t *testing.T) {
 	gwConfigurationVersion := "R81"
 	gwConfigurationBase64SIC := "MTIzNDU2Nzg="
 	gwConfigurationPolicy := "Standard"
+	gwConfigurationXForwardedFor := true
+	gwConfigurationColor := "black"
+	gwConfigurationCommunicationWithServersBehindNAT := "translated-ip-only"
+
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -32,11 +36,13 @@ func TestAccCheckpointManagementCMEGWConfigurationsAWS_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccManagementCMEGWConfigurationsAWSConfig(accountName, gwConfigurationName, gwConfigurationVersion,
-					gwConfigurationBase64SIC, gwConfigurationPolicy),
+					gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationXForwardedFor, gwConfigurationColor,
+					gwConfigurationCommunicationWithServersBehindNAT),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceName, &awsGWConfiguration),
 					testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(&awsGWConfiguration, gwConfigurationName, accountName, gwConfigurationVersion,
-						gwConfigurationPolicy, true, true),
+						gwConfigurationPolicy, true, true, gwConfigurationXForwardedFor,
+						gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT),
 				),
 			},
 		},
@@ -65,7 +71,8 @@ func testAccCheckpointManagementCMEGWConfigurationsAWSDestroy(s *terraform.State
 }
 
 func testAccManagementCMEGWConfigurationsAWSConfig(accountName string, gwConfigurationName string, gwConfigurationVersion string,
-	gwConfigurationBase64SIC string, gwConfigurationPolicy string) string {
+	gwConfigurationBase64SIC string, gwConfigurationPolicy string, gwConfigurationXForwardedFor bool, gwConfigurationColor string,
+	gwConfigurationCommunicationWithServersBehindNAT string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_cme_accounts_aws" "account_test" {
   name                  = "%s"
@@ -79,6 +86,9 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_configuration_tes
   version         = "%s"
   base64_sic_key  = "%s"
   policy          = "%s"
+  x_forwarded_for = %t
+  color           = "%s"
+  communication_with_servers_behind_nat = "%s"
   blades {
     ips      = true
     anti_bot = true
@@ -94,7 +104,8 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_configuration_tes
 	vpn = false
   }
 }
-`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy)
+`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationXForwardedFor,
+   gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
 }
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -126,7 +137,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceTfName
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, ipsFlag bool,
-	antiBotFlag bool) resource.TestCheckFunc {
+	antiBotFlag bool, gwConfigurationXForwardedFor bool, gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*awsGWConfiguration)["result"].(map[string]interface{})
 		if gwConfiguration["name"] != gwConfigurationName {
@@ -149,6 +160,15 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfi
 		}
 		if antiBot != antiBotFlag {
 			return fmt.Errorf("anti bot is %t, expected %t", antiBot, antiBotFlag)
+		}
+		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {
+			return fmt.Errorf("x_forwarded_for is %t, expected %t", gwConfiguration["x_forwarded_for"], gwConfigurationXForwardedFor)
+		}
+		if gwConfiguration["color"] != gwConfigurationColor {
+			return fmt.Errorf("color is %s, expected %s", gwConfiguration["color"], gwConfigurationColor)
+		}
+		if gwConfiguration["communication_with_servers_behind_nat"] != gwConfigurationCommunicationWithServersBehindNAT {
+			return fmt.Errorf("communication_with_servers_behind_nat is %s, expected %s", gwConfiguration["communication_with_servers_behind_nat"], gwConfigurationCommunicationWithServersBehindNAT)
 		}
 		return nil
 	}
