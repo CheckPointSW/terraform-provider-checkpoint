@@ -1,4 +1,4 @@
-## 2.8.0
+## 2.8.0 (September 29, 2024)
 
 FEATURES
 * **New Resource:** `checkpoint_management_vsx_provisioning_tool`
@@ -78,6 +78,7 @@ FEATURES
 
 ENHANCEMENTS
 * Add support to CME API v1.2
+* Use GO SDK v1.7.2
 
 BUG FIXES
 * Add support to manage VPN communities in `resource_checkpoint_management_access_rule` by using new fields `vpn_communities` and `vpn_directional`
