@@ -4,7 +4,6 @@ import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func dataSourceManagementContentAwarenessAdvancedSettings() *schema.Resource {
@@ -68,7 +67,6 @@ func dataSourceManagementSetContentAwarenessAdvancedSettingsRead(d *schema.Resou
 	if v := contentAwarenessAdvancedSettingsData["supported-services"]; v != nil {
 		servicesJson, ok := v.([]interface{})
 		if ok {
-			log.Println("service jason is ", servicesJson)
 			servicesNames := make([]string, 0)
 			if len(servicesJson) > 0 {
 				for _, svc := range servicesJson {

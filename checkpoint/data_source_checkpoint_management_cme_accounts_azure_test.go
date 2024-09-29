@@ -29,6 +29,9 @@ func TestAccDataSourceCheckpointManagementCMEAccountsAzure_basic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "directory_id", resourceName, "directory_id"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "subscription", resourceName, "subscription"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "application_id", resourceName, "application_id"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "environment", resourceName, "environment"),
+
 				),
 			},
 		},
@@ -43,6 +46,7 @@ resource "checkpoint_management_cme_accounts_azure" "test" {
   application_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
   client_secret = "mySecret"
   subscription = "46707d92-02f4-4817-8116-a4c3b23e6267"
+  environment = "AzureCloud"
 }
 
 data "checkpoint_management_cme_accounts_azure" "data_test"{

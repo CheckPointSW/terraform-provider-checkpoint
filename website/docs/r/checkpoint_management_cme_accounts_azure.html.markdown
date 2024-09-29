@@ -9,10 +9,8 @@ description: |- This resource allows you to add/update/delete Check Point CME Az
 
 This resource allows you to add/update/delete Check Point CME Azure Account.
 
-Available in:
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
 
-- Check Point Security Management/Multi-Domain Security Management Server R81.10 and higher.
-- CME Take 255 and higher.
 
 ## Example Usage
 
@@ -23,6 +21,7 @@ resource "checkpoint_management_cme_accounts_azure" "azure_account" {
   application_id = "abcd1234-ab12-cd34-ef56-abcdef123456"
   client_secret  = "mySecret"
   subscription   = "abcd1234-ab12-cd34-ef56-abcdef123456"
+  environmnet    = "AzureCloud"
 }
 ```
 
@@ -38,6 +37,7 @@ These arguments are supported:
 * `deletion_tolerance` - (Optional) The number of CME cycles to wait when the cloud provider does not return a Gateway
   until its deletion.
 * `domain` - (Optional) The account's domain name in Multi-Domain Security Management Server environment.
+* `environment` - (Optional) The Azure environmnet.
 
 ## Limitations
 

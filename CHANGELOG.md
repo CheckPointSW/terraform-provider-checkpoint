@@ -1,6 +1,35 @@
-## 2.7.1 
+## 2.8.0
 
 FEATURES
+* **New Resource:** `checkpoint_management_vsx_provisioning_tool`
+* **New Resource:** `checkpoint_management_outbound_inspection_certificate`
+* **New Resource:** `checkpoint_management_add_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_delete_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_run_trusted_ca_update`
+* **New Resource:** `checkpoint_management_set_gateway_global_use`
+* **New Resource:** `checkpoint_management_set_https_advanced_settings`
+* **New Resource:** `checkpoint_management_delete_infinity_idp_object`
+* **New Resource:** `checkpoint_management_delete_infinity_idp`
+* **New Resource:** `checkpoint_management_mobile_access_section`
+* **New Resource:** `checkpoint_management_mobile_access_rule`
+* **New Resource:** `checkpoint_management_mobile_access_profile_section`
+* **New Resource:** `checkpoint_management_mobile_access_profile_rule`
+* **New Resource:** `checkpoint_management_network_probe`
+* **New Resource:** `checkpoint_management_override_categorization`
+* **New Resource:** `checkpoint_management_interface`
+* **New Resource:** `checkpoint_management_resource_smtp`
+* **New Resource:** `checkpoint_management_resource_uri`
+* **New Resource:** `checkpoint_management_resource_ftp`
+* **New Resource:** `checkpoint_management_resource_cifs`
+* **New Resource:** `checkpoint_management_mobile_profile`
+* **New Resource:** `checkpoint_management_passcode_profile`
+* **New Resource:** `checkpoint_management_command_set_app_control_advanced_settings`
+* **New Resource:** `checkpoint_management_command_set_cp_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_command_set_trusted_ca_settings`
+* **New Resource:** `checkpoint_management_command_set_internal_trusted_ca`
+* **New Resource:** `checkpoint_management_external_trusted_ca`
+* **New Resource:** `checkpoint_management_opsec_trusted_ca`
+* **New Resource:** `checkpoint_management_multiple_key_exchanges`
 * **New Resource:** `checkpoint_management_limit`
 * **New Resource:** `checkpoint_management_command_set_content_awareness_advanced_settings`
 * **New Resource:** `checkpoint_management_data_type_keywords`
@@ -10,6 +39,35 @@ FEATURES
 * **New Resource:** `checkpoint_management_data_type_group`
 * **New Resource:** `checkpoint_management_data_type_traditional_group`
 * **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_custom_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_outbound_inspection_certificate`
+* **New Data Source:** `checkpoint_management_gateway_global_use`
+* **New Data Source:** `checkpoint_management_https_advanced_settings`
+* **New Data Source:** `checkpoint_management_gateway_capabilities`
+* **New Data Source:** `checkpoint_management_infinity_idp_object`
+* **New Data Source:** `checkpoint_management_infinity_idp`
+* **New Data Source:** `checkpoint_management_mobile_access_section`
+* **New Data Source:** `checkpoint_management_mobile_access_rule`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_section`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_rule`
+* **New Data Source:** `checkpoint_management_network_probe`
+* **New Data Source:** `checkpoint_management_override_categorization`
+* **New Data Source:** `checkpoint_management_interface`
+* **New Data Source:** `checkpoint_management_resource_smtp`
+* **New Data Source:** `checkpoint_management_resource_uri`
+* **New Data Source:** `checkpoint_management_resource_ftp`
+* **New Data Source:** `checkpoint_management_resource_cifs`
+* **New Data Source:** `checkpoint_management_mobile_profile`
+* **New Data Source:** `checkpoint_management_passcode_profile`
+* **New Data Source:** `checkpoint_management_app_control_advanced_settings`
+* **New Data Source:** `checkpoint_management_cp_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_trusted_ca_settings`
+* **New Data Source:** `checkpoint_management_internal_trusted_ca`
+* **New Data Source:** `checkpoint_management_external_trusted_ca`
+* **New Data Source:** `checkpoint_management_opsec_trusted_ca`
+* **New Data Source:** `checkpoint_management_multiple_key_exchanges`
+* **New Data Source:** `checkpoint_management_limit`
+* **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
 * **New Data Source:** `checkpoint_management_data_type_keywords`
 * **New Data Source:** `checkpoint_management_data_type_weighted_keywords`
 * **New Data Source:** `checkpoint_management_data_type_patterns`
@@ -17,8 +75,13 @@ FEATURES
 * **New Data Source:** `checkpoint_management_data_type_group`
 * **New Data Source:** `checkpoint_management_data_type_traditional_group`
 * **New Data Source:** `checkpoint_management_data_type_compound_group`
-  **New Data Source:** `checkpoint_management_limit`
-  **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
+
+ENHANCEMENTS
+* Add support to CME API v1.2
+
+BUG FIXES
+* Add support to manage VPN communities in `resource_checkpoint_management_access_rule` by using new fields `vpn_communities` and `vpn_directional`
+
 
 ## 2.7.0 (February 19, 2024)
 

@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"io/ioutil"
 	"os"
+	"strings"
+	"time"
 )
 
 //var lock sync.Mutex
@@ -127,7 +129,7 @@ func createTaskFailMessage(command string, data map[string]interface{}) string {
 	return msg
 }
 
-//converts object type to source for machines and users.
+// converts object type to source for machines and users.
 func getTypeToSource() map[string]string {
 	TypeToSource := map[string]string{
 		"identity-tag":      "Identity Tag",
@@ -187,4 +189,36 @@ func resolveListOfIdentifiers(fieldName string, jsonResponse interface{}, d *sch
 
 func resolveObjectIdentifier(fieldName string, jsonResponse interface{}, d *schema.ResourceData) string {
 	return resolveListOfIdentifiers(fieldName, jsonResponse, d)[0]
+}
+
+// removing prefix. suffix and '\n' that return with the cert from the server.
+func cleanseCertificate(cert string) string {
+
+	cert = strings.TrimPrefix(cert, "-----BEGIN CERTIFICATE-----\n")
+	cert = strings.TrimSuffix(cert, "\n-----END CERTIFICATE-----\n")
+	cert = strings.ReplaceAll(cert, "\n", "")
+
+	return cert
+}
+
+func removeCnPrefix(issueBy string) string {
+
+	issueBy = strings.TrimPrefix(issueBy, "CN=")
+	return issueBy
+
+}
+
+func convertDateFormat(dateStr string) (string, error) {
+	inputLayout := "02-Jan-06"
+	outputLayout := "2006-01-02"
+
+	// Parse the input date string using the input layout
+	t, err := time.Parse(inputLayout, dateStr)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+
+	// Format the parsed time using the output layout
+	return t.Format(outputLayout), nil
 }
