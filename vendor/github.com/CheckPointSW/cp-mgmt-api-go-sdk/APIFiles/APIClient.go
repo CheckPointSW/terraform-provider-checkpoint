@@ -31,17 +31,17 @@ import (
 )
 
 const (
-	InProgress       string        = "in progress"
-	DefaultPort      int           = 443
-	Limit            int           = 50
-	Filename         string        = "fingerprints.json"
-	TimeOut          time.Duration = time.Second * 10
-	SleepTime        time.Duration = time.Second * 2
-	GaiaContext      string        = "gaia_api"
-	WebContext       string        = "web_api"
-	DefaultProxyPort               = -1
-	DefaultProxyHost               = ""
-	AutoPublishBatchSize  int      = 100
+	InProgress           string        = "in progress"
+	DefaultPort          int           = 443
+	Limit                int           = 50
+	Filename             string        = "fingerprints.json"
+	TimeOut              time.Duration = time.Second * 10
+	SleepTime            time.Duration = time.Second * 2
+	GaiaContext          string        = "gaia_api"
+	WebContext           string        = "web_api"
+	DefaultProxyPort                   = -1
+	DefaultProxyHost                   = ""
+	AutoPublishBatchSize int           = 100
 )
 
 // Check Point API Client (Management/GAIA)
@@ -66,15 +66,15 @@ type ApiClient struct {
 	userAgent               string
 	cloudMgmtId             string
 	autoPublishBatchSize    int
-	activeCallsLock		    sync.Mutex
-	autoPublishLock 		sync.Mutex
-	totalCallsLock 		    sync.Mutex
+	activeCallsLock         sync.Mutex
+	autoPublishLock         sync.Mutex
+	totalCallsLock          sync.Mutex
 	duringPublish           bool
-	activeCallsCtr 		    int
-	totalCallsCtr 		    int
+	activeCallsCtr          int
+	totalCallsCtr           int
 }
 
-// Api Client constructor
+// ApiClient constructor
 // Input ApiClientArgs
 // Returns new client instance
 func APIClient(apiCA ApiClientArgs) *ApiClient {
@@ -212,7 +212,7 @@ func (c *ApiClient) DisableAutoPublish() {
 	c.totalCallsCtr = 0
 }
 
-// Deprecated: Do not use.
+// Deprecated: Do not use. Use ApiLogin instead
 func (c *ApiClient) Login(username string, password string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
 	credentials := map[string]interface{}{
 		"user":     username,
@@ -221,7 +221,7 @@ func (c *ApiClient) Login(username string, password string, continueLastSession 
 	return c.commonLoginLogic(credentials, continueLastSession, domain, readOnly, make(map[string]interface{}))
 }
 
-// Deprecated: Do not use.
+// Deprecated: Do not use. Use ApiLoginWithApiKey instead
 func (c *ApiClient) LoginWithApiKey(apiKey string, continueLastSession bool, domain string, readOnly bool, payload string) (APIResponse, error) {
 	credentials := map[string]interface{}{
 		"api-key": apiKey,
@@ -230,7 +230,7 @@ func (c *ApiClient) LoginWithApiKey(apiKey string, continueLastSession bool, dom
 }
 
 /*
-Performs a 'login' API call to management server
+Performs login API call to the management server using username and password
 
 username: Check Point admin name
 password: Check Point admin password
@@ -240,7 +240,6 @@ read_only: [optional] Login with Read Only permissions. This parameter is not co
 payload: [optional] More settings for the login command
 returns: APIResponse, error
 side-effects: updates the class's uid and server variables
-
 */
 func (c *ApiClient) ApiLogin(username string, password string, continueLastSession bool, domain string, readOnly bool, payload map[string]interface{}) (APIResponse, error) {
 	credentials := map[string]interface{}{
@@ -251,7 +250,7 @@ func (c *ApiClient) ApiLogin(username string, password string, continueLastSessi
 }
 
 /*
-performs a 'login' API call to the management server
+Performs login API call to the management server using api key
 
 api_key: Check Point api-key
 continue_last_session: [optional] It is possible to continue the last Check Point session
@@ -309,15 +308,16 @@ command: the command is placed in the URL field
 payload: a JSON object (or a string representing a JSON object) with the command arguments
 sid: The Check Point session-id. when omitted use self.sid.
 waitForTask: determines the behavior when the API server responds with a "task-id".
+
 	by default, the function will periodically check the status of the task
 	and will not return until the task is completed.
 	when wait_for_task=False, it is up to the user to call the "show-task" API and check
 	the status of the command.
+
 useProxy: Determines if the user wants to use the proxy server and port provider.
 method: HTTP request method - POST by default
 return: APIResponse object
 side-effects: updates the class's uid and server variables
-
 */
 func (c *ApiClient) ApiCall(command string, payload map[string]interface{}, sid string, waitForTask bool, useProxy bool, method ...string) (APIResponse, error) {
 	return c.apiCall(command, payload, sid, waitForTask, useProxy, false, method...)
@@ -411,9 +411,9 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 	if !internal && c.autoPublishBatchSize > 0 {
 		waitToRun := true
 		for waitToRun {
-			if c.totalCallsCtr + 1 <= c.autoPublishBatchSize && !c.duringPublish {
+			if c.totalCallsCtr+1 <= c.autoPublishBatchSize && !c.duringPublish {
 				c.totalCallsLock.Lock()
-				if c.totalCallsCtr + 1 <= c.autoPublishBatchSize && !c.duringPublish {
+				if c.totalCallsCtr+1 <= c.autoPublishBatchSize && !c.duringPublish {
 					c.totalCallsCtr++
 					waitToRun = false
 				}
@@ -519,9 +519,9 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 
 	if !internal && c.autoPublishBatchSize > 0 {
 		c.decreaseActiveCalls()
-		if c.totalCallsCtr > 0 && c.totalCallsCtr % c.autoPublishBatchSize == 0 && !c.duringPublish {
+		if c.totalCallsCtr > 0 && c.totalCallsCtr%c.autoPublishBatchSize == 0 && !c.duringPublish {
 			c.autoPublishLock.Lock()
-			if c.totalCallsCtr > 0 && c.totalCallsCtr % c.autoPublishBatchSize == 0 && !c.duringPublish {
+			if c.totalCallsCtr > 0 && c.totalCallsCtr%c.autoPublishBatchSize == 0 && !c.duringPublish {
 				c.duringPublish = true
 				c.autoPublishLock.Unlock()
 				for c.activeCallsCtr > 0 {
@@ -531,16 +531,16 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 				}
 				// Going to publish
 				fmt.Println("Start auto publish...")
-				publishRes, _ := c.apiCall("publish", map[string]interface{}{},c.GetSessionID(),true,c.IsProxyUsed(), true)
+				publishRes, _ := c.apiCall("publish", map[string]interface{}{}, c.GetSessionID(), true, c.IsProxyUsed(), true)
 
 				if !publishRes.Success {
 					fmt.Println("Auto publish failed. Message: " + publishRes.ErrorMsg)
-				}else{
+				} else {
 					fmt.Println("Auto publish finished successfully")
 				}
 				c.totalCallsCtr = 0
 				c.duringPublish = false
-			}else{
+			} else {
 				c.autoPublishLock.Unlock()
 			}
 		}
@@ -549,7 +549,8 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 	return res, nil
 }
 
-/**
+/*
+*
 The APIs that return a list of objects are limited by the number of objects that they return.
 To get the full list of objects, there's a need to make repeated API calls each time using a different offset
 until all the objects are returned.
@@ -558,19 +559,25 @@ note: this function calls gen_api_query and iterates over the generator until it
 then returns.
 
 command: name of API command. This command should be an API that returns an array of
+
 	objects (for example: show-hosts, show networks, ...)
+
 details_level: query APIs always take a details-level argument.
+
 	possible values are "standard", "full", "uid"
+
 container_key: name of the key that holds the objects in the JSON response (usually "objects").
 include_container_key: If set to False the 'data' field of the APIResponse object
+
 	will be a list of the wanted objects. Otherwise, the date field of the APIResponse will be a dictionary in the following
+
 format: { container_key: [ List of the wanted objects], "total": size of the list}
 payload: a JSON object (or a string representing a JSON object) with the command arguments
 return: if include-container-key is False:
+
 	an APIResponse object whose .data member contains a list of the objects requested: [ , , , ...]
 	if include-container-key is True:
 	an APIResponse object whose .data member contains a dict: { container_key: [...], "total": n }
-
 */
 func (c *ApiClient) ApiQuery(command string, detailsLevel string, containerKey string, includeContainerKey bool, payload map[string]interface{}) (APIResponse, error) {
 
@@ -617,7 +624,9 @@ This is in contrast to normal API calls that return only a limited number of obj
 This function can be used to show progress when requesting many objects (i.e. "Received x/y objects.")
 
 command: name of API command. This command should be an API that returns an array of objects
+
 	(for example: show-hosts, show networks, ...)
+
 details_level: query APIs always take a details-level argument. Possible values are "standard", "full", "uid"
 container_keys: the field in the .data dict that contains the objects
 payload: a JSON object (or a string representing a JSON object) with the command arguments
@@ -712,7 +721,8 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 	return serverResponse
 }
 
-/**
+/*
+*
 When the server needs to perform an API call that may take a long time (e.g. run-script, install-policy,
 publish), the server responds with a 'task-id'.
 Using the show-task API it is possible to check on the status of this task until its completion.
@@ -759,10 +769,10 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 		totalTasks := 0
 		for _, task := range taskResult.GetData()["tasks"].([]interface{}) {
 			totalTasks++
-			if task.(map[string]interface{})["status"].(string) != InProgress {
+			taskMap := task.(map[string]interface{})
+			if taskMap["status"] != nil && taskMap["status"].(string) != InProgress {
 				completedTasks++
 			}
-
 		}
 
 		if completedTasks == totalTasks {
@@ -778,7 +788,8 @@ func (c *ApiClient) waitForTask(taskId string) (APIResponse, error) {
 
 }
 
-/**
+/*
+*
 The version of waitForTask function for the collection of tasks
 
 task_objects: A list of task objects
@@ -823,7 +834,8 @@ func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 
 }
 
-/**
+/*
+*
 This method checks if one of the tasks failed and if so, changes the response status to be False
 
 task_result: api_response returned from "show-task" command
@@ -846,7 +858,8 @@ func checkTasksStatus(taskResult *APIResponse) {
    @===================@
 */
 
-/**
+/*
+*
 This function checks if the server's certificate is stored in the local fingerprints file.
 If the server's fingerprint is not found, an HTTPS connection is made to the server
 and the user is asked if he or she accepts the server's fingerprint.
@@ -928,7 +941,8 @@ func (c *ApiClient) loadFingerprintFromFile() (string, error) {
 
 }
 
-/**
+/*
+*
 This function takes the content of the file $FILENAME (which is a json file)
 and parses it's content to a map (from string to string)
 
@@ -960,13 +974,16 @@ func (c *ApiClient) fpFileToMap() (map[string]string, error) {
 
 }
 
-/**
+/*
+*
 store a server's fingerprint into a local file.
 
 server: the IP address/name of the Check Point management server.
 fingerprint: A SHA1 fingerprint of the server's certificate.
 filename: The file in which to store the certificates. The file will hold a JSON structure in which
+
 	the key is the server and the value is its fingerprint.
+
 return: 'True' if everything went well. 'False' if there was some kind of error storing the fingerprint.
 */
 func (c *ApiClient) saveFingerprintToFile(server string, fingerprint string) error {

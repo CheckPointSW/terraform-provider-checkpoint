@@ -2,7 +2,7 @@ package api_go_sdk
 
 import "time"
 
-// Api Client arguments to init a new instance
+// ApiClient arguments to init a new instance
 type ApiClientArgs struct {
 	Port                    int
 	Fingerprint             string
@@ -16,16 +16,15 @@ type ApiClientArgs struct {
 	AcceptServerCertificate bool
 	DebugFile               string
 	Context                 string
-	Timeout 				time.Duration
-	Sleep 				    time.Duration
-	UserAgent			    string
+	Timeout                 time.Duration
+	Sleep                   time.Duration
+	UserAgent               string
 	CloudMgmtId             string
-	AutoPublishBatchSize	int
+	AutoPublishBatchSize    int
 }
 
 /*
-Init a new APIClientArgs
-Construct a new ApiClientArgs instance with the given parameters.
+Init new APIClientArgs
 
 Port: the port that is being used
 Fingerprint: server's fingerprint
@@ -42,26 +41,25 @@ Timeout: HTTP Client timeout value
 Sleep: Interval size in seconds of the task update
 UserAgent: User agent will be use in api call request header
 CloudMgmtId: Smart-1 Cloud management UID
-AutoPublishBatchSize: Number of batch size for auto publish
+AutoPublishBatchSize: Publish will run automatically on every 'X' number of api calls, set -1 (or any negative number) to disable the feature
 */
 func APIClientArgs(port int, fingerprint string, sid string, server string, proxyHost string, proxyPort int, apiVersion string, ignoreServerCertificate bool, acceptServerCertificate bool, debugFile string, context string, timeout time.Duration, sleep time.Duration, userAgent string, cloudMgmtId string, autoPublishBatchSize int) ApiClientArgs {
-
 	return ApiClientArgs{
-		Port: port,
-		Fingerprint: fingerprint,
-		Sid: sid,
-		Server: server,
-		ProxyHost: proxyHost,
-		ProxyPort: proxyPort,
-		ApiVersion: apiVersion,
+		Port:                    port,
+		Fingerprint:             fingerprint,
+		Sid:                     sid,
+		Server:                  server,
+		ProxyHost:               proxyHost,
+		ProxyPort:               proxyPort,
+		ApiVersion:              apiVersion,
 		IgnoreServerCertificate: ignoreServerCertificate,
 		AcceptServerCertificate: acceptServerCertificate,
-		DebugFile: debugFile,
-		Context: context,
-		Timeout: timeout,
-		Sleep: sleep,
-		UserAgent: userAgent,
-		CloudMgmtId: cloudMgmtId,
-		AutoPublishBatchSize: autoPublishBatchSize,
+		DebugFile:               debugFile,
+		Context:                 context,
+		Timeout:                 timeout,
+		Sleep:                   sleep,
+		UserAgent:               userAgent,
+		CloudMgmtId:             cloudMgmtId,
+		AutoPublishBatchSize:    autoPublishBatchSize,
 	}
 }
