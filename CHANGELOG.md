@@ -1,4 +1,4 @@
-## 2.8.0 (September 29, 2024)
+## 2.8.0 (September 30, 2024)
 
 FEATURES
 * **New Resource:** `checkpoint_management_vsx_provisioning_tool`
