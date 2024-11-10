@@ -328,6 +328,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_cme_gw_configurations_aws":                      resourceManagementCMEGWConfigurationsAWS(),
 			"checkpoint_management_cme_gw_configurations_azure":                    resourceManagementCMEGWConfigurationsAzure(),
 			"checkpoint_management_cme_gw_configurations_gcp":                      resourceManagementCMEGWConfigurationsGCP(),
+			"checkpoint_generic_api":                                               resourceManagementGenericApi(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_outbound_inspection_certificate":           dataSourceManagementOutboundInspectionCertificate(),
