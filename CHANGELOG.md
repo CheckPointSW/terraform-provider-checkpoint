@@ -1,4 +1,4 @@
-## 2.8.1 (November 11, 2024)
+## 2.8.1 (November 10, 2024)
 
 FEATURES
 * **New Resource:** `checkpoint_generic_api`
