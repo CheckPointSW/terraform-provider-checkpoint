@@ -6,7 +6,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"log"
 )
 
 func resourceManagementGaiaApi() *schema.Resource {
@@ -15,44 +14,47 @@ func resourceManagementGaiaApi() *schema.Resource {
 		Read:   readManagementGaiaApi,
 		Delete: deleteManagementGaiaApi,
 		Schema: map[string]*schema.Schema{
+			"command_name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "GAIA API command name or path",
+			},
 			"target": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Gateway-object-name or gateway-ip-address or gateway-UID.",
+				Description: "Gateway object name or Gateway IP address or Gateway UID",
 			},
 			"other_parameter": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Other input parameters that gateway needs it.",
-			},
-			"command_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Target's api command.",
+				Description: "Other input parameters for the request payload in JSON format",
 			},
 			"response_message": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Response's object from the target in json format.\n",
+				Description: "Response message in JSON format",
 			},
 		},
 	}
 }
 
 func createManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
-
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	if v, ok := d.GetOk("target"); ok {
-		payload["target"] = v.(string)
-	}
 
 	if v, ok := d.GetOk("other_parameter"); ok {
-		payload["other-parameter"] = v.(string)
+		err := json.Unmarshal([]byte(v.(string)), &payload)
+		if err != nil {
+			return fmt.Errorf(err.Error())
+		}
+	}
+
+	if v, ok := d.GetOk("target"); ok {
+		payload["target"] = v.(string)
 	}
 
 	commandName := "gaia-api/" + d.Get("command_name").(string)
@@ -65,19 +67,13 @@ func createManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(GaiaApiRes.ErrorMsg)
 	}
 
-	gaiaApi := GaiaApiRes.GetData()
+	gaiaApiResponse := GaiaApiRes.GetData()
 
-	if v := gaiaApi["command-name"]; v != nil {
-		_ = d.Set("command_name", v)
-	}
-
-	if v := gaiaApi["response-message"]; v != nil {
+	if v := gaiaApiResponse["response-message"]; v != nil {
 		valToReturn, err := json.Marshal(v)
-
 		if err != nil {
-			log.Println(err.Error())
+			return fmt.Errorf(err.Error())
 		}
-
 		_ = d.Set("response_message", string(valToReturn))
 	}
 
@@ -90,7 +86,6 @@ func readManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
-
 	d.SetId("")
 	return nil
 }
