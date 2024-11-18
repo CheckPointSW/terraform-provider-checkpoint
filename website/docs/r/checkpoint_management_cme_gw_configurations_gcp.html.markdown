@@ -40,11 +40,15 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "gw_config_gcp" {
     application_control          = false
     autonomous_threat_prevention = false
     content_awareness            = false
-    identity_awareness           = false
+    identity_awareness           = true
     ipsec_vpn                    = false
     threat_emulation             = false
     url_filtering                = false
     vpn                          = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = false
+    receive_identities_from      = ["PDP1", "PDP2"]
   }
 }
 ```
@@ -71,6 +75,9 @@ These arguments are supported:
     * `threat_emulation` - (Required) Threat Emulation blade.
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
+* `identity_awareness_settings` - Dictionary of Identity Awareness settings that can be configured by CME:
+    * `enable_cloudguard_controller` - Enabling Web API identity source for CloudGuard Controller.
+    * `receive_identities_from` - List of PDP gateways names to receive identities from through Identity Sharing.
 * `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in
   the scripts repository on the Management server. Supports these parameters:
     * `name` - (Required) The name of the script.

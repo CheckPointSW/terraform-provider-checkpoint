@@ -134,6 +134,31 @@ func dataSourceManagementCMEGWConfigurations() *schema.Resource {
 								},
 							},
 						},
+						"identity_awareness_settings": {
+							Type:     schema.TypeList,
+							MaxItems: 1,
+							Computed: true,
+							Description: "Dictionary of identity awareness settings that can be configured by CME: " +
+								"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
+								"receive identities from through identity sharing feature)",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable_cloudguard_controller": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Enabling Web API identity source for CloudGuard Controller",
+									},
+									"receive_identities_from": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "List of PDP gateways names to receive identities from through identity sharing",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
 						"repository_gateway_scripts": {
 							Type:     schema.TypeList,
 							Computed: true,
@@ -260,6 +285,16 @@ func dataSourceManagementCMEGWConfigurationsRead(d *schema.ResourceData, m inter
 			}
 			bladesListToReturn = append(bladesListToReturn, bladesMapToAdd)
 			tempObject["blades"] = bladesListToReturn
+
+			var IDASettingsListToReturn []map[string]interface{}
+			IDASettingsMapToAdd := make(map[string]interface{})
+			if singleGWConfiguration["identity-awareness-settings"] != nil {
+				IDASettingsMap := singleGWConfiguration["identity-awareness-settings"].(map[string]interface{})
+				IDASettingsMapToAdd["enable_cloudguard_controller"] = IDASettingsMap["enable-cloudguard-controller"]
+				IDASettingsMapToAdd["receive_identities_from"] = IDASettingsMap["receive-identities-from"]
+				IDASettingsListToReturn = append(IDASettingsListToReturn, IDASettingsMapToAdd)
+			}
+			tempObject["identity_awareness_settings"] = IDASettingsListToReturn
 
 			if singleGWConfiguration["repository-gateway-scripts"] != nil {
 				scriptsList := singleGWConfiguration["repository-gateway-scripts"].([]interface{})

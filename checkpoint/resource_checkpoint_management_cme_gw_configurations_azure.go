@@ -135,6 +135,31 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 					},
 				},
 			},
+			"identity_awareness_settings": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Description: "Dictionary of identity awareness settings that can be configured by CME: " +
+					"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
+					"receive identities from through identity sharing feature)",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_cloudguard_controller": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Enabling Web API identity source for CloudGuard Controller",
+						},
+						"receive_identities_from": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of PDP gateways names to receive identities from through identity sharing",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"repository_gateway_scripts": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -265,6 +290,18 @@ func readManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interface{
 	bladesListToReturn = append(bladesListToReturn, bladesMapToAdd)
 	_ = d.Set("blades", bladesListToReturn)
 
+	var IDASettingsListToReturn []map[string]interface{}
+	IDASettingsMapToAdd := make(map[string]interface{})
+	if AzureGWConfiguration["identity-awareness-settings"] != nil {
+		IDASettingsMap := AzureGWConfiguration["identity-awareness-settings"].(map[string]interface{})
+		IDASettingsMapToAdd["enable_cloudguard_controller"] = IDASettingsMap["enable-cloudguard-controller"]
+		IDASettingsMapToAdd["receive_identities_from"] = IDASettingsMap["receive-identities-from"]
+		IDASettingsListToReturn = append(IDASettingsListToReturn, IDASettingsMapToAdd)
+		_ = d.Set("identity_awareness_settings", IDASettingsListToReturn)
+	} else {
+		_ = d.Set("identity_awareness_settings", nil)
+	}
+	
 	if AzureGWConfiguration["repository-gateway-scripts"] != nil {
 		scriptsList := AzureGWConfiguration["repository-gateway-scripts"].([]interface{})
 		if len(scriptsList) > 0 {
@@ -411,7 +448,22 @@ func createManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 		}
 		payload["blades"] = tempObject
 	}
-
+	if _, ok := d.GetOk("identity_awareness_settings"); ok {
+		tempObject := make(map[string]interface{})
+		if v := d.Get("identity_awareness_settings.0.enable_cloudguard_controller"); v != nil {
+			tempObject["enable_cloudguard_controller"] = v.(bool)
+		}
+		if v, ok := d.GetOk("identity_awareness_settings.0.receive_identities_from"); ok {
+			tempObject["receive_identities_from"] = v.([]interface{})
+		}
+		payload["identity_awareness_settings"] = tempObject
+	} else {
+		if blades, ok := payload["blades"].(map[string]interface{}); ok {
+			if identityAwareness, ok := blades["identity-awareness"].(bool); ok && identityAwareness {
+				return fmt.Errorf("'identity_awareness_settings' must be set when 'identity_awareness' blade is enabled")
+			}
+		}
+	}
 	log.Println("Create cme Azure GW configuration - name = ", payload["name"])
 
 	url := CmeApiPath + "/gwConfigurations/azure"
@@ -539,6 +591,16 @@ func updateManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 			tempObject["autonomous-threat-prevention"] = d.Get("blades.0.autonomous_threat_prevention")
 		}
 		payload["blades"] = tempObject
+	}
+	if d.HasChange("identity_awareness_settings") {
+		tempObject := make(map[string]interface{})
+		if d.HasChange("identity_awareness_settings.0.enable_cloudguard_controller") {
+			tempObject["enable_cloudguard_controller"] = d.Get("identity_awareness_settings.0.enable_cloudguard_controller")
+		}
+		if d.HasChange("identity_awareness_settings.0.receive_identities_from") {
+			tempObject["receive_identities_from"] = d.Get("identity_awareness_settings.0.receive_identities_from")
+		}
+		payload["identity_awareness_settings"] = tempObject
 	}
 	var name string
 

@@ -14,7 +14,7 @@ func TestAccCheckpointManagementCMEGWConfigurationsGCP_basic(t *testing.T) {
 	resourceName := "checkpoint_management_cme_gw_configurations_gcp.gw_configuration_test"
 	accountName := "test-account"
 	gwConfigurationName := "test-gw-configuration"
-	gwConfigurationVersion := "R81.20"
+	gwConfigurationVersion := "R82"
 	gwConfigurationBase64SIC := "MTIzNDU2Nzg="
 	gwConfigurationPolicy := "Standard"
 	gwConfigurationColor := "blue"
@@ -103,6 +103,9 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "gw_configuration_tes
 	url_filtering = false
 	vpn = false
   }
+  identity_awareness_settings {
+    enable_cloudguard_controller = true
+  }
 }
 `, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy,  gwConfigurationXForwardedFor,
    gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
@@ -162,13 +165,18 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsGCPAttributes(gcpGWConfi
 		if identityAwareness != identityAwarenessFlag {
 			return fmt.Errorf("identity awareness is %t, expected %t", identityAwareness, identityAwarenessFlag)
 		}
+		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
+		enableCgController := IDASettings["enable-cloudguard-controller"]
+		if enableCgController != identityAwarenessFlag{
+			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, identityAwarenessFlag)
+		}
 		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {
 			return fmt.Errorf("x_forwarded_for is %t, expected %t", gwConfiguration["x_forwarded_for"], gwConfigurationXForwardedFor)
 		}
 		if gwConfiguration["color"] != gwConfigurationColor {
 			return fmt.Errorf("color is %s, expected %s", gwConfiguration["color"], gwConfigurationColor)
 		}
-		if gwConfiguration["communication_with_servers_behind_nat"] != gwConfigurationCommunicationWithServersBehindNAT {
+		if gwConfiguration["communication-with-servers-behind-nat"] != gwConfigurationCommunicationWithServersBehindNAT {
 			return fmt.Errorf("communication_with_servers_behind_nat is %s, expected %s", gwConfiguration["communication_with_servers_behind_nat"], gwConfigurationCommunicationWithServersBehindNAT)
 		}
 		return nil

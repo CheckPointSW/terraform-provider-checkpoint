@@ -14,7 +14,7 @@ func TestAccCheckpointManagementCMEGWConfigurationsAWS_basic(t *testing.T) {
 	resourceName := "checkpoint_management_cme_gw_configurations_aws.gw_configuration_test"
 	accountName := "test-account"
 	gwConfigurationName := "test-gw-configuration"
-	gwConfigurationVersion := "R81"
+	gwConfigurationVersion := "R82"
 	gwConfigurationBase64SIC := "MTIzNDU2Nzg="
 	gwConfigurationPolicy := "Standard"
 	gwConfigurationXForwardedFor := true
@@ -41,7 +41,7 @@ func TestAccCheckpointManagementCMEGWConfigurationsAWS_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceName, &awsGWConfiguration),
 					testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(&awsGWConfiguration, gwConfigurationName, accountName, gwConfigurationVersion,
-						gwConfigurationPolicy, true, true, gwConfigurationXForwardedFor,
+						gwConfigurationPolicy, true, true, true, gwConfigurationXForwardedFor,
 						gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT),
 				),
 			},
@@ -97,11 +97,14 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_configuration_tes
 	application_control = false
 	autonomous_threat_prevention = false
 	content_awareness = false
-	identity_awareness = false
+	identity_awareness = true
 	ipsec_vpn = false
 	threat_emulation = false
 	url_filtering = false
 	vpn = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = true
   }
 }
 `, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationXForwardedFor,
@@ -137,7 +140,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceTfName
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, ipsFlag bool,
-	antiBotFlag bool, gwConfigurationXForwardedFor bool, gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
+	antiBotFlag bool, IDAFlag bool, gwConfigurationXForwardedFor bool, gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*awsGWConfiguration)["result"].(map[string]interface{})
 		if gwConfiguration["name"] != gwConfigurationName {
@@ -155,11 +158,20 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfi
 		blades := gwConfiguration["blades"].(map[string]interface{})
 		ips := blades["ips"]
 		antiBot := blades["anti-bot"]
+		IDA := blades["identity-awareness"]
 		if ips != ipsFlag {
 			return fmt.Errorf("ips is %t, expected %t", ips, ipsFlag)
 		}
 		if antiBot != antiBotFlag {
 			return fmt.Errorf("anti bot is %t, expected %t", antiBot, antiBotFlag)
+		}
+		if IDA != IDAFlag {
+			return fmt.Errorf("identity awareness is %t, expected %t", IDA, IDAFlag)
+		}
+		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
+		enableCgController := IDASettings["enable-cloudguard-controller"]
+		if enableCgController != IDAFlag{
+			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, IDAFlag)
 		}
 		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {
 			return fmt.Errorf("x_forwarded_for is %t, expected %t", gwConfiguration["x_forwarded_for"], gwConfigurationXForwardedFor)
@@ -167,7 +179,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfi
 		if gwConfiguration["color"] != gwConfigurationColor {
 			return fmt.Errorf("color is %s, expected %s", gwConfiguration["color"], gwConfigurationColor)
 		}
-		if gwConfiguration["communication_with_servers_behind_nat"] != gwConfigurationCommunicationWithServersBehindNAT {
+		if gwConfiguration["communication-with-servers-behind-nat"] != gwConfigurationCommunicationWithServersBehindNAT {
 			return fmt.Errorf("communication_with_servers_behind_nat is %s, expected %s", gwConfiguration["communication_with_servers_behind_nat"], gwConfigurationCommunicationWithServersBehindNAT)
 		}
 		return nil

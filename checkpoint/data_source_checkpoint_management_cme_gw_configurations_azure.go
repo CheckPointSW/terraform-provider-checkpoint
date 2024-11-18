@@ -107,6 +107,31 @@ func dataSourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 					},
 				},
 			},
+			"identity_awareness_settings": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Description: "Dictionary of identity awareness settings that can be configured by CME: " +
+					"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
+					"receive identities from through identity sharing feature)",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_cloudguard_controller": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enabling Web API identity source for CloudGuard Controller",
+						},
+						"receive_identities_from": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of PDP gateways names to receive identities from through identity sharing",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"repository_gateway_scripts": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -258,6 +283,18 @@ func dataSourceManagementCMEGWConfigurationsAzureRead(d *schema.ResourceData, m 
 	bladesListToReturn = append(bladesListToReturn, bladesMapToAdd)
 	_ = d.Set("blades", bladesListToReturn)
 
+	var IDASettingsListToReturn []map[string]interface{}
+	IDASettingsMapToAdd := make(map[string]interface{})
+	if AzureGWConfiguration["identity-awareness-settings"] != nil {
+		IDASettingsMap := AzureGWConfiguration["identity-awareness-settings"].(map[string]interface{})
+		IDASettingsMapToAdd["enable_cloudguard_controller"] = IDASettingsMap["enable-cloudguard-controller"]
+		IDASettingsMapToAdd["receive_identities_from"] = IDASettingsMap["receive-identities-from"]
+		IDASettingsListToReturn = append(IDASettingsListToReturn, IDASettingsMapToAdd)
+		_ = d.Set("identity_awareness_settings", IDASettingsListToReturn)
+	} else {
+		_ = d.Set("identity_awareness_settings", nil)
+	}
+	
 	if AzureGWConfiguration["repository-gateway-scripts"] != nil {
 		scriptsList := AzureGWConfiguration["repository-gateway-scripts"].([]interface{})
 		if len(scriptsList) > 0 {

@@ -398,6 +398,7 @@ The table below shows the compatibility between the Terraform Release version an
 
 | Terraform Release version | CME API version | CME Take       |
 |---------------------------|-----------------|----------------|
+|                           | v1.2.2          |                |
 | v2.8.0                    | v1.2            | 279 and higher |
 | v2.7.0                    | v1.1            | 255 and higher |
 
