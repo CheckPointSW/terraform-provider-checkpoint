@@ -77,7 +77,7 @@ These arguments are supported:
     * `threat_emulation` - (Required) Threat Emulation blade.
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
-* `identity_awareness_settings` - Dictionary of Identity Awareness settings that can be configured by CME:
+* `identity_awareness_settings` - Dictionary of Identity Awareness settings that can be configured on the gateway:
     * `enable_cloudguard_controller` - Enabling Web API identity source for CloudGuard Controller.
     * `receive_identities_from` - List of PDP gateways names to receive identities from through Identity Sharing.
 * `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in

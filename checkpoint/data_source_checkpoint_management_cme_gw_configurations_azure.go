@@ -111,7 +111,7 @@ func dataSourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Computed: true,
-				Description: "Dictionary of identity awareness settings that can be configured by CME: " +
+				Description: "Dictionary of identity awareness settings that can be configured on the gateway: " +
 					"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
 					"receive identities from through identity sharing feature)",
 				Elem: &schema.Resource{
