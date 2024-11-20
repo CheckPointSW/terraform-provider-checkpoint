@@ -75,9 +75,9 @@ These arguments are supported:
     * `threat_emulation` - (Required) Threat Emulation blade.
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
-* `identity_awareness_settings` - Dictionary of Identity Awareness settings that can be configured on the gateway:
-    * `enable_cloudguard_controller` - Enabling Web API identity source for CloudGuard Controller.
-    * `receive_identities_from` - List of PDP gateways names to receive identities from through Identity Sharing.
+* `identity_awareness_settings` - (Optional) Dictionary of Identity Awareness settings that can be configured on the gateway:
+    * `enable_cloudguard_controller` - (Required) Enable the Web API identity source for CloudGuard Controller.
+    * `receive_identities_from` - (Optional) List of PDP gateway names from which to receive identities through Identity Sharing.
 * `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in
   the scripts repository on the Management server. Supports these parameters:
     * `name` - (Required) The name of the script.

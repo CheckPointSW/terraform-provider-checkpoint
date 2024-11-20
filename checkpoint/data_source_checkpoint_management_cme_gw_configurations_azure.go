@@ -119,12 +119,12 @@ func dataSourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 						"enable_cloudguard_controller": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Enabling Web API identity source for CloudGuard Controller",
+							Description: "Enable the Web API identity source for CloudGuard Controller",
 						},
 						"receive_identities_from": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "List of PDP gateways names to receive identities from through identity sharing",
+							Description: "List of PDP gateway names from which to receive identities through Identity Sharing",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
