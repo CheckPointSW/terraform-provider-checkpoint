@@ -503,7 +503,7 @@ func createManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 	}
 	if _, ok := d.GetOk("identity_awareness_settings"); ok {
 		tempObject := make(map[string]interface{})
-		if v := d.Get("identity_awareness_settings.0.enable_cloudguard_controller"); v != nil {
+		if v, ok := d.GetOkExists("identity_awareness_settings.0.enable_cloudguard_controller"); ok {
 			tempObject["enable_cloudguard_controller"] = v.(bool)
 		}
 		if v, ok := d.GetOk("identity_awareness_settings.0.receive_identities_from"); ok {
@@ -653,11 +653,11 @@ func updateManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 	}
 	if d.HasChange("identity_awareness_settings") {
 		tempObject := make(map[string]interface{})
-		if d.HasChange("identity_awareness_settings.0.enable_cloudguard_controller") {
-			tempObject["enable_cloudguard_controller"] = d.Get("identity_awareness_settings.0.enable_cloudguard_controller")
+		if v, ok := d.GetOkExists("identity_awareness_settings.0.enable_cloudguard_controller"); ok {
+			tempObject["enable_cloudguard_controller"] = v.(bool)
 		}
-		if d.HasChange("identity_awareness_settings.0.receive_identities_from") {
-			tempObject["receive_identities_from"] = d.Get("identity_awareness_settings.0.receive_identities_from")
+		if v, ok := d.GetOkExists("identity_awareness_settings.0.receive_identities_from"); ok {
+			tempObject["receive_identities_from"] = v.([]interface{})
 		}
 		payload["identity_awareness_settings"] = tempObject
 	}
