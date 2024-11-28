@@ -9,7 +9,7 @@ description: |- Use this data source to get information on an existing Check Poi
 
 Use this data source to get information on an existing Check Point CME AWS Account.
 
-For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#compatibility-with-cme).
 
 
 ## Example Usage

@@ -9,7 +9,7 @@ description: |- This resource allows you to add/update/delete Check Point CME GC
 
 This resource allows you to add/update/delete Check Point CME GCP Gateway Configurations.
 
-For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#compatibility-with-cme).
 
 
 ## Example Usage
@@ -76,7 +76,7 @@ These arguments are supported:
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
 * `identity_awareness_settings` - (Optional) Dictionary of Identity Awareness settings that can be configured on the gateway:
-    * `enable_cloudguard_controller` - (Required) Enable the Web API identity source for CloudGuard Controller.
+    * `enable_cloudguard_controller` - (Optional) Enable the Web API identity source for CloudGuard Controller.
     * `receive_identities_from` - (Optional) List of PDP gateway names from which to receive identities through Identity Sharing.
 * `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in
   the scripts repository on the Management server. Supports these parameters:

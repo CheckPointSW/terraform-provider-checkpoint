@@ -147,7 +147,7 @@ func resourceManagementCMEGWConfigurationsAWS() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"enable_cloudguard_controller": {
 							Type:        schema.TypeBool,
-							Required:    true,
+							Optional:    true,
 							Description: "Enable the Web API identity source for CloudGuard Controller",
 						},
 						"receive_identities_from": {
@@ -510,12 +510,6 @@ func createManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 			tempObject["receive_identities_from"] = v.([]interface{})
 		}
 		payload["identity_awareness_settings"] = tempObject
-	} else {
-		if blades, ok := payload["blades"].(map[string]interface{}); ok {
-			if identityAwareness, ok := blades["identity-awareness"].(bool); ok && identityAwareness {
-				return fmt.Errorf("'identity_awareness_settings' must be set when 'identity_awareness' blade is enabled")
-			}
-		}
 	}
 	log.Println("Create cme AWS GW configuration - name = ", payload["name"])
 
