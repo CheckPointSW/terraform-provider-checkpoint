@@ -591,9 +591,7 @@ func updateManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 		if v, ok := d.GetOkExists("identity_awareness_settings.0.enable_cloudguard_controller"); ok {
 			tempObject["enable_cloudguard_controller"] = v.(bool)
 		}
-		if v, ok := d.GetOkExists("identity_awareness_settings.0.receive_identities_from"); ok {
-			tempObject["receive_identities_from"] = v.([]interface{})
-		}
+		tempObject["receive_identities_from"] = d.Get("identity_awareness_settings.0.receive_identities_from")
 		payload["identity_awareness_settings"] = tempObject
 	}
 	var name string
