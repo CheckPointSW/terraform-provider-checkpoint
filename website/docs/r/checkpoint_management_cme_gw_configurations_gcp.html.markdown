@@ -9,7 +9,7 @@ description: |- This resource allows you to add/update/delete Check Point CME GC
 
 This resource allows you to add/update/delete Check Point CME GCP Gateway Configurations.
 
-For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#compatibility-with-cme).
 
 
 ## Example Usage
@@ -40,11 +40,15 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "gw_config_gcp" {
     application_control          = false
     autonomous_threat_prevention = false
     content_awareness            = false
-    identity_awareness           = false
+    identity_awareness           = true
     ipsec_vpn                    = false
     threat_emulation             = false
     url_filtering                = false
     vpn                          = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = false
+    receive_identities_from      = ["PDP1", "PDP2"]
   }
 }
 ```
@@ -71,6 +75,9 @@ These arguments are supported:
     * `threat_emulation` - (Required) Threat Emulation blade.
     * `url_filtering` - (Required) URL Filtering blade.
     * `vpn` - (Required) VPN blade.
+* `identity_awareness_settings` - (Optional) Dictionary of Identity Awareness settings that can be configured on the gateway:
+    * `enable_cloudguard_controller` - (Optional) Enable the Web API identity source for CloudGuard Controller.
+    * `receive_identities_from` - (Optional) List of PDP gateway names from which to receive identities through Identity Sharing.
 * `repository_gateway_scripts` - (Optional) List of objects that each contain the name/UID of a script that exists in
   the scripts repository on the Management server. Supports these parameters:
     * `name` - (Required) The name of the script.
