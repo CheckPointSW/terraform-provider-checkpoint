@@ -33,6 +33,7 @@ func TestAccDataSourceCheckpointManagementCMEGWConfigurationsGCP_basic(t *testin
 					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "x_forwarded_for", resourceName, "x_forwarded_for"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "communication_with_servers_behind_nat", resourceName, "communication_with_servers_behind_nat"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "identity_awareness_settings", resourceName, "identity_awareness_settings"),
 				),
 			},
 		},
@@ -50,7 +51,7 @@ resource "checkpoint_management_cme_accounts_gcp" "gcp_account" {
 resource "checkpoint_management_cme_gw_configurations_gcp" "test" {
   name            = "%s"
   related_account = "${checkpoint_management_cme_accounts_gcp.gcp_account.name}"
-  version         = "R81"
+  version         = "R82"
   base64_sic_key  = "MTIzNDU2Nzg="
   policy          = "Standard"
   x_forwarded_for = true
@@ -64,11 +65,14 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "test" {
 	application_control          = false
 	autonomous_threat_prevention = false
 	content_awareness            = false
-	identity_awareness           = false
+	identity_awareness           = true
 	ipsec_vpn                    = false
 	threat_emulation             = false
 	url_filtering                = false
 	vpn                          = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = true
   }
 }
 

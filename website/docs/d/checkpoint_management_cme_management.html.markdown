@@ -9,7 +9,7 @@ description: |- Use this data source to get information on existing Check Point 
 
 Use this data source to get information on existing Check Point CME Management.
 
-For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#compatibility-with-cme).
 
 
 ## Example Usage

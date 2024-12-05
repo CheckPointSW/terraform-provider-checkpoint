@@ -9,7 +9,7 @@ description: |- This resource allows you to add/update/delete Check Point CME GC
 
 This resource allows you to add/update/delete Check Point CME GCP Account.
 
-For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](../index.html.markdown#compatibility-with-cme).
+For details about the compatibility between the Terraform Release version and the CME API version, please refer to the section [Compatibility with CME](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#compatibility-with-cme).
 
 
 ## Example Usage

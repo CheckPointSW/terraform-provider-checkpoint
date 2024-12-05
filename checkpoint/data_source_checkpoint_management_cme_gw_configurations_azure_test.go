@@ -34,6 +34,7 @@ func TestAccDataSourceCheckpointManagementCMEGWConfigurationsAzure_basic(t *test
 					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "x_forwarded_for", resourceName, "x_forwarded_for"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "communication_with_servers_behind_nat", resourceName, "communication_with_servers_behind_nat"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "identity_awareness_settings", resourceName, "identity_awareness_settings"),
 				),
 			},
 		},
@@ -46,14 +47,14 @@ resource "checkpoint_management_cme_accounts_azure" "azure_account" {
   name                  = "%s"
   directory_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
   application_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
-  client_secret = "mySecret"
+  client_secret = "abcdef-123456"
   subscription = "46707d92-02f4-4817-8116-a4c3b23e6267"
 }
 
 resource "checkpoint_management_cme_gw_configurations_azure" "test" {
   name            = "%s"
   related_account = "${checkpoint_management_cme_accounts_azure.azure_account.name}"
-  version         = "R81"
+  version         = "R82"
   base64_sic_key  = "MTIzNDU2Nzg="
   policy          = "Standard"
   ipv6			= true
@@ -68,11 +69,14 @@ resource "checkpoint_management_cme_gw_configurations_azure" "test" {
 	application_control          = false
 	autonomous_threat_prevention = false
 	content_awareness            = false
-	identity_awareness           = false
+	identity_awareness           = true
 	ipsec_vpn                    = false
 	threat_emulation             = false
 	url_filtering                = false
 	vpn                          = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = true
   }
 }
 

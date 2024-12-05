@@ -129,6 +129,31 @@ func dataSourceManagementCMEGWConfigurationsAWS() *schema.Resource {
 					},
 				},
 			},
+			"identity_awareness_settings": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Description: "Dictionary of identity awareness settings that can be configured on the gateway: " +
+					"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
+					"receive identities from through identity sharing feature)",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_cloudguard_controller": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enable the Web API identity source for CloudGuard Controller",
+						},
+						"receive_identities_from": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of PDP gateway names from which to receive identities through Identity Sharing",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"repository_gateway_scripts": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -288,6 +313,18 @@ func dataSourceManagementCMEGWConfigurationsAWSRead(d *schema.ResourceData, m in
 	}
 	bladesListToReturn = append(bladesListToReturn, bladesMapToAdd)
 	_ = d.Set("blades", bladesListToReturn)
+
+	var IDASettingsListToReturn []map[string]interface{}
+	IDASettingsMapToAdd := make(map[string]interface{})
+	if AWSGWConfiguration["identity-awareness-settings"] != nil {
+		IDASettingsMap := AWSGWConfiguration["identity-awareness-settings"].(map[string]interface{})
+		IDASettingsMapToAdd["enable_cloudguard_controller"] = IDASettingsMap["enable-cloudguard-controller"]
+		IDASettingsMapToAdd["receive_identities_from"] = IDASettingsMap["receive-identities-from"]
+		IDASettingsListToReturn = append(IDASettingsListToReturn, IDASettingsMapToAdd)
+		_ = d.Set("identity_awareness_settings", IDASettingsListToReturn)
+	} else {
+		_ = d.Set("identity_awareness_settings", nil)
+	}
 
 	if AWSGWConfiguration["repository-gateway-scripts"] != nil {
 		scriptsList := AWSGWConfiguration["repository-gateway-scripts"].([]interface{})

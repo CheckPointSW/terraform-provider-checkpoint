@@ -1,3 +1,11 @@
+## 2.8.1 (November 10, 2024)
+
+FEATURES
+* **New Resource:** `checkpoint_generic_api`
+
+BUG FIXES
+* Fix bug in resource `resource_checkpoint_management_command_gaia_api`
+
 ## 2.8.0 (September 30, 2024)
 
 FEATURES

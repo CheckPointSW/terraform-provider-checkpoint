@@ -14,7 +14,7 @@ func TestAccCheckpointManagementCMEGWConfigurationsAzure_basic(t *testing.T) {
 	resourceName := "checkpoint_management_cme_gw_configurations_azure.gw_configuration_test"
 	accountName := "test-account"
 	gwConfigurationName := "test-gw-configuration"
-	gwConfigurationVersion := "R81.10"
+	gwConfigurationVersion := "R82"
 	gwConfigurationBase64SIC := "MTIzNDU2Nzg="
 	gwConfigurationPolicy := "Standard"
 	gwConfigurationIpv6 := true
@@ -43,7 +43,7 @@ func TestAccCheckpointManagementCMEGWConfigurationsAzure_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceName, &azureGWConfiguration),
 					testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(&azureGWConfiguration, gwConfigurationName, accountName, gwConfigurationVersion,
-						gwConfigurationPolicy, true, true, gwConfigurationIpv6, gwConfigurationXForwardedFor,
+						gwConfigurationPolicy, true, true, true, gwConfigurationIpv6, gwConfigurationXForwardedFor,
 						gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT),
 				),
 			},
@@ -80,7 +80,7 @@ resource "checkpoint_management_cme_accounts_azure" "account_test" {
   name           = "%s"
   directory_id   = "46707d92-02f4-4817-8116-a4c3b23e6266"
   application_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
-  client_secret  = "mySecret"
+  client_secret  = "abcdef-123456"
   subscription   = "46707d92-02f4-4817-8116-a4c3b23e6266"
 }
 
@@ -98,11 +98,14 @@ resource "checkpoint_management_cme_gw_configurations_azure" "gw_configuration_t
 	anti_virus = false
 	autonomous_threat_prevention = false
 	content_awareness = false
-	identity_awareness = false
+	identity_awareness = true
 	ipsec_vpn = false
 	threat_emulation = false
 	url_filtering = false
 	vpn = false
+  }
+  identity_awareness_settings {
+    enable_cloudguard_controller = true
   }
   ipv6 = %t
   x_forwarded_for = %t
@@ -142,7 +145,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfNa
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, httpsInspectionFlag bool,
-	applicationControlFlag bool, gwConfigurationIpv6 bool, gwConfigurationXForwardedFor bool,
+	applicationControlFlag bool, IDAFlag bool, gwConfigurationIpv6 bool, gwConfigurationXForwardedFor bool,
     gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*azureGWConfiguration)["result"].(map[string]interface{})
@@ -161,11 +164,20 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWC
 		blades := gwConfiguration["blades"].(map[string]interface{})
 		httpsInspection := blades["https-inspection"]
 		applicationControl := blades["application-control"]
+		IDA := blades["identity-awareness"]
 		if httpsInspection != httpsInspectionFlag {
 			return fmt.Errorf("https inspection is %t, expected %t", httpsInspection, httpsInspectionFlag)
 		}
 		if applicationControl != applicationControlFlag {
 			return fmt.Errorf("application control is %t, expected %t", applicationControl, applicationControlFlag)
+		}
+		if IDA != IDAFlag {
+			return fmt.Errorf("identity awareness is %t, expected %t", IDA, IDAFlag)
+		}
+		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
+		enableCgController := IDASettings["enable-cloudguard-controller"]
+		if enableCgController != IDAFlag{
+			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, IDAFlag)
 		}
 		if gwConfiguration["ipv6"] != gwConfigurationIpv6 {
 			return fmt.Errorf("ipv6 is %t, expected %t", gwConfiguration["ipv6"], gwConfigurationIpv6)
@@ -176,7 +188,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWC
 		if gwConfiguration["color"] != gwConfigurationColor {
 			return fmt.Errorf("color is %s, expected %s", gwConfiguration["color"], gwConfigurationColor)
 		}
-		if gwConfiguration["communication_with_servers_behind_nat"] != gwConfigurationCommunicationWithServersBehindNAT {
+		if gwConfiguration["communication-with-servers-behind-nat"] != gwConfigurationCommunicationWithServersBehindNAT {
 			return fmt.Errorf("communication_with_servers_behind_nat is %s, expected %s", gwConfiguration["communication_with_servers_behind_nat"], gwConfigurationCommunicationWithServersBehindNAT)
 		}
 		return nil
