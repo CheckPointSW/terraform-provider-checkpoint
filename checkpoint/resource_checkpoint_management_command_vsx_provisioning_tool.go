@@ -1511,14 +1511,20 @@ func createManagementVsxProvisioningTool(d *schema.ResourceData, m interface{}) 
 		payload["set-vd-params"] = res
 	}
 
-	VsxProvisioningToolRes, _ := client.ApiCall("vsx-provisioning-tool", payload, client.GetSessionID(), true, false)
-	if !VsxProvisioningToolRes.Success {
-		return fmt.Errorf(VsxProvisioningToolRes.ErrorMsg)
+	vsxProvisioningToolRes, err := client.ApiCall("vsx-provisioning-tool", payload, client.GetSessionID(), true, client.IsProxyUsed())
+
+	log.Println("vsx-provisioning-tool result is ", vsxProvisioningToolRes)
+
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+
+	if !vsxProvisioningToolRes.Success {
+		return fmt.Errorf(vsxProvisioningToolRes.ErrorMsg)
 	}
 
 	d.SetId("vsx-provisioning-tool-" + acctest.RandString(10))
-	log.Println("result is ", VsxProvisioningToolRes)
-	_ = d.Set("task_id", resolveTaskId(VsxProvisioningToolRes.GetData()))
+	_ = d.Set("task_id", resolveTaskId(vsxProvisioningToolRes.GetData()))
 	return readManagementVsxProvisioningTool(d, m)
 }
 

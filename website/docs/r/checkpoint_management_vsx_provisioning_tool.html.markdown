@@ -3,12 +3,12 @@ layout: "checkpoint"
 page_title: "checkpoint_management_vsx_provisioning_tool"
 sidebar_current: "docs-checkpoint-resource-checkpoint-management-vsx-provisioning-tool"
 description: |-
-This resource allows you to execute Check Point Vsx Provisioning Tool.
+This resource allows you to execute Check Point VSX Provisioning Tool.
 ---
 
 # checkpoint_management_vsx_provisioning_tool
 
-This resource allows you to execute Check Point Vsx Provisioning Tool.
+This resource allows you to execute Check Point VSX Provisioning Tool.
 
 ## Example Usage
 
@@ -17,7 +17,6 @@ This resource allows you to execute Check Point Vsx Provisioning Tool.
 resource "checkpoint_management_vsx_provisioning_tool" "example" {
   operation = "add-vsx-cluster"
   add_vsx_cluster_params  {
-
     vsx_name = "VSX_CLUSTER"
     cluster_type = "vsls"
     ipv4_address = "192.168.0.0"
@@ -62,6 +61,7 @@ The following arguments are supported:
 * `set_physical_interface_params` - (Optional) Parameters for the operation to change the configuration of a physical interface.set_physical_interface_params blocks are documented below.
 * `set_vd_interface_params` - (Optional) Parameters for the operation to change the configuration of a logical interface.set_vd_interface_params blocks are documented below.
 * `set_vd_params` - (Optional) Parameters for the operation to change the configuration of a Virtual Device.set_vd_params blocks are documented below.
+* `task_id` - Operation Task UID.
 
 
 `add_physical_interface_params` supports the following:
