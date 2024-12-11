@@ -510,7 +510,6 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(data *schema.ResourceData) (interface{}, error) {
-
 	server := data.Get("server").(string)
 	username := data.Get("username").(string)
 	password := data.Get("password").(string)

@@ -18,26 +18,6 @@ DevSecOps workflows.
 ## Examples of usage
 To use Check Point provider, copy and paste this code into your Terraform configuration, update provider configuration and run `terraform init`.
 
-### Terraform 0.12 and earlier:
-```hcl
-# Configure Check Point Provider for Management API
-provider "checkpoint" {
-  server   = "192.0.2.1"
-  username = "aa"
-  password = "aaaa"
-  context  = "web_api"
-  session_name = "Terraform Session"
-}
-
-# Create network object
-resource "checkpoint_management_network" "network" {
-  name         = "My network"
-  subnet4      = "192.0.2.0"
-  mask_length4 = "24"
-  # ...   
-}
-```
-### Terraform 0.13 and later:
 ```hcl
 terraform {
   required_providers {
@@ -54,7 +34,7 @@ provider "checkpoint" {
   username = "aa"
   password = "aaaa"
   context  = "web_api"
-  session_name = "Terraform Session"
+  session_name = "Terraform session"
 }
 
 # Create network object
@@ -365,6 +345,26 @@ $ mv verify_policy $GOPATH/src/github.com/terraform-providers/terraform-provider
 $ terraform apply && verify_policy -policy-package <package name>
 ```
 
+## Compatibility with Management
+Check Point Provider supports Management server from version R80 and above.
+However, some Terraform resources or specific fields in Terraform resource might not be available because they are not supported in your Management API version.
+<br>You can check the Management API [versions list](https://sc1.checkpoint.com/documents/latest/APIs/index.html#api_versions) to see what is supported by your Management server.
+
+## Compatibility with CME
+Check Point Provider supports configuring objects in CME configuration file starting from Security Management/Multi-Domain Security Management Server version R81.10 and higher.
+
+The table below shows the compatibility between the Terraform Release version and the CME API version:
+
+| Terraform Release version | CME API version | CME Take       |
+|---------------------------|-----------------|----------------|
+| v2.9.0                    | v1.2.2          | 289 and higher |
+| v2.8.0                    | v1.2            | 279 and higher |
+| v2.7.0                    | v1.1            | 255 and higher |
+<br>
+-> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
+
+For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
+
 ## Import Resources
 
 In order to import resource, use the `terraform import` command with object unique identifier.
@@ -391,23 +391,6 @@ $ terraform import checkpoint_management_host.host 9423d36f-2d66-4754-b9e2-e7f44
 For more information about `terraform import` command, please
 refer [here](https://www.terraform.io/docs/import/usage.html).
 
-## Compatibility with CME
-Check Point Provider supports configuring objects in CME configuration file starting from Security Management/Multi-Domain Security Management Server version R81.10 and higher.
-
-The table below shows the compatibility between the Terraform Release version and the CME API version:
-
-| Terraform Release version | CME API version | CME Take       |
-|---------------------------|-----------------|----------------|
-| v2.9.0                    | v1.2.2          | 289 and higher |
-| v2.8.0                    | v1.2            | 279 and higher |
-| v2.7.0                    | v1.1            | 255 and higher |
-
-
--> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
-
-
-For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
-
 ## Tips & Best Practices
 
 This section describes best practices for working with the Check Point provider.
@@ -416,4 +399,5 @@ This section describes best practices for working with the Check Point provider.
 * Keep on object name uniqueness in your environment.
 * Use object name when reference to an object (avoid use of object UID).
 * Use post apply scripts (e.g. publish, install policy, logout) to run actions after apply your changes. Terraform runs in parallel and because of that we can't predict the order of when changes will execute, running post apply scripts will ensure to run last after all changes submitted successfully.
-* Create implicit / explicit dependencies between resources or modules. Terraform uses this dependency information to determine the correct order in which to create the different resources. To do so, it creates a dependency graph of all of the resources defined by the configuration. For more information, please refer [here](https://developer.hashicorp.com/terraform/tutorials/configuration-language/dependencies#dependencies).
+* Create implicit / explicit dependencies between resources or modules. Terraform uses this dependency information to determine the correct order in which to create the different resources. To do so, it creates a dependency graph of all of the resources defined by the configuration. For more information, please refer [here](https://developer.hashicorp.com/terraform/tutorials/configuration-language/dependencies#dependencies). 
+* When configure the provider [context](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#context-1) to `gaia_api` you can run only GAIA resources. Management resources will not be supported.

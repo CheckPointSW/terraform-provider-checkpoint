@@ -23,7 +23,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"reflect"
 	"strconv"
 	"strings"
 	"sync"
@@ -403,6 +402,7 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("User-Agent", c.userAgent)
+	req.Header.Set("Accept", "*/*")
 
 	if command != "login" {
 		req.Header.Set("X-chkp-sid", sid)
@@ -444,60 +444,7 @@ func (c *ApiClient) apiCall(command string, payload map[string]interface{}, sid 
 	}
 
 	if !res.Success {
-		resCode := ""
-		resMsg := ""
-		if code := res.GetData()["code"]; code != nil {
-			resCode = code.(string)
-		}
-		if msg := res.GetData()["message"]; msg != nil {
-			resMsg = msg.(string)
-		}
-
-		fullErrorMsg := "failed to execute API call" +
-			"\nStatus: " + res.StatusCode +
-			"\nCode: " + resCode +
-			"\nMessage: " + resMsg
-
-		if errorMsg := res.data["errors"]; errorMsg != nil {
-			fullErrorMsg += "\nErrors: "
-			errorMsgType := reflect.TypeOf(errorMsg).Kind()
-			if errorMsgType == reflect.String {
-				fullErrorMsg += errorMsg.(string) + "\n"
-			} else {
-				errorsList := res.data["errors"].([]interface{})
-				for i := range errorsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + errorsList[i].(map[string]interface{})["message"].(string)
-				}
-			}
-		}
-
-		if warningMsg := res.data["warnings"]; warningMsg != nil {
-			fullErrorMsg += "\nWarnings: "
-			warningMsgType := reflect.TypeOf(warningMsg).Kind()
-			if warningMsgType == reflect.String {
-				fullErrorMsg += warningMsg.(string) + "\n"
-			} else {
-				warningsList := res.data["warnings"].([]interface{})
-				for i := range warningsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + warningsList[i].(map[string]interface{})["message"].(string)
-				}
-			}
-		}
-
-		if blockingError := res.data["blocking-errors"]; blockingError != nil {
-			fullErrorMsg += "\nBlocking errors: "
-			warningMsgType := reflect.TypeOf(blockingError).Kind()
-			if warningMsgType == reflect.String {
-				fullErrorMsg += blockingError.(string) + "\n"
-			} else {
-				blockingErrorsList := res.data["blocking-errors"].([]interface{})
-				for i := range blockingErrorsList {
-					fullErrorMsg += "\n" + strconv.Itoa(i+1) + ". " + blockingErrorsList[i].(map[string]interface{})["message"].(string)
-				}
-			}
-		}
-
-		res.ErrorMsg = fullErrorMsg
+		res.ErrorMsg = res.buildGenericErrMsg()
 	}
 
 	if waitForTask == true && res.Success && command != "show-task" {
@@ -814,22 +761,7 @@ func (c *ApiClient) waitForTasks(taskObjects []interface{}) APIResponse {
 		fmt.Println("Problem showing tasks, try again")
 
 	}
-
-	if taskRes.Success {
-		if v, ok := taskRes.GetData()["tasks"]; ok {
-			tasks := v.([]interface{})
-			if len(tasks) > 0 {
-				for _, task := range tasks {
-					status := task.(map[string]interface{})["status"].(string)
-					if status == "failed" || status == "partially succeeded" {
-						taskRes.Success = false
-						break
-					}
-				}
-			}
-		}
-	}
-
+	checkTasksStatus(&taskRes)
 	return taskRes
 
 }
@@ -842,14 +774,16 @@ task_result: api_response returned from "show-task" command
 return:
 */
 func checkTasksStatus(taskResult *APIResponse) {
-
-	for _, task := range taskResult.data["tasks"].([]interface{}) {
-		if task.(map[string]interface{})["status"] == "failed" || task.(map[string]interface{})["status"] == "partially succeeded" {
-			taskResult.setSuccessStatus(false)
-			break
+	if v := taskResult.data["tasks"]; v != nil {
+		for _, task := range taskResult.data["tasks"].([]interface{}) {
+			if task.(map[string]interface{})["status"] == "failed" || task.(map[string]interface{})["status"] == "partially succeeded" {
+				taskResult.setSuccessStatus(false)
+				taskResult.StatusCode = ""
+				taskResult.setErrMsg(taskResult.buildGenericErrMsg())
+				break
+			}
 		}
 	}
-
 }
 
 /*
