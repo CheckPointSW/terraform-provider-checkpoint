@@ -743,7 +743,6 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Specifies whether the IPS will be downloaded from the Management or directly to the Gateway.",
-				Default:     "gateway automatic update",
 			},
 			"nat_hide_internal_interfaces": {
 				Type:        schema.TypeBool,
