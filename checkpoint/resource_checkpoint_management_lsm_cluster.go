@@ -39,7 +39,7 @@ func resourceManagementLsmCluster() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Object name. Must be unique in the domain.",
 						},
 						"uid": {
@@ -523,7 +523,7 @@ func createManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 					localMap := manualVpnDomainsList[i].(map[string]interface{})
 					payload := make(map[string]interface{})
 
-					if v := localMap["commens"]; v != nil {
+					if v := localMap["comments"]; v != nil {
 						payload["comments"] = v.(string)
 					}
 					if v := localMap["from_ipv4_address"]; v != nil {
@@ -1018,6 +1018,17 @@ func updateManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 				lsmCluster["dynamic-objects"] = dynamicObjectsToReturn
 			}
 
+		} else {
+			oldDynamicObjects, _ := d.GetChange("dynamic_objects")
+			if len(oldDynamicObjects.([]interface{})) > 0 {
+				oldDynamicObjectsList := oldDynamicObjects.([]interface{})
+				dynamicObjectsToRemove := make([]string, 0)
+				for i := range oldDynamicObjectsList {
+					objName := oldDynamicObjectsList[i].(map[string]interface{})["name"].(string)
+					dynamicObjectsToRemove = append(dynamicObjectsToRemove, objName)
+				}
+				lsmCluster["dynamic-objects"] = map[string]interface{}{"remove": dynamicObjectsToRemove}
+			}
 		}
 
 	}

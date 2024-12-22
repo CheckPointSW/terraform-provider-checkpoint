@@ -42,7 +42,7 @@ func resourceManagementLsmGateway() *schema.Resource {
 						},
 						"name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Object name. Must be unique in the domain.",
 						},
 						"uid": {
@@ -756,8 +756,18 @@ func updateManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 				lsmGateway["dynamic-objects"] = dynamicObjectsToReturn
 			}
 
+		} else {
+			oldDynamicObjects, _ := d.GetChange("dynamic_objects")
+			if len(oldDynamicObjects.([]interface{})) > 0 {
+				oldDynamicObjectsList := oldDynamicObjects.([]interface{})
+				dynamicObjectsToRemove := make([]string, 0)
+				for i := range oldDynamicObjectsList {
+					objName := oldDynamicObjectsList[i].(map[string]interface{})["name"].(string)
+					dynamicObjectsToRemove = append(dynamicObjectsToRemove, objName)
+				}
+				lsmGateway["dynamic-objects"] = map[string]interface{}{"remove": dynamicObjectsToRemove}
+			}
 		}
-
 	}
 
 	if d.HasChange("provisioning_settings") {
