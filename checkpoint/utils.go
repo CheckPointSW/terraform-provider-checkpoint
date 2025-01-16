@@ -59,7 +59,7 @@ func CheckSession(c *checkpoint.ApiClient, uid string) bool {
 	payload := map[string]interface{}{
 		"uid": uid,
 	}
-	res, _ := c.ApiCall("show-session", payload, c.GetSessionID(), true, false)
+	res, _ := c.ApiCall("show-session", payload, c.GetSessionID(), true, c.IsProxyUsed())
 	return res.Success
 }
 

@@ -109,6 +109,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE", -1),
 				Description: "Number of batch size to automatically run publish",
 			},
+			"ignore_server_certificate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_IGNORE_SERVER_CERTIFICATE", false),
+				Description: "Indicates that the client should not check the server's certificate",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_outbound_inspection_certificate":                resourceManagementOutboundInspectionCertificate(),
@@ -526,6 +532,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 	sessionTimeout := data.Get("session_timeout").(int)
 	cloudMgmtId := data.Get("cloud_mgmt_id").(string)
 	autoPublishBatchSize := data.Get("auto_publish_batch_size").(int)
+	ignoreServerCertificate := data.Get("ignore_server_certificate").(bool)
 
 	if server == "" || ((username == "" || password == "") && apiKey == "") {
 		return nil, fmt.Errorf("checkpoint-provider missing parameters to initialize (server, (username and password) OR api_key)")
@@ -539,7 +546,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		ProxyHost:               proxyHost,
 		ProxyPort:               proxyPort,
 		ApiVersion:              "",
-		IgnoreServerCertificate: false,
+		IgnoreServerCertificate: ignoreServerCertificate,
 		AcceptServerCertificate: false,
 		DebugFile:               "deb.txt",
 		Context:                 context,
@@ -584,7 +591,7 @@ func providerConfigure(data *schema.ResourceData) (interface{}, error) {
 		}
 		return gaia, nil
 	default:
-		return nil, fmt.Errorf("unsupported access context - gaia_api or web_api")
+		return nil, fmt.Errorf("Invalid access context. Use 'web_api' or 'gaia_api'")
 	}
 }
 
