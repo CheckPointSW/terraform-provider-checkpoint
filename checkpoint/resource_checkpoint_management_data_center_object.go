@@ -180,11 +180,10 @@ func resourceDataCenterObject() *schema.Resource {
 					},
 				},
 			},
-			"wait_until_sync_object": {
+			"wait_for_object_sync": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
-				Description: "When set to true, the provider will wait until object is synced with the management server",
+				Description: "When set to true, the provider will wait for object sync with the management server",
 			},
 		},
 	}
@@ -249,29 +248,30 @@ func createManagementDataCenterObject(d *schema.ResourceData, m interface{}) err
 
 	d.SetId(AddDataCenterObjectRes.GetData()["uid"].(string))
 
-	if doWait, ok := d.GetOkExists("wait_until_sync_object"); ok {
+	if doWait, ok := d.GetOkExists("wait_for_object_sync"); ok {
 		if doWait.(bool) {
+			log.Println("Wait for data center object sync")
 			objUidInDataCenter := AddDataCenterObjectRes.GetData()["uid-in-data-center"].(string)
 			dataCenterUid := AddDataCenterObjectRes.GetData()["data-center"].(map[string]interface{})["uid"].(string)
 			showDataCenterContentPayload := make(map[string]interface{})
 			showDataCenterContentPayload["data-center-uid"] = dataCenterUid
 			showDataCenterContentPayload["uid-in-data-center"] = objUidInDataCenter
-			maxRetry := 20
+			const maxRetry = 30
 			retry := 1
 			for retry < maxRetry {
-				showDataCenterContentRes, err := client.ApiCallSimple("show-data-center-content", showDataCenterContentPayload)
-				if err != nil || !showDataCenterContentRes.Success {
-					// failed to check if data center object exist. stop check...
-					break
-				}
-				showDataCenterContentData := showDataCenterContentRes.GetData()
-				if len(showDataCenterContentData["objects"].([]interface{})) > 0 {
-					obj := showDataCenterContentData["objects"].([]interface{})[0].(map[string]interface{})
-					if obj["uid-in-data-center"] == objUidInDataCenter {
-						break
+				showDataCenterContentRes, _ := client.ApiCallSimple("show-data-center-content", showDataCenterContentPayload)
+				if showDataCenterContentRes.Success {
+					showDataCenterContentData := showDataCenterContentRes.GetData()
+					if len(showDataCenterContentData["objects"].([]interface{})) > 0 {
+						obj := showDataCenterContentData["objects"].([]interface{})[0].(map[string]interface{})
+						if objUidInDataCenter == obj["uid-in-data-center"].(string) {
+							log.Println("Found data center object. Exiting...")
+							break
+						}
 					}
 				}
-				time.Sleep(time.Second * 10)
+				log.Println("Wait for data center object... sleeping for 10 seconds")
+				time.Sleep(10 * time.Second)
 				retry++
 			}
 		}
