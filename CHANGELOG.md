@@ -7,7 +7,7 @@ ENHANCEMENTS
 * Add support to wait for data center object to sync with the management server using `wait_for_object_sync` flag
 
 BUG FIXES
-* Fix bug in remove dynamic-objects from lsm-gateway or lsm-cluster
+* Fix bug in remove dynamic objects from `lsm-gateway` or `lsm-cluster`
 
 ## 2.8.1 (November 10, 2024)
 
