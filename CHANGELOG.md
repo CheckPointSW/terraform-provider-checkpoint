@@ -1,4 +1,4 @@
-## 2.9.0 (february 10, 2025)
+## 2.9.0 (February 10, 2025)
 
 ENHANCEMENTS
 * Add support to CME API v1.2.2
