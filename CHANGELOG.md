@@ -1,3 +1,14 @@
+## 2.9.0 (february 10, 2025)
+
+ENHANCEMENTS
+* Add support to CME API v1.2.2
+* Use GO SDK v1.8.0
+* Add support to ignore fingerprint check using `ignore_server_certificate` or via environment variable `CHECKPOINT_IGNORE_SERVER_CERTIFICATE`
+* Add support to wait for data center object to sync with the management server using `wait_for_object_sync` flag
+
+BUG FIXES
+* Fix bug in remove dynamic-objects from lsm-gateway or lsm-cluster
+
 ## 2.8.1 (November 10, 2024)
 
 FEATURES
