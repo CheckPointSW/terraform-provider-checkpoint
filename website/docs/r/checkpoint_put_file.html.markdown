@@ -9,6 +9,7 @@ description: |-
 # Resource: checkpoint_put_file
 
 This resource allows you to add a new file to a Check Point machine.
+<br>NOTE: This is GAIA API resource and require set provider context to `gaia_api`.
 
 ## Example Usage
 

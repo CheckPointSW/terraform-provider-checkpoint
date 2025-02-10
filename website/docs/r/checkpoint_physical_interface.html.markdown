@@ -9,6 +9,7 @@ description: |-
 # Resource: checkpoint_physical_interface
 
 This resource allows you to set a Physical interface.
+<br>NOTE: This is GAIA API resource and require set provider context to `gaia_api`.
 
 ## Example Usage
 

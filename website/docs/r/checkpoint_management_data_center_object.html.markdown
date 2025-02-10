@@ -33,15 +33,14 @@ The following arguments are supported:
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `comments` - (Optional) Comments string.
 * `tags` - (Optional) Collection of tag identifiers.
-* `groups` - (Optional)Collection of group identifiers.
+* `groups` - (Optional) Collection of group identifiers.
+* `wait_for_object_sync` - (Optional) When set to true, the provider will wait for object sync with the management server.
 * `uid_in_data_center` -  Unique identifier of the object in the Data Center.
 * `data_center` - The Data Center the object is on.
 * `updated_on_data_center` - Last update time in the Data Center
 * `deleted` - Indicates if the object is inaccessible or deleted on Data Center Server.
 * `type_in_data_center` - Object type in Data Center.
 * `additional_properties` - Additional properties on the object.
-
-
 
 `data_center` supports the following:
 * `name` - Object name. Should be unique in the domain.

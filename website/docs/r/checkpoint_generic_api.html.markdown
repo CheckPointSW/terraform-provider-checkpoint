@@ -10,7 +10,7 @@ This resource allows you to execute generic Management API calls.
 
 This resource allows you to execute Check Point generic Management API or GAIA API.<br>
 See the [Management API reference](https://sc1.checkpoint.com/documents/latest/APIs/index.html) or [GAIA API reference](https://sc1.checkpoint.com/documents/latest/GaiaAPIs/index.html) for a complete list of APIs you can run on your Check Point server.<br>
-<b>NOTE:</b> If you configure the provider [context](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#context-1) to `gaia_api` you can run only GAIA API and GAIA resources. Management API or any other resource will not be supported.
+<b>NOTE:</b> When configure provider [context](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#context-1) to `gaia_api` you can run only GAIA API. Management API will not be supported.
 
 ## Example Usage
 

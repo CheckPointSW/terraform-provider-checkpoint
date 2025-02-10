@@ -6,11 +6,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"strconv"
+	"time"
 )
 
 func resourceDataCenterObject() *schema.Resource {
 	return &schema.Resource{
-
 		Create: createManagementDataCenterObject,
 		Read:   readManagementDataCenterObject,
 		Update: updateManagementDataCenterObject,
@@ -21,7 +21,6 @@ func resourceDataCenterObject() *schema.Resource {
 				Optional:    true,
 				Description: "Name of the Data Center Server the object is in.",
 			},
-
 			"data_center_uid": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -181,6 +180,11 @@ func resourceDataCenterObject() *schema.Resource {
 					},
 				},
 			},
+			"wait_for_object_sync": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "When set to true, the provider will wait for object sync with the management server",
+			},
 		},
 	}
 }
@@ -234,12 +238,44 @@ func createManagementDataCenterObject(d *schema.ResourceData, m interface{}) err
 		payload["ignore-errors"] = v.(bool)
 	}
 
-	AddDataCenterObjectRes, _ := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	AddDataCenterObjectRes, err := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
 	if !AddDataCenterObjectRes.Success {
 		return fmt.Errorf(AddDataCenterObjectRes.ErrorMsg)
 	}
 
 	d.SetId(AddDataCenterObjectRes.GetData()["uid"].(string))
+
+	if doWait, ok := d.GetOkExists("wait_for_object_sync"); ok {
+		if doWait.(bool) {
+			log.Println("Wait for data center object sync")
+			objUidInDataCenter := AddDataCenterObjectRes.GetData()["uid-in-data-center"].(string)
+			dataCenterUid := AddDataCenterObjectRes.GetData()["data-center"].(map[string]interface{})["uid"].(string)
+			showDataCenterContentPayload := make(map[string]interface{})
+			showDataCenterContentPayload["data-center-uid"] = dataCenterUid
+			showDataCenterContentPayload["uid-in-data-center"] = objUidInDataCenter
+			const maxRetry = 30
+			retry := 1
+			for retry < maxRetry {
+				showDataCenterContentRes, _ := client.ApiCallSimple("show-data-center-content", showDataCenterContentPayload)
+				if showDataCenterContentRes.Success {
+					showDataCenterContentData := showDataCenterContentRes.GetData()
+					if len(showDataCenterContentData["objects"].([]interface{})) > 0 {
+						obj := showDataCenterContentData["objects"].([]interface{})[0].(map[string]interface{})
+						if objUidInDataCenter == obj["uid-in-data-center"].(string) {
+							log.Println("Found data center object. Exiting...")
+							break
+						}
+					}
+				}
+				log.Println("Wait for data center object... sleeping for 10 seconds")
+				time.Sleep(10 * time.Second)
+				retry++
+			}
+		}
+	}
 
 	return readManagementDataCenterObject(d, m)
 }

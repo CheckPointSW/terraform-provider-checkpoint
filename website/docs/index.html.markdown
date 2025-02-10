@@ -30,17 +30,38 @@ terraform {
 
 # Configure Check Point Provider for Management API
 provider "checkpoint" {
-  server   = "192.0.2.1"
+  server = "192.0.2.1"
   username = "aa"
   password = "aaaa"
-  context  = "web_api"
+  context = "web_api"
   session_name = "Terraform session"
 }
 
 # Create network object
 resource "checkpoint_management_network" "network" {
-  name         = "My network"
-  subnet4      = "192.0.2.0"
+  name = "My network"
+  subnet4 = "192.0.2.0"
+  mask_length4 = "24"
+  # ...   
+}
+```
+
+```hcl
+# Configure Check Point Provider for Management API for specific domain
+provider "checkpoint" {
+  server = "192.0.2.1"
+  username = "aa"
+  password = "aaaa"
+  context = "web_api"
+  domain = "MyDomain"
+  session_file_name = "mydomain.json"
+  session_name = "Terraform session"
+}
+
+# Create network object
+resource "checkpoint_management_network" "network" {
+  name = "My network"
+  subnet4 = "192.0.2.0"
   mask_length4 = "24"
   # ...   
 }
@@ -49,10 +70,10 @@ resource "checkpoint_management_network" "network" {
 ```hcl
 # Configure Check Point Provider for GAIA API
 provider "checkpoint" {
-  server   = "192.0.2.1"
+  server = "192.0.2.1"
   username = "gaia_user"
   password = "gaia_password"
-  context  = "gaia_api"
+  context = "gaia_api"
 }
 
 # Set machine hostname
@@ -94,8 +115,11 @@ The following arguments are supported:
   the `CHECKPOINT_TIMEOUT` environment variable. Default value is `120` seconds.
 * `cloud_mgmt_id` - (Optional) Smart-1 Cloud management UID. This can also be defined via
   the `CHECKPOINT_CLOUD_MGMT_ID` environment variable.
-* `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. This can also be defined via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
-
+* `auto_publish_batch_size` - (Optional) Number of batch size to automatically run publish. This can also be defined via
+  the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
+* `ignore_server_certificate` - (Optional) Indicates that the client should not check the server's certificate. This can also be defined via
+  the `CHECKPOINT_IGNORE_SERVER_CERTIFICATE` environment variable.
+  
 ## Authentication
 
 Check Point Provider offers providing credentials for authentication. The following methods are supported:
@@ -109,41 +133,43 @@ Usage with username and password:
 
 ```hcl
 provider "checkpoint" {
-  server   = "192.0.2.1"
+  server = "192.0.2.1"
   username = "aa"
   password = "aaaa"
-  domain   = "Domain Name"
-  context  = "web_api"
+  domain = "MyDomain"
+  session_file_name = "mydomain.json"
+  context = "web_api"
 }
 ```
 
 Usage with API key:
 ```hcl
 provider "checkpoint" {
-  server   = "192.0.2.1"
-  api_key  = "tBdloE9eOYzzSQicNxS7mA=="
-  domain   = "Domain Name"
-  context  = "web_api"
+  server = "192.0.2.1"
+  api_key = "tBdloE9eOYzzSQicNxS7mA=="
+  domain = "MyDomain"
+  session_file_name = "mydomain.json"
+  context = "web_api"
 }
 ```
 
 Usage for Smart-1 Cloud:
 ```hcl
 provider "checkpoint" {
-  server   = "chkp-vmnc6s4y.maas.checkpoint.com"
-  api_key  = "tBdloE9eOYzzSQicNxS7mA=="
+  server = "chkp-vmnc6s4y.maas.checkpoint.com"
+  api_key = "tBdloE9eOYzzSQicNxS7mA=="
   cloud_mgmt_id = "de9a9b08-c7c7-436e-a64a-a54136301701"
-  context  = "web_api"
+  context = "web_api"
 }
 ```
 
 Or for GAIA API:
 ```hcl
 provider "checkpoint" {
-  server   = "192.0.2.1"
+  server = "192.0.2.1"
   username = "gaia_user"
   password = "gaia_password"
-  context  = "gaia_api"
+  context = "gaia_api"
 }
 ```
 
@@ -159,17 +185,18 @@ $ export CHECKPOINT_SERVER="192.0.2.1"
 $ export CHECKPOINT_USERNAME="aa"
 $ export CHECKPOINT_PASSWORD="aaaa"
 $ export CHECKPOINT_CONTEXT="web_api"
-$ export CHECKPOINT_DOMAIN="Domain Name"
+$ export CHECKPOINT_DOMAIN="MyDomain"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
 $ export CHECKPOINT_SESSION_NAME="Terraform session name"
 $ export CHECKPOINT_SESSION_DESCRIPTION="Terraform session description"
-$ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_SESSION_FILE_NAME="mydomain.json"
 $ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
 $ export CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE=100
+$ export CHECKPOINT_IGNORE_SERVER_CERTIFICATE=false
  ```
 
 Usage with api key:
@@ -178,17 +205,18 @@ Usage with api key:
 $ export CHECKPOINT_SERVER="192.0.2.1"
 $ export CHECKPOINT_API_KEY="tBdloE9eOYzzSQicNxS7mA=="
 $ export CHECKPOINT_CONTEXT="web_api"
-$ export CHECKPOINT_DOMAIN="Domain Name"
+$ export CHECKPOINT_DOMAIN="MyDomain"
 $ export CHECKPOINT_TIMEOUT=10
 $ export CHECKPOINT_PORT=443
 $ export CHECKPOINT_SESSION_NAME="Terraform session name"
 $ export CHECKPOINT_SESSION_DESCRIPTION="Terraform session description"
-$ export CHECKPOINT_SESSION_FILE_NAME="sid.json"
+$ export CHECKPOINT_SESSION_FILE_NAME="mydomain.json"
 $ export CHECKPOINT_SESSION_TIMEOUT=600
 $ export CHECKPOINT_PROXY_HOST="1.2.3.4"
 $ export CHECKPOINT_PROXY_PORT="123"
 $ export CHECKPOINT_CLOUD_MGMT_ID="de9a9b08-c7c7-436e-a64a-a54136301701"
 $ export CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE=100
+$ export CHECKPOINT_IGNORE_SERVER_CERTIFICATE=false
  ```
 
 Then configure the Check Point Provider as following:
@@ -199,8 +227,8 @@ provider "checkpoint" {}
 
 # Create network object
 resource "checkpoint_management_network" "network" {
-  name         = "My network"
-  subnet4      = "192.0.2.0"
+  name = "My network"
+  subnet4 = "192.0.2.0"
   mask_length4 = "24"
   # ...
 }
@@ -377,7 +405,7 @@ Use the following resource configuration block:
 
 ```hcl
 resource "checkpoint_management_host" "host" {
-  name         = "myhost"
+  name = "myhost"
   ipv4_address = "1.1.1.1"
 }
 ```
@@ -399,5 +427,7 @@ This section describes best practices for working with the Check Point provider.
 * Keep on object name uniqueness in your environment.
 * Use object name when reference to an object (avoid use of object UID).
 * Use post apply scripts (e.g. publish, install policy, logout) to run actions after apply your changes. Terraform runs in parallel and because of that we can't predict the order of when changes will execute, running post apply scripts will ensure to run last after all changes submitted successfully.
-* Create implicit / explicit dependencies between resources or modules. Terraform uses this dependency information to determine the correct order in which to create the different resources. To do so, it creates a dependency graph of all of the resources defined by the configuration. For more information, please refer [here](https://developer.hashicorp.com/terraform/tutorials/configuration-language/dependencies#dependencies). 
-* When configure the provider [context](https://registry.terraform.io/providers/CheckPointSW/checkpoint/latest/docs#context-1) to `gaia_api` you can run only GAIA resources. Management resources will not be supported.
+* Create implicit / explicit dependencies between resources or modules. Terraform uses this dependency information to determine the correct order in which to create the different resources. To do so, it creates a dependency graph of all of the resources defined by the configuration. For more information, please refer [here](https://developer.hashicorp.com/terraform/tutorials/configuration-language/dependencies#dependencies).
+* Keep on unique `session_file_name` when configure more than one provider for authentication purposes.
+* Resources and Data Sources that start with `checkpoint_management_*` using Management API and require set context to `web_api`. For GAIA API resources set context to `gaia_api`.
+* When configure provider context to `gaia_api` you can run only GAIA resources. Management resources will not be supported.
