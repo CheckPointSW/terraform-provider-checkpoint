@@ -10,7 +10,8 @@ import (
 
 func dataSourceManagementNuageDataCenterServer() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceNuageDataCenterServerRead,
+		Read:               dataSourceNuageDataCenterServerRead,
+		DeprecationMessage: "This resource will be deprecated In R82.10",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
