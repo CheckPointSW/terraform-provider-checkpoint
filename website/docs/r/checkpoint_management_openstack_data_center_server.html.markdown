@@ -24,9 +24,9 @@ resource "checkpoint_management_openstack_data_center_server" "testOpenStack" {
 
 The following arguments are supported:
 
-* `name` - (Required) Object name.
-* `hostname` - (Required) URL of the OpenStack server. http(s)://<host>:<port>/<version>Example: https://1.2.3.4:5000/v2.0
-* `username` - (Required) Username of the OpenStack server. To login to specific domain insert domain name before username. Example: <domain>/<username>
+* `name` - (**Required**) Object name.
+* `hostname` - (**Required**) URL of the OpenStack server. <br>Format: http(s):\//\<host\>:\<port\>/\<version\><br>Example: https://1.2.3.4:5000/v2.0
+* `username` - (**Required**) Username of the OpenStack server. To login to specific domain insert domain name before username. Example: <domain>/<username>
 * `password` - (Optional)  Password of the OpenStack server.
 * `password_base64` - (Optional) Password of the OpenStack server encoded in Base64.
 * `certificate_fingerprint` - (Optional) Specify the SHA-1 or SHA-256 fingerprint of the Data Center Server's certificate.

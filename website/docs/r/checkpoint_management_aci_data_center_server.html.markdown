@@ -24,9 +24,9 @@ resource "checkpoint_management_aci_data_center_server" "testAci" {
 
 The following arguments are supported:
 
-* `name` - (Required) Object name.
-* `urls` - (Required) Address of APIC cluster members. Example: http(s)://<host1 ip/url>.
-* `username` - (Required) User ID of the Cisco APIC server. When using Login Domains use the following syntax:apic:<domain>\<username>.
+* `name` - (**Required**) Object name.
+* `urls` - (**Required**) Address of APIC cluster members. <br>Example: http(s)://<host1 ip/url>.
+* `username` - (**Required**) User ID of the Cisco APIC server. When using Login Domains use the following syntax:<br>apic:\<domain\>\\\<username\>
 * `password` - (Optional)  Password of the Cisco APIC server.
 * `password_base64` - (Optional) Password of the Cisco APIC server encoded in Base64.
 * `certificate_fingerprint` - (Optional) Specify the SHA-1 or SHA-256 fingerprint of the Data Center Server's certificate.
