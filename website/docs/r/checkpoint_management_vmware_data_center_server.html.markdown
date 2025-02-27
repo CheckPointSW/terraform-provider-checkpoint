@@ -41,7 +41,7 @@ resource "checkpoint_management_vmware_data_center_server" "testNsxt" {
 The following arguments are supported:
 
 * `name` - (**Required**) Object name.
-* `type` - (**Required**) Object type. ~~nsx~~ or nsxt or globalnsxt or vcenter.
+* `type` - (**Required**) Object type. nsx or nsxt or globalnsxt or vcenter.
 * `hostname` - (**Required**) IP Address or hostname of the VMware server.
 * `username` - (**Required**) Username of the VMware server.
 * `password` - (Optional)  Password of the VMware server.
