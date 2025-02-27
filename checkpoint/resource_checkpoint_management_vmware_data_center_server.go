@@ -22,7 +22,7 @@ func resourceManagementVMwareDataCenterServer() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "VMWare object type. nsx or nsxt or vcenter.",
+				Description: "VMWare object type. nsx or nsxt or globalnsxt or vcenter.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -62,6 +62,16 @@ func resourceManagementVMwareDataCenterServer() *schema.Resource {
 				Optional:    true,
 				Description: "When set to false, the current Data Center Server's certificate should be trusted, either by providing the certificate-fingerprint argument or by relying on a previously trusted certificate of this hostname.\n\nWhen set to true, trust the current Data Center Server's certificate as-is.",
 				Default:     false,
+			},
+			"policy_mode": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "For nsxt type only.\nWhen set to false, the Data Center Server will use Manager Mode APIs.\n\nWhen set to true, the Data Center Server will use Policy Mode APIs.",
+			},
+			"import_vms": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "For nsxt type only. When set to true, the Data Center Server will import Virtual Machines as well.\nThis feature will create additional API requests toward NSX-T manager\n\nNote: importing Virtual Machines can only be enabled while using Policy Mode APIs.",
 			},
 			"tags": {
 				Type:        schema.TypeSet,
@@ -108,7 +118,19 @@ func createManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 	}
 
 	if v, ok := d.GetOk("type"); ok {
-		vmwareDataCenterServer["type"] = v.(string)
+		t := v.(string)
+		if t != "nsx" && t != "nsxt" && t != "globalnsxt" && t != "vcenter" {
+			return fmt.Errorf("invalid type: '%s'. Only 'nsx', 'nsxt', 'globalnsxt' or 'vcenter' are allowed", t)
+		}
+		vmwareDataCenterServer["type"] = t
+		if t == "nsxt" {
+			if pm, ok := d.GetOkExists("policy_mode"); ok {
+				vmwareDataCenterServer["policy-mode"] = pm.(bool)
+			}
+			if pm, ok := d.GetOkExists("import_vms"); ok {
+				vmwareDataCenterServer["import-vms"] = pm.(bool)
+			}
+		}
 	}
 
 	if v, ok := d.GetOk("hostname"); ok {
@@ -205,6 +227,7 @@ func readManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{})
 		_ = d.Set("name", v)
 	}
 
+	// "policy-mode" and "import-vms" in "properties"
 	if vmwareDataCenterServer["properties"] != nil {
 		propsJson, ok := vmwareDataCenterServer["properties"].([]interface{})
 		if ok {
@@ -212,7 +235,8 @@ func readManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{})
 				propMap := prop.(map[string]interface{})
 				propName := strings.ReplaceAll(propMap["name"].(string), "-", "_")
 				propValue := propMap["value"]
-				if propName == "unsafe_auto_accept" {
+				if propName == "unsafe_auto_accept" || propName == "policy_mode" || propName == "import_vms" {
+					// all of them are boolean type so need to convert properly
 					propValue, _ = strconv.ParseBool(propValue.(string))
 				}
 				_ = d.Set(propName, propValue)
@@ -301,6 +325,14 @@ func updateManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 
 	if d.HasChange("unsafe_auto_accept") {
 		vmwareDataCenterServer["unsafe-auto-accept"] = d.Get("unsafe_auto_accept")
+	}
+
+	if d.HasChange("policy_mode") {
+		vmwareDataCenterServer["policy-mode"] = d.Get("policy_mode")
+	}
+
+	if d.HasChange("import_vms") {
+		vmwareDataCenterServer["import-vms"] = d.Get("import_vms")
 	}
 
 	if d.HasChange("tags") {

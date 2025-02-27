@@ -25,17 +25,17 @@ func dataSourceManagementVMwareDataCenterServer() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Object type. nsx or nsxt or vmware.",
+				Description: "Object type. nsx, nsxt or vcenter or globalnsxt.",
 			},
 			"hostname": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "IP Address or hostname of the vCenter server.",
+				Description: "IP Address or hostname of the vmware server.",
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Username of the vCenter server",
+				Description: "Username of the vmware server",
 			},
 			"certificate_fingerprint": {
 				Type:        schema.TypeString,
@@ -111,7 +111,7 @@ func dataSourceVMwareDataCenterServerRead(d *schema.ResourceData, m interface{})
 				propMap := prop.(map[string]interface{})
 				propName := strings.ReplaceAll(propMap["name"].(string), "-", "_")
 				propValue := propMap["value"]
-				if propName == "unsafe_auto_accept" {
+				if propName == "unsafe_auto_accept" || propName == "policy_mode" || propName == "import_vms" {
 					propValue, _ = strconv.ParseBool(propValue.(string))
 				}
 				_ = d.Set(propName, propValue)
@@ -140,7 +140,9 @@ func dataSourceVMwareDataCenterServerRead(d *schema.ResourceData, m interface{})
 	}
 
 	if v := vmwareDataCenterServer["data-center-type"]; v != nil {
-		_ = d.Set("type", v)
+		if v == "vcenter" || v == "nsx" || v == "nsxt" || v == "globalnsxt" {
+			_ = d.Set("type", v)
+		}
 	}
 
 	if v := vmwareDataCenterServer["comments"]; v != nil {
