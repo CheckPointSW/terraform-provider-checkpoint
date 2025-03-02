@@ -24,9 +24,9 @@ resource "checkpoint_management_ise_data_center_server" "testIse" {
 
 The following arguments are supported:
 
-* `name` - (Required) Object name.
-* `hostnames` - (Required) IP address or hostname of the Cisco ISE administration Node(s).
-* `username` - (Required) Username of the ISE administrator.
+* `name` - (**Required**) Object name.
+* `hostnames` - (**Required**) IP address or hostname of the Cisco ISE administration Node(s).
+* `username` - (**Required**) Username of the ISE administrator.
 * `password` - (Optional)  Password of the ISE administrator.
 * `password_base64` - (Optional) Password of the ISE administrator encoded in Base64.
 * `certificate_fingerprint` - (Optional) Specify the SHA-1 or SHA-256 fingerprint of the Data Center Server's certificate.

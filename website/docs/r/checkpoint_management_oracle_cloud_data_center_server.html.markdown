@@ -26,12 +26,12 @@ resource "checkpoint_management_oracle_cloud_data_center_server" "testOracleClou
 
 The following arguments are supported:
 
-* `name` - (Required) Object name. Must be unique in the domain.
-* `authentication_method` - (Required) key-authentication uses the Service Account private key file to authenticate. vm-instance-authentication uses VM Instance to authenticate. This option requires the Security Management Server deployed in Oracle Cloud, and running in a dynamic group with the required permissions. 
-* `private_key` - (Required) An Oracle Cloud API key PEM file, encoded in base64. Required for authentication-method: key-authentication.
-* `key_user` - (Required) An Oracle Cloud user id associated with key. Required for authentication-method: key-authentication.
-* `key_tenant` - (Required) An Oracle Cloud tenancy id where the key was created. Required for authentication-method: key-authentication.
-* `key_region` - (Required) An Oracle Cloud region for where to create scanner. Required for authentication-method: key-authentication.
+* `name` - (**Required**) Object name. Must be unique in the domain.
+* `authentication_method` - (**Required**) key-authentication uses the Service Account private key file to authenticate. vm-instance-authentication uses VM Instance to authenticate. This option requires the Security Management Server deployed in Oracle Cloud, and running in a dynamic group with the required permissions. 
+* `private_key` - (**Required**) An Oracle Cloud API key PEM file, encoded in base64. Required for authentication-method: key-authentication.
+* `key_user` - (**Required**) An Oracle Cloud user id associated with key. Required for authentication-method: key-authentication.
+* `key_tenant` - (**Required**) An Oracle Cloud tenancy id where the key was created. Required for authentication-method: key-authentication.
+* `key_region` - (**Required**) An Oracle Cloud region for where to create scanner. Required for authentication-method: key-authentication.
 * `tags` - (Optional) Collection of tag identifiers.
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `comments` - (Optional) Comments string.

@@ -23,9 +23,9 @@ resource "checkpoint_management_kubernetes_data_center_server" "testKubernetes" 
 
 The following arguments are supported:
 
-* `name` - (Required) Object name.
-* `hostname` - (Required) IP address or hostname of the Kubernetes server.
-* `token_file` - (Required) Kubernetes access token encoded in base64.
+* `name` - (**Required**) Object name.
+* `hostname` - (**Required**) IP address or hostname of the Kubernetes server.
+* `token_file` - (**Required**) Kubernetes access token encoded in base64.
 * `ca_certificate` - (Optional) The Kubernetes public certificate key encoded in base64.
 * `unsafe_auto_accept` - (Optional) When set to false, the current Data Center Server's certificate should be trusted, either by providing the certificate-fingerprint argument or by relying on a previously trusted certificate of this hostname. When set to true, trust the current Data Center Server's certificate as-is.
 * `tags` - (Optional) Collection of tag identifiers. tags blocks are documented below.

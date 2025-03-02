@@ -26,9 +26,9 @@ resource "checkpoint_management_generic_data_center_server" "generic_test" {
 
 The following arguments are supported:
 
-* `name` - (Required) Object name.
-* `url` - (Required) URL of the JSON feed (e.g. https://example.com/file.json).
-* `interval` - (Required)    Update interval of the feed in seconds.
+* `name` - (**Required**) Object name.
+* `url` - (**Required**) URL of the JSON feed (e.g. https://example.com/file.json).
+* `interval` - (**Required**)    Update interval of the feed in seconds.
 * `custom_header` - (Optional) When set to false, The admin is not using Key and Value for a Custom Header in order to
   connect to the feed server. When set to true, The admin is using Key and Value for a Custom Header in order to connect
   to the feed server.
