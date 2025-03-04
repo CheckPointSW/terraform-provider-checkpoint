@@ -393,6 +393,8 @@ The table below shows the compatibility between the Terraform Release version an
 
 For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
 
+Limitations: CME for OCI is currently not supported by the Check Point Provider.
+
 ## Import Resources
 
 In order to import resource, use the `terraform import` command with object unique identifier.
