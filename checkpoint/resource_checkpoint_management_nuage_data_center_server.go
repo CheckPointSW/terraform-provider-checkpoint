@@ -18,6 +18,7 @@ func resourceManagementNuageDataCenterServer() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		DeprecationMessage: "This resource will be deprecated In R82.10",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
