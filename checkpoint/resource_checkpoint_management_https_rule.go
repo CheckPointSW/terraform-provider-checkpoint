@@ -460,8 +460,18 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	httpsRule := make(map[string]interface{})
 
+    httpsRule["uid"] = d.Id()
+
 	if ok := d.HasChange("rule_number"); ok {
 		httpsRule["rule-number"] = d.Get("rule_number")
+	}
+
+	if ok := d.HasChange("layer"); ok {
+		oldLayer, newLayer := d.GetChange("layer")
+		httpsRule["layer"] = oldLayer
+		httpsRule["new-layer"] = newLayer
+	} else {
+		httpsRule["layer"] = d.Get("layer")
 	}
 
 	if ok := d.HasChange("name"); ok {
