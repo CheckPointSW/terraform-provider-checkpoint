@@ -467,7 +467,7 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if ok := d.HasChange("layer"); ok {
-		httpsRule["layer"] = d.GetChange("layer")
+		_, httpsRule["layer"] = d.GetChange("layer")
 	} else {
 		httpsRule["layer"] = d.Get("layer")
 	}
