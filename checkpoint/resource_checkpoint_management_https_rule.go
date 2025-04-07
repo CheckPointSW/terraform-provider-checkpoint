@@ -608,14 +608,6 @@ func deleteManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 		"uid":   d.Id(),
 		"layer": d.Get("layer"),
 	}
-	if v, ok := d.GetOkExists("ignore_warnings"); ok {
-		httpsRulePayload["ignore-warnings"] = v.(bool)
-	}
-
-	if v, ok := d.GetOkExists("ignore_errors"); ok {
-		httpsRulePayload["ignore-errors"] = v.(bool)
-	}
-	log.Println("Delete HttpsRule")
 
 	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsRuleRes.Success {
