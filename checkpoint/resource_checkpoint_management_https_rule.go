@@ -462,11 +462,11 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	httpsRule["uid"] = d.Id()
 
+	httpsRule["layer"] = d.Get("layer")
+
 	if ok := d.HasChange("rule_number"); ok {
 		httpsRule["rule-number"] = d.Get("rule_number")
 	}
-
-	httpsRule["layer"] = d.Get("layer")
 
 	if ok := d.HasChange("name"); ok {
 		_, httpsRule["new-name"] = d.GetChange("name")
