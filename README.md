@@ -19,7 +19,7 @@ Requirements
 -	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
 -	[Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
 
-Building The Provider
+Building the provider
 ---------------------
 1. Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-checkpoint`
 
@@ -41,7 +41,7 @@ $ make build
 
 4. For local development, update `dev_overrides` configuration file. See the next section below.
 
-Developing the Provider
+Developing the provider
 ---------------------------
 
 If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.11+ is *required*).
