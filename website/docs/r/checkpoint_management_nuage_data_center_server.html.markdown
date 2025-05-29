@@ -9,6 +9,9 @@ description: |- This resource allows you to execute Check Point nuage data cente
 
 This resource allows you to execute Check Point Nuage Data Center Server.
 
+### Note:
+Nuage DC is deprecated from R82.10 and above
+
 ## Example Usage
 
 ```hcl
