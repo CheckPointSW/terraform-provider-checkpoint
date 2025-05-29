@@ -460,16 +460,16 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	httpsRule := make(map[string]interface{})
 
+	httpsRule["uid"] = d.Id()
+
+	httpsRule["layer"] = d.Get("layer")
+
 	if ok := d.HasChange("rule_number"); ok {
 		httpsRule["rule-number"] = d.Get("rule_number")
 	}
 
 	if ok := d.HasChange("name"); ok {
-		oldName, newName := d.GetChange("name")
-		httpsRule["name"] = oldName
-		httpsRule["new-name"] = newName
-	} else {
-		httpsRule["name"] = d.Get("name")
+		httpsRule["new-name"] = d.Get("name")
 	}
 
 	if d.HasChange("destination") {
@@ -608,14 +608,6 @@ func deleteManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 		"uid":   d.Id(),
 		"layer": d.Get("layer"),
 	}
-	if v, ok := d.GetOkExists("ignore_warnings"); ok {
-		httpsRulePayload["ignore-warnings"] = v.(bool)
-	}
-
-	if v, ok := d.GetOkExists("ignore_errors"); ok {
-		httpsRulePayload["ignore-errors"] = v.(bool)
-	}
-	log.Println("Delete HttpsRule")
 
 	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsRuleRes.Success {
