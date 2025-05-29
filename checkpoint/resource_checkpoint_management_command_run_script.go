@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"encoding/json"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
@@ -54,6 +55,11 @@ func resourceManagementRunScript() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"response": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Response message in JSON format",
+			},
 		},
 	}
 }
@@ -82,14 +88,36 @@ func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
 		payload["comments"] = v.(string)
 	}
 
-	RunScriptRes, _ := client.ApiCall("run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
-	if !RunScriptRes.Success {
-		return fmt.Errorf(RunScriptRes.ErrorMsg)
+	runScriptRes, err := client.ApiCall("run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if !runScriptRes.Success {
+		return fmt.Errorf(runScriptRes.ErrorMsg)
+	}
+
+	taskIds := resolveTaskIds(runScriptRes.GetData())
+	_ = d.Set("tasks", taskIds)
+
+	var showTaskPayload = map[string]interface{}{}
+	showTaskPayload["task-id"] = taskIds
+	showTaskPayload["details-level"] = "full"
+	showTaskRes, err := client.ApiCallSimple("show-task", showTaskPayload)
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if !showTaskRes.Success {
+		return fmt.Errorf(showTaskRes.ErrorMsg)
+	}
+	jsonResponse, err := json.Marshal(showTaskRes.GetData())
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if jsonResponse != nil {
+		_ = d.Set("response", string(jsonResponse))
 	}
 
 	d.SetId("run-script-" + acctest.RandString(10))
-
-	_ = d.Set("tasks", resolveTaskIds(RunScriptRes.GetData()))
 
 	return readManagementRunScript(d, m)
 }

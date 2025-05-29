@@ -21,7 +21,7 @@ func resourceManagementInstallPolicy() *schema.Resource {
 			},
 			"targets": {
 				Type:        schema.TypeSet,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Description: "On what targets to execute this command. Targets may be identified by their name, or object unique identifier.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -55,20 +55,24 @@ func resourceManagementInstallPolicy() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "Relevant for the gateway clusters. If true, the policy is installed on all the cluster members. If the installation on a cluster member fails, don't install on that cluster.",
-				Default:     true,
 			},
 			"prepare_only": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
 				Description: "If true, prepares the policy for the installation, but doesn't install it on an installation target.",
-				Default:     false,
 			},
 			"revision": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Description: "The UID of the revision of the policy to install.",
+			},
+			"ignore_warnings": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Install policy ignoring policy mismatch warnings.",
 			},
 			"task_id": {
 				Type:        schema.TypeString,
@@ -99,23 +103,26 @@ func createManagementInstallPolicy(d *schema.ResourceData, m interface{}) error 
 	if v, ok := d.GetOk("targets"); ok {
 		payload["targets"] = v.(*schema.Set).List()
 	}
-	if v, ok := d.GetOk("access"); ok {
+	if v, ok := d.GetOkExists("access"); ok {
 		payload["access"] = v.(bool)
 	}
-	if v, ok := d.GetOk("desktop_security"); ok {
+	if v, ok := d.GetOkExists("desktop_security"); ok {
 		payload["desktop-security"] = v.(bool)
 	}
-	if v, ok := d.GetOk("qos"); ok {
+	if v, ok := d.GetOkExists("qos"); ok {
 		payload["qos"] = v.(bool)
 	}
-	if v, ok := d.GetOk("threat_prevention"); ok {
+	if v, ok := d.GetOkExists("threat_prevention"); ok {
 		payload["threat-prevention"] = v.(bool)
 	}
-	if v, ok := d.GetOk("install_on_all_cluster_members_or_fail"); ok {
+	if v, ok := d.GetOkExists("install_on_all_cluster_members_or_fail"); ok {
 		payload["install-on-all-cluster-members-or-fail"] = v.(bool)
 	}
 	if v, ok := d.GetOk("revision"); ok {
-		payload["revision"] = v.(bool)
+		payload["revision"] = v.(string)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		payload["ignore-warnings"] = v.(bool)
 	}
 
 	installPolicyRes, _ := client.ApiCall("install-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())

@@ -330,25 +330,33 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	network := make(map[string]interface{})
 
+	network["uid"] = d.Id()
+
 	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		network["name"] = oldName.(string)
-		network["new-name"] = newName.(string)
-	} else {
-		network["name"] = d.Get("name")
+		if v, ok := d.GetOk("name"); ok {
+			network["new-name"] = v.(string)
+		}
 	}
 
 	if ok := d.HasChange("subnet4"); ok {
-		network["subnet4"] = d.Get("subnet4")
+		if v, ok := d.GetOk("subnet4"); ok {
+			network["subnet4"] = v
+		}
 	}
 	if ok := d.HasChange("subnet6"); ok {
-		network["subnet6"] = d.Get("subnet6")
+		if v, ok := d.GetOk("subnet6"); ok {
+			network["subnet6"] = v
+		}
 	}
 	if ok := d.HasChange("mask_length4"); ok {
-		network["mask-length4"] = d.Get("mask_length4")
+		if v, ok := d.GetOk("mask_length4"); ok {
+			network["mask-length4"] = v
+		}
 	}
 	if ok := d.HasChange("mask_length6"); ok {
-		network["mask-length6"] = d.Get("mask_length6")
+		if v, ok := d.GetOk("mask_length6"); ok {
+			network["mask-length6"] = v
+		}
 	}
 
 	if ok := d.HasChange("nat_settings"); ok {
@@ -366,39 +374,47 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
 				res["ipv6-address"] = v.(string)
 			}
-			if d.HasChange("nat_settings.hide_behind") {
-				res["hide-behind"] = d.Get("nat_settings.hide_behind")
+			if v, ok := d.GetOk("nat_settings.hide_behind"); ok {
+				res["hide-behind"] = v
 			}
-			if d.HasChange("nat_settings.install_on") {
-				res["install-on"] = d.Get("nat_settings.install_on")
+			if v, ok := d.GetOk("nat_settings.install_on"); ok {
+				res["install-on"] = v
 			}
-			if d.HasChange("nat_settings.method") {
-				res["method"] = d.Get("nat_settings.method")
+			if v, ok := d.GetOk("nat_settings.method"); ok {
+				res["method"] = v
 			}
 
 			network["nat-settings"] = res
-		} else { //argument deleted - go back to defaults
-			network["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
+		//else { //argument deleted - go back to defaults
+		//	network["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
+		//}
 	}
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			network["tags"] = v.(*schema.Set).List()
-		} else {
-			oldTags, _ := d.GetChange("tags")
-			network["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
+		//else {
+		//	oldTags, _ := d.GetChange("tags")
+		//	network["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		//}
 	}
 
 	if ok := d.HasChange("broadcast"); ok {
-		network["broadcast"] = d.Get("broadcast")
+		if v, ok := d.GetOk("broadcast"); ok {
+			network["broadcast"] = v
+		}
 	}
 	if ok := d.HasChange("comments"); ok {
-		network["comments"] = d.Get("comments")
+		if v, ok := d.GetOk("comments"); ok {
+			network["comments"] = v
+		}
 	}
 	if ok := d.HasChange("color"); ok {
-		network["color"] = d.Get("color")
+		if v, ok := d.GetOk("color"); ok {
+			network["color"] = v
+		}
 	}
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		network["ignore-errors"] = v.(bool)
@@ -408,9 +424,19 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Network - Map = ", network)
-	setNetworkRes, _ := client.ApiCall("set-network", network, client.GetSessionID(), true, client.IsProxyUsed())
-	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+
+	if len(network) != 3 {
+		setNetworkRes, err := client.ApiCall("set-network", network, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil {
+			return fmt.Errorf(err.Error())
+		}
+		if !setNetworkRes.Success {
+			return fmt.Errorf(setNetworkRes.ErrorMsg)
+		}
+	} else {
+		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
 	}
 
 	return readManagementNetwork(d, m)

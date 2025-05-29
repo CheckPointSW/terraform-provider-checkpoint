@@ -365,12 +365,12 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	serviceTcp := make(map[string]interface{})
 
-	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		serviceTcp["name"] = oldName.(string)
-		serviceTcp["new-name"] = newName.(string)
-	} else {
-		serviceTcp["name"] = d.Get("name")
+	serviceTcp["uid"] = d.Id()
+
+	if ok := d.HasChange("name"); ok {
+		if v, ok := d.GetOk("name"); ok {
+			serviceTcp["new-name"] = v.(string)
+		}
 	}
 
 	if ok := d.HasChange("aggressive_aging"); ok {
@@ -379,74 +379,105 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 			res := make(map[string]interface{})
 
-			if d.HasChange("aggressive_aging.default_timeout") {
-				res["default-timeout"] = d.Get("aggressive_aging.default_timeout")
+			if v, ok := d.GetOk("aggressive_aging.default_timeout"); ok {
+				res["default-timeout"] = v
 			}
-			if d.HasChange("aggressive_aging.enable") {
-				res["enable"] = d.Get("aggressive_aging.enable")
+			if v, ok := d.GetOk("aggressive_aging.enable"); ok {
+				res["enable"] = v
 			}
-			if d.HasChange("aggressive_aging.timeout") {
-				res["timeout"] = d.Get("aggressive_aging.timeout")
+			if v, ok := d.GetOk("aggressive_aging.timeout"); ok {
+				res["timeout"] = v
 			}
-			if d.HasChange("aggressive_aging.use_default_timeout") {
-				res["use-default-timeout"] = d.Get("aggressive_aging.use_default_timeout")
+			if v, ok := d.GetOk("aggressive_aging.use_default_timeout"); ok {
+				res["use-default-timeout"] = v
 			}
 			serviceTcp["aggressive-aging"] = res
-		} else { //argument deleted - go back to defaults
-			defaultAggressiveAging := map[string]interface{}{
-				"enable":              true,
-				"timeout":             600,
-				"use-default-timeout": true,
-				"default-timeout":     0,
-			}
-			serviceTcp["aggressive-aging"] = defaultAggressiveAging
 		}
+		//else { //argument deleted - go back to defaults
+		//	defaultAggressiveAging := map[string]interface{}{
+		//		"enable":              true,
+		//		"timeout":             600,
+		//		"use-default-timeout": true,
+		//		"default-timeout":     0,
+		//	}
+		//	serviceTcp["aggressive-aging"] = defaultAggressiveAging
+		//}
 	}
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			serviceTcp["tags"] = v.(*schema.Set).List()
-		} else {
-			oldTags, _ := d.GetChange("tags")
-			serviceTcp["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
+		//else {
+		//	oldTags, _ := d.GetChange("tags")
+		//	serviceTcp["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		//}
 	}
 
 	if ok := d.HasChange("comments"); ok {
-		serviceTcp["comments"] = d.Get("comments")
+		if v, ok := d.GetOk("comments"); ok {
+			serviceTcp["comments"] = v
+		}
 	}
+
 	if ok := d.HasChange("keep_connections_open_after_policy_installation"); ok {
-		serviceTcp["keep-connections-open-after-policy-installation"] = d.Get("keep_connections_open_after_policy_installation")
+		if v, ok := d.GetOk("keep_connections_open_after_policy_installation"); ok {
+			serviceTcp["keep-connections-open-after-policy-installation"] = v
+		}
 	}
+
 	if ok := d.HasChange("match_by_protocol_signature"); ok {
-		serviceTcp["match-by-protocol-signature"] = d.Get("match_by_protocol_signature")
+		if v, ok := d.GetOk("match_by_protocol_signature"); ok {
+			serviceTcp["match-by-protocol-signature"] = v
+		}
 	}
+
 	if ok := d.HasChange("match_for_any"); ok {
-		serviceTcp["match-for-any"] = d.Get("match_for_any")
+		if v, ok := d.GetOk("match_for_any"); ok {
+			serviceTcp["match-for-any"] = v
+		}
 	}
 	if ok := d.HasChange("override_default_settings"); ok {
-		serviceTcp["override-default-settings"] = d.Get("override_default_settings")
+		if v, ok := d.GetOk("override_default_settings"); ok {
+			serviceTcp["override-default-settings"] = v
+		}
 	}
 	if ok := d.HasChange("port"); ok {
-		serviceTcp["port"] = d.Get("port")
+		if v, ok := d.GetOk("port"); ok {
+			serviceTcp["port"] = v
+		}
 	}
 	if ok := d.HasChange("protocol"); ok {
-		serviceTcp["protocol"] = d.Get("protocol")
+		if v, ok := d.GetOk("protocol"); ok {
+			serviceTcp["protocol"] = v
+		}
 	}
+
 	if ok := d.HasChange("session_timeout"); ok {
-		serviceTcp["session-timeout"] = d.Get("session_timeout")
+		if v, ok := d.GetOk("session_timeout"); ok {
+			serviceTcp["session-timeout"] = v
+		}
 	}
 	if ok := d.HasChange("source_port"); ok {
-		serviceTcp["source-port"] = d.Get("source_port")
+		if v, ok := d.GetOk("source_port"); ok {
+			serviceTcp["source-port"] = v
+		}
 	}
 	if ok := d.HasChange("sync_connections_on_cluster"); ok {
-		serviceTcp["sync-connections-on-cluster"] = d.Get("sync_connections_on_cluster")
+		if v, ok := d.GetOk("sync_connections_on_cluster"); ok {
+			serviceTcp["sync-connections-on-cluster"] = v
+		}
 	}
 	if ok := d.HasChange("use_default_session_timeout"); ok {
-		serviceTcp["use-default-session-timeout"] = d.Get("use_default_session_timeout")
+		if v, ok := d.GetOk("use_default_session_timeout"); ok {
+			serviceTcp["use-default-session-timeout"] = v
+		}
 	}
+
 	if ok := d.HasChange("color"); ok {
-		serviceTcp["color"] = d.Get("color")
+		if v, ok := d.GetOk("color"); ok {
+			serviceTcp["color"] = v
+		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
@@ -457,9 +488,19 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Service Tcp - Map = ", serviceTcp)
-	setServiceTcpRes, _ := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
-	if !setServiceTcpRes.Success {
-		return fmt.Errorf(setServiceTcpRes.ErrorMsg)
+
+	if len(serviceTcp) != 3 {
+		setServiceTcpRes, err := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil {
+			fmt.Errorf(err.Error())
+		}
+		if !setServiceTcpRes.Success {
+			return fmt.Errorf(setServiceTcpRes.ErrorMsg)
+		}
+	} else {
+		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
 	}
 
 	return readManagementServiceTcp(d, m)
