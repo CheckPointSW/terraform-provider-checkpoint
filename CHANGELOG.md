@@ -2,7 +2,7 @@
 
 ENHANCEMENTS
 * Add new field with JSON response to `checkpoint_management_task`, `checkpoint_management_show_objects` and `checkpoint_management_run_script`.
-* Update API calls will not send null values in `checkpoint_management_simple_cluster`, `checkpoint_management_simple_gateway`, `checkpoint_management_host`, `checkpoint_management_network`, `checkpoint_management_service_tcp` and `checkpoint_management_service_udp`
+* Update API calls will not send null values or undefined fields in `checkpoint_management_simple_cluster`, `checkpoint_management_simple_gateway`, `checkpoint_management_host`, `checkpoint_management_network`, `checkpoint_management_service_tcp` and `checkpoint_management_service_udp`
 
 BUG FIXES
 * Fix `checkpoint_management_https_rule` resource
