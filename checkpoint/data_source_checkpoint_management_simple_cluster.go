@@ -879,7 +879,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Use custom proxy settings for this network object.",
-							Default:     false,
+							//Default:     false,
 						},
 						"proxy_server": {
 							Type:        schema.TypeString,
@@ -890,7 +890,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "N/A",
-							Default:     80,
+							//Default:     80,
 						},
 					},
 				},
@@ -1531,6 +1531,11 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Computed:    true,
 							Description: "Stop logging when free disk space below threshold.",
 						},
+						"stop_logging_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stop logging when free disk space below metrics.",
+						},
 						"turn_on_qos_logging": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -1826,6 +1831,11 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Gateway VPN domain type.",
+						},
+						"vpn_domain_exclude_external_ip_addresses": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Exclude the external IP addresses from the VPN domain of this Security Gateway.",
 						},
 					},
 				},
@@ -2782,6 +2792,9 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 		if v := vpnSettingsJson["vpn-domain"]; v != nil {
 			vpnSettingsState["vpn_domain"] = v.(map[string]interface{})["name"]
 		}
+		if v := vpnSettingsJson["vpn-domain-exclude-external-ip-addresses"]; v != nil {
+			vpnSettingsState["vpn_domain_exclude_external_ip_addresses"] = v
+		}
 		if v := vpnSettingsJson["remote-access"]; v != nil {
 			remoteAccessJson := v.(map[string]interface{})
 			remoteAccessState := make(map[string]interface{})
@@ -2908,9 +2921,9 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			}
 			vpnSettingsState["office_mode"] = officeModeState
 		}
-		_ = d.Set("vpn-settings", vpnSettingsState)
+		_ = d.Set("vpn_settings", vpnSettingsState)
 	} else {
-		_ = d.Set("vpn-settings", nil)
+		_ = d.Set("vpn_settings", nil)
 	}
 
 	if v := cluster["tags"]; v != nil {

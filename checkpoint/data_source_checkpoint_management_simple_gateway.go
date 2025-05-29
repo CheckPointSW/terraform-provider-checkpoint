@@ -1803,6 +1803,11 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Computed:    true,
 							Description: "Gateway VPN domain type.",
 						},
+						"vpn_domain_exclude_external_ip_addresses": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Exclude the external IP addresses from the VPN domain of this Security Gateway.",
+						},
 					},
 				},
 			},
@@ -2734,6 +2739,9 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		}
 		if v := vpnSettingsJson["vpn-domain"]; v != nil {
 			vpnSettingsState["vpn_domain"] = v.(map[string]interface{})["name"]
+		}
+		if v := vpnSettingsJson["vpn-domain-exclude-external-ip-addresses"]; v != nil {
+			vpnSettingsState["vpn_domain_exclude_external_ip_addresses"] = v
 		}
 		if v := vpnSettingsJson["remote-access"]; v != nil {
 			remoteAccessJson := v.(map[string]interface{})

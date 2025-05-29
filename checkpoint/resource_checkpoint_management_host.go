@@ -615,12 +615,12 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	host := make(map[string]interface{})
 
+	host["uid"] = d.Id()
+
 	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		host["name"] = oldName
-		host["new-name"] = newName
-	} else {
-		host["name"] = d.Get("name")
+		if v, ok := d.GetOk("name"); ok {
+			host["new-name"] = v
+		}
 	}
 
 	if d.HasChange("interfaces") {
@@ -651,54 +651,56 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 				if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".mask_length6"); ok {
 					payload["mask-length6"] = v.(int)
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_warnings") {
-					payload["ignore-warnings"] = d.Get("interfaces." + strconv.Itoa(i) + ".ignore_warnings")
+				if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".comments"); ok {
+					payload["comments"] = v
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".color") {
-					payload["color"] = d.Get("interfaces." + strconv.Itoa(i) + ".color")
+				if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".color"); ok {
+					payload["color"] = v
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".ignore_errors") {
-					payload["ignore-errors"] = d.Get("interfaces." + strconv.Itoa(i) + ".ignore_errors")
+				if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".ignore_warnings"); ok {
+					payload["ignore-warnings"] = v
 				}
-				if d.HasChange("interfaces." + strconv.Itoa(i) + ".comments") {
-					payload["comments"] = d.Get("interfaces." + strconv.Itoa(i) + ".comments")
+				if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".ignore_errors"); ok {
+					payload["ignore-errors"] = v
 				}
 				interfacesPayload = append(interfacesPayload, payload)
 			}
 
 			host["interfaces"] = interfacesPayload
 
-		} else { //delete all of the list
-			oldInterfaces, _ := d.GetChange("interfaces")
-			var interfacesToDelete []interface{}
-			for _, inter := range oldInterfaces.([]interface{}) {
-				interfacesToDelete = append(interfacesToDelete, inter.(map[string]interface{})["name"].(string))
-			}
-			host["interfaces"] = map[string]interface{}{"remove": interfacesToDelete}
 		}
-	}
-
-	if v, ok := d.GetOkExists("ignore_errors"); ok {
-		host["ignore-errors"] = v.(bool)
-	}
-	if v, ok := d.GetOkExists("ignore_warnings"); ok {
-		host["ignore-warnings"] = v.(bool)
+		//else { //delete all of the list
+		//	oldInterfaces, _ := d.GetChange("interfaces")
+		//	var interfacesToDelete []interface{}
+		//	for _, inter := range oldInterfaces.([]interface{}) {
+		//		interfacesToDelete = append(interfacesToDelete, inter.(map[string]interface{})["name"].(string))
+		//	}
+		//	host["interfaces"] = map[string]interface{}{"remove": interfacesToDelete}
+		//}
 	}
 
 	if ok := d.HasChange("comments"); ok {
-		host["comments"] = d.Get("comments")
+		if v, ok := d.GetOk("comments"); ok {
+			host["comments"] = v
+		}
 	}
 
 	if ok := d.HasChange("color"); ok {
-		host["color"] = d.Get("color")
+		if v, ok := d.GetOk("color"); ok {
+			host["color"] = v
+		}
 	}
 
 	if ok := d.HasChange("ipv4_address"); ok {
-		host["ipv4-address"] = d.Get("ipv4_address")
+		if v, ok := d.GetOk("ipv4_address"); ok {
+			host["ipv4-address"] = v
+		}
 	}
 
 	if ok := d.HasChange("ipv6_address"); ok {
-		host["ipv6-address"] = d.Get("ipv6_address")
+		if v, ok := d.GetOk("ipv6_address"); ok {
+			host["ipv6-address"] = v
+		}
 	}
 
 	if ok := d.HasChange("nat_settings"); ok {
@@ -716,29 +718,31 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 			if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
 				res["ipv6-address"] = v.(string)
 			}
-			if d.HasChange("nat_settings.hide_behind") {
-				res["hide-behind"] = d.Get("nat_settings.hide_behind")
+			if v, ok := d.GetOk("nat_settings.hide_behind"); ok {
+				res["hide-behind"] = v
 			}
-			if d.HasChange("nat_settings.install_on") {
-				res["install-on"] = d.Get("nat_settings.install_on")
+			if v, ok := d.GetOk("nat_settings.install_on"); ok {
+				res["install-on"] = v
 			}
-			if d.HasChange("nat_settings.method") {
-				res["method"] = d.Get("nat_settings.method")
+			if v, ok := d.GetOk("nat_settings.method"); ok {
+				res["method"] = v
 			}
 
 			host["nat-settings"] = res
-		} else { //argument deleted - go back to defaults
-			host["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
 		}
+		//else { //argument deleted - go back to defaults
+		//	host["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
+		//}
 	}
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			host["tags"] = v.(*schema.Set).List()
-		} else {
-			oldTags, _ := d.GetChange("tags")
-			host["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
+		//else {
+		//	oldTags, _ := d.GetChange("tags")
+		//	host["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		//}
 	}
 
 	if ok := d.HasChange("host_servers"); ok {
@@ -751,52 +755,64 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 
 				hostServersPayload := make(map[string]interface{})
 
-				if d.HasChange("host_servers.0.dns_server") {
-					hostServersPayload["dns-server"] = d.Get("host_servers.0.dns_server").(bool)
+				if v, ok := d.GetOkExists("host_servers.0.dns_server"); ok {
+					hostServersPayload["dns-server"] = v.(bool)
 				}
-				if d.HasChange("host_servers.0.mail_server") {
-					hostServersPayload["mail-server"] = d.Get("host_servers.0.mail_server").(bool)
+				if v, ok := d.GetOkExists("host_servers.0.mail_server"); ok {
+					hostServersPayload["mail-server"] = v.(bool)
 				}
-				if d.HasChange("host_servers.0.web_server") {
-					hostServersPayload["web-server"] = d.Get("host_servers.0.web_server").(bool)
+				if v, ok := d.GetOkExists("host_servers.0.web_server"); ok {
+					hostServersPayload["web-server"] = v.(bool)
 				}
 
-				if d.HasChange("host_servers.0.web_server_config") {
-
-					hostServersPayload["web-server"] = d.Get("host_servers.0.web_server").(bool)
+				if _, ok := d.GetOk("host_servers.0.web_server_config"); ok {
 					webServerConfigPayLoad := make(map[string]interface{})
 
-					if d.HasChange("host_servers.0.web_server_config.0.additional_ports") {
-						webServerConfigPayLoad["additional-ports"] = d.Get("host_servers.0.web_server_config.0.additional_ports").(*schema.Set).List()
+					if v, ok := d.GetOk("host_servers.0.web_server_config.0.additional_ports"); ok {
+						webServerConfigPayLoad["additional-ports"] = v.(*schema.Set).List()
 					}
-					if d.HasChange("host_servers.0.web_server_config.0.application_engines") {
-						webServerConfigPayLoad["application-engines"] = d.Get("host_servers.0.web_server_config.0.application_engines").(*schema.Set).List()
+					if v, ok := d.GetOk("host_servers.0.web_server_config.0.application_engines"); ok {
+						webServerConfigPayLoad["application-engines"] = v.(*schema.Set).List()
 					}
-					//boolean nested field - isn't recognized by diff on the first time created
-					webServerConfigPayLoad["listen-standard-port"] = d.Get("host_servers.0.web_server_config.0.listen_standard_port")
-
-					if d.HasChange("host_servers.0.web_server_config.0.operating_system") {
-						webServerConfigPayLoad["operating-system"] = d.Get("host_servers.0.web_server_config.0.operating_system").(string)
+					if v, ok := d.GetOkExists("host_servers.0.web_server_config.0.listen_standard_port"); ok {
+						hostServersPayload["listen-standard-port"] = v.(bool)
 					}
-					if d.HasChange("host_servers.0.web_server_config.0.protected_by") {
-						webServerConfigPayLoad["protected-by"] = d.Get("host_servers.0.web_server_config.0.protected_by").(string)
+					if v, ok := d.GetOk("host_servers.0.web_server_config.0.operating_system"); ok {
+						webServerConfigPayLoad["operating-system"] = v.(string)
+					}
+					if v, ok := d.GetOk("host_servers.0.web_server_config.0.protected_by"); ok {
+						webServerConfigPayLoad["protected-by"] = v.(string)
 					}
 					hostServersPayload["web-server-config"] = webServerConfigPayLoad
 				}
 				host["host-servers"] = hostServersPayload
 			}
-		} else { // argument deleted - go back to defaults
-			host["host-servers"] = map[string]interface{}{"dns-server": false, "mail-server": false, "web-server": false}
 		}
+		//else { // argument deleted - go back to defaults
+		//	host["host-servers"] = map[string]interface{}{"dns-server": false, "mail-server": false, "web-server": false}
+		//}
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		host["ignore-errors"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		host["ignore-warnings"] = v.(bool)
 	}
 
 	log.Println("Update Host - Map = ", host)
-	updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, client.IsProxyUsed())
-	if err != nil || !updateHostRes.Success {
-		if updateHostRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHostRes.ErrorMsg)
+	if len(host) != 3 {
+		updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil || !updateHostRes.Success {
+			if updateHostRes.ErrorMsg != "" {
+				return fmt.Errorf(updateHostRes.ErrorMsg)
+			}
+			return fmt.Errorf(err.Error())
 		}
-		return fmt.Errorf(err.Error())
+	} else {
+		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
 	}
 
 	return readManagementHost(d, m)

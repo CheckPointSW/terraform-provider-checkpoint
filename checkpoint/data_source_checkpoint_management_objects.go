@@ -11,7 +11,8 @@ import (
 
 func dataSourceManagementObjects() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceManagementObjectsRead,
+		Read:               dataSourceManagementObjectsRead,
+		DeprecationMessage: "This data source is deprecated. Use instead data source 'checkpoint_management_show_objects'",
 		Schema: map[string]*schema.Schema{
 			"uids": {
 				Type:        schema.TypeSet,
@@ -72,7 +73,6 @@ func dataSourceManagementObjects() *schema.Resource {
 			"dereference_group_members": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
 				Description: "Indicates whether to dereference \"members\" field by details level for every object in reply.",
 			},
 			"show_membership": {

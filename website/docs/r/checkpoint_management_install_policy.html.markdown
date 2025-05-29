@@ -24,7 +24,7 @@ resource "checkpoint_management_install_policy" "example" {
 The following arguments are supported:
 
 * `policy_package` - (Required) The name of the Policy Package to be installed.
-* `targets` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.
+* `targets` - (Optional) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.
 * `access` - (Optional) Set to be true in order to install the Access Control policy. By default, the value is true if Access Control policy is enabled on the input policy package, otherwise false.
 * `desktop_security` - (Optional) Set to be true in order to install the Desktop Security policy. By default, the value is true if desktop security policy is enabled on the input policy package, otherwise false.
 * `qos` - (Optional) Set to be true in order to install the QoS policy. By default, the value is true if Quality-of-Service policy is enabled on the input policy package, otherwise false.
@@ -32,6 +32,7 @@ The following arguments are supported:
 * `install_on_all_cluster_members_or_fail` - (Optional) Relevant for the gateway clusters. If true, the policy is installed on all the cluster members. If the installation on a cluster member fails, don't install on that cluster.
 * `prepare_only` - (Optional) If true, prepares the policy for the installation, but doesn't install it on an installation target.
 * `revision` - (Optional) The UID of the revision of the policy to install.
+* `ignore_warnings` - (Optional) Install policy ignoring policy mismatch warnings.
 * `triggers` - (Optional) Triggers a install-policy if there are any changes to objects in this list.
 * `task_id` - (Computed) Asynchronous task unique identifier.
 
