@@ -15,7 +15,7 @@ func TestAccCheckpointManagementCMEAccountsAzure_basic(t *testing.T) {
 	accountName := "test-account"
 	directoryId := "46707d92-02f4-4817-8116-a4c3b23e6266"
 	applicationId := "46707d92-02f4-4817-8116-a4c3b23e6266"
-	clientSecret := "mySecret"
+	clientSecret := "1234abcdefgh----"
 	subscription := "46707d92-02f4-4817-8116-a4c3b23e6267"
 	environment := "AzureCloud"
 

@@ -96,6 +96,11 @@ func resourceManagementCMEAccountsAWS() *schema.Resource {
 				Optional:    true,
 				Description: "Set true in order to scan subnets with AWS GWLB.",
 			},
+			"scan_subnets_6": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Set true in order to scan IPv6 subnets with AWS GWLB.",
+			},
 			"communities": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -202,15 +207,17 @@ func readManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error {
 
 	if AWSAccount["sync"] != nil {
 		syncMap := AWSAccount["sync"].(map[string]interface{})
-		_ = d.Set("scan_gateways", syncMap["gateway"])
-		_ = d.Set("scan_vpn", syncMap["vpn"])
-		_ = d.Set("scan_load_balancers", syncMap["lb"])
-		_ = d.Set("scan_subnets", syncMap["scan-subnets"])
+		_ = d.Set("scan_gateways", syncMap["scan_gateways"])
+		_ = d.Set("scan_vpn", syncMap["scan_vpn"])
+		_ = d.Set("scan_load_balancers", syncMap["scan_load_balancers"])
+		_ = d.Set("scan_subnets", syncMap["scan_subnets"])
+		_ = d.Set("scan_subnets_6", syncMap["scan_subnets_6"])
 	} else {
 		_ = d.Set("scan_gateways", nil)
 		_ = d.Set("scan_vpn", nil)
 		_ = d.Set("scan_load_balancers", nil)
 		_ = d.Set("scan_subnets", nil)
+		_ = d.Set("scan_subnets_6", nil)
 	}
 	_ = d.Set("communities", AWSAccount["communities"])
 
@@ -277,6 +284,9 @@ func createManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error
 	}
 	if v, ok := d.GetOk("scan_subnets"); ok {
 		payload["scan_subnets"] = v.(bool)
+	}
+	if v, ok := d.GetOk("scan_subnets_6"); ok {
+		payload["scan_subnets_6"] = v.(bool)
 	}
 	if v, ok := d.GetOk("regions"); ok {
 		payload["regions"] = v.([]interface{})
@@ -372,6 +382,9 @@ func updateManagementCMEAccountsAWS(d *schema.ResourceData, m interface{}) error
 	}
 	if d.HasChange("scan_subnets") {
 		payload["scan_subnets"] = d.Get("scan_subnets")
+	}
+	if d.HasChange("scan_subnets_6") {
+		payload["scan_subnets_6"] = d.Get("scan_subnets_6")
 	}
 	if d.HasChange("regions") {
 		payload["regions"] = d.Get("regions")
