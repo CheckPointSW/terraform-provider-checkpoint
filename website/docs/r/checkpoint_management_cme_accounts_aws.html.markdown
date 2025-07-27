@@ -56,6 +56,7 @@ These arguments are supported:
 * `scan_load_balancers` - (Optional) Set true in order to scan load balancers access and NAT rules with AWS Transit
   Gateway.
 * `scan_subnets` - (Optional) Set true in order to scan subnets with AWS Gateway Load Balancer.
+* `scan_subnets_6` - (Optional) Set true in order to scan IPv6 subnets with AWS GWLB.
 * `communities` - (Optional) Comma-separated list of communities that are allowed for VPN connections for AWS Transit
   Gateways that are discovered by this account.
 * `sub_accounts` - (Optional) AWS sub-accounts. Supports these parameters:

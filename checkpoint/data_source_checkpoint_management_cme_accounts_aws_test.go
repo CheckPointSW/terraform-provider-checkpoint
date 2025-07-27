@@ -29,6 +29,8 @@ func TestAccDataSourceCheckpointManagementCMEAccountsAWS_basic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "regions", resourceName, "regions"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "credentials_file", resourceName, "credentials_file"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "scan_subnets", resourceName, "scan_subnets"),
+					resource.TestCheckResourceAttrPair(dataSourceName, "scan_subnets_6", resourceName, "scan_subnets_6"),
 				),
 			},
 		},
@@ -41,6 +43,9 @@ resource "checkpoint_management_cme_accounts_aws" "test" {
   name                  = "%s"
   regions               = ["us-east-1"]
   credentials_file      = "IAM"
+  scan_subnets			= true
+  scan_subnets_6		= true
+
 }
 
 data "checkpoint_management_cme_accounts_aws" "data_test"{

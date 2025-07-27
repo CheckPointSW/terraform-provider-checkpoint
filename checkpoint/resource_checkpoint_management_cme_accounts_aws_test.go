@@ -32,9 +32,9 @@ func TestAccCheckpointManagementCMEAccountsAWS_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementCMEAccountsAWSExists(resourceName, &awsAccount),
 					testAccCheckCheckpointManagementCMEAccountsAWSAttributes(&awsAccount, accountName, []interface{}{"us-east-1"},
-						"IAM", true, true,
-						[]map[string]interface{}{{"name": "sub_account_a", "access_key": "abcdeaaaaaaaaaaahaa", "secret_key": "1",
-							"sts_role": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "sts_external_id": "xyzx"}}, 0),
+						"IAM", true, true, true, true,
+						[]map[string]interface{}{{"name": "sub_account_a", "access_key": "ABCDEAAAAAAAAAAAHAA", "secret_key": "1",
+							"sts_role": "arn:aws:iam::123456789012:role/role-name", "sts_external_id": "xyzx"}}, 0),
 				),
 			},
 		},
@@ -70,11 +70,13 @@ resource "checkpoint_management_cme_accounts_aws" "test" {
   credentials_file      = "IAM"
   scan_vpn              = true
   scan_load_balancers   = true
+  scan_subnets			= true
+  scan_subnets_6		= true
   sub_accounts {
     name       = "sub_account_a"
-    access_key = "abcdeaaaaaaaaaaahaa"
-    secret_key = "1"
-	sts_role = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    access_key = "ABCDEAAAAAAAAAAAHAA"
+    secret_key = "aaaaaaaaaaaaaaaaee1"
+	sts_role = "arn:aws:iam::123456789012:role/role-name"
 	sts_external_id = "xyzx"
   }
 }
@@ -109,7 +111,7 @@ func testAccCheckCheckpointManagementCMEAccountsAWSExists(resourceTfName string,
 }
 
 func testAccCheckCheckpointManagementCMEAccountsAWSAttributes(awsAccount *map[string]interface{}, name string, regions []interface{},
-	credFile string, scanVpn bool, scanLoadBalancers bool, subAccounts []map[string]interface{}, expectedDeletionTolerance int) resource.TestCheckFunc {
+	credFile string, scanVpn bool, scanLoadBalancers bool, scanSubnets bool, scanSubnets6 bool, subAccounts []map[string]interface{}, expectedDeletionTolerance int) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		account := (*awsAccount)["result"].(map[string]interface{})
 		if account["name"] != name {
@@ -125,13 +127,19 @@ func testAccCheckCheckpointManagementCMEAccountsAWSAttributes(awsAccount *map[st
 		if deletionTolerance != expectedDeletionTolerance {
 			return fmt.Errorf("deletion_tolerance is %d, expected %d", deletionTolerance, expectedDeletionTolerance)
 		}
-		vpnFlag := account["sync"].(map[string]interface{})["vpn"]
+		vpnFlag := account["sync"].(map[string]interface{})["scan_vpn"]
 		if vpnFlag != scanVpn {
 			return fmt.Errorf("scan_vpn is %t, expected %t", vpnFlag, scanVpn)
 		}
-		lbFlag := account["sync"].(map[string]interface{})["lb"]
+		lbFlag := account["sync"].(map[string]interface{})["scan_load_balancers"]
 		if lbFlag != scanLoadBalancers {
 			return fmt.Errorf("scan_load_balancers is %t, expected %t", lbFlag, scanLoadBalancers)
+		}
+		if scanSubnets != account["sync"].(map[string]interface{})["scan_subnets"] {
+			return fmt.Errorf("scan_subnets is %t, expected %t", account["sync"].(map[string]interface{})["scan-subnets"], scanSubnets)
+		}
+		if scanSubnets6 != account["sync"].(map[string]interface{})["scan_subnets_6"] {
+			return fmt.Errorf("scan_subnets_6 is %t, expected %t", account["sync"].(map[string]interface{})["scan-subnets"], scanSubnets6)
 		}
 		subAccountsMap := account["sub_accounts"].(map[string]interface{})
 		if len(subAccountsMap) != len(subAccounts) {
