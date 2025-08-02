@@ -38,6 +38,8 @@ The following arguments are supported:
 * `scan_malicious_links` - (Optional) Scans malicious links (URLs) inside email messages. scan_malicious_links blocks are documented below.
 * `use_indicators` - (Optional) Indicates whether the profile should make use of indicators.
 * `anti_virus` - (Optional) Is Anti-Virus blade activated.
+* `threat_extraction` - (Optional) Is Threat-Extraction blade activated.
+* `zero_phishing` - (Optional) Is Zero-Phishing blade activated.
 * `anti_bot` - (Optional) Is Anti-Bot blade activated.
 * `ips` - (Optional) Is IPS blade activated.
 * `threat_emulation` - (Optional) Is Threat Emulation blade activated.

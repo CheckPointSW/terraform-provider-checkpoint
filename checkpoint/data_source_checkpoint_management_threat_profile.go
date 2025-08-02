@@ -296,6 +296,16 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 				Computed:    true,
 				Description: "Is Anti-Virus blade activated.",
 			},
+			"threat_extraction": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Is Threat-Extraction blade activated.",
+			},
+			"zero_phishing": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Is Zero-Phishing blade activated.",
+			},
 			"ips": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -734,6 +744,14 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 
 	if v := threatProfile["anti-virus"]; v != nil {
 		_ = d.Set("anti_virus", v)
+	}
+
+	if v := threatProfile["threat-extraction"]; v != nil {
+		_ = d.Set("threat_extraction", v)
+	}
+
+	if v := threatProfile["zero-phishing"]; v != nil {
+		_ = d.Set("zero_phishing", v)
 	}
 
 	if v := threatProfile["ips"]; v != nil {
