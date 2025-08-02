@@ -310,13 +310,11 @@ func resourceManagementThreatProfile() *schema.Resource {
 			"threat_extraction": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
 				Description: "Is Threat-Extraction blade activated.",
 			},
 			"zero_phishing": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     true,
 				Description: "Is Zero-Phishing blade activated.",
 			},
 			"ips": {
