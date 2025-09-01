@@ -1,3 +1,42 @@
+## 2.11.0
+
+ENHANCEMENTS
+* Use GO SDK v1.9.0
+
+FEATURES
+* **New Resource:** `checkpoint_management_syslog_server`
+* **New Resource:** `checkpoint_management_securid_server`
+* **New Resource:** `checkpoint_management_securemote_dns_server`
+* **New Resource:** `checkpoint_management_resource_uri_for_qos`
+* **New Resource:** `checkpoint_management_resource_tcp`
+* **New Resource:** `checkpoint_management_resource_mms`
+* **New Resource:** `checkpoint_management_log_exporter`
+* **New Resource:** `checkpoint_management_ldap_group`
+* **New Resource:** `checkpoint_management_identity_provider`
+* **New Resource:** `checkpoint_management_if_map_server`
+* **New Resource:** `checkpoint_management_set_anti_malware_update_schedule`
+* **New Resource:** `checkpoint_management_set_app_control_update_schedule`
+* **New Resource:** `checkpoint_management_run_app_control_update`
+* **New Resource:** `checkpoint_management_set_sync_with_user_center`
+* **New Data Source:** `checkpoint_management_hosts`
+* **New Data Source:** `checkpoint_management_networks`
+* **New Data Source:** `checkpoint_management_services_tcp`
+* **New Data Source:** `checkpoint_management_services_udp`
+* **New Data Source:** `checkpoint_management_syslog_server`
+* **New Data Source:** `checkpoint_management_securid_server`
+* **New Data Source:** `checkpoint_management_securemote_dns_server`
+* **New Data Source:** `checkpoint_management_resource_uri_for_qos`
+* **New Data Source:** `checkpoint_management_resource_tcp`
+* **New Data Source:** `checkpoint_management_resource_mms`
+* **New Data Source:** `checkpoint_management_log_exporter`
+* **New Data Source:** `checkpoint_management_ldap_group`
+* **New Data Source:** `checkpoint_management_identity_provider`
+* **New Data Source:** `checkpoint_management_if_map_server`
+* **New Data Source:** `checkpoint_management_anti_malware_update_schedule`
+* **New Data Source:** `checkpoint_management_app_control_status`
+* **New Data Source:** `checkpoint_management_app_control_update_schedule`
+* **New Data Source:** `checkpoint_management_sync_with_user_center`
+
 ## 2.10.0 (May 29, 2025)
 
 ENHANCEMENTS
