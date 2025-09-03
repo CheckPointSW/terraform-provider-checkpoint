@@ -1,7 +1,9 @@
-## 2.11.0
+## 2.11.0 (September 3, 2025)
 
 ENHANCEMENTS
 * Use GO SDK v1.9.0
+* Use CME v1.3.1
+* Add some new fields to `checkpoint_management_threat_profile`
 
 FEATURES
 * **New Resource:** `checkpoint_management_syslog_server`
