@@ -43,7 +43,8 @@ The following arguments are supported:
 * `interfaces` - (Optional) Network interfaces.interfaces blocks are documented below.
 * `ipv4_address` - (Optional) IPv4 address. 
 * `ipv6_address` - (Optional) IPv6 address. 
-* `ips` - (Optional) Intrusion Prevention System blade enabled. 
+* `ips` - (Optional) Intrusion Prevention System blade enabled.
+* `ips_settings` - (Optional) Gateway IPS settings.ips_settings blocks are documented below.
 * `ips_update_policy` - (Optional) Specifies whether the IPS will be downloaded from the Management or directly to the Gateway. 
 * `nat_hide_internal_interfaces` - (Optional) Hide internal networks behind the Gateway's external IP. 
 * `nat_settings` - (Optional) NAT settings.nat_settings blocks are documented below.
@@ -140,6 +141,17 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 
+`ips_settings` supports the following:
+
+* `bypass_all_under_load` - (Optional) Disable/enable all IPS protections until CPU and memory levels are back to normal.
+* `bypass_track_method` - (Optional) Track options when all IPS protections are disabled until CPU/memory levels are back to normal.
+* `top_cpu_consuming_protections` - (Optional) Provides a way to reduce CPU levels on machines under load by disabling the top CPU consuming IPS protections.top_cpu_consuming_protections blocks are documented below.
+* `activation_mode` - (Optional) Defines whether the IPS blade operates in Detect Only mode or enforces the configured IPS Policy.
+* `cpu_usage_low_threshold` - (Optional) CPU usage low threshold percentage (1-99).
+* `cpu_usage_high_threshold` - (Optional) CPU usage high threshold percentage (1-99).
+* `memory_usage_low_threshold` - (Optional) Memory usage low threshold percentage (1-99).
+* `memory_usage_high_threshold` - (Optional) Memory usage high threshold percentage (1-99).
+* `send_threat_cloud_info` - (Optional) Help improve Check Point Threat Prevention product by sending anonymous information.
 
 `nat_settings` supports the following:
 
