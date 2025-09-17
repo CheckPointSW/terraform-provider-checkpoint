@@ -24,6 +24,26 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 				Required:    true,
 				Description: "Object name.",
 			},
+			"disable_nat": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to disable NAT inside the VPN Community.",
+			},
+			"encrypted_traffic": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Encrypted traffic settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether to accept all encrypted traffic.",
+						},
+					},
+				},
+			},
 			"encryption_method": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -33,6 +53,14 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The encryption suite to be used.",
+			},
+			"excluded_services": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of services that are excluded from the community identified by the name or UID.<br> Connections with these services will not be encrypted and will not match rules specifying the community in the VPN community.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"gateways": {
 				Type:        schema.TypeSet,
@@ -110,6 +138,59 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 							Default:     1440,
+						},
+					},
+				},
+			},
+			"link_selection_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Link Selection Mode.",
+			},
+			"override_interfaces": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Override the Enhanced Link Selection interfaces for each participant VPN peer.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"gateway": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Participant VPN Peer.",
+						},
+						"interfaces": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Enhanced Link Selection Interfaces.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"interface_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The name of the interface.",
+									},
+									"next_hop_ip": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The IP address of the next hop.",
+									},
+									"static_nat_ip": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The NATed IPv4 address that hides the source IPv4 address of outgoing connections (applies only to IPv4).",
+									},
+									"priority": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Priority of a 'Backup' interface.",
+									},
+									"redundancy_mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Interface redundancy mode (Active/Backup).",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -259,6 +340,164 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 					},
 				},
 			},
+			"permanent_tunnels": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Permanent tunnels properties.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"set_permanent_tunnels": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Indicates which tunnels to set as permanent.",
+						},
+						"gateways": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of gateways to set all their tunnels to permanent with specified track options. Will take effect only if set-permanent-tunnels-on is set to all-tunnels-of-specific-gateways.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gateway": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Gateway to set all is tunnels to permanent with specified track options.<br> Identified by name or UID.",
+									},
+									"track_options": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Indicates whether to use the community track options or to override track options for the permanent tunnels.",
+									},
+									"override_tunnel_down_track": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Gateway tunnel down track option. Relevant only if the track-options is set to 'override track options'.",
+									},
+									"override_tunnel_up_track": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Gateway tunnel up track option. Relevant only if the track-options is set to 'override track options'.",
+									},
+								},
+							},
+						},
+						"tunnels": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "List of tunnels to set as permanent with specified track options. Will take effect only if set-permanent-tunnels-on is set to specific-tunnels-in-the-community.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"first_tunnel_endpoint": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "First tunnel endpoint (center gateway). Identified by name or UID.",
+									},
+									"second_tunnel_endpoint": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Second tunnel endpoint (center gateway for meshed VPN community and satellitegateway for star VPN community).  Identified by name or UID.",
+									},
+									"track_options": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Indicates whether to use the community track options or to override track options for the permanent tunnels.",
+									},
+									"override_tunnel_down_track": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Gateway tunnel down track option. Relevant only if the track-options is set to 'override track options'.",
+									},
+									"override_tunnel_up_track": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Gateway tunnel up track option. Relevant only if the track-options is set to 'override track options'.",
+									},
+								},
+							},
+						},
+						"rim": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Route Injection Mechanism settings.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether Route Injection Mechanism is enabled.",
+									},
+									"enable_on_gateways": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to enable automatic Route Injection Mechanism for gateways.",
+									},
+									"route_injection_track": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Route injection track method.",
+									},
+								},
+							},
+						},
+						"tunnel_down_track": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "VPN community permanent tunnels down track option.",
+						},
+						"tunnel_up_track": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Permanent tunnels up track option.",
+						},
+					},
+				},
+			},
+			"wire_mode": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "VPN Community Wire mode properties.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allow_uninspected_encrypted_traffic": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Allow uninspected encrypted traffic between Wire mode interfaces of this Community members.",
+						},
+						"allow_uninspected_encrypted_routing": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Allow members to route uninspected encrypted traffic in VPN routing configurations.",
+						},
+					},
+				},
+			},
+			"routing_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "VPN Community Routing Mode.",
+			},
+			"advanced_properties": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Advanced properties.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"support_ip_compression": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether to support IP compression.",
+						},
+						"use_aggressive_mode": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether to use aggressive mode.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -309,12 +548,35 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 		vpnCommunityMeshed["name"] = v.(string)
 	}
 
+	if v, ok := d.GetOkExists("disable_nat"); ok {
+		vpnCommunityMeshed["disable-nat"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("encrypted_traffic"); ok {
+
+		encryptedTrafficList := v.([]interface{})
+
+		if len(encryptedTrafficList) > 0 {
+
+			encryptedTrafficPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("encrypted_traffic.0.enabled"); ok {
+				encryptedTrafficPayload["enabled"] = v.(bool)
+			}
+			vpnCommunityMeshed["encrypted-traffic"] = encryptedTrafficPayload
+		}
+	}
+
 	if v, ok := d.GetOk("encryption_method"); ok {
 		vpnCommunityMeshed["encryption-method"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("encryption_suite"); ok {
 		vpnCommunityMeshed["encryption-suite"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("excluded_services"); ok {
+		vpnCommunityMeshed["excluded-services"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOk("gateways"); ok {
@@ -360,6 +622,64 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 			res["ike-p2-rekey-time"] = v.(string)
 		}
 		vpnCommunityMeshed["ike-phase-2"] = res
+	}
+
+	if v, ok := d.GetOk("link_selection_mode"); ok {
+		vpnCommunityMeshed["link-selection-mode"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("override_interfaces"); ok {
+
+		overrideInterfacesList := v.([]interface{})
+
+		if len(overrideInterfacesList) > 0 {
+
+			var overrideInterfacesPayload []map[string]interface{}
+
+			for i := range overrideInterfacesList {
+
+				Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".gateway"); ok {
+					Payload["gateway"] = v.(string)
+				}
+				if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces"); ok {
+
+					overrideInterfacesInterfacesList := v.([]interface{})
+
+					if len(overrideInterfacesInterfacesList) > 0 {
+
+						var overrideInterfacesInterfacesPayload []map[string]interface{}
+
+						for j := range overrideInterfacesInterfacesList {
+
+							interfacesPayload := make(map[string]interface{})
+
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".interface_name"); ok {
+								interfacesPayload["interface-name"] = v.(string)
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".next_hop_ip"); ok {
+								interfacesPayload["next-hop-ip"] = v.(string)
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".static_nat_ip"); ok {
+								interfacesPayload["static-nat-ip"] = v.(string)
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".priority"); ok {
+								interfacesPayload["priority"] = v.(int)
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".redundancy_mode"); ok {
+								interfacesPayload["redundancy-mode"] = v.(string)
+							}
+							overrideInterfacesInterfacesPayload = append(overrideInterfacesInterfacesPayload, interfacesPayload)
+						}
+						Payload["interfaces"] = overrideInterfacesInterfacesPayload
+					}
+				}
+
+				overrideInterfacesPayload = append(overrideInterfacesPayload, Payload)
+			}
+			vpnCommunityMeshed["overrideInterfaces"] = overrideInterfacesPayload
+		}
 	}
 
 	if v, ok := d.GetOk("override_vpn_domains"); ok {
@@ -474,6 +794,121 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 		}
 	}
 
+	if v, ok := d.GetOk("permanent_tunnels"); ok {
+
+		permanentTunnelsList := v.([]interface{})
+
+		if len(permanentTunnelsList) > 0 {
+
+			permanentTunnelsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("permanent_tunnels.0.set_permanent_tunnels"); ok {
+				permanentTunnelsPayload["set-permanent-tunnels"] = v.(string)
+			}
+			if _, ok := d.GetOk("permanent_tunnels.0.gateways"); ok {
+
+				gatewaysPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.gateway"); ok {
+					gatewaysPayload["gateway"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.track_options"); ok {
+					gatewaysPayload["track-options"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.override_tunnel_down_track"); ok {
+					gatewaysPayload["override-tunnel-down-track"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.override_tunnel_up_track"); ok {
+					gatewaysPayload["override-tunnel-up-track"] = v.(string)
+				}
+				permanentTunnelsPayload["gateways"] = gatewaysPayload
+			}
+			if _, ok := d.GetOk("permanent_tunnels.0.tunnels"); ok {
+
+				tunnelsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.first_tunnel_endpoint"); ok {
+					tunnelsPayload["first-tunnel-endpoint"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.second_tunnel_endpoint"); ok {
+					tunnelsPayload["second-tunnel-endpoint"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.track_options"); ok {
+					tunnelsPayload["track-options"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.override_tunnel_down_track"); ok {
+					tunnelsPayload["override-tunnel-down-track"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.override_tunnel_up_track"); ok {
+					tunnelsPayload["override-tunnel-up-track"] = v.(string)
+				}
+				permanentTunnelsPayload["tunnels"] = tunnelsPayload
+			}
+			if _, ok := d.GetOk("permanent_tunnels.0.rim"); ok {
+
+				rimPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("permanent_tunnels.0.rim.0.enabled"); ok {
+					rimPayload["enabled"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.rim.0.enable_on_gateways"); ok {
+					rimPayload["enable-on-gateways"] = strconv.FormatBool(v.(bool))
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.rim.0.route_injection_track"); ok {
+					rimPayload["route-injection-track"] = v.(string)
+				}
+				permanentTunnelsPayload["rim"] = rimPayload
+			}
+			if v, ok := d.GetOk("permanent_tunnels.0.tunnel_down_track"); ok {
+				permanentTunnelsPayload["tunnel-down-track"] = v.(string)
+			}
+			if v, ok := d.GetOk("permanent_tunnels.0.tunnel_up_track"); ok {
+				permanentTunnelsPayload["tunnel-up-track"] = v.(string)
+			}
+			vpnCommunityMeshed["permanent-tunnels"] = permanentTunnelsPayload
+		}
+	}
+
+	if v, ok := d.GetOk("wire_mode"); ok {
+
+		wireModeList := v.([]interface{})
+
+		if len(wireModeList) > 0 {
+
+			wireModePayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("wire_mode.0.allow_uninspected_encrypted_traffic"); ok {
+				wireModePayload["allow-uninspected-encrypted-traffic"] = v.(bool)
+			}
+			if v, ok := d.GetOk("wire_mode.0.allow_uninspected_encrypted_routing"); ok {
+				wireModePayload["allow-uninspected-encrypted-routing"] = v.(bool)
+			}
+			vpnCommunityMeshed["wire-mode"] = wireModePayload
+		}
+	}
+
+	if v, ok := d.GetOk("routing_mode"); ok {
+		vpnCommunityMeshed["routing-mode"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("advanced_properties"); ok {
+
+		advancedPropertiesList := v.([]interface{})
+
+		if len(advancedPropertiesList) > 0 {
+
+			advancedPropertiesPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("advanced_properties.0.support_ip_compression"); ok {
+				advancedPropertiesPayload["support-ip-compression"] = v.(bool)
+			}
+			if v, ok := d.GetOk("advanced_properties.0.use_aggressive_mode"); ok {
+				advancedPropertiesPayload["use-aggressive-mode"] = v.(bool)
+			}
+			vpnCommunityMeshed["advanced-properties"] = advancedPropertiesPayload
+		}
+	}
+
 	if v, ok := d.GetOk("tags"); ok {
 		vpnCommunityMeshed["tags"] = v.(*schema.Set).List()
 	}
@@ -541,12 +976,49 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		_ = d.Set("name", v)
 	}
 
+	if v := vpnCommunityMeshed["disable-nat"]; v != nil {
+		_ = d.Set("disable_nat", v)
+	}
+
+	if vpnCommunityMeshed["encrypted-traffic"] != nil {
+
+		encryptedTrafficMap, ok := vpnCommunityMeshed["encrypted-traffic"].(map[string]interface{})
+
+		if ok {
+			encryptedTrafficMapToReturn := make(map[string]interface{})
+
+			if v := encryptedTrafficMap["enabled"]; v != nil {
+				encryptedTrafficMapToReturn["enabled"] = v
+			}
+			_ = d.Set("encrypted_traffic", []interface{}{encryptedTrafficMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("encrypted_traffic", nil)
+	}
+
 	if v := vpnCommunityMeshed["encryption-method"]; v != nil {
 		_ = d.Set("encryption_method", v)
 	}
 
 	if v := vpnCommunityMeshed["encryption-suite"]; v != nil {
 		_ = d.Set("encryption_suite", v)
+	}
+
+	if vpnCommunityMeshed["excluded_services"] != nil {
+		excludedServicesJson, ok := vpnCommunityMeshed["excluded_services"].([]interface{})
+		if ok {
+			excludedServicesIds := make([]string, 0)
+			if len(excludedServicesJson) > 0 {
+				for _, excluded_services := range excludedServicesJson {
+					excluded_services := excluded_services.(map[string]interface{})
+					excludedServicesIds = append(excludedServicesIds, excluded_services["name"].(string))
+				}
+			}
+			_ = d.Set("excluded_services", excludedServicesIds)
+		}
+	} else {
+		_ = d.Set("excluded_services", nil)
 	}
 
 	if vpnCommunityMeshed["gateways"] != nil {
@@ -626,6 +1098,61 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 
 	} else {
 		_ = d.Set("ike_phase_2", nil)
+	}
+
+	if v := vpnCommunityMeshed["link-selection-mode"]; v != nil {
+		_ = d.Set("link_selection_mode", v)
+	}
+
+	if vpnCommunityMeshed["override-interfaces"] != nil {
+
+		overrideInterfacesList, ok := vpnCommunityMeshed["override-interfaces"].([]interface{})
+
+		if ok {
+
+			if len(overrideInterfacesList) > 0 {
+
+				var overrideInterfacesListToReturn []map[string]interface{}
+
+				for i := range overrideInterfacesList {
+
+					overrideInterfacesMap := overrideInterfacesList[i].(map[string]interface{})
+
+					overrideInterfacesMapToAdd := make(map[string]interface{})
+
+					if v, _ := overrideInterfacesMap["gateway"]; v != nil {
+						overrideInterfacesMapToAdd["gateway"] = v
+					}
+					if v := overrideInterfacesMap["interfaces"]; v != nil {
+						interfacesShow := v.(map[string]interface{})
+						interfacesState := make(map[string]interface{})
+						if v := interfacesShow["interface-name"]; v != nil {
+							interfacesState["interface_name"] = v
+						}
+						if v := interfacesShow["next-hop-ip"]; v != nil {
+							interfacesState["next_hop_ip"] = v
+						}
+						if v := interfacesShow["static-nat-ip"]; v != nil {
+							interfacesState["static_nat_ip"] = v
+						}
+						if v := interfacesShow["priority"]; v != nil {
+							interfacesState["priority"] = v
+						}
+						if v := interfacesShow["redundancy-mode"]; v != nil {
+							interfacesState["redundancy_mode"] = v
+						}
+						overrideInterfacesMapToAdd["interfaces"] = interfacesState
+					}
+					overrideInterfacesListToReturn = append(overrideInterfacesListToReturn, overrideInterfacesMapToAdd)
+				}
+
+				_ = d.Set("override_interfaces", overrideInterfacesListToReturn)
+			} else {
+				_ = d.Set("override_interfaces", overrideInterfacesList)
+			}
+		}
+	} else {
+		_ = d.Set("override_interfaces", nil)
 	}
 
 	if vpnCommunityMeshed["override-vpn-domains"] != nil {
@@ -782,6 +1309,166 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		}
 	}
 
+	if vpnCommunityMeshed["permanent-tunnels"] != nil {
+
+		permanentTunnelsMap := vpnCommunityMeshed["permanent-tunnels"].(map[string]interface{})
+
+		permanentTunnelsMapToReturn := make(map[string]interface{})
+
+		if v := permanentTunnelsMap["set-permanent-tunnels"]; v != nil {
+			permanentTunnelsMapToReturn["set_permanent_tunnels"] = v
+		}
+		if v := permanentTunnelsMap["gateways"]; v != nil {
+
+			gatewaysList := v.([]interface{})
+
+			if len(gatewaysList) > 0 {
+
+				var gatewaysListToReturn []map[string]interface{}
+
+				for i := range gatewaysList {
+
+					gatewaysMap := gatewaysList[i].(map[string]interface{})
+
+					gatewaysMapToAdd := make(map[string]interface{})
+
+					if v := gatewaysMap["gateway"]; v != nil {
+						gatewayObj := v.(map[string]interface{})
+						if v := gatewayObj["name"]; v != nil {
+							gatewaysMapToAdd["gateway"] = v.(string)
+						}
+					}
+					if v, _ := gatewaysMap["track-options"]; v != nil {
+						gatewaysMapToAdd["track_options"] = v
+					}
+					if v, _ := gatewaysMap["override-tunnel-down-track"]; v != nil {
+						gatewaysMapToAdd["override_tunnel_down_track"] = v
+					}
+					if v, _ := gatewaysMap["override-tunnel-up-track"]; v != nil {
+						gatewaysMapToAdd["override_tunnel_up_track"] = v
+					}
+					gatewaysListToReturn = append(gatewaysListToReturn, gatewaysMapToAdd)
+				}
+				permanentTunnelsMapToReturn["gateways"] = gatewaysListToReturn
+			} else {
+				permanentTunnelsMapToReturn["gateways"] = gatewaysList
+			}
+		} else {
+			permanentTunnelsMapToReturn["gateways"] = nil
+		}
+
+		if v := permanentTunnelsMap["tunnels"]; v != nil {
+
+			tunnelsList := v.([]interface{})
+
+			if len(tunnelsList) > 0 {
+
+				var tunnelsListToReturn []map[string]interface{}
+
+				for i := range tunnelsList {
+
+					tunnelsMap := tunnelsList[i].(map[string]interface{})
+
+					tunnelsMapToAdd := make(map[string]interface{})
+
+					if v, _ := tunnelsMap["first-tunnel-endpoint"]; v != nil {
+						tunnelsMapToAdd["first_tunnel_endpoint"] = v
+					}
+					if v, _ := tunnelsMap["second-tunnel-endpoint"]; v != nil {
+						tunnelsMapToAdd["second_tunnel_endpoint"] = v
+					}
+					if v, _ := tunnelsMap["track-options"]; v != nil {
+						tunnelsMapToAdd["track_options"] = v
+					}
+					if v, _ := tunnelsMap["override-tunnel-down-track"]; v != nil {
+						tunnelsMapToAdd["override_tunnel_down_track"] = v
+					}
+					if v, _ := tunnelsMap["override-tunnel-up-track"]; v != nil {
+						tunnelsMapToAdd["override_tunnel_up_track"] = v
+					}
+					tunnelsListToReturn = append(tunnelsListToReturn, tunnelsMapToAdd)
+				}
+				permanentTunnelsMapToReturn["tunnels"] = tunnelsListToReturn
+			} else {
+				permanentTunnelsMapToReturn["tunnels"] = tunnelsList
+			}
+		} else {
+			permanentTunnelsMapToReturn["tunnels"] = nil
+		}
+
+		if v := permanentTunnelsMap["rim"]; v != nil {
+
+			rimMap := v.(map[string]interface{})
+			rimMapToReturn := make(map[string]interface{})
+
+			if v, _ := rimMap["enabled"]; v != nil {
+				rimMapToReturn["enabled"] = v
+			}
+			if v, _ := rimMap["enable-on-gateways"]; v != nil {
+				rimMapToReturn["enable_on_gateways"] = v
+			}
+			if v, _ := rimMap["route-injection-track"]; v != nil {
+				rimMapToReturn["route_injection_track"] = v
+			}
+			permanentTunnelsMapToReturn["rim"] = []interface{}{rimMapToReturn}
+		}
+
+		if v := permanentTunnelsMap["tunnel-down-track"]; v != nil {
+			permanentTunnelsMapToReturn["tunnel_down_track"] = v
+		}
+		if v := permanentTunnelsMap["tunnel-up-track"]; v != nil {
+			permanentTunnelsMapToReturn["tunnel_up_track"] = v
+		}
+		_ = d.Set("permanent_tunnels", []interface{}{permanentTunnelsMapToReturn})
+
+	} else {
+		_ = d.Set("permanent_tunnels", nil)
+	}
+
+	if vpnCommunityMeshed["wire-mode"] != nil {
+
+		wireModeMap, ok := vpnCommunityMeshed["wire-mode"].(map[string]interface{})
+
+		if ok {
+			wireModeMapToReturn := make(map[string]interface{})
+
+			if v := wireModeMap["allow-uninspected-encrypted-traffic"]; v != nil {
+				wireModeMapToReturn["allow_uninspected_encrypted_traffic"] = v
+			}
+			if v := wireModeMap["allow-uninspected-encrypted-routing"]; v != nil {
+				wireModeMapToReturn["allow_uninspected_encrypted_routing"] = v
+			}
+			_ = d.Set("wire_mode", []interface{}{wireModeMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("wire_mode", nil)
+	}
+
+	if v := vpnCommunityMeshed["routing-mode"]; v != nil {
+		_ = d.Set("routing_mode", v)
+	}
+
+	if vpnCommunityMeshed["advanced-properties"] != nil {
+
+		advancedPropertiesMap, ok := vpnCommunityMeshed["advanced-properties"].(map[string]interface{})
+
+		if ok {
+			advancedPropertiesMapToReturn := make(map[string]interface{})
+
+			if v := advancedPropertiesMap["support-ip-compression"]; v != nil {
+				advancedPropertiesMapToReturn["support_ip_compression"] = v
+			}
+			if v := advancedPropertiesMap["use-aggressive-mode"]; v != nil {
+				advancedPropertiesMapToReturn["use_aggressive_mode"] = v
+			}
+			_ = d.Set("advanced_properties", []interface{}{advancedPropertiesMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("advanced_properties", nil)
+	}
+
 	if vpnCommunityMeshed["tags"] != nil {
 		tagsJson, ok := vpnCommunityMeshed["tags"].([]interface{})
 		if ok {
@@ -835,12 +1522,40 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 		vpnCommunityMeshed["name"] = d.Get("name")
 	}
 
+	if v, ok := d.GetOkExists("disable_nat"); ok {
+		vpnCommunityMeshed["disable-nat"] = v.(bool)
+	}
+
+	if d.HasChange("encrypted_traffic") {
+
+		if v, ok := d.GetOk("encrypted_traffic"); ok {
+
+			encryptedTrafficList := v.([]interface{})
+
+			if len(encryptedTrafficList) > 0 {
+
+				encryptedTrafficPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("encrypted_traffic.0.enabled"); ok {
+					encryptedTrafficPayload["enabled"] = v.(bool)
+				}
+				vpnCommunityMeshed["encrypted-traffic"] = encryptedTrafficPayload
+			}
+		}
+	}
+
 	if ok := d.HasChange("encryption_method"); ok {
 		vpnCommunityMeshed["encryption-method"] = d.Get("encryption_method")
 	}
 
 	if ok := d.HasChange("encryption_suite"); ok {
 		vpnCommunityMeshed["encryption-suite"] = d.Get("encryption_suite")
+	}
+
+	if d.HasChange("excluded_services") {
+		if v, ok := d.GetOk("excluded_services"); ok {
+			vpnCommunityMeshed["excluded_services"] = v.(*schema.Set).List()
+		}
 	}
 
 	if d.HasChange("gateways") {
@@ -900,6 +1615,64 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 			vpnCommunityMeshed["ike-phase-2"] = res
 		} else {
 			vpnCommunityMeshed["ike-phase-2"] = map[string]interface{}{"encryption-algorithm": "aes-128", "data-integrity": "sha1"}
+		}
+	}
+
+	if ok := d.HasChange("link_selection_mode"); ok {
+		vpnCommunityMeshed["link-selection-mode"] = d.Get("link_selection_mode")
+	}
+
+	if d.HasChange("override_interfaces") {
+
+		if v, ok := d.GetOk("override_interfaces"); ok {
+
+			overrideInterfacesList := v.([]interface{})
+
+			var overrideInterfacesPayload []map[string]interface{}
+
+			for i := range overrideInterfacesList {
+
+				Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".gateway"); ok {
+					Payload["gateway"] = v
+				}
+				if d.HasChange("override_interfaces." + strconv.Itoa(i) + ".interfaces") {
+
+					if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces"); ok {
+
+						overrideInterfacesInterfacesList := v.([]interface{})
+
+						var overrideInterfacesInterfacesPayload []map[string]interface{}
+
+						for j := range overrideInterfacesInterfacesList {
+
+							interfacesPayload := make(map[string]interface{})
+
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".interface_name"); ok {
+								interfacesPayload["interface-name"] = v
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".next_hop_ip"); ok {
+								interfacesPayload["next-hop-ip"] = v
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".static_nat_ip"); ok {
+								interfacesPayload["static-nat-ip"] = v
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".priority"); ok {
+								interfacesPayload["priority"] = v
+							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".redundancy_mode"); ok {
+								interfacesPayload["redundancy-mode"] = v
+							}
+							overrideInterfacesInterfacesPayload = append(overrideInterfacesInterfacesPayload, interfacesPayload)
+						}
+						Payload["interfaces"] = overrideInterfacesInterfacesPayload
+					}
+				}
+
+				overrideInterfacesPayload = append(overrideInterfacesPayload, Payload)
+			}
+			vpnCommunityMeshed["override-interfaces"] = overrideInterfacesPayload
 		}
 	}
 
@@ -1040,6 +1813,127 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 					toRemove = append(toRemove, obj)
 				}
 				vpnCommunityMeshed["granular-encryptions"] = map[string]interface{}{"remove": toRemove}
+			}
+		}
+	}
+
+	if d.HasChange("permanent_tunnels") {
+
+		if v, ok := d.GetOk("permanent_tunnels"); ok {
+
+			permanentTunnelsList := v.([]interface{})
+
+			if len(permanentTunnelsList) > 0 {
+
+				permanentTunnelsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("permanent_tunnels.0.set_permanent_tunnels"); ok {
+					permanentTunnelsPayload["set-permanent-tunnels"] = v.(string)
+				}
+				if _, ok := d.GetOk("permanent_tunnels.0.gateways"); ok {
+					gatewaysPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.gateway"); ok {
+						gatewaysPayload["gateway"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.track_options"); ok {
+						gatewaysPayload["track-options"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.override_tunnel_down_track"); ok {
+						gatewaysPayload["override-tunnel-down-track"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.gateways.0.override_tunnel_up_track"); ok {
+						gatewaysPayload["override-tunnel-up-track"] = v.(string)
+					}
+					permanentTunnelsPayload["gateways"] = gatewaysPayload
+				}
+				if _, ok := d.GetOk("permanent_tunnels.0.tunnels"); ok {
+					tunnelsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.first_tunnel_endpoint"); ok {
+						tunnelsPayload["first-tunnel-endpoint"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.second_tunnel_endpoint"); ok {
+						tunnelsPayload["second-tunnel-endpoint"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.track_options"); ok {
+						tunnelsPayload["track-options"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.override_tunnel_down_track"); ok {
+						tunnelsPayload["override-tunnel-down-track"] = v.(string)
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.tunnels.0.override_tunnel_up_track"); ok {
+						tunnelsPayload["override-tunnel-up-track"] = v.(string)
+					}
+					permanentTunnelsPayload["tunnels"] = tunnelsPayload
+				}
+				if _, ok := d.GetOk("permanent_tunnels.0.rim"); ok {
+					rimPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("permanent_tunnels.0.rim.0.enabled"); ok {
+						rimPayload["enabled"] = strconv.FormatBool(v.(bool))
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.rim.0.enable_on_gateways"); ok {
+						rimPayload["enable-on-gateways"] = strconv.FormatBool(v.(bool))
+					}
+					if v, ok := d.GetOk("permanent_tunnels.0.rim.0.route_injection_track"); ok {
+						rimPayload["route-injection-track"] = v.(string)
+					}
+					permanentTunnelsPayload["rim"] = rimPayload
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnel_down_track"); ok {
+					permanentTunnelsPayload["tunnel-down-track"] = v.(string)
+				}
+				if v, ok := d.GetOk("permanent_tunnels.0.tunnel_up_track"); ok {
+					permanentTunnelsPayload["tunnel-up-track"] = v.(string)
+				}
+				vpnCommunityMeshed["permanent-tunnels"] = permanentTunnelsPayload
+			}
+		}
+	}
+
+	if d.HasChange("wire_mode") {
+
+		if v, ok := d.GetOk("wire_mode"); ok {
+
+			wireModeList := v.([]interface{})
+
+			if len(wireModeList) > 0 {
+
+				wireModePayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("wire_mode.0.allow_uninspected_encrypted_traffic"); ok {
+					wireModePayload["allow-uninspected-encrypted-traffic"] = v.(bool)
+				}
+				if v, ok := d.GetOk("wire_mode.0.allow_uninspected_encrypted_routing"); ok {
+					wireModePayload["allow-uninspected-encrypted-routing"] = v.(bool)
+				}
+				vpnCommunityMeshed["wire-mode"] = wireModePayload
+			}
+		}
+	}
+
+	if ok := d.HasChange("routing_mode"); ok {
+		vpnCommunityMeshed["routing-mode"] = d.Get("routing_mode")
+	}
+
+	if d.HasChange("advanced_properties") {
+
+		if v, ok := d.GetOk("advanced_properties"); ok {
+
+			advancedPropertiesList := v.([]interface{})
+
+			if len(advancedPropertiesList) > 0 {
+
+				advancedPropertiesPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("advanced_properties.0.support_ip_compression"); ok {
+					advancedPropertiesPayload["support-ip-compression"] = v.(bool)
+				}
+				if v, ok := d.GetOk("advanced_properties.0.use_aggressive_mode"); ok {
+					advancedPropertiesPayload["use-aggressive-mode"] = v.(bool)
+				}
+				vpnCommunityMeshed["advanced-properties"] = advancedPropertiesPayload
 			}
 		}
 	}

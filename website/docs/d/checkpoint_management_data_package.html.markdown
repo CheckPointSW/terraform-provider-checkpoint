@@ -28,6 +28,7 @@ The following arguments are supported:
 
 * `name` - (Optional) Object name. Should be unique in the domain.
 * `uid` - (Optional) Object unique identifier. 
+* `show_installation_targets` - (Optional) Indicates whether to calculate and show "installation-targets" field in reply.
 * `access` - True - enables, False - disables access & NAT policies, empty - nothing is changed.
 * `desktop_security` - True - enables, False - disables Desktop security policy, empty - nothing is changed.
 * `qos` - True - enables, False - disables QoS policy, empty - nothing is changed.

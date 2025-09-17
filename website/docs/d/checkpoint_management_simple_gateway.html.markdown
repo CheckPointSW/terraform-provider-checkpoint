@@ -51,6 +51,7 @@ The following arguments are supported:
 * `ipv4_address` - IPv4 address.
 * `ipv6_address` - IPv6 address.
 * `ips` - Intrusion Prevention System blade enabled.
+* `ips_settings` - Gateway IPS settings.ips_settings blocks are documented below.
 * `ips_update_policy` - Specifies whether the IPS will be downloaded from the Management or directly to the Gateway.
 * `nat_hide_internal_interfaces` - Hide internal networks behind the Gateway's external IP.
 * `nat_settings` - NAT settings.nat_settings blocks are documented below.
@@ -147,6 +148,17 @@ The following arguments are supported:
 * `comments` - Comments string.
 * `ignore_errors` - Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 
+`ips_settings` supports the following:
+
+* `bypass_all_under_load` - Disable/enable all IPS protections until CPU and memory levels are back to normal.
+* `bypass_track_method` - Track options when all IPS protections are disabled until CPU/memory levels are back to normal.
+* `top_cpu_consuming_protections` - Provides a way to reduce CPU levels on machines under load by disabling the top CPU consuming IPS protections.top_cpu_consuming_protections blocks are documented below.
+* `activation_mode` - Defines whether the IPS blade operates in Detect Only mode or enforces the configured IPS Policy.
+* `cpu_usage_low_threshold` - CPU usage low threshold percentage (1-99).
+* `cpu_usage_high_threshold` - CPU usage high threshold percentage (1-99).
+* `memory_usage_low_threshold` - Memory usage low threshold percentage (1-99).
+* `memory_usage_high_threshold` - Memory usage high threshold percentage (1-99).
+* `send_threat_cloud_info` - Help improve Check Point Threat Prevention product by sending anonymous information.
 
 `nat_settings` supports the following:
 

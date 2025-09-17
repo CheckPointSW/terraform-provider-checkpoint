@@ -38,6 +38,25 @@ func dataSourceManagementVpnCommunityRemoteAccess() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"override_vpn_domains": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The Overrides VPN Domains of the participants GWs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"gateway": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Participant gateway in override VPN domain identified by the name or UID.",
+						},
+						"vpn_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "VPN domain network identified by the name or UID.",
+						},
+					},
+				},
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -129,6 +148,30 @@ func dataSourceManagementVpnCommunityRemoteAccessRead(d *schema.ResourceData, m 
 		}
 	} else {
 		_ = d.Set("user_groups", nil)
+	}
+
+	if vpnCommunityRemoteAccess["override-vpn-domains"] != nil {
+		overrideVpnDomainsList := vpnCommunityRemoteAccess["override-vpn-domains"].([]interface{})
+		var overrideVpnDomainsListToReturn []map[string]interface{}
+		if len(overrideVpnDomainsList) > 0 {
+			for i := range overrideVpnDomainsList {
+
+				overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
+
+				overrideVpnDomainsMapToAdd := make(map[string]interface{})
+
+				if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
+					overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
+				}
+				if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
+					overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
+				}
+				overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
+			}
+		}
+		_ = d.Set("override_vpn_domains", overrideVpnDomainsListToReturn)
+	} else {
+		_ = d.Set("override_vpn_domains", nil)
 	}
 
 	if vpnCommunityRemoteAccess["tags"] != nil {
