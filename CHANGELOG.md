@@ -1,3 +1,19 @@
+## 2.12.0
+
+ENHANCEMENTS
+* Added new fields to resources and data sources according to v2.0.1:
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_data_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_data_vpn_community_star`
+  * **Data Source:** `checkpoint_management_data_package`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_data_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_data_vpn_community_star`
+
 ## 2.11.0
 
 ENHANCEMENTS
