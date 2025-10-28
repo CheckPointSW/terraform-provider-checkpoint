@@ -1,3 +1,49 @@
+## 2.12.0
+
+ENHANCEMENTS
+* Fixed 'enabled' field logic in  `checkpoint_management_access_rule` resource
+* Added new fields to resources and data sources according to v2.0.1:
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_data_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_data_vpn_community_star`
+  * **Data Source:** `checkpoint_management_data_package`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_data_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_data_vpn_community_star`
+
+FEATURES
+* **New Resource:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Resource:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Resource:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Resource:** `checkpoint_management_subordinate_ca`
+* **New Resource:** `checkpoint_management_command_set_smart_console_idle_timeout`
+* **New Resource:** `checkpoint_management_command_set_login_restrictions`
+* **New Resource:** `checkpoint_management_logical_server`
+* **New Resource:** `checkpoint_management_command_renew_scaled_sharing_server_certificate`
+* **New Resource:** `checkpoint_management_command_set_default_administrator_settings`
+* **New Resource:** `checkpoint_management_command_compliance_scan`
+* **New Resource:** `checkpoint_management_command_set_cp_password_requirements`
+* **New Resource:** `checkpoint_management_command_change_password_on_next_login`
+* **New Data Source:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Data Source:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Data Source:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Data Source:** `checkpoint_management_subordinate_ca`
+* **New Data Source:** `checkpoint_management_smart_console_idle_timeout`
+* **New Data Source:** `checkpoint_management_login_restrictions`
+* **New Data Source:** `checkpoint_management_logical_server`
+* **New Data Source:** `checkpoint_management_default_administrator_settings`
+* **New Data Source:** `checkpoint_management_cp_password_requirements`
+* **New Data Source:** `checkpoint_management_best_practice`
+
+
 ## 2.11.0 (September 3, 2025)
 
 ENHANCEMENTS
