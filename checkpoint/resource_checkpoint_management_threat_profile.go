@@ -307,6 +307,16 @@ func resourceManagementThreatProfile() *schema.Resource {
 				Default:     true,
 				Description: "Is Anti-Virus blade activated.",
 			},
+			"threat_extraction": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Is Threat-Extraction blade activated.",
+			},
+			"zero_phishing": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Is Zero-Phishing blade activated.",
+			},
 			"ips": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -602,6 +612,14 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	if v, ok := d.GetOkExists("anti_virus"); ok {
 		threatProfile["anti-virus"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("threat_extraction"); ok {
+		threatProfile["threat-extraction"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("zero_phishing"); ok {
+		threatProfile["zero-phishing"] = v.(bool)
 	}
 
 	if v, ok := d.GetOkExists("ips"); ok {
@@ -1015,6 +1033,14 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("anti_virus", v)
 	}
 
+	if v := threatProfile["threat-extraction"]; v != nil {
+		_ = d.Set("threat_extraction", v)
+	}
+
+	if v := threatProfile["zero-phishing"]; v != nil {
+		_ = d.Set("zero_phishing", v)
+	}
+
 	if v := threatProfile["ips"]; v != nil {
 		_ = d.Set("ips", v)
 	}
@@ -1233,6 +1259,14 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	if ok := d.HasChange("anti_virus"); ok {
 		threatProfile["anti-virus"] = d.Get("anti_virus")
+	}
+
+	if ok := d.HasChange("threat_extraction"); ok {
+		threatProfile["threat-extraction"] = d.Get("threat_extraction")
+	}
+
+	if ok := d.HasChange("zero_phishing"); ok {
+		threatProfile["zero-phishing"] = d.Get("zero_phishing")
 	}
 
 	if ok := d.HasChange("ips"); ok {
