@@ -2,6 +2,7 @@
 
 ENHANCEMENTS
 * Fixed 'enabled' field logic in  `checkpoint_management_access_rule` resource
+* Fixed `task_id` field in `checkpoint_management_repository_package` data source
 * Added new fields to resources and data sources according to v2.0.1:
   * **Resource:** `checkpoint_management_simple_cluster`
   * **Resource:** `checkpoint_management_simple_gateway`
@@ -22,14 +23,14 @@ FEATURES
 * **New Resource:** `checkpoint_management_voip_domain_h323_gateway`
 * **New Resource:** `checkpoint_management_voip_domain_h323_gatekeeper`
 * **New Resource:** `checkpoint_management_subordinate_ca`
-* **New Resource:** `checkpoint_management_command_set_smart_console_idle_timeout`
-* **New Resource:** `checkpoint_management_command_set_login_restrictions`
+* **New Resource:** `checkpoint_management_set_smart_console_idle_timeout`
+* **New Resource:** `checkpoint_management_set_login_restrictions`
 * **New Resource:** `checkpoint_management_logical_server`
-* **New Resource:** `checkpoint_management_command_renew_scaled_sharing_server_certificate`
-* **New Resource:** `checkpoint_management_command_set_default_administrator_settings`
-* **New Resource:** `checkpoint_management_command_compliance_scan`
-* **New Resource:** `checkpoint_management_command_set_cp_password_requirements`
-* **New Resource:** `checkpoint_management_command_change_password_on_next_login`
+* **New Resource:** `checkpoint_management_renew_scaled_sharing_server_certificate`
+* **New Resource:** `checkpoint_management_set_default_administrator_settings`
+* **New Resource:** `checkpoint_management_compliance_scan`
+* **New Resource:** `checkpoint_management_set_cp_password_requirements`
+* **New Resource:** `checkpoint_management_change_password_on_next_login`
 * **New Data Source:** `checkpoint_management_voip_domain_sip_proxy`
 * **New Data Source:** `checkpoint_management_voip_domain_sccp_call_manager`
 * **New Data Source:** `checkpoint_management_voip_domain_mgcp_call_agent`

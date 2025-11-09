@@ -46,18 +46,17 @@ func dataSourceManagementRepositoryPackageRead(d *schema.ResourceData, m interfa
 
 	log.Println("Read RepositoryPackage - Show JSON = ", RepositoryPackage)
 
-	if v := RepositoryPackage["uid"]; v != nil {
-		_ = d.Set("uid", v)
-		d.SetId(v.(string))
+	taskId := resolveTaskId(RepositoryPackage)
+
+	if taskId != nil {
+		d.SetId(taskId.(string))
 	}
 
 	if v, ok := d.GetOk("name"); ok {
 		_ = d.Set("name", v.(string))
 	}
 
-	if v, ok := d.GetOk("task_id"); ok {
-		_ = d.Set("task_id", v.(string))
-	}
+	_ = d.Set("task_id", taskId)
 
 	return nil
 }
