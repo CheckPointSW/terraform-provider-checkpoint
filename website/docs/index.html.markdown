@@ -395,7 +395,7 @@ The table below shows the compatibility between the Terraform Release version an
 | v2.7.0                    | v1.1            | 255 and higher |
 
 <br>
--> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
+**Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
 
 For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
 
@@ -442,7 +442,9 @@ This section describes best practices for working with the Check Point provider.
 ### Publish best options and practices
 
 #### Trigger field
+
 From version 1.2 the provider was enhanced where a `triggers` field for resource `install-policy`, `publish` and `logout` was added for re-execution if there are any changes in the configuration files.
+
 ```hcl
 # Put the Check Point configuration in a sub folder and refer to is as a module
 module "chkp_policy" {
@@ -460,8 +462,10 @@ resource "checkpoint_management_publish" "publish" {
   triggers = local.publish_triggers
 }
 ```
+<br>
 
 #### Avoid large bulk publishes
+
 From version 2.5.0 the provider was enhanced with support to auto publish mode using `auto_publish_batch_size` or via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable to configure the number of batch size to automatically run publish.
 <br>Note: To make sure all changes are published need to do publish explicitly at the end of the execution.
 ```hcl
@@ -473,6 +477,8 @@ provider "checkpoint" {
   auto_publish_batch_size = "100"
 }
 ```
+
+<br>
 
 #### Control publish post destroy
 From version 2.6.0 the provider was enhanced where a new flag was added `run_publish_on_destroy` to `checkpoint_management_publish` which indicates whether to run publish on destroy.

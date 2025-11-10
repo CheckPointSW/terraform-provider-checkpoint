@@ -897,7 +897,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("content") {
-		if v, ok := d.GetOkExists("content"); ok {
+		if v, ok := d.GetOk("content"); ok {
 			accessRule["content"] = v.(*schema.Set).List()
 		}
 		//else {
@@ -965,7 +965,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("install_on") {
-		if v, ok := d.GetOkExists("install_on"); ok {
+		if v, ok := d.GetOk("install_on"); ok {
 			accessRule["install-on"] = v.(*schema.Set).List()
 		}
 		//else {
@@ -975,7 +975,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("service") {
-		if v, ok := d.GetOkExists("service"); ok {
+		if v, ok := d.GetOk("service"); ok {
 			accessRule["service"] = v.(*schema.Set).List()
 		}
 		//else {
@@ -991,7 +991,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("source") {
-		if v, ok := d.GetOkExists("source"); ok {
+		if v, ok := d.GetOk("source"); ok {
 			accessRule["source"] = v.(*schema.Set).List()
 		}
 		//else {
@@ -1007,7 +1007,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("time") {
-		if v, ok := d.GetOkExists("time"); ok {
+		if v, ok := d.GetOk("time"); ok {
 			accessRule["time"] = v.(*schema.Set).List()
 		}
 		//else {
@@ -1080,7 +1080,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("vpn_communities") {
-		if v, ok := d.GetOkExists("vpn_communities"); ok {
+		if v, ok := d.GetOk("vpn_communities"); ok {
 			accessRule["vpn"] = v.(*schema.Set).List()
 		}
 	}
