@@ -29,7 +29,8 @@ The following arguments are supported:
 * `script` - (Required) Script body. 
 * `targets` - (Required) On what targets to execute this command. Targets may be identified by their name, or object unique identifier.targets blocks are documented below.
 * `args` - (Optional) Script arguments. 
-* `comments` - (Optional) Comments string. 
+* `comments` - (Optional) Comments string.
+* `timeout` - (Optional) Script timeout in seconds.
 * `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 * `response` - Response message in JSON format.
 

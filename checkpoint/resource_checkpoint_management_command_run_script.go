@@ -47,6 +47,12 @@ func resourceManagementRunScript() *schema.Resource {
 				ForceNew:    true,
 				Description: "Comments string.",
 			},
+			"timeout": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Script timeout in seconds.",
+			},
 			"tasks": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -86,6 +92,10 @@ func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("comments"); ok {
 		payload["comments"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("timeout"); ok {
+		payload["timeout"] = v
 	}
 
 	runScriptRes, err := client.ApiCall("run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
