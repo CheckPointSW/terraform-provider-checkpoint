@@ -1,9 +1,8 @@
-## 2.12.0
+## 2.12.0 (November 10, 2025)
 
 ENHANCEMENTS
-* Fixed 'enabled' field logic in  `checkpoint_management_access_rule` resource
-* Fixed `task_id` field in `checkpoint_management_repository_package` data source
-* Added new fields to resources and data sources according to v2.0.1:
+* Add `timeout` field to run script resource
+* Add new fields to the following resources and data sources according to Management API v2.0.1:
   * **Resource:** `checkpoint_management_simple_cluster`
   * **Resource:** `checkpoint_management_simple_gateway`
   * **Resource:** `checkpoint_management_data_vpn_community_meshed`
@@ -44,13 +43,16 @@ FEATURES
 * **New Data Source:** `checkpoint_management_cp_password_requirements`
 * **New Data Source:** `checkpoint_management_best_practice`
 
+BUG FIXES
+* Fix `enabled` field in `checkpoint_management_access_rule` resource
+* Fix `task_id` field in `checkpoint_management_repository_package` data source
 
 ## 2.11.0 (September 3, 2025)
 
 ENHANCEMENTS
 * Use GO SDK v1.9.0
 * Use CME v1.3.1
-* Add some new fields to `checkpoint_management_threat_profile`
+* Add new fields to `checkpoint_management_threat_profile`
 
 FEATURES
 * **New Resource:** `checkpoint_management_syslog_server`
