@@ -436,7 +436,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("destination_negate"); ok {
 		accessRule["destination-negate"] = v.(bool)
 	}
-	if v, ok := d.GetOk("enabled"); ok {
+	if v, ok := d.GetOkExists("enabled"); ok {
 		accessRule["enabled"] = v.(bool)
 	}
 	if val, ok := d.GetOk("inline_layer"); ok {
@@ -953,7 +953,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("enabled") {
-		if v, ok := d.GetOk("enabled"); ok {
+		if v, ok := d.GetOkExists("enabled"); ok {
 			accessRule["enabled"] = v
 		}
 	}
