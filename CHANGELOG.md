@@ -1,3 +1,7 @@
+## 2.13.0
+BUG FIXES
+* Fix `checkpoint_management_azure_ad` resource when authentication method is set to "service-principal-authentication"
+
 ## 2.12.0 (November 10, 2025)
 
 ENHANCEMENTS
