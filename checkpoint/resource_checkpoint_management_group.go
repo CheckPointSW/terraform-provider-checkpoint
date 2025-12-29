@@ -181,12 +181,12 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	group := make(map[string]interface{})
 
+	group["uid"] = d.Id()
+
 	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		group["name"] = oldName.(string)
-		group["new-name"] = newName.(string)
-	} else {
-		group["name"] = d.Get("name")
+		if v, ok := d.GetOk("name"); ok {
+			group["new-name"] = v.(string)
+		}
 	}
 
 	if ok := d.HasChange("members"); ok {

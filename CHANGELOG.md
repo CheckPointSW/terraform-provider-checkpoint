@@ -1,3 +1,107 @@
+## 2.13.0
+BUG FIXES
+* Fix `checkpoint_management_azure_ad` resource when authentication method is set to "service-principal-authentication"
+
+## 2.12.0 (November 10, 2025)
+
+ENHANCEMENTS
+* Add `timeout` field to run script resource
+* Add new fields to the following resources and data sources according to Management API v2.0.1:
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_data_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_data_vpn_community_star`
+  * **Data Source:** `checkpoint_management_data_package`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_data_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_data_vpn_community_star`
+
+FEATURES
+* **New Resource:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Resource:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Resource:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Resource:** `checkpoint_management_subordinate_ca`
+* **New Resource:** `checkpoint_management_set_smart_console_idle_timeout`
+* **New Resource:** `checkpoint_management_set_login_restrictions`
+* **New Resource:** `checkpoint_management_logical_server`
+* **New Resource:** `checkpoint_management_renew_scaled_sharing_server_certificate`
+* **New Resource:** `checkpoint_management_set_default_administrator_settings`
+* **New Resource:** `checkpoint_management_compliance_scan`
+* **New Resource:** `checkpoint_management_set_cp_password_requirements`
+* **New Resource:** `checkpoint_management_change_password_on_next_login`
+* **New Data Source:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Data Source:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Data Source:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Data Source:** `checkpoint_management_subordinate_ca`
+* **New Data Source:** `checkpoint_management_smart_console_idle_timeout`
+* **New Data Source:** `checkpoint_management_login_restrictions`
+* **New Data Source:** `checkpoint_management_logical_server`
+* **New Data Source:** `checkpoint_management_default_administrator_settings`
+* **New Data Source:** `checkpoint_management_cp_password_requirements`
+* **New Data Source:** `checkpoint_management_best_practice`
+
+BUG FIXES
+* Fix `enabled` field in `checkpoint_management_access_rule` resource
+* Fix `task_id` field in `checkpoint_management_repository_package` data source
+
+## 2.11.0 (September 3, 2025)
+
+ENHANCEMENTS
+* Use GO SDK v1.9.0
+* Use CME v1.3.1
+* Add new fields to `checkpoint_management_threat_profile`
+
+FEATURES
+* **New Resource:** `checkpoint_management_syslog_server`
+* **New Resource:** `checkpoint_management_securid_server`
+* **New Resource:** `checkpoint_management_securemote_dns_server`
+* **New Resource:** `checkpoint_management_resource_uri_for_qos`
+* **New Resource:** `checkpoint_management_resource_tcp`
+* **New Resource:** `checkpoint_management_resource_mms`
+* **New Resource:** `checkpoint_management_log_exporter`
+* **New Resource:** `checkpoint_management_ldap_group`
+* **New Resource:** `checkpoint_management_identity_provider`
+* **New Resource:** `checkpoint_management_if_map_server`
+* **New Resource:** `checkpoint_management_set_anti_malware_update_schedule`
+* **New Resource:** `checkpoint_management_set_app_control_update_schedule`
+* **New Resource:** `checkpoint_management_run_app_control_update`
+* **New Resource:** `checkpoint_management_set_sync_with_user_center`
+* **New Data Source:** `checkpoint_management_hosts`
+* **New Data Source:** `checkpoint_management_networks`
+* **New Data Source:** `checkpoint_management_services_tcp`
+* **New Data Source:** `checkpoint_management_services_udp`
+* **New Data Source:** `checkpoint_management_syslog_server`
+* **New Data Source:** `checkpoint_management_securid_server`
+* **New Data Source:** `checkpoint_management_securemote_dns_server`
+* **New Data Source:** `checkpoint_management_resource_uri_for_qos`
+* **New Data Source:** `checkpoint_management_resource_tcp`
+* **New Data Source:** `checkpoint_management_resource_mms`
+* **New Data Source:** `checkpoint_management_log_exporter`
+* **New Data Source:** `checkpoint_management_ldap_group`
+* **New Data Source:** `checkpoint_management_identity_provider`
+* **New Data Source:** `checkpoint_management_if_map_server`
+* **New Data Source:** `checkpoint_management_anti_malware_update_schedule`
+* **New Data Source:** `checkpoint_management_app_control_status`
+* **New Data Source:** `checkpoint_management_app_control_update_schedule`
+* **New Data Source:** `checkpoint_management_sync_with_user_center`
+
+## 2.10.0 (May 29, 2025)
+
+ENHANCEMENTS
+* Add new field with JSON response to `checkpoint_management_task`, `checkpoint_management_show_objects` and `checkpoint_management_run_script`
+* Update API calls will not send null values or undefined fields in `checkpoint_management_simple_cluster`, `checkpoint_management_simple_gateway`, `checkpoint_management_host`, `checkpoint_management_network`, `checkpoint_management_service_tcp` and `checkpoint_management_service_udp`
+
+BUG FIXES
+* Fix `checkpoint_management_https_rule` resource
+* Fix `checkpoint_management_install_policy` resource
+
 ## 2.9.0 (February 10, 2025)
 
 ENHANCEMENTS

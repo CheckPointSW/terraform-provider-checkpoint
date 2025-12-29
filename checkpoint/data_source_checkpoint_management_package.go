@@ -21,6 +21,11 @@ func dataSourceManagementPackage() *schema.Resource {
 				Optional:    true,
 				Description: "Object unique identifier.",
 			},
+			"show_installation_targets": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to calculate and show \"installation-targets\" field in reply.",
+			},
 			"access": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -94,6 +99,10 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 		payload["name"] = name
 	} else if uid != "" {
 		payload["uid"] = uid
+	}
+
+	if v, ok := d.GetOkExists("show_installation_targets"); ok {
+		payload["show-installation-targets"] = v.(bool)
 	}
 
 	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, client.IsProxyUsed())

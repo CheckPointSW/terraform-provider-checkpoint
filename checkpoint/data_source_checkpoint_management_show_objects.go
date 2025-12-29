@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"encoding/json"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
@@ -13,6 +14,14 @@ func dataSourceManagementShowObjects() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceManagementShowObjectsRead,
 		Schema: map[string]*schema.Schema{
+			"uids": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of UIDs of the objects to retrieve.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"filter": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -22,7 +31,6 @@ func dataSourceManagementShowObjects() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The objects' type, e.g.: host, service-tcp, network, address-range...",
-				Default:     "object",
 			},
 			"ip_only": {
 				Type:        schema.TypeBool,
@@ -56,6 +64,24 @@ func dataSourceManagementShowObjects() *schema.Resource {
 							Description: "Sorts results by the given field in descending order.",
 						},
 					},
+				},
+			},
+			"dereference_group_members": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to dereference \"members\" field by details level for every object in reply.",
+			},
+			"show_membership": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to calculate and show \"groups\" field for every object in reply.",
+			},
+			"domains_to_process": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ignore-warnings true. Valid values are: CURRENT_DOMAIN, ALL_DOMAINS_ON_THIS_SERVER.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 			"from": {
@@ -121,6 +147,11 @@ func dataSourceManagementShowObjects() *schema.Resource {
 					},
 				},
 			},
+			"response": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Response message in JSON format",
+			},
 		},
 	}
 }
@@ -130,6 +161,12 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 	client := m.(*checkpoint.ApiClient)
 
 	payload := make(map[string]interface{})
+
+	payload["details-level"] = "full"
+
+	if v, ok := d.GetOk("uids"); ok {
+		payload["uids"] = v.(*schema.Set).List()
+	}
 
 	if v, ok := d.GetOk("filter"); ok {
 		payload["filter"] = v.(string)
@@ -149,6 +186,18 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 
 	if v, ok := d.GetOk("type"); ok {
 		payload["type"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("dereference_group_members"); ok {
+		payload["dereference-group-members"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("show_membership"); ok {
+		payload["show-membership"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("domains_to_process"); ok {
+		payload["domains-to-process"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOk("order"); ok {
@@ -247,6 +296,14 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 		}
 	} else {
 		_ = d.Set("objects", nil)
+	}
+
+	jsonResponse, err := json.Marshal(objectsData)
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if jsonResponse != nil {
+		_ = d.Set("response", string(jsonResponse))
 	}
 
 	return nil

@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"encoding/json"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
@@ -60,6 +61,11 @@ func dataSourceManagementTask() *schema.Resource {
 					},
 				},
 			},
+			"response": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Response message in JSON format",
+			},
 		},
 	}
 }
@@ -71,6 +77,7 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("task_id"); ok {
 		payload["task-id"] = v.(*schema.Set).List()
+		payload["details-level"] = "full"
 	}
 
 	showTaskRes, err := client.ApiCall("show-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
@@ -84,8 +91,6 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 	task := showTaskRes.GetData()
 
 	log.Println("Read Task - Show JSON = ", task)
-
-	d.SetId("show-task-" + acctest.RandString(10))
 
 	if task["tasks"] != nil {
 		tasksList := task["tasks"].([]interface{})
@@ -126,6 +131,16 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 	} else {
 		_ = d.Set("tasks", nil)
 	}
+
+	jsonResponse, err := json.Marshal(task)
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if jsonResponse != nil {
+		_ = d.Set("response", string(jsonResponse))
+	}
+
+	d.SetId("show-task-" + acctest.RandString(10))
 
 	return nil
 }

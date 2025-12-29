@@ -29,28 +29,28 @@ func resourceManagementAzureAd() *schema.Resource {
 			},
 			"password": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
 				Description: "Password of the Azure account. Required for authentication-method: user-authentication.",
 			},
 			"username": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "An Azure Active Directory user Format <username>@<domain>. Required for authentication-method: user-authentication",
 			},
 			"application_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The Application ID of the Service Principal, in UUID format. Required for authentication-method: service-principal-authentication.",
 			},
 			"application_key": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The key created for the Service Principal. Required for authentication-method: service-principal-authentication.",
 			},
 			"directory_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The Directory ID of the Azure AD, in UUID format. Required for authentication-method: service-principal-authentication.",
 			},
 			"tags": {
@@ -156,7 +156,23 @@ func createManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf(err.Error())
 	}
 
-	d.SetId(addAzureAdRes.GetData()["uid"].(string))
+	payload := map[string]interface{}{
+		"name": d.Get("name").(string),
+	}
+
+	showAzureAdRes, err := client.ApiCall("show-azure-ad", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	if !showAzureAdRes.Success {
+		if objectNotFound(showAzureAdRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf(showAzureAdRes.ErrorMsg)
+	}
+
+	d.SetId(showAzureAdRes.GetData()["uid"].(string))
 	_ = d.Set("task_id", resolveTaskId(addAzureAdRes.GetData()))
 
 	return readManagementAzureAd(d, m)

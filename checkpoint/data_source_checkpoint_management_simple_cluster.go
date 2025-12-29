@@ -879,7 +879,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Use custom proxy settings for this network object.",
-							Default:     false,
+							//Default:     false,
 						},
 						"proxy_server": {
 							Type:        schema.TypeString,
@@ -890,7 +890,7 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "N/A",
-							Default:     80,
+							//Default:     80,
 						},
 					},
 				},
@@ -1301,6 +1301,81 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 				Computed:    true,
 				Description: "Intrusion Prevention System blade enabled.",
 			},
+			"ips_settings": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Cluster IPS settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bypass_all_under_load": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Disable/enable all IPS protections until CPU and memory levels are back to normal.",
+						},
+						"bypass_track_method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Track options when all IPS protections are disabled until CPU/memory levels are back to normal.",
+						},
+						"top_cpu_consuming_protections": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Provides a way to reduce CPU levels on machines under load by disabling the top CPU consuming IPS protections.",
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"disable_period": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Duration (in hours) for disabling the protections.",
+									},
+									"disable_under_load": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Temporarily disable/enable top CPU consuming IPS protections.",
+									},
+								},
+							},
+						},
+						"activation_mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Defines whether the IPS blade operates in Detect Only mode or enforces the configured IPS Policy.",
+						},
+						"cpu_usage_low_threshold": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "CPU usage low threshold percentage (1-99).",
+						},
+						"cpu_usage_high_threshold": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "CPU usage high threshold percentage (1-99).",
+						},
+						"memory_usage_low_threshold": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory usage low threshold percentage (1-99).",
+						},
+						"memory_usage_high_threshold": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory usage high threshold percentage (1-99).",
+						},
+						"send_threat_cloud_info": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Help improve Check Point Threat Prevention product by sending anonymous information.",
+						},
+						"reject_on_cluster_fail_over": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Define the IPS connections during fail over reject packets or accept packets.",
+						},
+					},
+				},
+			},
 			"threat_emulation": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -1530,6 +1605,11 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Stop logging when free disk space below threshold.",
+						},
+						"stop_logging_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stop logging when free disk space below metrics.",
 						},
 						"turn_on_qos_logging": {
 							Type:        schema.TypeBool,
@@ -1826,6 +1906,11 @@ func dataSourceManagementSimpleCluster() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Gateway VPN domain type.",
+						},
+						"vpn_domain_exclude_external_ip_addresses": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Exclude the external IP addresses from the VPN domain of this Security Gateway.",
 						},
 					},
 				},
@@ -2550,6 +2635,62 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("ips", v)
 	}
 
+	if cluster["ips-settings"] != nil {
+
+		ipsSettingsMap, ok := cluster["ips-settings"].(map[string]interface{})
+
+		if ok {
+			ipsSettingsMapToReturn := make(map[string]interface{})
+
+			if v := ipsSettingsMap["bypass-all-under-load"]; v != nil {
+				ipsSettingsMapToReturn["bypass_all_under_load"] = v
+			}
+			if v := ipsSettingsMap["bypass-track-method"]; v != nil {
+				ipsSettingsMapToReturn["bypass_track_method"] = v
+			}
+			if v, ok := ipsSettingsMap["top-cpu-consuming-protections"]; ok {
+
+				topCpuConsumingProtectionsMap, ok := v.(map[string]interface{})
+				if ok {
+					topCpuConsumingProtectionsMapToReturn := make(map[string]interface{})
+
+					if v, _ := topCpuConsumingProtectionsMap["disable-period"]; v != nil {
+						topCpuConsumingProtectionsMapToReturn["disable_period"] = v
+					}
+					if v, _ := topCpuConsumingProtectionsMap["disable-under-load"]; v != nil {
+						topCpuConsumingProtectionsMapToReturn["disable_under_load"] = v
+					}
+					ipsSettingsMapToReturn["top_cpu_consuming_protections"] = []interface{}{topCpuConsumingProtectionsMapToReturn}
+				}
+			}
+			if v := ipsSettingsMap["activation-mode"]; v != nil {
+				ipsSettingsMapToReturn["activation_mode"] = v
+			}
+			if v := ipsSettingsMap["cpu-usage-low-threshold"]; v != nil {
+				ipsSettingsMapToReturn["cpu_usage_low_threshold"] = v
+			}
+			if v := ipsSettingsMap["cpu-usage-high-threshold"]; v != nil {
+				ipsSettingsMapToReturn["cpu_usage_high_threshold"] = v
+			}
+			if v := ipsSettingsMap["memory-usage-low-threshold"]; v != nil {
+				ipsSettingsMapToReturn["memory_usage_low_threshold"] = v
+			}
+			if v := ipsSettingsMap["memory-usage-high-threshold"]; v != nil {
+				ipsSettingsMapToReturn["memory_usage_high_threshold"] = v
+			}
+			if v := ipsSettingsMap["send-threat-cloud-info"]; v != nil {
+				ipsSettingsMapToReturn["send_threat_cloud_info"] = v
+			}
+			if v := ipsSettingsMap["reject-on-cluster-fail-over"]; v != nil {
+				ipsSettingsMapToReturn["reject_on_cluster_fail_over"] = v
+			}
+			_ = d.Set("ips_settings", []interface{}{ipsSettingsMapToReturn})
+
+		}
+	} else {
+		_ = d.Set("ips_settings", nil)
+	}
+
 	if v := cluster["threat-emulation"]; v != nil {
 		_ = d.Set("threat_emulation", v)
 	}
@@ -2782,6 +2923,9 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 		if v := vpnSettingsJson["vpn-domain"]; v != nil {
 			vpnSettingsState["vpn_domain"] = v.(map[string]interface{})["name"]
 		}
+		if v := vpnSettingsJson["vpn-domain-exclude-external-ip-addresses"]; v != nil {
+			vpnSettingsState["vpn_domain_exclude_external_ip_addresses"] = v
+		}
 		if v := vpnSettingsJson["remote-access"]; v != nil {
 			remoteAccessJson := v.(map[string]interface{})
 			remoteAccessState := make(map[string]interface{})
@@ -2908,9 +3052,9 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 			}
 			vpnSettingsState["office_mode"] = officeModeState
 		}
-		_ = d.Set("vpn-settings", vpnSettingsState)
+		_ = d.Set("vpn_settings", vpnSettingsState)
 	} else {
-		_ = d.Set("vpn-settings", nil)
+		_ = d.Set("vpn_settings", nil)
 	}
 
 	if v := cluster["tags"]; v != nil {

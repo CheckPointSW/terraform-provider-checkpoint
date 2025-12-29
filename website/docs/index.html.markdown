@@ -119,7 +119,7 @@ The following arguments are supported:
   the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable.
 * `ignore_server_certificate` - (Optional) Indicates that the client should not check the server's certificate. This can also be defined via
   the `CHECKPOINT_IGNORE_SERVER_CERTIFICATE` environment variable.
-  
+
 ## Authentication
 
 Check Point Provider offers providing credentials for authentication. The following methods are supported:
@@ -259,10 +259,9 @@ resource "checkpoint_hostname" "hostname" {
 
 ## Post Apply / Destroy scripts
 
-As of right now, Terraform does not provide native support for publish and install-policy, so both of them and more post apply actions are handled
-out-of-band.
+There are actions that can run out-of-band Terraform using dedicated scripts for publish, install-policy and more.
 
-In order to use post Apply / Destroy commands, the authentication method must be via environment variables.
+In order to use post apply or post destroy commands, the authentication method must be via environment variables.
 
 ### Publish
 
@@ -275,14 +274,20 @@ $ mv publish $GOPATH/src/github.com/terraform-providers/terraform-provider-check
 $ terraform apply && publish
 ```
 
-Another option is to use `auto_publish_batch_size` provider argument which automatically runs publish.
-
 ### Install Policy
 
 The following arguments are supported:
 
 * `policy-package` - (Required) The name of the Policy Package to be installed.
-* `target` - (Required) On what targets to execute this command. Targets may be identified by their name or object unique identifier. Multiple targets can be added.
+* `target` - (Optional) On what targets to execute this command. Targets may be identified by their name or object unique identifier. Multiple targets can be added.
+* `access` - (Optional) Set to be true in order to install the Access Control policy. By default, the value is true if Access Control policy is enabled on the input policy package, otherwise false.
+* `desktop-security` - (Optional) Set to be true in order to install the Desktop Security policy. By default, the value is true if desktop security policy is enabled on the input policy package, otherwise false.
+* `qos` - (Optional) Set to be true in order to install the QoS policy. By default, the value is true if Quality-of-Service policy is enabled on the input policy package, otherwise false.
+* `threat-prevention` - (Optional) Set to be true in order to install the Threat Prevention policy. By default, the value is true if Threat Prevention policy is enabled on the input policy package, otherwise false.
+* `install-on-all-cluster-members-or-fail` - (Optional) Relevant for the gateway clusters. If true, the policy is installed on all the cluster members. If the installation on a cluster member fails, don't install on that cluster.
+* `prepare-only` - (Optional) If true, prepares the policy for the installation, but doesn't install it on an installation target.
+* `revision` - (Optional) The UID of the revision of the policy to install.
+* `ignore-warnings` - (Optional) Install policy ignoring policy mismatch warnings.
 
 Please use the following script for Install Policy:
 
@@ -385,11 +390,13 @@ The table below shows the compatibility between the Terraform Release version an
 
 | Terraform Release version | CME API version | CME Take       |
 |---------------------------|-----------------|----------------|
+| v2.11.0                   | v1.3.1          | 309 and higher |
 | v2.9.0                    | v1.2.2          | 289 and higher |
 | v2.8.0                    | v1.2            | 279 and higher |
 | v2.7.0                    | v1.1            | 255 and higher |
+
 <br>
--> **Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
+**Note:** When you install or upgrade the Terraform Release version, make sure to also upgrade CME to the corresponding CME Take to properly configure CME resources.
 
 For details about upgrading CME, please refer to the documentation [here](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CME/Content/Topics-CME/Installing_and_Updating_CME.htm?tocpath=_____4).
 
@@ -431,3 +438,53 @@ This section describes best practices for working with the Check Point provider.
 * Keep on unique `session_file_name` when configure more than one provider for authentication purposes.
 * Resources and Data Sources that start with `checkpoint_management_*` using Management API and require set context to `web_api`. For GAIA API resources set context to `gaia_api`.
 * When configure provider context to `gaia_api` you can run only GAIA resources. Management resources will not be supported.
+* Provider state policy is to capture all resource attributes into Terraform state. All attributes defined in the resource schema are recorded and kept up-to-date in the state. For more information, please refer [here](https://developer.hashicorp.com/terraform/plugin/sdkv2/best-practices/detecting-drift#capture-all-state-in-read).
+
+### Publish best options and practices
+
+#### Trigger field
+From version 1.2 the provider was enhanced where a `triggers` field for resource `install-policy`, `publish` and `logout` was added for re-execution if there are any changes in the configuration files.
+
+```hcl
+# Put the Check Point configuration in a sub folder and refer to is as a module
+module "chkp_policy" {
+  source = "./chkp_policy"
+}
+
+# Activate the trigger if there is a change in the configuration files in the folder chkp_policy
+locals {
+  publish_triggers = [for filename in fileset(path.module, "chkp_policy/*.tf"): filesha256(filename)]
+}
+
+# Make the publish resources dependent of the module and **trigger** it if there is a change in the configuration files
+resource "checkpoint_management_publish" "publish" {
+  depends_on = [ module.policy ]
+  triggers = local.publish_triggers
+}
+```
+<br>
+
+#### Avoid large bulk publishes
+From version 2.5.0 the provider was enhanced with support to auto publish mode using `auto_publish_batch_size` or via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable to configure the number of batch size to automatically run publish.
+<br>Note: To make sure all changes are published need to do publish explicitly at the end of the execution.
+```hcl
+# Configure the Check Point Provider
+provider "checkpoint" {
+  server = "chkp-mgmt-srv.local"
+  api_key = "admin_api_key"
+  context = "web_api"
+  auto_publish_batch_size = "100"
+}
+```
+<br>
+
+#### Control publish post destroy
+From version 2.6.0 the provider was enhanced where a new flag was added `run_publish_on_destroy` to `checkpoint_management_publish` which indicates whether to run publish on destroy.
+```hcl
+# Make the publish resources dependent of the module and trigger it if there is a change in the configuration files
+resource "checkpoint_management_publish" "publish" {
+  depends_on = [ module.policy ]
+  triggers = local.publish_triggers
+  run_publish_on_destroy = true
+}
+```

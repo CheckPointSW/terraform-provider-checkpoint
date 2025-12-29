@@ -144,6 +144,7 @@ func resourceManagementAccessRule() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Default: nil,
 			},
 			"destination_negate": {
 				Type:        schema.TypeBool,
@@ -435,7 +436,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("destination_negate"); ok {
 		accessRule["destination-negate"] = v.(bool)
 	}
-	if v, ok := d.GetOk("enabled"); ok {
+	if v, ok := d.GetOkExists("enabled"); ok {
 		accessRule["enabled"] = v.(bool)
 	}
 	if val, ok := d.GetOk("inline_layer"); ok {
@@ -864,93 +865,97 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("name") {
-		accessRule["new-name"] = d.Get("name")
+		if v, ok := d.GetOk("name"); ok {
+			accessRule["new-name"] = v
+		}
 	}
 
 	if d.HasChange("action") {
-		accessRule["action"] = d.Get("action")
-		if val, ok := d.GetOk("inline_layer"); ok {
-			accessRule["inline-layer"] = val.(string)
+		if v, ok := d.GetOk("action"); ok {
+			accessRule["action"] = v
+
+			if val, ok := d.GetOk("inline_layer"); ok {
+				accessRule["inline-layer"] = val.(string)
+			}
 		}
 	}
 
 	if d.HasChange("action_settings") {
-
 		if _, ok := d.GetOk("action_settings"); ok {
-
 			res := make(map[string]interface{})
-
-			if d.HasChange("action_settings.enable_identity_captive_portal") {
-				if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
-					res["enable-identity-captive-portal"] = v
-				}
+			if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
+				res["enable-identity-captive-portal"] = v
 			}
-			if d.HasChange("action_settings.limit") {
-				if v, ok := d.GetOk("action_settings.limit"); ok {
-					res["limit"] = v.(string)
-				}
+			if v, ok := d.GetOk("action_settings.limit"); ok {
+				res["limit"] = v.(string)
 			}
-
 			accessRule["action-settings"] = res
-		} else { //argument deleted - go back to defaults
-			accessRule["action-settings"] = map[string]interface{}{"enable-identity-captive-portal": "false"}
 		}
+		//else { //argument deleted - go back to defaults
+		//	accessRule["action-settings"] = map[string]interface{}{"enable-identity-captive-portal": "false"}
+		//}
 	}
 
 	if d.HasChange("content") {
 		if v, ok := d.GetOk("content"); ok {
 			accessRule["content"] = v.(*schema.Set).List()
-		} else {
-			oldContent, _ := d.GetChange("content")
-			accessRule["content"] = map[string]interface{}{"remove": oldContent.(*schema.Set).List()}
 		}
+		//else {
+		//	oldContent, _ := d.GetChange("content")
+		//	if oldContent != nil {
+		//		accessRule["content"] = map[string]interface{}{"remove": oldContent.(*schema.Set).List()}
+		//	}
+		//}
 	}
 
 	if d.HasChange("content_direction") {
-		accessRule["content-direction"] = d.Get("content_direction")
+		if v, ok := d.GetOk("content_direction"); ok {
+			accessRule["content-direction"] = v
+		}
 	}
 
 	if d.HasChange("content_negate") {
-		accessRule["content-negate"] = d.Get("content_negate")
+		if v, ok := d.GetOk("content_negate"); ok {
+			accessRule["content-negate"] = v
+		}
 	}
 
 	if d.HasChange("custom_fields") {
-
 		if _, ok := d.GetOk("custom_fields"); ok {
-
 			res := make(map[string]interface{})
-
-			if d.HasChange("custom_fields.field_1") {
-				res["field-1"] = d.Get("custom_fields.field_1")
+			if v, ok := d.GetOk("custom_fields.field_1"); ok {
+				res["field-1"] = v
 			}
-			if d.HasChange("custom_fields.field_2") {
-				res["field-2"] = d.Get("custom_fields.field_2")
+			if v, ok := d.GetOk("custom_fields.field_2"); ok {
+				res["field-2"] = v
 			}
-			if d.HasChange("custom_fields.field_3") {
-				res["field-3"] = d.Get("custom_fields.field_3")
+			if v, ok := d.GetOk("custom_fields.field_3"); ok {
+				res["field-3"] = v
 			}
 			accessRule["custom-fields"] = res
-		} else {
-			defaultCustomField := map[string]interface{}{"field-1": "", "field-2": "", "field-3": ""}
-			accessRule["custom-fields"] = defaultCustomField
 		}
+		//else {
+		//	defaultCustomField := map[string]interface{}{"field-1": "", "field-2": "", "field-3": ""}
+		//	accessRule["custom-fields"] = defaultCustomField
+		//}
 	}
 
 	if d.HasChange("destination") {
 		if v, ok := d.GetOk("destination"); ok {
 			accessRule["destination"] = v.(*schema.Set).List()
-		} else {
-			oldDestination, _ := d.GetChange("destination")
-			accessRule["destination"] = map[string]interface{}{"remove": oldDestination.(*schema.Set).List()}
 		}
 	}
 
 	if d.HasChange("destination_negate") {
-		accessRule["destination-negate"] = d.Get("destination_negate")
+		if v, ok := d.GetOk("destination_negate"); ok {
+			accessRule["destination-negate"] = v
+		}
 	}
 
 	if d.HasChange("enabled") {
-		accessRule["enabled"] = d.Get("enabled")
+		if v, ok := d.GetOkExists("enabled"); ok {
+			accessRule["enabled"] = v
+		}
 	}
 
 	if d.HasChange("inline_layer") {
@@ -962,95 +967,80 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("install_on") {
 		if v, ok := d.GetOk("install_on"); ok {
 			accessRule["install-on"] = v.(*schema.Set).List()
-		} else {
-			oldInstallOn, _ := d.GetChange("install_on")
-			accessRule["install-on"] = map[string]interface{}{"remove": oldInstallOn.(*schema.Set).List()}
 		}
+		//else {
+		//	oldInstallOn, _ := d.GetChange("install_on")
+		//	accessRule["install-on"] = map[string]interface{}{"remove": oldInstallOn.(*schema.Set).List()}
+		//}
 	}
 
 	if d.HasChange("service") {
 		if v, ok := d.GetOk("service"); ok {
 			accessRule["service"] = v.(*schema.Set).List()
-		} else {
-			oldService, _ := d.GetChange("service")
-			accessRule["service"] = map[string]interface{}{"remove": oldService.(*schema.Set).List()}
 		}
+		//else {
+		//	oldService, _ := d.GetChange("service")
+		//	accessRule["service"] = map[string]interface{}{"remove": oldService.(*schema.Set).List()}
+		//}
 	}
 
 	if d.HasChange("service_negate") {
-		accessRule["service-negate"] = d.Get("service_negate")
+		if v, ok := d.GetOk("service_negate"); ok {
+			accessRule["service-negate"] = v
+		}
 	}
 
 	if d.HasChange("source") {
 		if v, ok := d.GetOk("source"); ok {
 			accessRule["source"] = v.(*schema.Set).List()
-		} else {
-			oldSource, _ := d.GetChange("source")
-			accessRule["source"] = map[string]interface{}{"remove": oldSource.(*schema.Set).List()}
 		}
+		//else {
+		//	oldSource, _ := d.GetChange("source")
+		//	accessRule["source"] = map[string]interface{}{"remove": oldSource.(*schema.Set).List()}
+		//}
 	}
 
 	if d.HasChange("source_negate") {
-		accessRule["source-negate"] = d.Get("source_negate")
+		if v, ok := d.GetOk("source_negate"); ok {
+			accessRule["source-negate"] = v
+		}
 	}
 
 	if d.HasChange("time") {
 		if v, ok := d.GetOk("time"); ok {
 			accessRule["time"] = v.(*schema.Set).List()
 		}
-	} else {
-		oldTime, _ := d.GetChange("time")
-		oldTimeLst := oldTime.(*schema.Set).List()
-		if len(oldTimeLst) > 0 {
-			accessRule["time"] = map[string]interface{}{"remove": oldTimeLst}
-		}
+		//else {
+		//	oldTime, _ := d.GetChange("time")
+		//	oldTimeLst := oldTime.(*schema.Set).List()
+		//	if len(oldTimeLst) > 0 {
+		//		accessRule["time"] = map[string]interface{}{"remove": oldTimeLst}
+		//	}
+		//}
 	}
 
 	if d.HasChange("track") {
-		defaultTrack := map[string]interface{}{
-			"accounting":              "false",
-			"alert":                   "none",
-			"enable-firewall-session": "false",
-			"per-connection":          "false",
-			"per-session":             "false",
-			"type":                    "None"}
-		if v, ok := d.GetOk("track"); ok {
+		if _, ok := d.GetOk("track"); ok {
 			res := make(map[string]interface{})
-			logsSettingsJson := v.(map[string]interface{})
-			if val, ok := logsSettingsJson["accounting"]; ok {
-				res["accounting"] = val
-			} else {
-				res["accounting"] = defaultTrack["accounting"]
+			if v, ok := d.GetOk("track.accounting"); ok {
+				res["accounting"] = v
 			}
-			if val, ok := logsSettingsJson["alert"]; ok {
-				res["alert"] = val
-			} else {
-				res["alert"] = defaultTrack["alert"]
+			if v, ok := d.GetOk("track.alert"); ok {
+				res["alert"] = v
 			}
-			if val, ok := logsSettingsJson["enable_firewall_session"]; ok {
-				res["enable-firewall-session"] = val
-			} else {
-				res["enable-firewall-session"] = defaultTrack["enable-firewall-session"]
+			if v, ok := d.GetOk("track.enable_firewall_session"); ok {
+				res["enable-firewall-session"] = v
 			}
-			if val, ok := logsSettingsJson["per_connection"]; ok {
-				res["per-connection"] = val
-			} else {
-				res["per-connection"] = defaultTrack["per-connection"]
+			if v, ok := d.GetOk("track.per_connection"); ok {
+				res["per-connection"] = v
 			}
-			if val, ok := logsSettingsJson["per_session"]; ok {
-				res["per-session"] = val
-			} else {
-				res["per-session"] = defaultTrack["per-session"]
+			if v, ok := d.GetOk("track.per_session"); ok {
+				res["per-session"] = v
 			}
-			if val, ok := logsSettingsJson["type"]; ok {
-				res["type"] = val
-			} else {
-				res["type"] = defaultTrack["type"]
+			if v, ok := d.GetOk("track.type"); ok {
+				res["type"] = v
 			}
 			accessRule["track"] = res
-
-		} else {
-			accessRule["track"] = defaultTrack
 		}
 	}
 
@@ -1059,32 +1049,26 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			userCheckList := v.([]interface{})
 			if len(userCheckList) > 0 {
 				userCheckPayload := make(map[string]interface{})
-
-				if d.HasChange("user_check.0.confirm") {
-					userCheckPayload["confirm"] = d.Get("user_check.0.confirm").(string)
+				if v, ok := d.GetOk("user_check.0.confirm"); ok {
+					userCheckPayload["confirm"] = v.(string)
 				}
-				if d.HasChange("user_check.0.custom_frequency") {
-
+				if _, ok := d.GetOk("user_check.0.custom_frequency"); ok {
 					customFrequencyConfigPayLoad := make(map[string]interface{})
-
-					if d.HasChange("user_check.0.custom_frequency.0.every") {
-						customFrequencyConfigPayLoad["every"] = d.Get("user_check.0.custom_frequency.0.every")
+					if v, ok := d.GetOk("user_check.0.custom_frequency.0.every"); ok {
+						customFrequencyConfigPayLoad["every"] = v
 					}
-					if d.HasChange("user_check.0.custom_frequency.0.unit") {
-						customFrequencyConfigPayLoad["unit"] = d.Get("user_check.0.custom_frequency.0.unit").(string)
+					if v, ok := d.GetOk("user_check.0.custom_frequency.0.unit"); ok {
+						customFrequencyConfigPayLoad["unit"] = v.(string)
 					}
-
 					userCheckPayload["custom-frequency"] = customFrequencyConfigPayLoad
 				}
-				if d.HasChange("user_check.0.frequency") {
-					userCheckPayload["frequency"] = d.Get("user_check.0.frequency").(string)
+				if v, ok := d.GetOk("user_check.0.frequency"); ok {
+					userCheckPayload["frequency"] = v.(string)
 				}
-				if d.HasChange("user_check.0.interaction") {
-					userCheckPayload["interaction"] = d.Get("user_check.0.interaction").(string)
+				if v, ok := d.GetOk("user_check.0.interaction"); ok {
+					userCheckPayload["interaction"] = v.(string)
 				}
-
 				accessRule["user-check"] = userCheckPayload
-
 			}
 		}
 	}
@@ -1107,27 +1091,36 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if v, ok := d.GetOk("ignore_errors"); ok {
+	if d.HasChange("comments") {
+		if v, ok := d.GetOk("comments"); ok {
+			accessRule["comments"] = v
+		}
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		accessRule["ignore-errors"] = v.(bool)
 	}
 
-	if v, ok := d.GetOk("ignore_warnings"); ok {
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
 		accessRule["ignore-warnings"] = v.(bool)
-	}
-
-	if d.HasChange("comments") {
-		accessRule["comments"] = d.Get("comments")
 	}
 
 	log.Println("Update Access Rule - Map = ", accessRule)
 
-	updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
-	if err != nil || !updateAccessRuleRes.Success {
-		if updateAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
+	if len(accessRule) != 4 {
+		updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil || !updateAccessRuleRes.Success {
+			if updateAccessRuleRes.ErrorMsg != "" {
+				return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
+			}
+			return fmt.Errorf(err.Error())
 		}
-		return fmt.Errorf(err.Error())
+	} else {
+		// Payload contain only required fields: uid, layer, ignore-warnings, ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
 	}
+
 	return readManagementAccessRule(d, m)
 }
 

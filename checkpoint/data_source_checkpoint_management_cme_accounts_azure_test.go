@@ -44,7 +44,7 @@ resource "checkpoint_management_cme_accounts_azure" "test" {
   name                  = "%s"
   directory_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
   application_id = "46707d92-02f4-4817-8116-a4c3b23e6266"
-  client_secret = "mySecret"
+  client_secret = "1234abcdefgh----"
   subscription = "46707d92-02f4-4817-8116-a4c3b23e6267"
   environment = "AzureCloud"
 }

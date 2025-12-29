@@ -25,6 +25,7 @@ The following arguments are supported:
 
 * `task_id` - (Required) Unique identifier of one or more tasks.
 * `tasks` - The tasks. tasks blocks are documented below.
+* `response` - Response message in JSON format.
 
 `tasks` supports the following:
 

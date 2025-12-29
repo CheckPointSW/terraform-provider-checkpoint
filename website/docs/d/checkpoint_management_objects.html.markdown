@@ -9,6 +9,7 @@ Use this data source to get information on an existing Check Point Objects.
 # Data Source: checkpoint_management_objects
 
 Use this data source to get information on an existing Check Point Objects.
+<b>NOTE: This data source is deprecated. Use instead data source `checkpoint_management_show_objects`.</b>
 
 ## Example Usage
 

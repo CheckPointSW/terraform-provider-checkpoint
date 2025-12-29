@@ -32,6 +32,12 @@ The following arguments are supported:
 * `uid` - (Optional) Object unique identifier.  
 * `gateways` - Collection of Gateway objects identified by the name or UID.
 * `user_groups` - Collection of User group objects identified by the name or UID.
+* `override_vpn_domains` - The Overrides VPN Domains of the participants GWs. override_vpn_domains blocks are documented below.
 * `tags` - Collection of tag identifiers.
 * `color` - Color of the object. 
 * `comments` - Comments string.
+
+`override_vpn_domains` supports the following:
+
+* `gateway` - Participant gateway in override VPN domain identified by the name or UID.
+* `vpn_domain` - VPN domain network identified by the name or UID. 

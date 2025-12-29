@@ -378,12 +378,12 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	serviceUdp := make(map[string]interface{})
 
-	if d.HasChange("name") {
-		oldName, newName := d.GetChange("name")
-		serviceUdp["name"] = oldName.(string)
-		serviceUdp["new-name"] = newName.(string)
-	} else {
-		serviceUdp["name"] = d.Get("name")
+	serviceUdp["uid"] = d.Id()
+
+	if ok := d.HasChange("name"); ok {
+		if v, ok := d.GetOk("name"); ok {
+			serviceUdp["new-name"] = v.(string)
+		}
 	}
 
 	if ok := d.HasChange("aggressive_aging"); ok {
@@ -392,77 +392,115 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 			res := make(map[string]interface{})
 
-			if d.HasChange("aggressive_aging.default_timeout") {
-				res["default-timeout"] = d.Get("aggressive_aging.default_timeout")
+			if v, ok := d.GetOk("aggressive_aging.default_timeout"); ok {
+				res["default-timeout"] = v
 			}
-			if d.HasChange("aggressive_aging.enable") {
-				res["enable"] = d.Get("aggressive_aging.enable")
+			if v, ok := d.GetOk("aggressive_aging.enable"); ok {
+				res["enable"] = v
 			}
-			if d.HasChange("aggressive_aging.timeout") {
-				res["timeout"] = d.Get("aggressive_aging.timeout")
+			if v, ok := d.GetOk("aggressive_aging.timeout"); ok {
+				res["timeout"] = v
 			}
-			if d.HasChange("aggressive_aging.use_default_timeout") {
-				res["use-default-timeout"] = d.Get("aggressive_aging.use_default_timeout")
+			if v, ok := d.GetOk("aggressive_aging.use_default_timeout"); ok {
+				res["use-default-timeout"] = v
 			}
 			serviceUdp["aggressive-aging"] = res
-		} else { //argument deleted - go back to defaults
-			defaultAggressiveAging := map[string]interface{}{
-				"enable":              true,
-				"timeout":             600,
-				"use-default-timeout": true,
-				"default-timeout":     0,
-			}
-			serviceUdp["aggressive-aging"] = defaultAggressiveAging
 		}
+		//else { //argument deleted - go back to defaults
+		//	defaultAggressiveAging := map[string]interface{}{
+		//		"enable":              true,
+		//		"timeout":             600,
+		//		"use-default-timeout": true,
+		//		"default-timeout":     0,
+		//	}
+		//	serviceUdp["aggressive-aging"] = defaultAggressiveAging
+		//}
 	}
 
 	if ok := d.HasChange("tags"); ok {
 		if v, ok := d.GetOk("tags"); ok {
 			serviceUdp["tags"] = v.(*schema.Set).List()
-		} else {
-			oldTags, _ := d.GetChange("tags")
-			serviceUdp["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
+		//else {
+		//	oldTags, _ := d.GetChange("tags")
+		//	serviceUdp["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		//}
 	}
 
 	if ok := d.HasChange("accept_replies"); ok {
-		serviceUdp["accept-replies"] = d.Get("accept_replies")
+		if v, ok := d.GetOk("accept_replies"); ok {
+			serviceUdp["accept-replies"] = v
+		}
 	}
 	if ok := d.HasChange("comments"); ok {
-		serviceUdp["comments"] = d.Get("comments")
+		if v, ok := d.GetOk("comments"); ok {
+			serviceUdp["comments"] = v
+		}
 	}
+
 	if ok := d.HasChange("keep_connections_open_after_policy_installation"); ok {
-		serviceUdp["keep-connections-open-after-policy-installation"] = d.Get("keep_connections_open_after_policy_installation")
+		if v, ok := d.GetOk("keep_connections_open_after_policy_installation"); ok {
+			serviceUdp["keep-connections-open-after-policy-installation"] = v
+		}
 	}
+
 	if ok := d.HasChange("match_by_protocol_signature"); ok {
-		serviceUdp["match-by-protocol-signature"] = d.Get("match_by_protocol_signature")
+		if v, ok := d.GetOk("match_by_protocol_signature"); ok {
+			serviceUdp["match-by-protocol-signature"] = v
+		}
 	}
+
 	if ok := d.HasChange("match_for_any"); ok {
-		serviceUdp["match-for-any"] = d.Get("match_for_any")
+		if v, ok := d.GetOk("match_for_any"); ok {
+			serviceUdp["match-for-any"] = v
+		}
 	}
+
 	if ok := d.HasChange("override_default_settings"); ok {
-		serviceUdp["override-default-settings"] = d.Get("override_default_settings")
+		if v, ok := d.GetOk("override_default_settings"); ok {
+			serviceUdp["override-default-settings"] = v
+		}
 	}
+
 	if ok := d.HasChange("port"); ok {
-		serviceUdp["port"] = d.Get("port")
+		if v, ok := d.GetOk("port"); ok {
+			serviceUdp["port"] = v
+		}
 	}
+
 	if ok := d.HasChange("protocol"); ok {
-		serviceUdp["protocol"] = d.Get("protocol")
+		if v, ok := d.GetOk("protocol"); ok {
+			serviceUdp["protocol"] = v
+		}
 	}
+
 	if ok := d.HasChange("session_timeout"); ok {
-		serviceUdp["session-timeout"] = d.Get("session_timeout")
+		if v, ok := d.GetOk("session_timeout"); ok {
+			serviceUdp["session-timeout"] = v
+		}
 	}
+
 	if ok := d.HasChange("source_port"); ok {
-		serviceUdp["source-port"] = d.Get("source_port")
+		if v, ok := d.GetOk("source_port"); ok {
+			serviceUdp["source-port"] = v
+		}
 	}
+
 	if ok := d.HasChange("sync_connections_on_cluster"); ok {
-		serviceUdp["sync-connections-on-cluster"] = d.Get("sync_connections_on_cluster")
+		if v, ok := d.GetOk("sync_connections_on_cluster"); ok {
+			serviceUdp["sync-connections-on-cluster"] = v
+		}
 	}
 	if ok := d.HasChange("use_default_session_timeout"); ok {
-		serviceUdp["use-default-session-timeout"] = d.Get("use_default_session_timeout")
+		if v, ok := d.GetOk("use_default_session_timeout"); ok {
+			serviceUdp["use-default-session-timeout"] = v
+		}
 	}
+
 	if ok := d.HasChange("color"); ok {
-		serviceUdp["color"] = d.Get("color")
+		if v, ok := d.GetOk("color"); ok {
+			serviceUdp["color"] = v
+		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
@@ -473,9 +511,19 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Service Udp - Map = ", serviceUdp)
-	setServiceUdpRes, _ := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
-	if !setServiceUdpRes.Success {
-		return fmt.Errorf(setServiceUdpRes.ErrorMsg)
+
+	if len(serviceUdp) != 3 {
+		setServiceUdpRes, err := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil {
+			fmt.Errorf(err.Error())
+		}
+		if !setServiceUdpRes.Success {
+			return fmt.Errorf(setServiceUdpRes.ErrorMsg)
+		}
+	} else {
+		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
 	}
 
 	return readManagementServiceUdp(d, m)

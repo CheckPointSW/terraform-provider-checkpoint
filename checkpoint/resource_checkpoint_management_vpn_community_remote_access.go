@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"reflect"
+	"strconv"
 )
 
 func resourceManagementVpnCommunityRemoteAccess() *schema.Resource {
@@ -34,6 +35,25 @@ func resourceManagementVpnCommunityRemoteAccess() *schema.Resource {
 				Description: "Collection of User group objects identified by the name or UID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
+				},
+			},
+			"override_vpn_domains": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "The Overrides VPN Domains of the participants GWs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"gateway": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Participant gateway in override VPN domain identified by the name or UID.",
+						},
+						"vpn_domain": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "VPN domain network identified by the name or UID.",
+						},
+					},
 				},
 			},
 			"tags": {
@@ -84,6 +104,30 @@ func createManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 
 	if v, ok := d.GetOk("user_groups"); ok {
 		payload["user-groups"] = v.(*schema.Set).List()
+	}
+
+	if v, ok := d.GetOk("override_vpn_domains"); ok {
+
+		overrideVpnDomainsList := v.([]interface{})
+
+		if len(overrideVpnDomainsList) > 0 {
+
+			var overrideVpnDomainsPayload []map[string]interface{}
+
+			for i := range overrideVpnDomainsList {
+
+				Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("override_vpn_domains." + strconv.Itoa(i) + ".gateway"); ok {
+					Payload["gateway"] = v.(string)
+				}
+				if v, ok := d.GetOk("override_vpn_domains." + strconv.Itoa(i) + ".vpn_domain"); ok {
+					Payload["vpn-domain"] = v.(string)
+				}
+				overrideVpnDomainsPayload = append(overrideVpnDomainsPayload, Payload)
+			}
+			payload["override-vpn-domains"] = overrideVpnDomainsPayload
+		}
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -144,6 +188,30 @@ func updateManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 		} else {
 			oldUserGroups, _ := d.GetChange("gateways")
 			payload["user-groups"] = map[string]interface{}{"remove": oldUserGroups.(*schema.Set).List()}
+		}
+	}
+
+	if d.HasChange("override_vpn_domains") {
+
+		if v, ok := d.GetOk("override_vpn_domains"); ok {
+
+			overrideVpnDomainsList := v.([]interface{})
+
+			var overrideVpnDomainsPayload []map[string]interface{}
+
+			for i := range overrideVpnDomainsList {
+
+				Payload := make(map[string]interface{})
+
+				if d.HasChange("override_vpn_domains." + strconv.Itoa(i) + ".gateway") {
+					Payload["gateway"] = d.Get("override_vpn_domains." + strconv.Itoa(i) + ".gateway")
+				}
+				if d.HasChange("override_vpn_domains." + strconv.Itoa(i) + ".vpn_domain") {
+					Payload["vpn-domain"] = d.Get("override_vpn_domains." + strconv.Itoa(i) + ".vpn_domain")
+				}
+				overrideVpnDomainsPayload = append(overrideVpnDomainsPayload, Payload)
+			}
+			payload["override-vpn-domains"] = overrideVpnDomainsPayload
 		}
 	}
 
@@ -241,6 +309,30 @@ func readManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interface{
 		}
 	} else {
 		_ = d.Set("user_groups", nil)
+	}
+
+	if vpnCommunityRemoteAccess["override-vpn-domains"] != nil {
+		overrideVpnDomainsList := vpnCommunityRemoteAccess["override-vpn-domains"].([]interface{})
+		var overrideVpnDomainsListToReturn []map[string]interface{}
+		if len(overrideVpnDomainsList) > 0 {
+			for i := range overrideVpnDomainsList {
+
+				overrideVpnDomainsMap := overrideVpnDomainsList[i].(map[string]interface{})
+
+				overrideVpnDomainsMapToAdd := make(map[string]interface{})
+
+				if v, _ := overrideVpnDomainsMap["gateway"]; v != nil {
+					overrideVpnDomainsMapToAdd["gateway"] = v.(map[string]interface{})["name"].(string)
+				}
+				if v, _ := overrideVpnDomainsMap["vpn-domain"]; v != nil {
+					overrideVpnDomainsMapToAdd["vpn_domain"] = v.(map[string]interface{})["name"].(string)
+				}
+				overrideVpnDomainsListToReturn = append(overrideVpnDomainsListToReturn, overrideVpnDomainsMapToAdd)
+			}
+		}
+		_ = d.Set("override_vpn_domains", overrideVpnDomainsListToReturn)
+	} else {
+		_ = d.Set("override_vpn_domains", nil)
 	}
 
 	if vpnCommunityRemoteAccess["tags"] != nil {
