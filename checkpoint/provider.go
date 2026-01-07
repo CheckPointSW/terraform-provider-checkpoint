@@ -366,6 +366,7 @@ func Provider() terraform.ResourceProvider {
 			"checkpoint_management_change_password_on_next_login":                  resourceManagementChangePasswordOnNextLogin(),
 			"checkpoint_management_set_trust":                                      resourceManagementSetTrust(),
 			"checkpoint_management_test_trust":                                     resourceManagementTestTrust(),
+			"checkpoint_gaia_user":                                                 resourceGaiaUser(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"checkpoint_management_outbound_inspection_certificate":           dataSourceManagementOutboundInspectionCertificate(),
