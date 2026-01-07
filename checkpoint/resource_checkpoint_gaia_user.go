@@ -6,12 +6,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourceGaiaUsers() *schema.Resource {
+func resourceGaiaUser() *schema.Resource {
 	return &schema.Resource{
-		Create: addGaiaUsers,
-		Read:   showGaiaUsers,
-		Update: setGaiaUsers,
-		Delete: deleteGaiaUsers,
+		Create: addGaiaUser,
+		Read:   showGaiaUser,
+		Update: setGaiaUser,
+		Delete: deleteGaiaUser,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -103,7 +103,7 @@ func resourceGaiaUsers() *schema.Resource {
 	}
 }
 
-func addGaiaUsers(d *schema.ResourceData, m interface{}) error {
+func addGaiaUser(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok { payload["name"] = v.(string) } else { return fmt.Errorf("name is required") }
@@ -130,7 +130,7 @@ func addGaiaUsers(d *schema.ResourceData, m interface{}) error {
 	return readGaiaUsers(d, m)
 }
 
-func showGaiaUsers(d *schema.ResourceData, m interface{}) error {
+func showGaiaUser(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok { payload["name"] = v.(string) } else { return fmt.Errorf("name is required") }
@@ -160,7 +160,7 @@ func showGaiaUsers(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func setGaiaUsers(d *schema.ResourceData, m interface{}) error {
+func setGaiaUser(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok { payload["name"] = v.(string) } else { return fmt.Errorf("name is required") }
@@ -185,7 +185,7 @@ func setGaiaUsers(d *schema.ResourceData, m interface{}) error {
 	return readGaiaUsers(d, m)
 }
 
-func deleteGaiaUsers(d *schema.ResourceData, m interface{}) error {
+func deleteGaiaUser(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	payload := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok { payload["name"] = v.(string) } else { return fmt.Errorf("name is required") }
