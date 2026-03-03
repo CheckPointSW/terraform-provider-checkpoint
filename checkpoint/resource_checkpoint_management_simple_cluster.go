@@ -1498,6 +1498,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Gateway VPN settings.",
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
@@ -2286,7 +2287,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings"); ok {
 					antiSpoofingSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.action"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.0.action"); ok {
 						antiSpoofingSettings["action"] = v.(string)
 					}
 					interfacePayload["anti-spoofing-settings"] = antiSpoofingSettings
@@ -2304,10 +2305,10 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings"); ok {
 					securityZoneSettings := make(map[string]interface{})
-					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".security_zone_settings.auto_calculated"); ok {
+					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.auto_calculated"); ok {
 						securityZoneSettings["auto-calculated"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.specific_zone"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.specific_zone"); ok {
 						securityZoneSettings["specific-zone"] = v.(string)
 					}
 					interfacePayload["security-zone-settings"] = securityZoneSettings
@@ -2318,13 +2319,13 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings"); ok {
 					topologySettings := make(map[string]interface{})
 
-					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".topology_settings.interface_leads_to_dmz"); ok {
+					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".topology_settings.0.interface_leads_to_dmz"); ok {
 						topologySettings["interface-leads-to-dmz"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.ip_address_behind_this_interface"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.ip_address_behind_this_interface"); ok {
 						topologySettings["ip-address-behind-this-interface"] = v.(string)
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.specific_network"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.specific_network"); ok {
 						topologySettings["specific-network"] = v.(string)
 					}
 					interfacePayload["topology-settings"] = topologySettings
@@ -3544,7 +3545,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 					if v, _ := antiSpoofingSettingsJson["action"]; v != nil {
 						antiSpoofingSettingsState["action"] = v
 					}
-					interfaceState["anti_spoofing_settings"] = antiSpoofingSettingsState
+					interfaceState["anti_spoofing_settings"] = []interface{}{antiSpoofingSettingsState}
 				}
 				if v, _ := interfaceJson["security-zone"]; v != nil {
 					interfaceState["security_zone"] = v
@@ -3558,7 +3559,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 					if v, _ := securityZoneSettingsJson["specific-zone"]; v != nil {
 						securityZoneSettingsState["specific_zone"] = v
 					}
-					interfaceState["security_zone_settings"] = securityZoneSettingsState
+					interfaceState["security_zone_settings"] = []interface{}{securityZoneSettingsState}
 				}
 				if v, _ := interfaceJson["topology"]; v != nil {
 					interfaceState["topology"] = v
@@ -3578,7 +3579,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 					if v, _ := topologySettingsJson["specific-network"]; v != nil {
 						topologySettingsState["specific_network"] = v
 					}
-					interfaceState["topology_settings"] = topologySettingsState
+					interfaceState["topology_settings"] = []interface{}{topologySettingsState}
 				}
 
 				if v, _ := interfaceJson["color"]; v != nil {
@@ -3823,7 +3824,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 		if v := firewallSettingsJson["memory-pool-size"]; v != nil {
 			firewallSettingsState["memory_pool_size"] = v
 		}
-		_ = d.Set("firewall_settings", firewallSettingsState)
+		_ = d.Set("firewall_settings", []interface{}{firewallSettingsState})
 	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
@@ -3844,7 +3845,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 				}
 				authenticationState["authentication_clients"] = clientsIds
 			}
-			vpnSettingsState["authentication"] = authenticationState
+			vpnSettingsState["authentication"] = []interface{}{authenticationState}
 		}
 
 		if v := vpnSettingsJson["link-selection"]; v != nil {
@@ -3859,7 +3860,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 			if v := linkSelectionJson["ip-address"]; v != nil {
 				linkSelectionState["ip_address"] = v
 			}
-			vpnSettingsState["link_selection"] = linkSelectionState
+			vpnSettingsState["link_selection"] = []interface{}{linkSelectionState}
 		}
 		if v := vpnSettingsJson["maximum-concurrent-ike-negotiations"]; v != nil {
 			vpnSettingsState["maximum_concurrent_ike_negotiations"] = v
@@ -3906,7 +3907,7 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 			if v := remoteAccessJson["visitor-mode-interface"]; v != nil {
 				remoteAccessState["visitor_mode_interface"] = v
 			}
-			vpnSettingsState["remote_access"] = remoteAccessState
+			vpnSettingsState["remote_access"] = []interface{}{remoteAccessState}
 		}
 
 		if v := vpnSettingsJson["office-mode"]; v != nil {
@@ -3996,13 +3997,13 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 					if v := optionalParametersJson["ip-lease-duration"]; v != nil {
 						optionalParametersState["ip_lease_duration"] = v
 					}
-					allocateIpAddressFromState["optional_parameters"] = optionalParametersState
+					allocateIpAddressFromState["optional_parameters"] = []interface{}{optionalParametersState}
 				}
-				officeModeState["allocate_ip_address_from"] = allocateIpAddressFromState
+				officeModeState["allocate_ip_address_from"] = []interface{}{allocateIpAddressFromState}
 			}
-			vpnSettingsState["office_mode"] = officeModeState
+			vpnSettingsState["office_mode"] = []interface{}{officeModeState}
 		}
-		_ = d.Set("vpn_settings", vpnSettingsState)
+		_ = d.Set("vpn_settings", []interface{}{vpnSettingsState})
 	} else {
 		_ = d.Set("vpn_settings", nil)
 	}
@@ -4527,7 +4528,7 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings"); ok {
 					antiSpoofingSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.action"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.0.action"); ok {
 						antiSpoofingSettings["action"] = v.(string)
 					}
 					interfacePayload["anti-spoofing-settings"] = antiSpoofingSettings
@@ -4543,10 +4544,10 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings"); ok {
 					securityZoneSettings := make(map[string]interface{})
-					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".security_zone_settings.auto_calculated"); ok {
+					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.auto_calculated"); ok {
 						securityZoneSettings["auto-calculated"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.specific_zone"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.specific_zone"); ok {
 						securityZoneSettings["specific-zone"] = v.(string)
 					}
 					interfacePayload["security-zone-settings"] = securityZoneSettings
@@ -4557,13 +4558,13 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings"); ok {
 					topologySettings := make(map[string]interface{})
 
-					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".topology_settings.interface_leads_to_dmz"); ok {
+					if v, ok := d.GetOkExists("interfaces." + strconv.Itoa(i) + ".topology_settings.0.interface_leads_to_dmz"); ok {
 						topologySettings["interface-leads-to-dmz"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.ip_address_behind_this_interface"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.ip_address_behind_this_interface"); ok {
 						topologySettings["ip-address-behind-this-interface"] = v.(string)
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.specific_network"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.specific_network"); ok {
 						topologySettings["specific-network"] = v.(string)
 					}
 					interfacePayload["topology-settings"] = topologySettings

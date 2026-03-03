@@ -105,7 +105,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "aes-256",
 						},
 						"ike_p1_rekey_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 							Default:     1440,
@@ -133,7 +133,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "aes-128",
 						},
 						"ike_p2_use_pfs": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.",
 							Default:     false,
@@ -145,7 +145,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "group-2",
 						},
 						"ike_p2_rekey_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 							Default:     1440,
@@ -421,7 +421,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 										Default:     "aes-256",
 									},
 									"ike_p1_rekey_time": {
-										Type:        schema.TypeString,
+										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 										Default:     1440,
@@ -461,7 +461,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 										Default:     "group-2",
 									},
 									"ike_p2_rekey_time": {
-										Type:        schema.TypeString,
+										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 										Default:     1440,
@@ -1003,35 +1003,35 @@ func createManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 					ikePhase1Payload := make(map[string]interface{})
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.encryption_algorithm"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 						ikePhase1Payload["encryption-algorithm"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.data_integrity"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.data_integrity"); ok {
 						ikePhase1Payload["data-integrity"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.diffie_hellman_group"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.diffie_hellman_group"); ok {
 						ikePhase1Payload["diffie-hellman-group"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
 						ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
 					}
 					payload["ike-phase-1"] = ikePhase1Payload
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 					ikePhase2Payload := make(map[string]interface{})
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.encryption_algorithm"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 						ikePhase2Payload["encryption-algorithm"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.data_integrity"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.data_integrity"); ok {
 						ikePhase2Payload["data-integrity"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_use_pfs"); ok {
 						ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
 						ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
 						ikePhase2Payload["ike-p2-rekey-time"] = v.(string)
 					}
 					payload["ike-phase-2"] = ikePhase2Payload
@@ -1645,7 +1645,7 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
 							ikePhase1State["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_1"] = ikePhase1State
+						granularEncryptionState["ike_phase_1"] = []interface{}{ikePhase1State}
 					}
 
 					if v := granularEncryptionShow["ike-phase-2"]; v != nil {
@@ -1666,7 +1666,7 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
 							ikePhase2State["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_2"] = ikePhase2State
+						granularEncryptionState["ike_phase_2"] = []interface{}{ikePhase2State}
 					}
 					granularEncryptionsState = append(granularEncryptionsState, granularEncryptionState)
 				}
@@ -2252,35 +2252,35 @@ func updateManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 						ikePhase1Payload := make(map[string]interface{})
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.encryption_algorithm"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 							ikePhase1Payload["encryption-algorithm"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.data_integrity"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.data_integrity"); ok {
 							ikePhase1Payload["data-integrity"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.diffie_hellman_group"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.diffie_hellman_group"); ok {
 							ikePhase1Payload["diffie-hellman-group"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
 							ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
 						}
 						payload["ike-phase-1"] = ikePhase1Payload
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 						ikePhase2Payload := make(map[string]interface{})
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.encryption_algorithm"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 							ikePhase2Payload["encryption-algorithm"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.data_integrity"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.data_integrity"); ok {
 							ikePhase2Payload["data-integrity"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_use_pfs"); ok {
 							ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
 							ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
 							ikePhase2Payload["ike-p2-rekey-time"] = v.(string)
 						}
 						payload["ike-phase-2"] = ikePhase2Payload

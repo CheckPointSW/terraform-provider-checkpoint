@@ -39,17 +39,17 @@ func testAccDataSourceManagementAccessRuleConfig(name string, layer string) stri
 resource "checkpoint_management_access_rule" "access_rule" {
     name = "%s"
 	layer = "%s"
-	position = {top = "top"}
+	position {top = "top"}
 	source = ["Any"]
 	destination = ["Any"]
 	service = ["Any"]
-	track = {
-    accounting = false
-    alert = "none"
-    enable_firewall_session = false
-    per_connection = false
-    per_session = false
-    type = "None"
+	track {
+	accounting = false
+	alert = "none"
+	enable_firewall_session = false
+	per_connection = false
+	per_session = false
+	type = "None"
   }
 }
 

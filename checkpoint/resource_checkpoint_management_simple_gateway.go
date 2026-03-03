@@ -1635,6 +1635,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Gateway VPN settings.",
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
@@ -2405,7 +2406,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings"); ok {
 					antiSpoofingSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.action"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.0.action"); ok {
 						antiSpoofingSettings["action"] = v.(string)
 					}
 					interfacePayload["anti-spoofing-settings"] = antiSpoofingSettings
@@ -2416,10 +2417,10 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings"); ok {
 					securityZoneSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.auto_calculated"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.auto_calculated"); ok {
 						securityZoneSettings["auto-calculated"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.specific_zone"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.specific_zone"); ok {
 						securityZoneSettings["specific-zone"] = v.(string)
 					}
 					interfacePayload["security-zone-settings"] = securityZoneSettings
@@ -2430,13 +2431,13 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings"); ok {
 					topologySettings := make(map[string]interface{})
 
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.interface_leads_to_dmz"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.interface_leads_to_dmz"); ok {
 						topologySettings["interface-leads-to-dmz"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.ip_address_behind_this_interface"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.ip_address_behind_this_interface"); ok {
 						topologySettings["ip-address-behind-this-interface"] = v.(string)
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.specific_network"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.specific_network"); ok {
 						topologySettings["specific-network"] = v.(string)
 					}
 					interfacePayload["topology-settings"] = topologySettings
@@ -2477,6 +2478,51 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 	if v, ok := d.GetOk("application_control"); ok {
 		gateway["application-control"] = v
+	}
+
+	if v, ok := d.GetOk("application_control_and_url_filtering_settings"); ok {
+
+		applicationControlAndUrlFilteringSettingsList := v.([]interface{})
+
+		if len(applicationControlAndUrlFilteringSettingsList) > 0 {
+
+			applicationControlAndUrlFilteringSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("application_control_and_url_filtering_settings.0.global_settings_mode"); ok {
+				applicationControlAndUrlFilteringSettingsPayload["global-settings-mode"] = v.(string)
+			}
+			if _, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings"); ok {
+
+				overrideGlobalSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.fail_mode"); ok {
+					overrideGlobalSettingsPayload["fail-mode"] = v.(string)
+				}
+				if _, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.website_categorization"); ok {
+
+					websiteCategorizationPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.website_categorization.0.mode"); ok {
+						websiteCategorizationPayload["mode"] = v.(string)
+					}
+					if _, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.website_categorization.0.custom_mode"); ok {
+
+						customModePayload := make(map[string]interface{})
+
+						if v, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.website_categorization.0.custom_mode.0.social_networking_widgets"); ok {
+							customModePayload["social-networking-widgets"] = v.(string)
+						}
+						if v, ok := d.GetOk("application_control_and_url_filtering_settings.0.override_global_settings.0.website_categorization.0.custom_mode.0.url_filtering"); ok {
+							customModePayload["url-filtering"] = v.(string)
+						}
+						websiteCategorizationPayload["custom-mode"] = customModePayload
+					}
+					overrideGlobalSettingsPayload["website-categorization"] = websiteCategorizationPayload
+				}
+				applicationControlAndUrlFilteringSettingsPayload["override-global-settings"] = overrideGlobalSettingsPayload
+			}
+			gateway["application-control-and-url-filtering-settings"] = applicationControlAndUrlFilteringSettingsPayload
+		}
 	}
 
 	if v, ok := d.GetOk("content_awareness"); ok {
@@ -3672,7 +3718,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := antiSpoofingSettingsJson["action"]; v != nil {
 						antiSpoofingSettingsState["action"] = v
 					}
-					interfaceState["anti_spoofing_settings"] = antiSpoofingSettingsState
+					interfaceState["anti_spoofing_settings"] = []interface{}{antiSpoofingSettingsState}
 				}
 				if v, _ := interfaceJson["security-zone"]; v != nil {
 					interfaceState["security_zone"] = v
@@ -3686,7 +3732,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := securityZoneSettingsJson["specific-zone"]; v != nil {
 						securityZoneSettingsState["specific_zone"] = v
 					}
-					interfaceState["security_zone_settings"] = securityZoneSettingsState
+					interfaceState["security_zone_settings"] = []interface{}{securityZoneSettingsState}
 				}
 				if v, _ := interfaceJson["topology"]; v != nil {
 					interfaceState["topology"] = v
@@ -3706,7 +3752,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := topologySettingsJson["specific-network"]; v != nil {
 						topologySettingsState["specific_network"] = v
 					}
-					interfaceState["topology_settings"] = topologySettingsState
+					interfaceState["topology_settings"] = []interface{}{topologySettingsState}
 				}
 				if v, _ := interfaceJson["color"]; v != nil {
 					interfaceState["color"] = v
@@ -4038,7 +4084,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		if v := logSettingsJson["update-account-log-every"]; v != nil && isArgDefault(strconv.Itoa(int(math.Round(v.(float64)))), d, "logs_settings.update_account_log_every", defaultLogsSettings["update_account_log_every"].(string)) {
 			logSettingsState["update_account_log_every"] = strconv.Itoa(int(math.Round(v.(float64))))
 		}
-		_ = d.Set("logs_settings", logSettingsState)
+		_ = d.Set("logs_settings", []interface{}{logSettingsState})
 	} else {
 		_ = d.Set("logs_settings", nil)
 	}
@@ -4064,7 +4110,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 		if v := firewallSettingsJson["memory-pool-size"]; v != nil {
 			firewallSettingsState["memory_pool_size"] = v
 		}
-		_ = d.Set("firewall_settings", firewallSettingsState)
+		_ = d.Set("firewall_settings", []interface{}{firewallSettingsState})
 	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
@@ -4085,7 +4131,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 				}
 				authenticationState["authentication_clients"] = clientsIds
 			}
-			vpnSettingsState["authentication"] = authenticationState
+			vpnSettingsState["authentication"] = []interface{}{authenticationState}
 		}
 
 		if v := vpnSettingsJson["link-selection"]; v != nil {
@@ -4100,7 +4146,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			if v := linkSelectionJson["ip-address"]; v != nil {
 				linkSelectionState["ip_address"] = v
 			}
-			vpnSettingsState["link_selection"] = linkSelectionState
+			vpnSettingsState["link_selection"] = []interface{}{linkSelectionState}
 		}
 		if v := vpnSettingsJson["maximum-concurrent-ike-negotiations"]; v != nil {
 			vpnSettingsState["maximum_concurrent_ike_negotiations"] = v
@@ -4147,7 +4193,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 			if v := remoteAccessJson["visitor-mode-interface"]; v != nil {
 				remoteAccessState["visitor_mode_interface"] = v
 			}
-			vpnSettingsState["remote_access"] = remoteAccessState
+			vpnSettingsState["remote_access"] = []interface{}{remoteAccessState}
 		}
 
 		if v := vpnSettingsJson["office-mode"]; v != nil {
@@ -4237,15 +4283,15 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v := optionalParametersJson["ip-lease-duration"]; v != nil {
 						optionalParametersState["ip_lease_duration"] = v
 					}
-					allocateIpAddressFromState["optional_parameters"] = optionalParametersState
+					allocateIpAddressFromState["optional_parameters"] = []interface{}{optionalParametersState}
 				}
-				officeModeState["allocate_ip_address_from"] = allocateIpAddressFromState
+				officeModeState["allocate_ip_address_from"] = []interface{}{allocateIpAddressFromState}
 			}
-			vpnSettingsState["office_mode"] = officeModeState
+			vpnSettingsState["office_mode"] = []interface{}{officeModeState}
 		}
-		_ = d.Set("vpn-settings", vpnSettingsState)
+		_ = d.Set("vpn_settings", []interface{}{vpnSettingsState})
 	} else {
-		_ = d.Set("vpn-settings", nil)
+		_ = d.Set("vpn_settings", nil)
 	}
 
 	if v := gateway["tags"]; v != nil {
@@ -4746,7 +4792,7 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				}
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings"); ok {
 					antiSpoofingSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.action"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".anti_spoofing_settings.0.action"); ok {
 						antiSpoofingSettings["action"] = v.(string)
 					}
 					interfacePayload["anti-spoofing-settings"] = antiSpoofingSettings
@@ -4757,10 +4803,10 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings"); ok {
 					securityZoneSettings := make(map[string]interface{})
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.auto_calculated"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.auto_calculated"); ok {
 						securityZoneSettings["auto-calculated"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.specific_zone"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".security_zone_settings.0.specific_zone"); ok {
 						securityZoneSettings["specific-zone"] = v.(string)
 					}
 					interfacePayload["security-zone-settings"] = securityZoneSettings

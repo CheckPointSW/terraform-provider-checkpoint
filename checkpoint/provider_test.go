@@ -8,10 +8,17 @@ import (
 )
 
 var testAccProvider *schema.Provider
+
+// Legacy acceptance tests still reference TestCase.Providers.
+// Prefer testAccProviderFactories for new tests.
+var testAccProviders map[string]*schema.Provider
 var testAccProviderFactories map[string]func() (*schema.Provider, error)
 
 func init() {
 	testAccProvider = Provider()
+	testAccProviders = map[string]*schema.Provider{
+		"checkpoint": testAccProvider,
+	}
 	testAccProviderFactories = map[string]func() (*schema.Provider, error){
 		"checkpoint": func() (*schema.Provider, error) { return Provider(), nil },
 	}

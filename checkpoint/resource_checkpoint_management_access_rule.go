@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
@@ -35,6 +36,7 @@ func resourceManagementAccessRule() *schema.Resource {
 			},
 			"position": &schema.Schema{
 				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -365,7 +367,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				accessRule["position"] = "top" // entire rule-base
 			} else {
@@ -373,15 +375,15 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			accessRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			accessRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				accessRule["position"] = "bottom" // entire rule-base
 			} else {
@@ -713,24 +715,36 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		trackMap := accessRule["track"].(map[string]interface{})
 
 		trackMapToReturn := make(map[string]interface{})
+		defaultTrack := map[string]interface{}{
+			"accounting":              "false",
+			"alert":                   "none",
+			"enable-firewall-session": "false",
+			"per-connection":          "false",
+			"per-session":             "false",
+			"type":                    "None",
+		}
+		if v := trackMap["accounting"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.accounting", defaultTrack["accounting"].(string)) {
+			trackMapToReturn["accounting"] = v.(bool)
+		}
 
-		if v := trackMap["accounting"]; v != nil {
-			trackMapToReturn["accounting"] = v
+		if v, _ := trackMap["alert"]; v != nil && isArgDefault(v.(string), d, "track.0.alert", defaultTrack["alert"].(string)) {
+			trackMapToReturn["alert"] = v.(string)
 		}
-		if v := trackMap["alert"]; v != nil {
-			trackMapToReturn["alert"] = v
+
+		if v := trackMap["enable-firewall-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.enable_firewall_session", defaultTrack["enable-firewall-session"].(string)) {
+			trackMapToReturn["enable_firewall_session"] = v.(bool)
 		}
-		if v := trackMap["enable-firewall-session"]; v != nil {
-			trackMapToReturn["enable_firewall_session"] = v
+
+		if v := trackMap["per-connection"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.per_connection", defaultTrack["per-connection"].(string)) {
+			trackMapToReturn["per_connection"] = v.(bool)
 		}
-		if v := trackMap["per-connection"]; v != nil {
-			trackMapToReturn["per_connection"] = v
+
+		if v := trackMap["per-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.per_session", defaultTrack["per-session"].(string)) {
+			trackMapToReturn["per_session"] = v.(bool)
 		}
-		if v := trackMap["per-session"]; v != nil {
-			trackMapToReturn["per_session"] = v
-		}
-		if v := trackMap["type"]; v != nil {
-			trackMapToReturn["type"] = v
+
+		if v, _ := trackMap["type"]; v != nil && isArgDefault(v.(map[string]interface{})["name"].(string), d, "track.0.type", defaultTrack["type"].(string)) {
+			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
 		}
 		_ = d.Set("track", []interface{}{trackMapToReturn})
 
@@ -834,7 +848,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					accessRule["new-position"] = "top" // entire rule-base
 				} else {
@@ -842,15 +856,15 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				accessRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				accessRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					accessRule["new-position"] = "bottom" // entire rule-base
 				} else {

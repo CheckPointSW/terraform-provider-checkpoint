@@ -212,10 +212,10 @@ func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 			allowedLocationsPayload := make(map[string]interface{})
 
 			if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
-				allowedLocationsPayload["destinations"] = v
+				allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
 			}
 			if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
-				allowedLocationsPayload["sources"] = v
+				allowedLocationsPayload["sources"] = v.(*schema.Set).List()
 			}
 			userTemplate["allowed-locations"] = allowedLocationsPayload
 		}
@@ -485,10 +485,10 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 				allowedLocationsPayload := make(map[string]interface{})
 
 				if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
-					allowedLocationsPayload["destinations"] = v
+					allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
 				}
 				if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
-					allowedLocationsPayload["sources"] = v
+					allowedLocationsPayload["sources"] = v.(*schema.Set).List()
 				}
 				userTemplate["allowed-locations"] = allowedLocationsPayload
 			}

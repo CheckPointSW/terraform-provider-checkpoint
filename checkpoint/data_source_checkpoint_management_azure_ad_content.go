@@ -61,6 +61,7 @@ func dataSourceManagementAzureAdContent() *schema.Resource {
 			"filter": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				MaxItems:    1,
 				Description: "Return results matching the specified filter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

@@ -202,8 +202,31 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("layer"); ok {
 		threatRule["layer"] = v.(string)
 	}
-	if v, ok := d.GetOk("position"); ok {
-		threatRule["position"] = v.(string)
+	if _, ok := d.GetOk("position"); ok {
+
+		if v, ok := d.GetOk("position.0.top"); ok {
+			if v.(string) == "top" {
+				threatRule["position"] = "top" // entire rule-base
+			} else {
+				threatRule["position"] = map[string]interface{}{"top": v.(string)} // section-name
+			}
+		}
+
+		if v, ok := d.GetOk("position.0.above"); ok {
+			threatRule["position"] = map[string]interface{}{"above": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.below"); ok {
+			threatRule["position"] = map[string]interface{}{"below": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.bottom"); ok {
+			if v.(string) == "bottom" {
+				threatRule["position"] = "bottom" // entire rule-base
+			} else {
+				threatRule["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+			}
+		}
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -458,7 +481,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		if reflect.DeepEqual(defaultTrackSettings, trackSettingsState) && !trackSettingsInConf {
 			_ = d.Set("track_settings", map[string]interface{}{})
 		} else {
-			_ = d.Set("track_settings", trackSettingsState)
+			_ = d.Set("track_settings", []interface{}{trackSettingsState})
 		}
 	}
 

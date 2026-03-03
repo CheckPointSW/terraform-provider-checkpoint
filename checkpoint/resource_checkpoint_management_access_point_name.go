@@ -191,7 +191,7 @@ func readManagementAccessPointName(d *schema.ResourceData, m interface{}) error 
 	}
 
 	if v := accessPointName["end-user-domain"]; v != nil {
-		_ = d.Set("end_user_domain", v)
+		_ = d.Set("end_user_domain", v.(map[string]interface{})["name"].(string))
 	}
 
 	if accessPointName["tags"] != nil {

@@ -157,8 +157,32 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("package"); ok {
 		natRule["package"] = v.(string)
 	}
-	if v, ok := d.GetOk("position"); ok {
-		natRule["position"] = v.(string)
+
+	if _, ok := d.GetOk("position"); ok {
+
+		if v, ok := d.GetOk("position.0.top"); ok {
+			if v.(string) == "top" {
+				natRule["position"] = "top" // entire rule-base
+			} else {
+				natRule["position"] = map[string]interface{}{"top": v.(string)} // section-name
+			}
+		}
+
+		if v, ok := d.GetOk("position.0.above"); ok {
+			natRule["position"] = map[string]interface{}{"above": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.below"); ok {
+			natRule["position"] = map[string]interface{}{"below": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.bottom"); ok {
+			if v.(string) == "bottom" {
+				natRule["position"] = "bottom" // entire rule-base
+			} else {
+				natRule["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+			}
+		}
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -331,17 +355,29 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
-				natRule["new-position"] = "top"
+
+			if v, ok := d.GetOk("position.0.top"); ok {
+				if v.(string) == "top" {
+					natRule["new-position"] = "top" // entire rule-base
+				} else {
+					natRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
+				}
 			}
-			if v, ok := d.GetOk("position.above"); ok {
+
+			if v, ok := d.GetOk("position.0.above"); ok {
 				natRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
-			if v, ok := d.GetOk("position.below"); ok {
+
+			if v, ok := d.GetOk("position.0.below"); ok {
 				natRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
-				natRule["new-position"] = "bottom"
+
+			if v, ok := d.GetOk("position.0.bottom"); ok {
+				if v.(string) == "bottom" {
+					natRule["new-position"] = "bottom" // entire rule-base
+				} else {
+					natRule["new-position"] = map[string]interface{}{"bottom": v.(string)} // specific section-name
+				}
 			}
 		}
 	}

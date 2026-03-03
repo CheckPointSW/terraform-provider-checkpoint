@@ -2,10 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementUser() *schema.Resource {
@@ -238,10 +239,10 @@ func createManagementUser(d *schema.ResourceData, m interface{}) error {
 			allowedLocationsPayload := make(map[string]interface{})
 
 			if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
-				allowedLocationsPayload["destinations"] = v
+				allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
 			}
 			if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
-				allowedLocationsPayload["sources"] = v
+				allowedLocationsPayload["sources"] = v.(*schema.Set).List()
 			}
 			user["allowed-locations"] = allowedLocationsPayload
 		}
@@ -523,10 +524,10 @@ func updateManagementUser(d *schema.ResourceData, m interface{}) error {
 				allowedLocationsPayload := make(map[string]interface{})
 
 				if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
-					allowedLocationsPayload["destinations"] = v
+					allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
 				}
 				if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
-					allowedLocationsPayload["sources"] = v
+					allowedLocationsPayload["sources"] = v.(*schema.Set).List()
 				}
 				user["allowed-locations"] = allowedLocationsPayload
 			}

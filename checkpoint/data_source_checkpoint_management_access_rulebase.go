@@ -2,12 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
-	"strconv"
-	"strings"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementAccessRuleBase() *schema.Resource {
@@ -907,19 +906,19 @@ func readAccessRuleBaseField(RuleBase map[string]interface{}) []map[string]inter
 				tempRulebase["action"] = v
 			}
 
-			if v, _ := ruleBaseMap["action-settings"]; v != nil {
-				propsJson, ok := ruleBaseMap["action-settings"].(map[string]interface{})
-				if ok {
-					actionSettingsMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						if propName == "enable_identity_captive_portal" {
-							value = strconv.FormatBool(value.(bool))
-						}
-						actionSettingsMapToReturn[propName] = value
-					}
-					tempRulebase["action_settings"] = actionSettingsMapToReturn
+			if ruleBaseMap["action-settings"] != nil {
+
+				actionSettingsMap := ruleBaseMap["action-settings"].(map[string]interface{})
+
+				actionSettingsMapToReturn := make(map[string]interface{})
+
+				if v := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
+					actionSettingsMapToReturn["enable_identity_captive_portal"] = v
 				}
+				if v := actionSettingsMap["limit"]; v != nil {
+					actionSettingsMapToReturn["limit"] = v
+				}
+				tempRulebase["action_settings"] = []interface{}{actionSettingsMapToReturn}
 			}
 			if v, _ := ruleBaseMap["content"]; v != nil {
 				tempRulebase["content"] = v
@@ -945,31 +944,56 @@ func readAccessRuleBaseField(RuleBase map[string]interface{}) []map[string]inter
 				tempRulebase["to"] = int(math.Round(v.(float64)))
 			}
 
-			if v, _ := ruleBaseMap["track"]; v != nil {
-				propsJson, ok := ruleBaseMap["track"].(map[string]interface{})
-				if ok {
-					trackMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						if propName != "type" && propName != "alert" {
-							value = strconv.FormatBool(value.(bool))
-						}
-						trackMapToReturn[propName] = value
-					}
-					tempRulebase["track"] = trackMapToReturn
+			if ruleBaseMap["track"] != nil {
+
+				trackMap := ruleBaseMap["track"].(map[string]interface{})
+
+				trackMapToReturn := make(map[string]interface{})
+				if v := trackMap["accounting"]; v != nil {
+					trackMapToReturn["accounting"] = v.(bool)
 				}
+
+				if v, _ := trackMap["alert"]; v != nil {
+					trackMapToReturn["alert"] = v.(string)
+				}
+
+				if v := trackMap["enable-firewall-session"]; v != nil {
+					trackMapToReturn["enable_firewall_session"] = v.(bool)
+				}
+
+				if v := trackMap["per-connection"]; v != nil {
+					trackMapToReturn["per_connection"] = v.(bool)
+				}
+
+				if v := trackMap["per-session"]; v != nil {
+					trackMapToReturn["per_session"] = v.(bool)
+				}
+
+				if v, _ := trackMap["type"]; v != nil {
+					trackMapToReturn["type"] = v.(string)
+				}
+
+				tempRulebase["track"] = []interface{}{trackMapToReturn}
 			}
 
-			if v, _ := ruleBaseMap["custom-fields"]; v != nil {
-				propsJson, ok := ruleBaseMap["custom-fields"].(map[string]interface{})
-				if ok {
-					customFieldMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						customFieldMapToReturn[propName] = value
-					}
-					tempRulebase["custom_fields"] = customFieldMapToReturn
+			if ruleBaseMap["custom-fields"] != nil {
+
+				customFieldsMap := ruleBaseMap["custom-fields"].(map[string]interface{})
+
+				customFieldsMapToReturn := make(map[string]interface{})
+
+				if v, _ := customFieldsMap["field-1"]; v != nil {
+					customFieldsMapToReturn["field_1"] = v
 				}
+
+				if v, _ := customFieldsMap["field-2"]; v != nil {
+					customFieldsMapToReturn["field_2"] = v
+				}
+
+				if v, _ := customFieldsMap["field-3"]; v != nil {
+					customFieldsMapToReturn["field_3"] = v
+				}
+				tempRulebase["custom_fields"] = []interface{}{customFieldsMapToReturn}
 			}
 
 			if v := ruleBaseMap["rule-number"]; v != nil {

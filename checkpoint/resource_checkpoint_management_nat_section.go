@@ -83,8 +83,31 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 		natSection["package"] = v.(string)
 	}
 
-	if v, ok := d.GetOk("position"); ok {
-		natSection["position"] = v.(string)
+	if _, ok := d.GetOk("position"); ok {
+
+		if v, ok := d.GetOk("position.0.top"); ok {
+			if v.(string) == "top" {
+				natSection["position"] = "top" // entire rule-base
+			} else {
+				natSection["position"] = map[string]interface{}{"top": v.(string)} // section-name
+			}
+		}
+
+		if v, ok := d.GetOk("position.0.above"); ok {
+			natSection["position"] = map[string]interface{}{"above": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.below"); ok {
+			natSection["position"] = map[string]interface{}{"below": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.bottom"); ok {
+			if v.(string) == "bottom" {
+				natSection["position"] = "bottom" // entire rule-base
+			} else {
+				natSection["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+			}
+		}
 	}
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
