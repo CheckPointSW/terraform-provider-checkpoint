@@ -150,12 +150,38 @@ func createManagementLoginToDomain(d *schema.ResourceData, m interface{}) error 
 		_ = d.Set("disk_space_message", v)
 	}
 
-	if v := LoginToDomainRes.GetData()["last-login-was-at"]; v != nil {
-		_ = d.Set("last_login_was_at", v)
+	if loginToDomain["last-login-was-at"] != nil {
+		lastLoginWasAtMap := loginToDomain["last-login-was-at"].(map[string]interface{})
+
+		lastLoginWasAtMapToReturn := make(map[string]interface{})
+
+		if v, _ := lastLoginWasAtMap["iso-8601"]; v != nil {
+			lastLoginWasAtMapToReturn["iso_8601"] = v
+		}
+		if v, _ := lastLoginWasAtMap["posix"]; v != nil {
+			lastLoginWasAtMapToReturn["posix"] = v
+		}
+
+		_ = d.Set("last_login_was_at", []interface{}{lastLoginWasAtMapToReturn})
+	} else {
+		_ = d.Set("last_login_was_at", nil)
 	}
 
-	if v := LoginToDomainRes.GetData()["login-message"]; v != nil {
-		_ = d.Set("login_message", v)
+	if loginToDomain["login-message"] != nil {
+		loginMessageMap := loginToDomain["login-message"].(map[string]interface{})
+
+		loginMessageMapToReturn := make(map[string]interface{})
+
+		if v, _ := loginMessageMap["header"]; v != nil {
+			loginMessageMapToReturn["header"] = v
+		}
+		if v, _ := loginMessageMap["message"]; v != nil {
+			loginMessageMapToReturn["message"] = v
+		}
+
+		_ = d.Set("login_message", []interface{}{loginMessageMapToReturn})
+	} else {
+		_ = d.Set("login_message", nil)
 	}
 
 	if v := loginToDomain["read-only"]; v != nil {

@@ -826,7 +826,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 			"exclude_protection_with_severity":           false,
 		}
 		if reflect.DeepEqual(defaultIpsSettings, ipsSettingsState) && !ipsSettingsInConf {
-			_ = d.Set("ips_settings", map[string]interface{}{})
+			_ = d.Set("ips_settings", []interface{}{})
 		} else {
 			_ = d.Set("ips_settings", ipsSettingsState)
 		}

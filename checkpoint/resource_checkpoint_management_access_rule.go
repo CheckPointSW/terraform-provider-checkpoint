@@ -3,7 +3,6 @@ package checkpoint
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
@@ -659,6 +658,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		if v := customFieldsMap["field-3"]; v != nil {
 			customFieldsMapToReturn["field_3"] = v
 		}
+
 		_ = d.Set("custom_fields", []interface{}{customFieldsMapToReturn})
 
 	} else {
@@ -715,35 +715,28 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		trackMap := accessRule["track"].(map[string]interface{})
 
 		trackMapToReturn := make(map[string]interface{})
-		defaultTrack := map[string]interface{}{
-			"accounting":              "false",
-			"alert":                   "none",
-			"enable-firewall-session": "false",
-			"per-connection":          "false",
-			"per-session":             "false",
-			"type":                    "None",
-		}
-		if v := trackMap["accounting"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.accounting", defaultTrack["accounting"].(string)) {
+
+		if v := trackMap["accounting"]; v != nil {
 			trackMapToReturn["accounting"] = v.(bool)
 		}
 
-		if v, _ := trackMap["alert"]; v != nil && isArgDefault(v.(string), d, "track.0.alert", defaultTrack["alert"].(string)) {
+		if v, _ := trackMap["alert"]; v != nil {
 			trackMapToReturn["alert"] = v.(string)
 		}
 
-		if v := trackMap["enable-firewall-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.enable_firewall_session", defaultTrack["enable-firewall-session"].(string)) {
+		if v := trackMap["enable-firewall-session"]; v != nil {
 			trackMapToReturn["enable_firewall_session"] = v.(bool)
 		}
 
-		if v := trackMap["per-connection"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.per_connection", defaultTrack["per-connection"].(string)) {
+		if v := trackMap["per-connection"]; v != nil {
 			trackMapToReturn["per_connection"] = v.(bool)
 		}
 
-		if v := trackMap["per-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.0.per_session", defaultTrack["per-session"].(string)) {
+		if v := trackMap["per-session"]; v != nil {
 			trackMapToReturn["per_session"] = v.(bool)
 		}
 
-		if v, _ := trackMap["type"]; v != nil && isArgDefault(v.(map[string]interface{})["name"].(string), d, "track.0.type", defaultTrack["type"].(string)) {
+		if v, _ := trackMap["type"]; v != nil {
 			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
 		}
 		_ = d.Set("track", []interface{}{trackMapToReturn})

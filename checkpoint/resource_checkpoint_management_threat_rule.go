@@ -289,10 +289,7 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 			trackSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("track_settings.0.forensics"); ok {
-				trackSettingsPayload["forensics"] = v.(bool)
-			}
-			if v, ok := d.GetOk("track_settings.0.packet_capture"); ok {
+			if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
 				trackSettingsPayload["packet-capture"] = v.(bool)
 			}
 			threatRule["track-settings"] = trackSettingsPayload
@@ -513,17 +510,25 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
-				threatRule["new-position"] = "top"
+			if v, ok := d.GetOk("position.0.top"); ok {
+				if v.(string) == "top" {
+					threatRule["new-position"] = "top" // entire rule-base
+				} else {
+					threatRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
+				}
 			}
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				threatRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				threatRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
-				threatRule["new-position"] = "bottom"
+			if v, ok := d.GetOk("position.0.bottom"); ok {
+				if v.(string) == "bottom" {
+					threatRule["new-position"] = "bottom" // entire rule-base
+				} else {
+					threatRule["new-position"] = map[string]interface{}{"bottom": v.(string)} // specific section-name
+				}
 			}
 		}
 	}
@@ -614,9 +619,6 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 				trackSettingsPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOkExists("track_settings.0.forensics"); ok {
-					trackSettingsPayload["forensics"] = v.(bool)
-				}
 				if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
 					trackSettingsPayload["packet-capture"] = v.(bool)
 				}

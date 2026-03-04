@@ -345,50 +345,9 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 		if v := accessPointNameMap["enable"]; v != nil {
 			accessPointNameMapToReturn["enable"] = v
 		}
-		if v := accessPointNameMap["apn"]; v != nil {
-
-			apnMap := v.(map[string]interface{})
-
-			apnMapToReturn := make(map[string]interface{})
-
-			if v := apnMap["name"]; v != nil {
-				apnMapToReturn["name"] = v
-			}
-			if v := apnMap["type"]; v != nil {
-				apnMapToReturn["type"] = v
-			}
-			if v := apnMap["color"]; v != nil {
-				apnMapToReturn["color"] = v
-			}
-			if v := apnMap["domain"]; v != nil {
-
-				domainMap := v.(map[string]interface{})
-
-				domainMapToReturn := make(map[string]interface{})
-
-				if v := domainMap["name"]; v != nil {
-					domainMapToReturn["name"] = v
-				}
-				if v := domainMap["domain-type"]; v != nil {
-					domainMapToReturn["domain_type"] = v
-				}
-				if v := domainMap["uid"]; v != nil {
-					domainMapToReturn["uid"] = v
-				}
-
-				apnMapToReturn["domain"] = []interface{}{domainMapToReturn}
-			}
-
-			if v := apnMap["icon"]; v != nil {
-				apnMapToReturn["icon"] = v
-			}
-			if v := apnMap["uid"]; v != nil {
-				apnMapToReturn["uid"] = v
-			}
-
-			accessPointNameMapToReturn["apn"] = []interface{}{apnMapToReturn}
+		if v := payload["apn"]; v != nil {
+			accessPointNameMapToReturn["apn"] = v.(map[string]interface{})["name"].(string)
 		}
-
 		_ = d.Set("access_point_name", []interface{}{accessPointNameMapToReturn})
 
 	} else {
@@ -447,47 +406,7 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 		interfaceProfileMapToReturn := make(map[string]interface{})
 
 		if v := interfaceProfileMap["profile"]; v != nil {
-
-			profileMap := v.(map[string]interface{})
-
-			profileMapToReturn := make(map[string]interface{})
-
-			if v := profileMap["name"]; v != nil {
-				profileMapToReturn["name"] = v
-			}
-			if v := profileMap["type"]; v != nil {
-				profileMapToReturn["type"] = v
-			}
-			if v := profileMap["color"]; v != nil {
-				profileMapToReturn["color"] = v
-			}
-			if v := profileMap["domain"]; v != nil {
-
-				domainMap := v.(map[string]interface{})
-
-				domainMapToReturn := make(map[string]interface{})
-
-				if v := domainMap["name"]; v != nil {
-					domainMapToReturn["name"] = v
-				}
-				if v := domainMap["domain-type"]; v != nil {
-					domainMapToReturn["domain_type"] = v
-				}
-				if v := domainMap["uid"]; v != nil {
-					domainMapToReturn["uid"] = v
-				}
-
-				profileMapToReturn["domain"] = []interface{}{domainMapToReturn}
-			}
-
-			if v := profileMap["icon"]; v != nil {
-				profileMapToReturn["icon"] = v
-			}
-			if v := profileMap["uid"]; v != nil {
-				profileMapToReturn["uid"] = v
-			}
-
-			interfaceProfileMapToReturn["profile"] = []interface{}{profileMapToReturn}
+			interfaceProfileMapToReturn["profile"] = v.(map[string]interface{})["name"].(string)
 		}
 
 		if v := interfaceProfileMap["custom-message-types"]; v != nil {
@@ -509,48 +428,9 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 		if v := ldapGroupMap["enable"]; v != nil {
 			ldapGroupMapToReturn["enable"] = v
 		}
-		if v := ldapGroupMap["group"]; v != nil {
 
-			groupMap := v.(map[string]interface{})
-
-			groupMapToReturn := make(map[string]interface{})
-
-			if v := groupMap["name"]; v != nil {
-				groupMapToReturn["name"] = v
-			}
-			if v := groupMap["type"]; v != nil {
-				groupMapToReturn["type"] = v
-			}
-			if v := groupMap["color"]; v != nil {
-				groupMapToReturn["color"] = v
-			}
-			if v := groupMap["domain"]; v != nil {
-
-				domainMap := v.(map[string]interface{})
-
-				domainMapToReturn := make(map[string]interface{})
-
-				if v := domainMap["name"]; v != nil {
-					domainMapToReturn["name"] = v
-				}
-				if v := domainMap["domain-type"]; v != nil {
-					domainMapToReturn["domain_type"] = v
-				}
-				if v := domainMap["uid"]; v != nil {
-					domainMapToReturn["uid"] = v
-				}
-
-				groupMapToReturn["domain"] = []interface{}{domainMapToReturn}
-			}
-
-			if v := groupMap["icon"]; v != nil {
-				groupMapToReturn["icon"] = v
-			}
-			if v := groupMap["uid"]; v != nil {
-				groupMapToReturn["uid"] = v
-			}
-
-			ldapGroupMapToReturn["group"] = []interface{}{groupMapToReturn}
+		if v, _ := ldapGroupMap["group"]; v != nil {
+			ldapGroupMapToReturn["group"] = v.(map[string]interface{})["name"].(string)
 		}
 
 		if v := ldapGroupMap["according-to"]; v != nil {

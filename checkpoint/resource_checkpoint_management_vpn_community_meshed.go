@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
+	"reflect"
 	"strconv"
 )
 
@@ -1104,7 +1105,13 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		if v := ikePhase1Map["ike-p1-rekey-time-unit"]; v != nil {
 			ikePhase1MapToReturn["ike_p1_rekey_time_unit"] = v
 		}
-		_ = d.Set("ike_phase_1", []interface{}{ikePhase1MapToReturn})
+		_, ikePhase1InConf := d.GetOk("ike_phase_1")
+		defaultIkePhase1 := map[string]interface{}{"encryption_algorithm": "aes-256", "diffie_hellman_group": "group-2", "data_integrity": "sha1"}
+		if reflect.DeepEqual(defaultIkePhase1, ikePhase1MapToReturn) && !ikePhase1InConf {
+			_ = d.Set("ike_phase_1", []interface{}{})
+		} else {
+			_ = d.Set("ike_phase_1", []interface{}{ikePhase1MapToReturn})
+		}
 
 	} else {
 		_ = d.Set("ike_phase_1", nil)
@@ -1143,7 +1150,13 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		if v := ikePhase2Map["ike-p2-rekey-time-unit"]; v != nil {
 			ikePhase2MapToReturn["ike_p2_rekey_time_unit"] = v
 		}
-		_ = d.Set("ike_phase_2", []interface{}{ikePhase2MapToReturn})
+		_, ikePhase2InConf := d.GetOk("ike_phase_2")
+		defaultIkePhase2 := map[string]interface{}{"encryption_algorithm": "aes-128", "data_integrity": "sha1"}
+		if reflect.DeepEqual(defaultIkePhase2, ikePhase2MapToReturn) && !ikePhase2InConf {
+			_ = d.Set("ike_phase_2", []interface{}{})
+		} else {
+			_ = d.Set("ike_phase_2", []interface{}{ikePhase2MapToReturn})
+		}
 
 	} else {
 		_ = d.Set("ike_phase_2", nil)
@@ -1652,6 +1665,8 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 				}
 				vpnCommunityMeshed["ike-phase-1"] = ikePhase1Payload
 			}
+		} else {
+			vpnCommunityMeshed["ike-phase-1"] = map[string]interface{}{"encryption-algorithm": "aes-256", "diffie-hellman-group": "group-2", "data-integrity": "sha1"}
 		}
 	}
 
@@ -1694,6 +1709,8 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 				}
 				vpnCommunityMeshed["ike-phase-2"] = ikePhase2Payload
 			}
+		} else {
+			vpnCommunityMeshed["ike-phase-2"] = map[string]interface{}{"encryption-algorithm": "aes-128", "data-integrity": "sha1"}
 		}
 	}
 

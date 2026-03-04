@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
+	"reflect"
 )
 
 func resourceManagementLsvProfile() *schema.Resource {
@@ -249,7 +250,13 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 		if v := vpnDomainMap["max-allowed-addresses"]; v != nil {
 			vpnDomainMapToReturn["max_allowed_addresses"] = v
 		}
-		_ = d.Set("vpn_domain", []interface{}{vpnDomainMapToReturn})
+		_, vpnDomainInConf := d.GetOk("vpn_domain")
+		defaultVpnDomain := map[string]interface{}{"limit_peer_domain_size": "false", "max_allowed_addresses": "256"}
+		if reflect.DeepEqual(defaultVpnDomain, vpnDomainMapToReturn) && !vpnDomainInConf {
+			_ = d.Set("vpn_domain", map[string]interface{}{})
+		} else {
+			_ = d.Set("vpn_domain", []interface{}{vpnDomainMapToReturn})
+		}
 
 	} else {
 		_ = d.Set("vpn_domain", nil)
@@ -322,6 +329,8 @@ func updateManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 				}
 				lsvProfile["vpn-domain"] = vpnDomainPayload
 			}
+		} else {
+			lsvProfile["vpn-domain"] = map[string]interface{}{"limit-peer-domain_size": "false", "max-allowed-addresses": "256"}
 		}
 	}
 

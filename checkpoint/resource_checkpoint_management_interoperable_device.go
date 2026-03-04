@@ -483,20 +483,16 @@ func readManagementInteroperableDevice(d *schema.ResourceData, m interface{}) er
 
 						topologySettingsMap, ok := v.(map[string]interface{})
 						if ok {
-							defaultVpnSettings := map[string]interface{}{
-								"ip-address-behind-this-interface": "not defined",
-								"interface-leads-to-dmz":           "false",
-							}
 							topologySettingsMapToReturn := make(map[string]interface{})
 
-							if v, _ := topologySettingsMap["ip-address-behind-this-interface"]; v != nil && isArgDefault(v.(string), d, "interfaces."+strconv.Itoa(i)+".topology_settings.ip_address_behind_this_interface", defaultVpnSettings["ip-address-behind-this-interface"].(string)) {
-								topologySettingsMapToReturn["ip_address_behind_this_interface"] = v
+							if v, _ := topologySettingsMap["ip-address-behind-this-interface"]; v != nil {
+								topologySettingsMapToReturn["ip_address_behind_this_interface"] = v.(string)
 							}
-							if v, _ := topologySettingsMap["interface-leads-to-dmz"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "interfaces."+strconv.Itoa(i)+".topology_settings.interface_leads_to_dmz", defaultVpnSettings["interface-leads-to-dmz"].(string)) {
-								topologySettingsMapToReturn["interface_leads_to_dmz"] = v
+							if v, _ := topologySettingsMap["interface-leads-to-dmz"]; v != nil {
+								topologySettingsMapToReturn["interface_leads_to_dmz"] = v.(bool)
 							}
 							if v, _ := topologySettingsMap["specific-network"]; v != nil {
-								topologySettingsMapToReturn["specific_network"] = v
+								topologySettingsMapToReturn["specific_network"] = v.(string)
 							}
 							if len(topologySettingsMapToReturn) != 0 {
 								interfacesMapToReturn["topology_settings"] = []interface{}{topologySettingsMapToReturn}
@@ -530,14 +526,14 @@ func readManagementInteroperableDevice(d *schema.ResourceData, m interface{}) er
 
 		vpnSettingsMapToReturn := make(map[string]interface{})
 
-		if v := vpnSettingsMap["vpn-domain"]; v != nil {
-			vpnSettingsMapToReturn["vpn_domain"] = v
+		if v, _ := vpnSettingsMap["vpn-domain"]; v != nil {
+			vpnSettingsMapToReturn["vpn_domain"] = v.(string)
 		}
 		if v := vpnSettingsMap["vpn-domain-exclude-external-ip-addresses"]; v != nil {
-			vpnSettingsMapToReturn["vpn_domain_exclude_external_ip_addresses"] = v
+			vpnSettingsMapToReturn["vpn_domain_exclude_external_ip_addresses"] = v.(bool)
 		}
-		if v := vpnSettingsMap["vpn-domain-type"]; v != nil {
-			vpnSettingsMapToReturn["vpn_domain_type"] = v
+		if v, _ := vpnSettingsMap["vpn-domain-type"]; v != nil {
+			vpnSettingsMapToReturn["vpn_domain_type"] = v.(string)
 		}
 		_ = d.Set("vpn_settings", []interface{}{vpnSettingsMapToReturn})
 

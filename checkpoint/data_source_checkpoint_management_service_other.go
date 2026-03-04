@@ -2,10 +2,9 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
 )
 
 func dataSourceManagementServiceOther() *schema.Resource {

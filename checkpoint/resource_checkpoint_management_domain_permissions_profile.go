@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	"log"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 
 	"strconv"
 )
@@ -908,24 +909,13 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 	if domainPermissionsProfile["access-control"] != nil {
 
-		defaultEventsAndReports := map[string]interface{}{
-			"show-policy":                          "custom",
-			"dlp-policy":                           "write",
-			"geo-control-policy":                   "write",
-			"nat-policy":                           "true",
-			"qos-policy":                           "true",
-			"access-control-objects-and-settings":  "true",
-			"app-control-and-url-filtering-update": "true",
-			"install-policy":                       "true",
-		}
-
 		accessControlMap, ok := domainPermissionsProfile["access-control"].(map[string]interface{})
 
 		if ok {
 			accessControlMapToReturn := make(map[string]interface{})
 
-			if v := accessControlMap["show-policy"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "access_control.0.show_policy", defaultEventsAndReports["show-policy"].(string)) {
-				accessControlMapToReturn["show_policy"] = strconv.FormatBool(v.(bool))
+			if v := accessControlMap["show-policy"]; v != nil {
+				accessControlMapToReturn["show_policy"] = v.(bool)
 			}
 			if v, ok := accessControlMap["policy-layers"]; ok {
 
@@ -934,43 +924,43 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 					policyLayersMapToReturn := make(map[string]interface{})
 
 					if v, _ := policyLayersMap["edit-layers"]; v != nil {
-						policyLayersMapToReturn["edit_layers"] = v
+						policyLayersMapToReturn["edit_layers"] = v.(string)
 					}
 					if v, _ := policyLayersMap["app-control-and-url-filtering"]; v != nil {
-						policyLayersMapToReturn["app_control_and_url_filtering"] = v
+						policyLayersMapToReturn["app_control_and_url_filtering"] = v.(bool)
 					}
 					if v, _ := policyLayersMap["content-awareness"]; v != nil {
-						policyLayersMapToReturn["content_awareness"] = v
+						policyLayersMapToReturn["content_awareness"] = v.(bool)
 					}
 					if v, _ := policyLayersMap["firewall"]; v != nil {
-						policyLayersMapToReturn["firewall"] = v
+						policyLayersMapToReturn["firewall"] = v.(bool)
 					}
 					if v, _ := policyLayersMap["mobile-access"]; v != nil {
-						policyLayersMapToReturn["mobile_access"] = v
+						policyLayersMapToReturn["mobile_access"] = v.(bool)
 					}
 					accessControlMapToReturn["policy_layers"] = []interface{}{policyLayersMapToReturn}
 				}
 			}
-			if v := accessControlMap["dlp-policy"]; v != nil && isArgDefault(v.(string), d, "access_control.0.dlp_policy", defaultEventsAndReports["dlp-policy"].(string)) {
-				accessControlMapToReturn["dlp_policy"] = v
+			if v := accessControlMap["dlp-policy"]; v != nil {
+				accessControlMapToReturn["dlp_policy"] = v.(string)
 			}
-			if v := accessControlMap["geo-control-policy"]; v != nil && isArgDefault(v.(string), d, "access_control.0.geo_control_policy", defaultEventsAndReports["geo-control-policy"].(string)) {
-				accessControlMapToReturn["geo_control_policy"] = v
+			if v := accessControlMap["geo-control-policy"]; v != nil {
+				accessControlMapToReturn["geo_control_policy"] = v.(string)
 			}
-			if v := accessControlMap["nat-policy"]; v != nil && isArgDefault(v.(string), d, "access_control.0.nat_policy", defaultEventsAndReports["nat-policy"].(string)) {
-				accessControlMapToReturn["nat_policy"] = v
+			if v := accessControlMap["nat-policy"]; v != nil {
+				accessControlMapToReturn["nat_policy"] = v.(string)
 			}
-			if v := accessControlMap["qos-policy"]; v != nil && isArgDefault(v.(string), d, "access_control.0.qos_policy", defaultEventsAndReports["qos-policy"].(string)) {
-				accessControlMapToReturn["qos_policy"] = v
+			if v := accessControlMap["qos-policy"]; v != nil {
+				accessControlMapToReturn["qos_policy"] = v.(string)
 			}
-			if v := accessControlMap["access-control-objects-and-settings"]; v != nil && isArgDefault(v.(string), d, "access_control.0.access_control_objects_and_settings", defaultEventsAndReports["access-control-objects-and-settings"].(string)) {
-				accessControlMapToReturn["access_control_objects_and_settings"] = v
+			if v := accessControlMap["access-control-objects-and-settings"]; v != nil {
+				accessControlMapToReturn["access_control_objects_and_settings"] = v.(string)
 			}
-			if v := accessControlMap["app-control-and-url-filtering-update"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "access_control.0.app_control_and_url_filtering_update", defaultEventsAndReports["app-control-and-url-filtering-update"].(string)) {
-				accessControlMapToReturn["app_control_and_url_filtering_update"] = strconv.FormatBool(v.(bool))
+			if v := accessControlMap["app-control-and-url-filtering-update"]; v != nil {
+				accessControlMapToReturn["app_control_and_url_filtering_update"] = v.(bool)
 			}
-			if v := accessControlMap["install-policy"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "access_control.0.install_policy", defaultEventsAndReports["install-policy"].(string)) {
-				accessControlMapToReturn["install_policy"] = v
+			if v := accessControlMap["install-policy"]; v != nil {
+				accessControlMapToReturn["install_policy"] = v.(bool)
 			}
 			_ = d.Set("access_control", []interface{}{accessControlMapToReturn})
 
@@ -986,34 +976,34 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 		endpointMapToReturn := make(map[string]interface{})
 
 		if v := endpointMap["manage-policies-and-software-deployment"]; v != nil {
-			endpointMapToReturn["manage_policies_and_software_deployment"] = v
+			endpointMapToReturn["manage_policies_and_software_deployment"] = v.(bool)
 		}
 		if v := endpointMap["edit-endpoint-policies"]; v != nil {
-			endpointMapToReturn["edit_endpoint_policies"] = v
+			endpointMapToReturn["edit_endpoint_policies"] = v.(bool)
 		}
 		if v := endpointMap["policies-installation"]; v != nil {
-			endpointMapToReturn["policies_installation"] = v
+			endpointMapToReturn["policies_installation"] = v.(bool)
 		}
 		if v := endpointMap["edit-software-deployment"]; v != nil {
-			endpointMapToReturn["edit_software_deployment"] = v
+			endpointMapToReturn["edit_software_deployment"] = v.(bool)
 		}
 		if v := endpointMap["software-deployment-installation"]; v != nil {
-			endpointMapToReturn["software_deployment_installation"] = v
+			endpointMapToReturn["software_deployment_installation"] = v.(bool)
 		}
 		if v := endpointMap["allow-executing-push-operations"]; v != nil {
-			endpointMapToReturn["allow_executing_push_operations"] = v
+			endpointMapToReturn["allow_executing_push_operations"] = v.(bool)
 		}
 		if v := endpointMap["authorize-preboot-users"]; v != nil {
-			endpointMapToReturn["authorize_preboot_users"] = v
+			endpointMapToReturn["authorize_preboot_users"] = v.(bool)
 		}
 		if v := endpointMap["recovery-media"]; v != nil {
-			endpointMapToReturn["recovery_media"] = v
+			endpointMapToReturn["recovery_media"] = v.(bool)
 		}
 		if v := endpointMap["remote-help"]; v != nil {
-			endpointMapToReturn["remote_help"] = v
+			endpointMapToReturn["remote_help"] = v.(bool)
 		}
 		if v := endpointMap["reset-computer-data"]; v != nil {
-			endpointMapToReturn["reset_computer_data"] = v
+			endpointMapToReturn["reset_computer_data"] = v.(bool)
 		}
 		_ = d.Set("endpoint", []interface{}{endpointMapToReturn})
 
@@ -1027,17 +1017,17 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		eventsAndReportsMapToReturn := make(map[string]interface{})
 
-		if v := eventsAndReportsMap["smart-event"]; v != nil {
-			eventsAndReportsMapToReturn["smart_event"] = v
+		if v, _ := eventsAndReportsMap["smart-event"]; v != nil {
+			eventsAndReportsMapToReturn["smart_event"] = v.(string)
 		}
-		if v := eventsAndReportsMap["events"]; v != nil {
-			eventsAndReportsMapToReturn["events"] = v
+		if v, _ := eventsAndReportsMap["events"]; v != nil {
+			eventsAndReportsMapToReturn["events"] = v.(string)
 		}
-		if v := eventsAndReportsMap["policy"]; v != nil {
-			eventsAndReportsMapToReturn["policy"] = v
+		if v, _ := eventsAndReportsMap["policy"]; v != nil {
+			eventsAndReportsMapToReturn["policy"] = v.(string)
 		}
-		if v := eventsAndReportsMap["reports"]; v != nil {
-			eventsAndReportsMapToReturn["reports"] = v
+		if v, _ := eventsAndReportsMap["reports"]; v != nil {
+			eventsAndReportsMapToReturn["reports"] = v.(bool)
 		}
 		_ = d.Set("events_and_reports", []interface{}{eventsAndReportsMapToReturn})
 
@@ -1051,35 +1041,35 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		gatewaysMapToReturn := make(map[string]interface{})
 
-		if v := gatewaysMap["smart-update"]; v != nil {
-			gatewaysMapToReturn["smart_update"] = v
+		if v, _ := gatewaysMap["smart-update"]; v != nil {
+			gatewaysMapToReturn["smart_update"] = v.(string)
 		}
-		if v := gatewaysMap["lsm-gw-db"]; v != nil {
-			gatewaysMapToReturn["lsm_gw_db"] = v
+		if v, _ := gatewaysMap["lsm-gw-db"]; v != nil {
+			gatewaysMapToReturn["lsm_gw_db"] = v.(string)
 		}
-		if v := gatewaysMap["manage-provisioning-profiles"]; v != nil {
-			gatewaysMapToReturn["manage_provisioning_profiles"] = v
+		if v, _ := gatewaysMap["manage-provisioning-profiles"]; v != nil {
+			gatewaysMapToReturn["manage_provisioning_profiles"] = v.(string)
 		}
-		if v := gatewaysMap["vsx-provisioning"]; v != nil {
-			gatewaysMapToReturn["vsx_provisioning"] = v
+		if v, _ := gatewaysMap["vsx-provisioning"]; v != nil {
+			gatewaysMapToReturn["vsx_provisioning"] = v.(bool)
 		}
-		if v := gatewaysMap["system-backup"]; v != nil {
-			gatewaysMapToReturn["system_backup"] = v
+		if v, _ := gatewaysMap["system-backup"]; v != nil {
+			gatewaysMapToReturn["system_backup"] = v.(bool)
 		}
-		if v := gatewaysMap["system-restore"]; v != nil {
-			gatewaysMapToReturn["system_restore"] = v
+		if v, _ := gatewaysMap["system-restore"]; v != nil {
+			gatewaysMapToReturn["system_restore"] = v.(bool)
 		}
-		if v := gatewaysMap["open-shell"]; v != nil {
-			gatewaysMapToReturn["open_shell"] = v
+		if v, _ := gatewaysMap["open-shell"]; v != nil {
+			gatewaysMapToReturn["open_shell"] = v.(bool)
 		}
-		if v := gatewaysMap["run-one-time-script"]; v != nil {
-			gatewaysMapToReturn["run_one_time_script"] = v
+		if v, _ := gatewaysMap["run-one-time-script"]; v != nil {
+			gatewaysMapToReturn["run_one_time_script"] = v.(bool)
 		}
-		if v := gatewaysMap["run-repository-script"]; v != nil {
-			gatewaysMapToReturn["run_repository_script"] = v
+		if v, _ := gatewaysMap["run-repository-script"]; v != nil {
+			gatewaysMapToReturn["run_repository_script"] = v.(bool)
 		}
-		if v := gatewaysMap["manage-repository-scripts"]; v != nil {
-			gatewaysMapToReturn["manage_repository_scripts"] = v
+		if v, _ := gatewaysMap["manage-repository-scripts"]; v != nil {
+			gatewaysMapToReturn["manage_repository_scripts"] = v.(string)
 		}
 		_ = d.Set("gateways", []interface{}{gatewaysMapToReturn})
 
@@ -1093,29 +1083,29 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		managementMapToReturn := make(map[string]interface{})
 
-		if v := managementMap["cme-operations"]; v != nil {
-			managementMapToReturn["cme_operations"] = v
+		if v, _ := managementMap["cme-operations"]; v != nil {
+			managementMapToReturn["cme_operations"] = v.(string)
 		}
-		if v := managementMap["manage-admins"]; v != nil {
-			managementMapToReturn["manage_admins"] = v
+		if v, _ := managementMap["manage-admins"]; v != nil {
+			managementMapToReturn["manage_admins"] = v.(bool)
 		}
-		if v := managementMap["management-api-login"]; v != nil {
-			managementMapToReturn["management_api_login"] = v
+		if v, _ := managementMap["management-api-login"]; v != nil {
+			managementMapToReturn["management_api_login"] = v.(bool)
 		}
-		if v := managementMap["manage-sessions"]; v != nil {
-			managementMapToReturn["manage_sessions"] = v
+		if v, _ := managementMap["manage-sessions"]; v != nil {
+			managementMapToReturn["manage_sessions"] = v.(bool)
 		}
-		if v := managementMap["high-availability-operations"]; v != nil {
-			managementMapToReturn["high_availability_operations"] = v
+		if v, _ := managementMap["high-availability-operations"]; v != nil {
+			managementMapToReturn["high_availability_operations"] = v.(bool)
 		}
-		if v := managementMap["approve-or-reject-sessions"]; v != nil {
-			managementMapToReturn["approve_or_reject_sessions"] = v
+		if v, _ := managementMap["approve-or-reject-sessions"]; v != nil {
+			managementMapToReturn["approve_or_reject_sessions"] = v.(bool)
 		}
-		if v := managementMap["publish-sessions"]; v != nil {
-			managementMapToReturn["publish_sessions"] = v
+		if v, _ := managementMap["publish-sessions"]; v != nil {
+			managementMapToReturn["publish_sessions"] = v.(bool)
 		}
-		if v := managementMap["manage-integration-with-cloud-services"]; v != nil {
-			managementMapToReturn["manage_integration_with_cloud_services"] = v
+		if v, _ := managementMap["manage-integration-with-cloud-services"]; v != nil {
+			managementMapToReturn["manage_integration_with_cloud_services"] = v.(bool)
 		}
 		_ = d.Set("management", []interface{}{managementMapToReturn})
 
@@ -1129,38 +1119,38 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		monitoringAndLoggingMapToReturn := make(map[string]interface{})
 
-		if v := monitoringAndLoggingMap["monitoring"]; v != nil {
-			monitoringAndLoggingMapToReturn["monitoring"] = v
+		if v, _ := monitoringAndLoggingMap["monitoring"]; v != nil {
+			monitoringAndLoggingMapToReturn["monitoring"] = v.(string)
 		}
-		if v := monitoringAndLoggingMap["management-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["management_logs"] = v
+		if v, _ := monitoringAndLoggingMap["management-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["management_logs"] = v.(string)
 		}
-		if v := monitoringAndLoggingMap["track-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["track_logs"] = v
+		if v, _ := monitoringAndLoggingMap["track-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["track_logs"] = v.(string)
 		}
-		if v := monitoringAndLoggingMap["app-and-url-filtering-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["app_and_url_filtering_logs"] = v
+		if v, _ := monitoringAndLoggingMap["app-and-url-filtering-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["app_and_url_filtering_logs"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["https-inspection-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["https_inspection_logs"] = v
+		if v, _ := monitoringAndLoggingMap["https-inspection-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["https_inspection_logs"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["packet-capture-and-forensics"]; v != nil {
-			monitoringAndLoggingMapToReturn["packet_capture_and_forensics"] = v
+		if v, _ := monitoringAndLoggingMap["packet-capture-and-forensics"]; v != nil {
+			monitoringAndLoggingMapToReturn["packet_capture_and_forensics"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["show-packet-capture-by-default"]; v != nil {
-			monitoringAndLoggingMapToReturn["show_packet_capture_by_default"] = v
+		if v, _ := monitoringAndLoggingMap["show-packet-capture-by-default"]; v != nil {
+			monitoringAndLoggingMapToReturn["show_packet_capture_by_default"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["identities"]; v != nil {
-			monitoringAndLoggingMapToReturn["identities"] = v
+		if v, _ := monitoringAndLoggingMap["identities"]; v != nil {
+			monitoringAndLoggingMapToReturn["identities"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["show-identities-by-default"]; v != nil {
-			monitoringAndLoggingMapToReturn["show_identities_by_default"] = v
+		if v, _ := monitoringAndLoggingMap["show-identities-by-default"]; v != nil {
+			monitoringAndLoggingMapToReturn["show_identities_by_default"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["dlp-logs-including-confidential-fields"]; v != nil {
-			monitoringAndLoggingMapToReturn["dlp_logs_including_confidential_fields"] = v
+		if v, _ := monitoringAndLoggingMap["dlp-logs-including-confidential-fields"]; v != nil {
+			monitoringAndLoggingMapToReturn["dlp_logs_including_confidential_fields"] = v.(bool)
 		}
-		if v := monitoringAndLoggingMap["manage-dlp-messages"]; v != nil {
-			monitoringAndLoggingMapToReturn["manage_dlp_messages"] = v
+		if v, _ := monitoringAndLoggingMap["manage-dlp-messages"]; v != nil {
+			monitoringAndLoggingMapToReturn["manage_dlp_messages"] = v.(bool)
 		}
 		_ = d.Set("monitoring_and_logging", []interface{}{monitoringAndLoggingMapToReturn})
 
@@ -1174,29 +1164,29 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		threatPreventionMapToReturn := make(map[string]interface{})
 
-		if v := threatPreventionMap["policy-layers"]; v != nil {
-			threatPreventionMapToReturn["policy_layers"] = v
+		if v, _ := threatPreventionMap["policy-layers"]; v != nil {
+			threatPreventionMapToReturn["policy_layers"] = v.(string)
 		}
-		if v := threatPreventionMap["edit-layers"]; v != nil {
-			threatPreventionMapToReturn["edit_layers"] = v
+		if v, _ := threatPreventionMap["edit-layers"]; v != nil {
+			threatPreventionMapToReturn["edit_layers"] = v.(string)
 		}
-		if v := threatPreventionMap["edit-settings"]; v != nil {
-			threatPreventionMapToReturn["edit_settings"] = v
+		if v, _ := threatPreventionMap["edit-settings"]; v != nil {
+			threatPreventionMapToReturn["edit_settings"] = v.(bool)
 		}
-		if v := threatPreventionMap["policy-exceptions"]; v != nil {
-			threatPreventionMapToReturn["policy_exceptions"] = v
+		if v, _ := threatPreventionMap["policy-exceptions"]; v != nil {
+			threatPreventionMapToReturn["policy_exceptions"] = v.(string)
 		}
-		if v := threatPreventionMap["profiles"]; v != nil {
-			threatPreventionMapToReturn["profiles"] = v
+		if v, _ := threatPreventionMap["profiles"]; v != nil {
+			threatPreventionMapToReturn["profiles"] = v.(string)
 		}
-		if v := threatPreventionMap["protections"]; v != nil {
-			threatPreventionMapToReturn["protections"] = v
+		if v, _ := threatPreventionMap["protections"]; v != nil {
+			threatPreventionMapToReturn["protections"] = v.(string)
 		}
-		if v := threatPreventionMap["install-policy"]; v != nil {
-			threatPreventionMapToReturn["install_policy"] = v
+		if v, _ := threatPreventionMap["install-policy"]; v != nil {
+			threatPreventionMapToReturn["install_policy"] = v.(bool)
 		}
-		if v := threatPreventionMap["ips-update"]; v != nil {
-			threatPreventionMapToReturn["ips_update"] = v
+		if v, _ := threatPreventionMap["ips-update"]; v != nil {
+			threatPreventionMapToReturn["ips_update"] = v.(bool)
 		}
 		_ = d.Set("threat_prevention", []interface{}{threatPreventionMapToReturn})
 
@@ -1210,23 +1200,23 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 		othersMapToReturn := make(map[string]interface{})
 
-		if v := othersMap["client-certificates"]; v != nil {
-			othersMapToReturn["client_certificates"] = v
+		if v, _ := othersMap["client-certificates"]; v != nil {
+			othersMapToReturn["client_certificates"] = v.(bool)
 		}
-		if v := othersMap["edit-cp-users-db"]; v != nil {
-			othersMapToReturn["edit_cp_users_db"] = v
+		if v, _ := othersMap["edit-cp-users-db"]; v != nil {
+			othersMapToReturn["edit_cp_users_db"] = v.(bool)
 		}
-		if v := othersMap["https-inspection"]; v != nil {
-			othersMapToReturn["https_inspection"] = v
+		if v, _ := othersMap["https-inspection"]; v != nil {
+			othersMapToReturn["https_inspection"] = v.(string)
 		}
-		if v := othersMap["ldap-users-db"]; v != nil {
-			othersMapToReturn["ldap_users_db"] = v
+		if v, _ := othersMap["ldap-users-db"]; v != nil {
+			othersMapToReturn["ldap_users_db"] = v.(string)
 		}
-		if v := othersMap["user-authority-access"]; v != nil {
-			othersMapToReturn["user_authority_access"] = v
+		if v, _ := othersMap["user-authority-access"]; v != nil {
+			othersMapToReturn["user_authority_access"] = v.(string)
 		}
-		if v := othersMap["user-device-mgmt-conf"]; v != nil {
-			othersMapToReturn["user_device_mgmt_conf"] = v
+		if v, _ := othersMap["user-device-mgmt-conf"]; v != nil {
+			othersMapToReturn["user_device_mgmt_conf"] = v.(string)
 		}
 		_ = d.Set("others", []interface{}{othersMapToReturn})
 

@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
+	"reflect"
 	"strconv"
 )
 
@@ -521,7 +522,13 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
-		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
+		_, natSettingInConf := d.GetOk("nat_settings")
+		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
+		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
+			_ = d.Set("nat_settings", []interface{}{})
+		} else {
+			_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
+		}
 
 	} else {
 		_ = d.Set("nat_settings", nil)

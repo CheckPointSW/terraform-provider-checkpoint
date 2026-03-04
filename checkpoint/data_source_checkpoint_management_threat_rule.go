@@ -294,7 +294,7 @@ func dataSourceManagementThreatRuleRead(d *schema.ResourceData, m interface{}) e
 		_, trackSettingsInConf := d.GetOk("track_settings")
 		defaultTrackSettings := map[string]interface{}{"packet-capture": true}
 		if reflect.DeepEqual(defaultTrackSettings, trackSettingsState) && !trackSettingsInConf {
-			_ = d.Set("track_settings", map[string]interface{}{})
+			_ = d.Set("track_settings", []interface{}{})
 		} else {
 			_ = d.Set("track_settings", []interface{}{trackSettingsState})
 		}

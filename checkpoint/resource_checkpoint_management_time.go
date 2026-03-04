@@ -186,28 +186,17 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		time["name"] = v.(string)
 	}
 
-	if v, ok := d.GetOk("end"); ok {
+	if _, ok := d.GetOk("end"); ok {
 
-		endList := v.([]interface{})
+		res := make(map[string]interface{})
 
-		if len(endList) > 0 {
-
-			endPayload := make(map[string]interface{})
-
-			if v, ok := d.GetOk("end.0.date"); ok {
-				endPayload["date"] = v.(string)
-			}
-			if v, ok := d.GetOk("end.0.iso_8601"); ok {
-				endPayload["iso-8601"] = v.(string)
-			}
-			if v, ok := d.GetOk("end.0.posix"); ok {
-				endPayload["posix"] = v.(int)
-			}
-			if v, ok := d.GetOk("end.0.time"); ok {
-				endPayload["time"] = v.(string)
-			}
-			time["end"] = endPayload
+		if v, ok := d.GetOk("end.0.date"); ok {
+			res["date"] = v.(string)
 		}
+		if v, ok := d.GetOk("end.0.time"); ok {
+			res["time"] = v.(string)
+		}
+		time["end"] = res
 	}
 
 	if v, ok := d.GetOkExists("end_never"); ok {
@@ -243,28 +232,17 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	if v, ok := d.GetOk("start"); ok {
+	if _, ok := d.GetOk("start"); ok {
 
-		startList := v.([]interface{})
+		res := make(map[string]interface{})
 
-		if len(startList) > 0 {
-
-			startPayload := make(map[string]interface{})
-
-			if v, ok := d.GetOk("start.0.date"); ok {
-				startPayload["date"] = v.(string)
-			}
-			if v, ok := d.GetOk("start.0.iso_8601"); ok {
-				startPayload["iso-8601"] = v.(string)
-			}
-			if v, ok := d.GetOk("start.0.posix"); ok {
-				startPayload["posix"] = v.(int)
-			}
-			if v, ok := d.GetOk("start.0.time"); ok {
-				startPayload["time"] = v.(string)
-			}
-			time["start"] = startPayload
+		if v, ok := d.GetOk("start.0.date"); ok {
+			res["date"] = v.(string)
 		}
+		if v, ok := d.GetOk("start.0.time"); ok {
+			res["time"] = v.(string)
+		}
+		time["start"] = res
 	}
 
 	if v, ok := d.GetOkExists("start_now"); ok {
@@ -280,16 +258,16 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		res := make(map[string]interface{})
 
 		if v, ok := d.GetOk("recurrence.days"); ok {
-			res["days"] = v
+			res["days"] = v.(*schema.Set).List()
 		}
 		if v, ok := d.GetOk("recurrence.month"); ok {
-			res["month"] = v
+			res["month"] = v.(string)
 		}
 		if v, ok := d.GetOk("recurrence.pattern"); ok {
 			res["pattern"] = v.(string)
 		}
 		if v, ok := d.GetOk("recurrence.weekdays"); ok {
-			res["weekdays"] = v
+			res["weekdays"] = v.(*schema.Set).List()
 		}
 		time["recurrence"] = res
 	}
@@ -354,27 +332,18 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["end"] != nil {
-
 		endMap := time["end"].(map[string]interface{})
 
 		endMapToReturn := make(map[string]interface{})
 
-		if v := endMap["date"]; v != nil {
-			endMapToReturn["date"] = v
+		if v, _ := endMap["date"]; v != nil {
+			endMapToReturn["date"] = v.(string)
 		}
-		if v := endMap["iso-8601"]; v != nil {
-			endMapToReturn["iso_8601"] = v
+		if v, _ := endMap["time"]; v != nil {
+			endMapToReturn["time"] = v.(string)
 		}
-		if v := endMap["posix"]; v != nil {
-			endMapToReturn["posix"] = v
-		}
-		if v := endMap["time"]; v != nil {
-			endMapToReturn["time"] = v
-		}
-		_ = d.Set("end", []interface{}{endMapToReturn})
 
-	} else {
-		_ = d.Set("end", nil)
+		_ = d.Set("end", []interface{}{endMapToReturn})
 	}
 
 	if v := time["end-never"]; v != nil {
@@ -398,16 +367,16 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 					hoursRangesMapToAdd := make(map[string]interface{})
 
 					if v, _ := hoursRangesMap["enabled"]; v != nil {
-						hoursRangesMapToAdd["enabled"] = v
+						hoursRangesMapToAdd["enabled"] = v.(bool)
 					}
 					if v, _ := hoursRangesMap["from"]; v != nil {
-						hoursRangesMapToAdd["from"] = v
+						hoursRangesMapToAdd["from"] = v.(string)
 					}
 					if v, _ := hoursRangesMap["index"]; v != nil {
 						hoursRangesMapToAdd["index"] = int(math.Round(v.(float64)))
 					}
 					if v, _ := hoursRangesMap["to"]; v != nil {
-						hoursRangesMapToAdd["to"] = v
+						hoursRangesMapToAdd["to"] = v.(string)
 					}
 
 					hourRangesListToReturn = append(hourRangesListToReturn, hoursRangesMapToAdd)
@@ -418,27 +387,18 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["start"] != nil {
-
 		startMap := time["start"].(map[string]interface{})
 
 		startMapToReturn := make(map[string]interface{})
 
-		if v := startMap["date"]; v != nil {
-			startMapToReturn["date"] = v
+		if v, _ := startMap["date"]; v != nil {
+			startMapToReturn["date"] = v.(string)
 		}
-		if v := startMap["iso-8601"]; v != nil {
-			startMapToReturn["iso_8601"] = v
+		if v, _ := startMap["time"]; v != nil {
+			startMapToReturn["time"] = v.(string)
 		}
-		if v := startMap["posix"]; v != nil {
-			startMapToReturn["posix"] = v
-		}
-		if v := startMap["time"]; v != nil {
-			startMapToReturn["time"] = v
-		}
-		_ = d.Set("start", []interface{}{startMapToReturn})
 
-	} else {
-		_ = d.Set("start", nil)
+		_ = d.Set("start", []interface{}{startMapToReturn})
 	}
 
 	if v := time["start-now"]; v != nil {
@@ -462,10 +422,6 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["recurrence"] != nil {
-		defaultRecurrenceMap := map[string]interface{}{
-			"pattern": "Daily",
-			"month":   "Any",
-		}
 		endMap := time["recurrence"].(map[string]interface{})
 
 		endMapToReturn := make(map[string]interface{})
@@ -482,11 +438,11 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 		}
-		if v, _ := endMap["month"]; v != nil && isArgDefault(v.(string), d, "recurrence.month", defaultRecurrenceMap["month"].(string)) {
-			endMapToReturn["month"] = v
+		if v, _ := endMap["month"]; v != nil {
+			endMapToReturn["month"] = v.(string)
 		}
-		if v, _ := endMap["pattern"]; v != nil && isArgDefault(v.(string), d, "recurrence.pattern", defaultRecurrenceMap["pattern"].(string)) {
-			endMapToReturn["pattern"] = v
+		if v, _ := endMap["pattern"]; v != nil {
+			endMapToReturn["pattern"] = v.(string)
 		}
 		if v, _ := endMap["weekdays"]; v != nil {
 			tagsJson, ok := endMap["weekdays"].([]interface{})
@@ -539,6 +495,10 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("end") {
+		defaultEndMap := map[string]interface{}{
+			"date": "01-Jan-1970",
+			"time": "00:00",
+		}
 
 		if v, ok := d.GetOk("end"); ok {
 
@@ -551,16 +511,14 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				if v, ok := d.GetOk("end.0.date"); ok {
 					endPayload["date"] = v.(string)
 				}
-				if v, ok := d.GetOk("end.0.iso_8601"); ok {
-					endPayload["iso-8601"] = v.(string)
-				}
-				if v, ok := d.GetOk("end.0.posix"); ok {
-					endPayload["posix"] = v.(int)
-				}
 				if v, ok := d.GetOk("end.0.time"); ok {
 					endPayload["time"] = v.(string)
 				}
-				time["end"] = endPayload
+				if len(endPayload) > 0 {
+					time["end"] = endPayload
+				} else {
+					time["end"] = defaultEndMap
+				}
 			}
 		}
 	}
@@ -580,7 +538,7 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				serverPayload["enabled"] = false
 			}
 			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".from"); ok {
-				serverPayload["from"] = v
+				serverPayload["from"] = v.(string)
 			} else {
 				serverPayload["from"] = "00:00"
 			}
@@ -590,7 +548,7 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				serverPayload["index"] = i + 1
 			}
 			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".to"); ok {
-				serverPayload["to"] = v
+				serverPayload["to"] = v.(string)
 			} else {
 				serverPayload["to"] = "00:00"
 			}
@@ -600,6 +558,10 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("start") {
+		defaultStartMap := map[string]interface{}{
+			"date": "01-Jan-1970",
+			"time": "00:00",
+		}
 
 		if v, ok := d.GetOk("start"); ok {
 
@@ -612,16 +574,14 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				if v, ok := d.GetOk("start.0.date"); ok {
 					startPayload["date"] = v.(string)
 				}
-				if v, ok := d.GetOk("start.0.iso_8601"); ok {
-					startPayload["iso-8601"] = v.(string)
-				}
-				if v, ok := d.GetOk("start.0.posix"); ok {
-					startPayload["posix"] = v.(int)
-				}
 				if v, ok := d.GetOk("start.0.time"); ok {
 					startPayload["time"] = v.(string)
 				}
-				time["start"] = startPayload
+				if len(startPayload) > 0 {
+					time["start"] = startPayload
+				} else {
+					time["start"] = defaultStartMap
+				}
 			}
 		}
 	}

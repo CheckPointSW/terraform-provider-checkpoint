@@ -279,6 +279,7 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
+
 		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {

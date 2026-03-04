@@ -5,6 +5,7 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
+	"reflect"
 )
 
 func resourceManagementServiceUdp() *schema.Resource {
@@ -343,7 +344,18 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 		if v := aggressiveAgingMap["use-default-timeout"]; v != nil {
 			aggressiveAgingMapToReturn["use_default_timeout"] = v
 		}
-		_ = d.Set("aggressive_aging", []interface{}{aggressiveAgingMapToReturn})
+		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")
+		defaultAggressiveAging := map[string]interface{}{
+			"enable":              true,
+			"timeout":             600,
+			"use_default_timeout": true,
+			"default_timeout":     0,
+		}
+		if reflect.DeepEqual(defaultAggressiveAging, aggressiveAgingMapToReturn) && !aggressiveAgingInConf {
+			_ = d.Set("aggressive_aging", []interface{}{})
+		} else {
+			_ = d.Set("aggressive_aging", []interface{}{aggressiveAgingMapToReturn})
+		}
 
 	} else {
 		_ = d.Set("aggressive_aging", nil)

@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"strings"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
@@ -397,7 +398,13 @@ func readManagementUser(d *schema.ResourceData, m interface{}) error {
 		if v := allowedLocationsMap["sources"]; v != nil {
 			allowedLocationsMapToReturn["sources"] = v
 		}
-		_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
+		_, allowedLocationsInConf := d.GetOk("allowed_locations")
+		defaultAllowedLocations := map[string]interface{}{"sources": "['97aeb369-9aea-11d5-bd16-0090272ccb30']", "destinations": "['97aeb369-9aea-11d5-bd16-0090272ccb30']"}
+		if reflect.DeepEqual(defaultAllowedLocations, allowedLocationsMapToReturn) && !allowedLocationsInConf {
+			_ = d.Set("allowed_locations", []interface{}{})
+		} else {
+			_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
+		}
 
 	} else {
 		_ = d.Set("allowed_locations", nil)
@@ -421,7 +428,13 @@ func readManagementUser(d *schema.ResourceData, m interface{}) error {
 		if v := encryptionMap["shared-secret"]; v != nil {
 			encryptionMapToReturn["shared_secret"] = v
 		}
-		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
+		_, encryptionInConf := d.GetOk("encryption")
+		defaultEncryption := map[string]interface{}{"enable_ike": "false"}
+		if reflect.DeepEqual(defaultEncryption, encryptionMapToReturn) && !encryptionInConf {
+			_ = d.Set("encryption", []interface{}{})
+		} else {
+			_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
+		}
 
 	} else {
 		_ = d.Set("encryption", nil)
