@@ -139,10 +139,10 @@ func createManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 			if v, ok := d.GetOk("cpmi.0.administrator_profile"); ok {
 				cpmiPayload["administrator-profile"] = v.(string)
 			}
-			if v, ok := d.GetOk("cpmi.0.enabled"); ok {
+			if v, ok := d.GetOkExists("cpmi.0.enabled"); ok {
 				cpmiPayload["enabled"] = v.(bool)
 			}
-			if v, ok := d.GetOk("cpmi.0.use_administrator_credentials"); ok {
+			if v, ok := d.GetOkExists("cpmi.0.use_administrator_credentials"); ok {
 				cpmiPayload["use-administrator-credentials"] = v.(bool)
 			}
 			opsecApplication["cpmi"] = cpmiPayload
@@ -167,7 +167,7 @@ func createManagementOpsecApplication(d *schema.ResourceData, m interface{}) err
 			if v, ok := d.GetOk("lea.0.administrator_profile"); ok {
 				leaPayload["administrator-profile"] = v.(string)
 			}
-			if v, ok := d.GetOk("lea.0.enabled"); ok {
+			if v, ok := d.GetOkExists("lea.0.enabled"); ok {
 				leaPayload["enabled"] = v.(bool)
 			}
 			opsecApplication["lea"] = leaPayload
@@ -263,7 +263,7 @@ func readManagementOpsecApplication(d *schema.ResourceData, m interface{}) error
 	}
 
 	if v := opsecApplication["host"]; v != nil {
-		_ = d.Set("host", v)
+		_ = d.Set("host", v.(map[string]interface{})["name"].(string))
 	}
 
 	if opsecApplication["lea"] != nil {

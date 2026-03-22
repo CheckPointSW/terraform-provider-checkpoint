@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementAppControlAdvancedSettings_basic(t *te
 			{
 				Config: testAccDataSourceManagementAppControlAdvancedSettingsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

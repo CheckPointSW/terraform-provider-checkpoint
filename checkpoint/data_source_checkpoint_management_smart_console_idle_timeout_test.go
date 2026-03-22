@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementSmartConsoleIdleTimeout_basic(t *testi
 			{
 				Config: testAccDataSourceManagementSmartConsoleIdleTimeoutConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

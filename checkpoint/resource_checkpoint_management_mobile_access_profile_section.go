@@ -95,7 +95,7 @@ func createManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				mobileAccessProfileSection["position"] = "top" // entire rule-base
 			} else {
@@ -103,15 +103,15 @@ func createManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			mobileAccessProfileSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			mobileAccessProfileSection["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				mobileAccessProfileSection["position"] = "bottom" // entire rule-base
 			} else {
@@ -215,7 +215,7 @@ func updateManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					mobileAccessProfileSection["new-position"] = "top" // entire rule-base
 				} else {
@@ -223,15 +223,15 @@ func updateManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				mobileAccessProfileSection["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				mobileAccessProfileSection["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					mobileAccessProfileSection["new-position"] = "bottom" // entire rule-base
 				} else {

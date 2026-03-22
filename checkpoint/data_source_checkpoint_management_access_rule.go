@@ -5,7 +5,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -343,11 +342,11 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		actionSettingsMapToReturn := make(map[string]interface{})
 
 		if v, _ := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
-			actionSettingsMapToReturn["enable_identity_captive_portal"] = strconv.FormatBool(v.(bool))
+			actionSettingsMapToReturn["enable_identity_captive_portal"] = v.(bool)
 		}
 
 		if v, _ := actionSettingsMap["limit"]; v != nil {
-			actionSettingsMapToReturn["limit"] = v
+			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
 		}
 
 		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
@@ -442,7 +441,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 		trackMapToReturn := make(map[string]interface{})
 		if v := trackMap["accounting"]; v != nil {
-			trackMapToReturn["accounting"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["accounting"] = v.(bool)
 		}
 
 		if v, _ := trackMap["alert"]; v != nil {
@@ -450,15 +449,15 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		}
 
 		if v := trackMap["enable-firewall-session"]; v != nil {
-			trackMapToReturn["enable_firewall_session"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["enable_firewall_session"] = v.(bool)
 		}
 
 		if v := trackMap["per-connection"]; v != nil {
-			trackMapToReturn["per_connection"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["per_connection"] = v.(bool)
 		}
 
 		if v := trackMap["per-session"]; v != nil {
-			trackMapToReturn["per_session"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["per_session"] = v.(bool)
 		}
 
 		if v, _ := trackMap["type"]; v != nil {

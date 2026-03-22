@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementContentAwarenessAdvancedSettings_basic
 			{
 				Config: testAccDataSourceManagementContentAwarenessAdvancedSettingsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

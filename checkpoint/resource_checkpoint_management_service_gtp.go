@@ -354,7 +354,7 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 			accessPointNamePayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("access_point_name.0.enable"); ok {
+			if v, ok := d.GetOkExists("access_point_name.0.enable"); ok {
 				accessPointNamePayload["enable"] = v.(bool)
 			}
 			if v, ok := d.GetOk("access_point_name.0.apn"); ok {
@@ -376,10 +376,10 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 			applyAccessPolicyOnUserTrafficPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("apply_access_policy_on_user_traffic.0.enable"); ok {
+			if v, ok := d.GetOkExists("apply_access_policy_on_user_traffic.0.enable"); ok {
 				applyAccessPolicyOnUserTrafficPayload["enable"] = v.(bool)
 			}
-			if v, ok := d.GetOk("apply_access_policy_on_user_traffic.0.add_imsi_field_to_log"); ok {
+			if v, ok := d.GetOkExists("apply_access_policy_on_user_traffic.0.add_imsi_field_to_log"); ok {
 				applyAccessPolicyOnUserTrafficPayload["add-imsi-field-to-log"] = v.(bool)
 			}
 			serviceGtp["apply-access-policy-on-user-traffic"] = applyAccessPolicyOnUserTrafficPayload
@@ -398,7 +398,7 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 			imsiPrefixPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("imsi_prefix.0.enable"); ok {
+			if v, ok := d.GetOkExists("imsi_prefix.0.enable"); ok {
 				imsiPrefixPayload["enable"] = v.(bool)
 			}
 			if v, ok := d.GetOk("imsi_prefix.0.prefix"); ok {
@@ -434,7 +434,7 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 			ldapGroupPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("ldap_group.0.enable"); ok {
+			if v, ok := d.GetOkExists("ldap_group.0.enable"); ok {
 				ldapGroupPayload["enable"] = v.(bool)
 			}
 			if v, ok := d.GetOk("ldap_group.0.group"); ok {
@@ -455,7 +455,7 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 			msIsdnPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("ms_isdn.0.enable"); ok {
+			if v, ok := d.GetOkExists("ms_isdn.0.enable"); ok {
 				msIsdnPayload["enable"] = v.(bool)
 			}
 			if v, ok := d.GetOk("ms_isdn.0.ms_isdn"); ok {

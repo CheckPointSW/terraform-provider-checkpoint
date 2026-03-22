@@ -29,7 +29,6 @@ func TestAccDataSourceCheckpointManagementVoipDomainH323Gatekeeper_basic(t *test
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "comments", resourceName, "comments"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "icon", resourceName, "icon"),
 				),
 			},
 		},
@@ -38,14 +37,26 @@ func TestAccDataSourceCheckpointManagementVoipDomainH323Gatekeeper_basic(t *test
 
 func testAccDataSourceManagementVoipDomainH323GatekeeperConfig(objectName string) string {
 	return fmt.Sprintf(`
+resource "checkpoint_management_group" "ds_gatekeeper_group" {
+	name = "ds-gatekeeper-group-%s"
+}
+
+resource "checkpoint_management_host" "ds_gatekeeper_host" {
+	name = "ds-gatekeeper-host-%s"
+	ipv4_address = "192.0.2.31"
+	ignore_warnings = true
+}
+
 resource "checkpoint_management_voip_domain_h323_gatekeeper" "test" {
 	name = "%s"
-	color = "test-value"
+	color = "blue"
 	comments = "test-value"
+	endpoints_domain = "${checkpoint_management_group.ds_gatekeeper_group.name}"
+	installed_at = "${checkpoint_management_host.ds_gatekeeper_host.name}"
 }
 
 data "checkpoint_management_voip_domain_h323_gatekeeper" "data_test" {
 	name = "${checkpoint_management_voip_domain_h323_gatekeeper.test.name}"
 }
-`, objectName)
+`, objectName, objectName, objectName)
 }

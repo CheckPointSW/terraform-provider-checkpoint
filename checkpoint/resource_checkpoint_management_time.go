@@ -495,10 +495,6 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("end") {
-		defaultEndMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
 
 		if v, ok := d.GetOk("end"); ok {
 
@@ -516,8 +512,6 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				}
 				if len(endPayload) > 0 {
 					time["end"] = endPayload
-				} else {
-					time["end"] = defaultEndMap
 				}
 			}
 		}
@@ -558,10 +552,6 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("start") {
-		defaultStartMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
 
 		if v, ok := d.GetOk("start"); ok {
 
@@ -579,8 +569,6 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				}
 				if len(startPayload) > 0 {
 					time["start"] = startPayload
-				} else {
-					time["start"] = defaultStartMap
 				}
 			}
 		}

@@ -2,11 +2,12 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementHost() *schema.Resource {
@@ -17,6 +18,14 @@ func resourceManagementHost() *schema.Resource {
 		Delete: deleteManagementHost,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementHostV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementHostStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
@@ -305,7 +314,7 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 
 			natSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat_settings.0.auto_rule"); ok {
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
 				natSettingsPayload["auto-rule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
@@ -522,13 +531,8 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
-		_, natSettingInConf := d.GetOk("nat_settings")
-		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
-		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
-			_ = d.Set("nat_settings", []interface{}{})
-		} else {
-			_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
-		}
+
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {
 		_ = d.Set("nat_settings", nil)

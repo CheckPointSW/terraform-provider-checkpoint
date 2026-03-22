@@ -2006,76 +2006,76 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			firewallPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("firewall.0.accept_control_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_control_connections"); ok {
 				firewallPayload["accept-control-connections"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_ips1_management_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_ips1_management_connections"); ok {
 				firewallPayload["accept-ips1-management-connections"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_remote_access_control_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_remote_access_control_connections"); ok {
 				firewallPayload["accept-remote-access-control-connections"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_smart_update_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_smart_update_connections"); ok {
 				firewallPayload["accept-smart-update-connections"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_outgoing_packets_originating_from_gw"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_outgoing_packets_originating_from_gw"); ok {
 				firewallPayload["accept-outgoing-packets-originating-from-gw"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_outgoing_packets_originating_from_gw_position"); ok {
 				firewallPayload["accept-outgoing-packets-originating-from-gw-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_outgoing_packets_originating_from_connectra_gw"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_outgoing_packets_originating_from_connectra_gw"); ok {
 				firewallPayload["accept-outgoing-packets-originating-from-connectra-gw"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_outgoing_packets_to_cp_online_services"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_outgoing_packets_to_cp_online_services"); ok {
 				firewallPayload["accept-outgoing-packets-to-cp-online-services"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_outgoing_packets_to_cp_online_services_position"); ok {
 				firewallPayload["accept-outgoing-packets-to-cp-online-services-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_domain_name_over_tcp"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_domain_name_over_tcp"); ok {
 				firewallPayload["accept-domain-name-over-tcp"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_domain_name_over_tcp_position"); ok {
 				firewallPayload["accept-domain-name-over-tcp-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_domain_name_over_udp"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_domain_name_over_udp"); ok {
 				firewallPayload["accept-domain-name-over-udp"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_domain_name_over_udp_position"); ok {
 				firewallPayload["accept-domain-name-over-udp-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_dynamic_addr_modules_outgoing_internet_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_dynamic_addr_modules_outgoing_internet_connections"); ok {
 				firewallPayload["accept-dynamic-addr-modules-outgoing-internet-connections"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_icmp_requests"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_icmp_requests"); ok {
 				firewallPayload["accept-icmp-requests"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_icmp_requests_position"); ok {
 				firewallPayload["accept-icmp-requests-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_identity_awareness_control_connections"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_identity_awareness_control_connections"); ok {
 				firewallPayload["accept-identity-awareness-control-connections"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_identity_awareness_control_connections_position"); ok {
 				firewallPayload["accept-identity-awareness-control-connections-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_incoming_traffic_to_dhcp_and_dns_services_of_gws"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_incoming_traffic_to_dhcp_and_dns_services_of_gws"); ok {
 				firewallPayload["accept-incoming-traffic-to-dhcp-and-dns-services-of-gws"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_rip"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_rip"); ok {
 				firewallPayload["accept-rip"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall.0.accept_rip_position"); ok {
 				firewallPayload["accept-rip-position"] = v.(string)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_vrrp_packets_originating_from_cluster_members"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_vrrp_packets_originating_from_cluster_members"); ok {
 				firewallPayload["accept-vrrp-packets-originating-from-cluster-members"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.accept_web_and_ssh_connections_for_gw_administration"); ok {
+			if v, ok := d.GetOkExists("firewall.0.accept_web_and_ssh_connections_for_gw_administration"); ok {
 				firewallPayload["accept-web-and-ssh-connections-for-gw-administration"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall.0.log_implied_rules"); ok {
+			if v, ok := d.GetOkExists("firewall.0.log_implied_rules"); ok {
 				firewallPayload["log-implied-rules"] = v.(bool)
 			}
 			if _, ok := d.GetOk("firewall.0.security_server"); ok {
@@ -2146,22 +2146,22 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			natPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat.0.allow_bi_directional_nat"); ok {
+			if v, ok := d.GetOkExists("nat.0.allow_bi_directional_nat"); ok {
 				natPayload["allow-bi-directional-nat"] = v.(bool)
 			}
-			if v, ok := d.GetOk("nat.0.auto_arp_conf"); ok {
+			if v, ok := d.GetOkExists("nat.0.auto_arp_conf"); ok {
 				natPayload["auto-arp-conf"] = v.(bool)
 			}
-			if v, ok := d.GetOk("nat.0.merge_manual_proxy_arp_conf"); ok {
+			if v, ok := d.GetOkExists("nat.0.merge_manual_proxy_arp_conf"); ok {
 				natPayload["merge-manual-proxy-arp-conf"] = v.(bool)
 			}
-			if v, ok := d.GetOk("nat.0.auto_translate_dest_on_client_side"); ok {
+			if v, ok := d.GetOkExists("nat.0.auto_translate_dest_on_client_side"); ok {
 				natPayload["auto-translate-dest-on-client-side"] = v.(bool)
 			}
-			if v, ok := d.GetOk("nat.0.manually_translate_dest_on_client_side"); ok {
+			if v, ok := d.GetOkExists("nat.0.manually_translate_dest_on_client_side"); ok {
 				natPayload["manually-translate-dest-on-client-side"] = v.(bool)
 			}
-			if v, ok := d.GetOk("nat.0.enable_ip_pool_nat"); ok {
+			if v, ok := d.GetOkExists("nat.0.enable_ip_pool_nat"); ok {
 				natPayload["enable-ip-pool-nat"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat.0.addr_alloc_and_release_track"); ok {
@@ -2182,7 +2182,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			authenticationPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("authentication.0.auth_internal_users_with_specific_suffix"); ok {
+			if v, ok := d.GetOkExists("authentication.0.auth_internal_users_with_specific_suffix"); ok {
 				authenticationPayload["auth-internal-users-with-specific-suffix"] = v.(bool)
 			}
 			if v, ok := d.GetOk("authentication.0.allowed_suffix_for_internal_users"); ok {
@@ -2203,7 +2203,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("authentication.0.max_telnet_attempts_before_connection_termination"); ok {
 				authenticationPayload["max-telnet-attempts-before-connection-termination"] = v.(int)
 			}
-			if v, ok := d.GetOk("authentication.0.enable_delayed_auth"); ok {
+			if v, ok := d.GetOkExists("authentication.0.enable_delayed_auth"); ok {
 				authenticationPayload["enable-delayed-auth"] = v.(bool)
 			}
 			if v, ok := d.GetOk("authentication.0.delay_each_auth_attempt_by"); ok {
@@ -2227,16 +2227,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("vpn.0.domain_name_for_dns_resolving"); ok {
 				vpnPayload["domain-name-for-dns-resolving"] = v.(string)
 			}
-			if v, ok := d.GetOk("vpn.0.enable_backup_gw"); ok {
+			if v, ok := d.GetOkExists("vpn.0.enable_backup_gw"); ok {
 				vpnPayload["enable-backup-gw"] = v.(bool)
 			}
-			if v, ok := d.GetOk("vpn.0.enable_decrypt_on_accept_for_gw_to_gw_traffic"); ok {
+			if v, ok := d.GetOkExists("vpn.0.enable_decrypt_on_accept_for_gw_to_gw_traffic"); ok {
 				vpnPayload["enable-decrypt-on-accept-for-gw-to-gw-traffic"] = v.(bool)
 			}
-			if v, ok := d.GetOk("vpn.0.enable_load_distribution_for_mep_conf"); ok {
+			if v, ok := d.GetOkExists("vpn.0.enable_load_distribution_for_mep_conf"); ok {
 				vpnPayload["enable-load-distribution-for-mep-conf"] = v.(bool)
 			}
-			if v, ok := d.GetOk("vpn.0.enable_vpn_directional_match_in_vpn_column"); ok {
+			if v, ok := d.GetOkExists("vpn.0.enable_vpn_directional_match_in_vpn_column"); ok {
 				vpnPayload["enable-vpn-directional-match-in-vpn-column"] = v.(bool)
 			}
 			if v, ok := d.GetOk("vpn.0.grace_period_after_the_crl_is_not_valid"); ok {
@@ -2266,13 +2266,13 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			remoteAccessPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("remote_access.0.enable_back_connections"); ok {
+			if v, ok := d.GetOkExists("remote_access.0.enable_back_connections"); ok {
 				remoteAccessPayload["enable-back-connections"] = v.(bool)
 			}
 			if v, ok := d.GetOk("remote_access.0.keep_alive_packet_to_gw_interval"); ok {
 				remoteAccessPayload["keep-alive-packet-to-gw-interval"] = v.(int)
 			}
-			if v, ok := d.GetOk("remote_access.0.encrypt_dns_traffic"); ok {
+			if v, ok := d.GetOkExists("remote_access.0.encrypt_dns_traffic"); ok {
 				remoteAccessPayload["encrypt-dns-traffic"] = v.(bool)
 			}
 			if v, ok := d.GetOk("remote_access.0.simultaneous_login_mode"); ok {
@@ -2294,16 +2294,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 							supportEncryptionAlgorithmsPayload := make(map[string]interface{})
 
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.aes_128"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.aes_128"); ok {
 								supportEncryptionAlgorithmsPayload["aes-128"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.aes_256"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.aes_256"); ok {
 								supportEncryptionAlgorithmsPayload["aes-256"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.des"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.des"); ok {
 								supportEncryptionAlgorithmsPayload["des"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.tdes"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_encryption_algorithms.0.tdes"); ok {
 								supportEncryptionAlgorithmsPayload["tdes"] = strconv.FormatBool(v.(bool))
 							}
 							ikePayload["support-encryption-algorithms"] = supportEncryptionAlgorithmsPayload
@@ -2315,16 +2315,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 							supportDataIntegrityPayload := make(map[string]interface{})
 
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.aes_xcbc"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.aes_xcbc"); ok {
 								supportDataIntegrityPayload["aes-xcbc"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.md5"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.md5"); ok {
 								supportDataIntegrityPayload["md5"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.sha1"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.sha1"); ok {
 								supportDataIntegrityPayload["sha1"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.sha256"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.sha256"); ok {
 								supportDataIntegrityPayload["sha256"] = strconv.FormatBool(v.(bool))
 							}
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_data_integrity.0.sha384"); ok {
@@ -2342,10 +2342,10 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 							supportDiffieHellmanGroupsPayload := make(map[string]interface{})
 
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group1"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group1"); ok {
 								supportDiffieHellmanGroupsPayload["group1"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group14"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group14"); ok {
 								supportDiffieHellmanGroupsPayload["group14"] = strconv.FormatBool(v.(bool))
 							}
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group15"); ok {
@@ -2363,7 +2363,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group19"); ok {
 								supportDiffieHellmanGroupsPayload["group19"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group2"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group2"); ok {
 								supportDiffieHellmanGroupsPayload["group2"] = strconv.FormatBool(v.(bool))
 							}
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group20"); ok {
@@ -2372,7 +2372,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group21"); ok {
 								supportDiffieHellmanGroupsPayload["group21"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group5"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ike.0.support_diffie_hellman_groups.0.group5"); ok {
 								supportDiffieHellmanGroupsPayload["group5"] = strconv.FormatBool(v.(bool))
 							}
 							ikePayload["support-diffie-hellman-groups"] = supportDiffieHellmanGroupsPayload
@@ -2390,16 +2390,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 							supportEncryptionAlgorithmsPayload := make(map[string]interface{})
 
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.aes_128"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.aes_128"); ok {
 								supportEncryptionAlgorithmsPayload["aes-128"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.aes_256"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.aes_256"); ok {
 								supportEncryptionAlgorithmsPayload["aes-256"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.des"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.des"); ok {
 								supportEncryptionAlgorithmsPayload["des"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.tdes"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_encryption_algorithms.0.tdes"); ok {
 								supportEncryptionAlgorithmsPayload["tdes"] = strconv.FormatBool(v.(bool))
 							}
 							ipsecPayload["support-encryption-algorithms"] = supportEncryptionAlgorithmsPayload
@@ -2411,16 +2411,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 							supportDataIntegrityPayload := make(map[string]interface{})
 
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.aes_xcbc"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.aes_xcbc"); ok {
 								supportDataIntegrityPayload["aes-xcbc"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.md5"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.md5"); ok {
 								supportDataIntegrityPayload["md5"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.sha1"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.sha1"); ok {
 								supportDataIntegrityPayload["sha1"] = strconv.FormatBool(v.(bool))
 							}
-							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.sha256"); ok {
+							if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.sha256"); ok {
 								supportDataIntegrityPayload["sha256"] = strconv.FormatBool(v.(bool))
 							}
 							if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.support_data_integrity.0.sha384"); ok {
@@ -2434,7 +2434,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 						if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.use_data_integrity"); ok {
 							ipsecPayload["use-data-integrity"] = v.(string)
 						}
-						if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.enforce_encryption_alg_and_data_integrity_on_all_users"); ok {
+						if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.encryption_algorithms.0.ipsec.0.enforce_encryption_alg_and_data_integrity_on_all_users"); ok {
 							ipsecPayload["enforce-encryption-alg-and-data-integrity-on-all-users"] = strconv.FormatBool(v.(bool))
 						}
 						encryptionAlgorithmsPayload["ipsec"] = ipsecPayload
@@ -2444,16 +2444,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.encryption_method"); ok {
 					vpnAuthenticationAndEncryptionPayload["encryption-method"] = v.(string)
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.pre_shared_secret"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.pre_shared_secret"); ok {
 					vpnAuthenticationAndEncryptionPayload["pre-shared-secret"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.support_legacy_auth_for_sc_l2tp_nokia_clients"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.support_legacy_auth_for_sc_l2tp_nokia_clients"); ok {
 					vpnAuthenticationAndEncryptionPayload["support-legacy-auth-for-sc-l2tp-nokia-clients"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.support_legacy_eap"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.support_legacy_eap"); ok {
 					vpnAuthenticationAndEncryptionPayload["support-legacy-eap"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.support_l2tp_with_pre_shared_key"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_authentication_and_encryption.0.support_l2tp_with_pre_shared_key"); ok {
 					vpnAuthenticationAndEncryptionPayload["support-l2tp-with-pre-shared-key"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("remote_access.0.vpn_authentication_and_encryption.0.l2tp_pre_shared_key"); ok {
@@ -2465,13 +2465,13 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 				vpnAdvancedPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("remote_access.0.vpn_advanced.0.allow_clear_traffic_to_encryption_domain_when_disconnected"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_advanced.0.allow_clear_traffic_to_encryption_domain_when_disconnected"); ok {
 					vpnAdvancedPayload["allow-clear-traffic-to-encryption-domain-when-disconnected"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_advanced.0.enable_load_distribution_for_mep_conf"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_advanced.0.enable_load_distribution_for_mep_conf"); ok {
 					vpnAdvancedPayload["enable-load-distribution-for-mep-conf"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.vpn_advanced.0.use_first_allocated_om_ip_addr_for_all_conn_to_the_gws_of_the_site"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.vpn_advanced.0.use_first_allocated_om_ip_addr_for_all_conn_to_the_gws_of_the_site"); ok {
 					vpnAdvancedPayload["use-first-allocated-om-ip-addr-for-all-conn-to-the-gws-of-the-site"] = strconv.FormatBool(v.(bool))
 				}
 				remoteAccessPayload["vpn-advanced"] = vpnAdvancedPayload
@@ -2480,7 +2480,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 				scvPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("remote_access.0.scv.0.apply_scv_on_simplified_mode_fw_policies"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.apply_scv_on_simplified_mode_fw_policies"); ok {
 					scvPayload["apply-scv-on-simplified-mode-fw-policies"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("remote_access.0.scv.0.exceptions"); ok {
@@ -2506,22 +2506,22 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 						scvPayload["exceptions"] = exceptionsPayload
 					}
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.no_scv_for_unsupported_cp_clients"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.no_scv_for_unsupported_cp_clients"); ok {
 					scvPayload["no-scv-for-unsupported-cp-clients"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.upon_verification_accept_and_log_client_connection"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.upon_verification_accept_and_log_client_connection"); ok {
 					scvPayload["upon-verification-accept-and-log-client-connection"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.only_tcp_ip_protocols_are_used"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.only_tcp_ip_protocols_are_used"); ok {
 					scvPayload["only-tcp-ip-protocols-are-used"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.policy_installed_on_all_interfaces"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.policy_installed_on_all_interfaces"); ok {
 					scvPayload["policy-installed-on-all-interfaces"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.generate_log"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.generate_log"); ok {
 					scvPayload["generate-log"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.scv.0.notify_user"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.scv.0.notify_user"); ok {
 					scvPayload["notify-user"] = strconv.FormatBool(v.(bool))
 				}
 				remoteAccessPayload["scv"] = scvPayload
@@ -2545,7 +2545,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 				if v, ok := d.GetOk("remote_access.0.ssl_network_extender.0.re_auth_user_interval"); ok {
 					sslNetworkExtenderPayload["re-auth-user-interval"] = v
 				}
-				if v, ok := d.GetOk("remote_access.0.ssl_network_extender.0.scan_ep_machine_for_compliance_with_ep_compliance_policy"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.ssl_network_extender.0.scan_ep_machine_for_compliance_with_ep_compliance_policy"); ok {
 					sslNetworkExtenderPayload["scan-ep-machine-for-compliance-with-ep-compliance-policy"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("remote_access.0.ssl_network_extender.0.client_outgoing_keep_alive_packets_frequency"); ok {
@@ -2615,19 +2615,19 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.network_or_group_of_conn_vpn_client"); ok {
 						networkLocationAwarenessConfPayload["network-or-group-of-conn-vpn-client"] = v.(string)
 					}
-					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.consider_wireless_networks_as_external"); ok {
+					if v, ok := d.GetOkExists("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.consider_wireless_networks_as_external"); ok {
 						networkLocationAwarenessConfPayload["consider-wireless-networks-as-external"] = strconv.FormatBool(v.(bool))
 					}
 					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.excluded_internal_wireless_networks"); ok {
 						networkLocationAwarenessConfPayload["excluded-internal-wireless-networks"] = v.(*schema.Set).List()
 					}
-					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.consider_undefined_dns_suffixes_as_external"); ok {
+					if v, ok := d.GetOkExists("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.consider_undefined_dns_suffixes_as_external"); ok {
 						networkLocationAwarenessConfPayload["consider-undefined-dns-suffixes-as-external"] = strconv.FormatBool(v.(bool))
 					}
 					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.dns_suffixes"); ok {
 						networkLocationAwarenessConfPayload["dns-suffixes"] = v.(*schema.Set).List()
 					}
-					if v, ok := d.GetOk("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.remember_previously_detected_external_networks"); ok {
+					if v, ok := d.GetOkExists("remote_access.0.endpoint_connect.0.network_location_awareness_conf.0.remember_previously_detected_external_networks"); ok {
 						networkLocationAwarenessConfPayload["remember-previously-detected-external-networks"] = strconv.FormatBool(v.(bool))
 					}
 					endpointConnectPayload["network-location-awareness-conf"] = networkLocationAwarenessConfPayload
@@ -2650,16 +2650,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 				hotSpotAndHotelRegistrationPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("remote_access.0.hot_spot_and_hotel_registration.0.enable_registration"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.hot_spot_and_hotel_registration.0.enable_registration"); ok {
 					hotSpotAndHotelRegistrationPayload["enable-registration"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("remote_access.0.hot_spot_and_hotel_registration.0.local_subnets_access_only"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.hot_spot_and_hotel_registration.0.local_subnets_access_only"); ok {
 					hotSpotAndHotelRegistrationPayload["local-subnets-access-only"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("remote_access.0.hot_spot_and_hotel_registration.0.registration_timeout"); ok {
 					hotSpotAndHotelRegistrationPayload["registration-timeout"] = v
 				}
-				if v, ok := d.GetOk("remote_access.0.hot_spot_and_hotel_registration.0.track_log"); ok {
+				if v, ok := d.GetOkExists("remote_access.0.hot_spot_and_hotel_registration.0.track_log"); ok {
 					hotSpotAndHotelRegistrationPayload["track-log"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("remote_access.0.hot_spot_and_hotel_registration.0.max_ip_access_during_registration"); ok {
@@ -2682,13 +2682,13 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			userDirectoryPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("user_directory.0.enable_password_change_when_user_active_directory_expires"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.enable_password_change_when_user_active_directory_expires"); ok {
 				userDirectoryPayload["enable-password-change-when-user-active-directory-expires"] = v.(bool)
 			}
 			if v, ok := d.GetOk("user_directory.0.cache_size"); ok {
 				userDirectoryPayload["cache-size"] = v.(int)
 			}
-			if v, ok := d.GetOk("user_directory.0.enable_password_expiration_configuration"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.enable_password_expiration_configuration"); ok {
 				userDirectoryPayload["enable-password-expiration-configuration"] = v.(bool)
 			}
 			if v, ok := d.GetOk("user_directory.0.password_expires_after"); ok {
@@ -2700,22 +2700,22 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("user_directory.0.display_user_dn_at_login"); ok {
 				userDirectoryPayload["display-user-dn-at-login"] = v.(string)
 			}
-			if v, ok := d.GetOk("user_directory.0.enforce_rules_for_user_mgmt_admins"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.enforce_rules_for_user_mgmt_admins"); ok {
 				userDirectoryPayload["enforce-rules-for-user-mgmt-admins"] = v.(bool)
 			}
 			if v, ok := d.GetOk("user_directory.0.min_password_length"); ok {
 				userDirectoryPayload["min-password-length"] = v.(int)
 			}
-			if v, ok := d.GetOk("user_directory.0.password_must_include_a_digit"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.password_must_include_a_digit"); ok {
 				userDirectoryPayload["password-must-include-a-digit"] = v.(bool)
 			}
-			if v, ok := d.GetOk("user_directory.0.password_must_include_a_symbol"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.password_must_include_a_symbol"); ok {
 				userDirectoryPayload["password-must-include-a-symbol"] = v.(bool)
 			}
-			if v, ok := d.GetOk("user_directory.0.password_must_include_lowercase_char"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.password_must_include_lowercase_char"); ok {
 				userDirectoryPayload["password-must-include-lowercase-char"] = v.(bool)
 			}
-			if v, ok := d.GetOk("user_directory.0.password_must_include_uppercase_char"); ok {
+			if v, ok := d.GetOkExists("user_directory.0.password_must_include_uppercase_char"); ok {
 				userDirectoryPayload["password-must-include-uppercase-char"] = v.(bool)
 			}
 			payload["user-directory"] = userDirectoryPayload
@@ -2760,13 +2760,13 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			carrierSecurityPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("carrier_security.0.block_gtp_in_gtp"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.block_gtp_in_gtp"); ok {
 				carrierSecurityPayload["block-gtp-in-gtp"] = v.(bool)
 			}
-			if v, ok := d.GetOk("carrier_security.0.enforce_gtp_anti_spoofing"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.enforce_gtp_anti_spoofing"); ok {
 				carrierSecurityPayload["enforce-gtp-anti-spoofing"] = v.(bool)
 			}
-			if v, ok := d.GetOk("carrier_security.0.produce_extended_logs_on_unmatched_pdus"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.produce_extended_logs_on_unmatched_pdus"); ok {
 				carrierSecurityPayload["produce-extended-logs-on-unmatched-pdus"] = v.(bool)
 			}
 			if v, ok := d.GetOk("carrier_security.0.produce_extended_logs_on_unmatched_pdus_position"); ok {
@@ -2775,19 +2775,19 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("carrier_security.0.protocol_violation_track_option"); ok {
 				carrierSecurityPayload["protocol-violation-track-option"] = v.(string)
 			}
-			if v, ok := d.GetOk("carrier_security.0.enable_g_pdu_seq_number_check_with_max_deviation"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.enable_g_pdu_seq_number_check_with_max_deviation"); ok {
 				carrierSecurityPayload["enable-g-pdu-seq-number-check-with-max-deviation"] = v.(bool)
 			}
 			if v, ok := d.GetOk("carrier_security.0.g_pdu_seq_number_check_max_deviation"); ok {
 				carrierSecurityPayload["g-pdu-seq-number-check-max-deviation"] = v.(int)
 			}
-			if v, ok := d.GetOk("carrier_security.0.verify_flow_labels"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.verify_flow_labels"); ok {
 				carrierSecurityPayload["verify-flow-labels"] = v.(bool)
 			}
-			if v, ok := d.GetOk("carrier_security.0.allow_ggsn_replies_from_multiple_interfaces"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.allow_ggsn_replies_from_multiple_interfaces"); ok {
 				carrierSecurityPayload["allow-ggsn-replies-from-multiple-interfaces"] = v.(bool)
 			}
-			if v, ok := d.GetOk("carrier_security.0.enable_reverse_connections"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.enable_reverse_connections"); ok {
 				carrierSecurityPayload["enable-reverse-connections"] = v.(bool)
 			}
 			if v, ok := d.GetOk("carrier_security.0.gtp_signaling_rate_limit_sampling_interval"); ok {
@@ -2796,7 +2796,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("carrier_security.0.one_gtp_echo_on_each_path_frequency"); ok {
 				carrierSecurityPayload["one-gtp-echo-on-each-path-frequency"] = v.(int)
 			}
-			if v, ok := d.GetOk("carrier_security.0.aggressive_aging"); ok {
+			if v, ok := d.GetOkExists("carrier_security.0.aggressive_aging"); ok {
 				carrierSecurityPayload["aggressive-aging"] = v.(bool)
 			}
 			if v, ok := d.GetOk("carrier_security.0.aggressive_timeout"); ok {
@@ -2835,7 +2835,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("user_accounts.0.days_until_expiration"); ok {
 				userAccountsPayload["days-until-expiration"] = v.(int)
 			}
-			if v, ok := d.GetOk("user_accounts.0.show_accounts_expiration_indication_days_in_advance"); ok {
+			if v, ok := d.GetOkExists("user_accounts.0.show_accounts_expiration_indication_days_in_advance"); ok {
 				userAccountsPayload["show-accounts-expiration-indication-days-in-advance"] = v.(bool)
 			}
 			payload["user-accounts"] = userAccountsPayload
@@ -2850,7 +2850,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			userAuthorityPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("user_authority.0.display_web_access_view"); ok {
+			if v, ok := d.GetOkExists("user_authority.0.display_web_access_view"); ok {
 				userAuthorityPayload["display-web-access-view"] = v.(bool)
 			}
 			if v, ok := d.GetOk("user_authority.0.windows_domains_to_trust"); ok {
@@ -2928,37 +2928,37 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("stateful_inspection.0.sctp_end_timeout"); ok {
 				statefulInspectionPayload["sctp-end-timeout"] = v.(int)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.accept_stateful_udp_replies_for_unknown_services"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.accept_stateful_udp_replies_for_unknown_services"); ok {
 				statefulInspectionPayload["accept-stateful-udp-replies-for-unknown-services"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.accept_stateful_icmp_errors"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.accept_stateful_icmp_errors"); ok {
 				statefulInspectionPayload["accept-stateful-icmp-errors"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.accept_stateful_icmp_replies"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.accept_stateful_icmp_replies"); ok {
 				statefulInspectionPayload["accept-stateful-icmp-replies"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.accept_stateful_other_ip_protocols_replies_for_unknown_services"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.accept_stateful_other_ip_protocols_replies_for_unknown_services"); ok {
 				statefulInspectionPayload["accept-stateful-other-ip-protocols-replies-for-unknown-services"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.drop_out_of_state_tcp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.drop_out_of_state_tcp_packets"); ok {
 				statefulInspectionPayload["drop-out-of-state-tcp-packets"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.log_on_drop_out_of_state_tcp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.log_on_drop_out_of_state_tcp_packets"); ok {
 				statefulInspectionPayload["log-on-drop-out-of-state-tcp-packets"] = v.(bool)
 			}
 			if v, ok := d.GetOk("stateful_inspection.0.tcp_out_of_state_drop_exceptions"); ok {
 				statefulInspectionPayload["tcp-out-of-state-drop-exceptions"] = v
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.drop_out_of_state_icmp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.drop_out_of_state_icmp_packets"); ok {
 				statefulInspectionPayload["drop-out-of-state-icmp-packets"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.log_on_drop_out_of_state_icmp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.log_on_drop_out_of_state_icmp_packets"); ok {
 				statefulInspectionPayload["log-on-drop-out-of-state-icmp-packets"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.drop_out_of_state_sctp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.drop_out_of_state_sctp_packets"); ok {
 				statefulInspectionPayload["drop-out-of-state-sctp-packets"] = v.(bool)
 			}
-			if v, ok := d.GetOk("stateful_inspection.0.log_on_drop_out_of_state_sctp_packets"); ok {
+			if v, ok := d.GetOkExists("stateful_inspection.0.log_on_drop_out_of_state_sctp_packets"); ok {
 				statefulInspectionPayload["log-on-drop-out-of-state-sctp-packets"] = v.(bool)
 			}
 			payload["stateful-inspection"] = statefulInspectionPayload
@@ -3003,7 +3003,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 			if v, ok := d.GetOk("log_and_alert.0.vpn_successful_key_exchange"); ok {
 				logAndAlertPayload["vpn-successful-key-exchange"] = v.(string)
 			}
-			if v, ok := d.GetOk("log_and_alert.0.log_every_authenticated_http_connection"); ok {
+			if v, ok := d.GetOkExists("log_and_alert.0.log_every_authenticated_http_connection"); ok {
 				logAndAlertPayload["log-every-authenticated-http-connection"] = v.(bool)
 			}
 			if v, ok := d.GetOk("log_and_alert.0.log_traffic"); ok {
@@ -3013,37 +3013,37 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 				alertsPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_popup_alert_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_popup_alert_to_smartview_monitor"); ok {
 					alertsPayload["send-popup-alert-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.popup_alert_script"); ok {
 					alertsPayload["popup-alert-script"] = v.(string)
 				}
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_mail_alert_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_mail_alert_to_smartview_monitor"); ok {
 					alertsPayload["send-mail-alert-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.mail_alert_script"); ok {
 					alertsPayload["mail-alert-script"] = v.(string)
 				}
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_snmp_trap_alert_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_snmp_trap_alert_to_smartview_monitor"); ok {
 					alertsPayload["send-snmp-trap-alert-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.snmp_trap_alert_script"); ok {
 					alertsPayload["snmp-trap-alert-script"] = v.(string)
 				}
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_user_defined_alert_num1_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_user_defined_alert_num1_to_smartview_monitor"); ok {
 					alertsPayload["send-user-defined-alert-num1-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.user_defined_script_num1"); ok {
 					alertsPayload["user-defined-script-num1"] = v.(string)
 				}
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_user_defined_alert_num2_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_user_defined_alert_num2_to_smartview_monitor"); ok {
 					alertsPayload["send-user-defined-alert-num2-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.user_defined_script_num2"); ok {
 					alertsPayload["user-defined-script-num2"] = v.(string)
 				}
-				if v, ok := d.GetOk("log_and_alert.0.alerts.0.send_user_defined_alert_num3_to_smartview_monitor"); ok {
+				if v, ok := d.GetOkExists("log_and_alert.0.alerts.0.send_user_defined_alert_num3_to_smartview_monitor"); ok {
 					alertsPayload["send-user-defined-alert-num3-to-smartview-monitor"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("log_and_alert.0.alerts.0.user_defined_script_num3"); ok {
@@ -3084,16 +3084,16 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			dataAccessControlPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("data_access_control.0.auto_download_important_data"); ok {
+			if v, ok := d.GetOkExists("data_access_control.0.auto_download_important_data"); ok {
 				dataAccessControlPayload["auto-download-important-data"] = v.(bool)
 			}
-			if v, ok := d.GetOk("data_access_control.0.auto_download_sw_updates_and_new_features"); ok {
+			if v, ok := d.GetOkExists("data_access_control.0.auto_download_sw_updates_and_new_features"); ok {
 				dataAccessControlPayload["auto-download-sw-updates-and-new-features"] = v.(bool)
 			}
-			if v, ok := d.GetOk("data_access_control.0.send_anonymous_info"); ok {
+			if v, ok := d.GetOkExists("data_access_control.0.send_anonymous_info"); ok {
 				dataAccessControlPayload["send-anonymous-info"] = v.(bool)
 			}
-			if v, ok := d.GetOk("data_access_control.0.share_sensitive_info"); ok {
+			if v, ok := d.GetOkExists("data_access_control.0.share_sensitive_info"); ok {
 				dataAccessControlPayload["share-sensitive-info"] = v.(bool)
 			}
 			payload["data-access-control"] = dataAccessControlPayload
@@ -3141,7 +3141,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			proxyPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("proxy.0.use_proxy_server"); ok {
+			if v, ok := d.GetOkExists("proxy.0.use_proxy_server"); ok {
 				proxyPayload["use-proxy-server"] = v.(bool)
 			}
 			if v, ok := d.GetOk("proxy.0.proxy_address"); ok {
@@ -3180,7 +3180,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 			hitCountPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("hit_count.0.enable_hit_count"); ok {
+			if v, ok := d.GetOkExists("hit_count.0.enable_hit_count"); ok {
 				hitCountPayload["enable-hit-count"] = v.(bool)
 			}
 			if v, ok := d.GetOk("hit_count.0.keep_hit_count_data_up_to"); ok {
@@ -3212,9 +3212,6 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 					certsAndPkiPayload["host-certs-key-size"] = v.(string)
 				}
 				advancedConfPayload["certs-and-pki"] = certsAndPkiPayload
-			}
-			if v, ok := d.GetOk("advanced_conf.0.keep_ike_sas"); ok {
-				advancedConfPayload["keep-ike-sas"] = v.(bool)
 			}
 			payload["advanced-conf"] = advancedConfPayload
 		}

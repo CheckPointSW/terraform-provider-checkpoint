@@ -101,7 +101,9 @@ func testAccManagementNatRuleConfig(name string, packageName string) string {
 resource "checkpoint_management_nat_rule" "test" {
 	name = "%s"
     package = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 `, name, packageName)
 }

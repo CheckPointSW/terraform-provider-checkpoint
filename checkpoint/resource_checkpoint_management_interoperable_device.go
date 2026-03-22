@@ -351,7 +351,7 @@ func createManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain"); ok {
 				vpnSettingsPayload["vpn-domain"] = v.(string)
 			}
-			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
+			if v, ok := d.GetOkExists("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
 				vpnSettingsPayload["vpn-domain-exclude-external-ip-addresses"] = v.(bool)
 			}
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_type"); ok {

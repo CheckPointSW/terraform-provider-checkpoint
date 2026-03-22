@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
-	"strconv"
 	"strings"
 )
 
@@ -556,11 +555,11 @@ func dataSourceManagementThreatRuleBaseRead(d *schema.ResourceData, m interface{
 						for field, value := range propsJson {
 							propName := strings.ReplaceAll(field, "-", "_")
 							if propName == "packet_capture" {
-								value = strconv.FormatBool(value.(bool))
+								value = value.(bool)
 							}
 							actionSettingsMapToReturn[propName] = value
 						}
-						tempRulebase["track_settings"] = actionSettingsMapToReturn
+						tempRulebase["track_settings"] = []interface{}{actionSettingsMapToReturn}
 					}
 				}
 

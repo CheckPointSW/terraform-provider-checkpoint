@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementIpsProtectionExtendedAttribute_basic(t
 			{
 				Config: testAccDataSourceManagementIpsProtectionExtendedAttributeConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 				),
 			},
 		},

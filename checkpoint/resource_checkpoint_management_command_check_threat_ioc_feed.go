@@ -235,7 +235,7 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 			if v, ok := d.GetOk("ioc_feed.0.custom_value"); ok {
 				iocFeedPayload["custom-value"] = v.(int)
 			}
-			if v, ok := d.GetOk("ioc_feed.0.enabled"); ok {
+			if v, ok := d.GetOkExists("ioc_feed.0.enabled"); ok {
 				iocFeedPayload["enabled"] = v.(bool)
 			}
 			if v, ok := d.GetOk("ioc_feed.0.feed_type"); ok {
@@ -250,7 +250,7 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 			if v, ok := d.GetOk("ioc_feed.0.severity"); ok {
 				iocFeedPayload["severity"] = v.(int)
 			}
-			if v, ok := d.GetOk("ioc_feed.0.use_custom_feed_settings"); ok {
+			if v, ok := d.GetOkExists("ioc_feed.0.use_custom_feed_settings"); ok {
 				iocFeedPayload["use-custom-feed-settings"] = v.(bool)
 			}
 			if v, ok := d.GetOk("ioc_feed.0.use_snort_format"); ok {
@@ -265,13 +265,13 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 			if v, ok := d.GetOk("ioc_feed.0.ignore_lines_that_start_with"); ok {
 				iocFeedPayload["ignore-lines-that-start-with"] = v.(string)
 			}
-			if v, ok := d.GetOk("ioc_feed.0.use_gateway_proxy"); ok {
+			if v, ok := d.GetOkExists("ioc_feed.0.use_gateway_proxy"); ok {
 				iocFeedPayload["use-gateway-proxy"] = v.(bool)
 			}
-			if v, ok := d.GetOk("ioc_feed.0.ignore_warnings"); ok {
+			if v, ok := d.GetOkExists("ioc_feed.0.ignore_warnings"); ok {
 				iocFeedPayload["ignore-warnings"] = v.(bool)
 			}
-			if v, ok := d.GetOk("ioc_feed.0.ignore_errors"); ok {
+			if v, ok := d.GetOkExists("ioc_feed.0.ignore_errors"); ok {
 				iocFeedPayload["ignore-errors"] = v.(bool)
 			}
 			payload["ioc-feed"] = iocFeedPayload

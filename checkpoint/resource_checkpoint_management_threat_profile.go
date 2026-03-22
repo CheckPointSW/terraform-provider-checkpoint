@@ -819,17 +819,9 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		if v := ipsSettingsJson["newly-updated-protections"]; v != nil {
 			ipsSettingsState["newly_updated_protections"] = v
 		}
-		_, ipsSettingsInConf := d.GetOk("ips_settings")
-		defaultIpsSettings := map[string]interface{}{
-			"newly_updated_protections":                  "active",
-			"exclude_protection_with_performance_impact": false,
-			"exclude_protection_with_severity":           false,
-		}
-		if reflect.DeepEqual(defaultIpsSettings, ipsSettingsState) && !ipsSettingsInConf {
-			_ = d.Set("ips_settings", []interface{}{})
-		} else {
-			_ = d.Set("ips_settings", ipsSettingsState)
-		}
+
+		_ = d.Set("ips_settings", []interface{}{ipsSettingsState})
+
 	} else {
 		_ = d.Set("ips_settings", nil)
 	}
@@ -874,25 +866,8 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 			maliciousMailPolicySettingsState["send_copy_list"] = v
 		}
 
-		_, maliciousMailPolicySettingsInConf := d.GetOk("malicious_mail_policy_settings")
-		defaultMaliciousMailPolicySettings := map[string]interface{}{
-			"email_action":                      "allow",
-			"remove_attachments_and_links":      true,
-			"malicious_attachments_text":        "Malicious email attachment '$filename$' removed by Check Point.",
-			"failed_to_scan_attachments_text":   "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
-			"malicious_links_text":              "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
-			"add_x_header_to_email":             false,
-			"add_email_subject_prefix":          false,
-			"email_subject_prefix_text":         "Attachment was found malicious. It is recommended not to open this mail.",
-			"add_customized_text_to_email_body": false,
-			"email_body_customized_text":        "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
-			"send_copy":                         false,
-		}
-		if reflect.DeepEqual(defaultMaliciousMailPolicySettings, maliciousMailPolicySettingsState) && !maliciousMailPolicySettingsInConf {
-			_ = d.Set("malicious_mail_policy_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("malicious_mail_policy_settings", maliciousMailPolicySettingsState)
-		}
+		_ = d.Set("malicious_mail_policy_settings", []interface{}{maliciousMailPolicySettingsState})
+
 	} else {
 		_ = d.Set("malicious_mail_policy_settings", nil)
 	}
@@ -974,7 +949,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		if v := scanMaliciousLinksJson["max-links"]; v != nil {
 			scanMaliciousLinksState["max_links"] = v
 		}
-		_ = d.Set("scan_malicious_links", scanMaliciousLinksState)
+		_ = d.Set("scan_malicious_links", []interface{}{scanMaliciousLinksState})
 	} else {
 		_ = d.Set("scan_malicious_links", nil)
 	}

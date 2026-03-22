@@ -38,7 +38,9 @@ func testAccDataSourceManagementHttpsRuleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_https_rule" "https_rule" {
 	name = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	layer = "Default Layer"
 	blade = ["IPS"]
 	destination = ["Internet"]

@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementSyncWIthUserCenter_basic(t *testing.T)
 			{
 				Config: testAccDataSourceManagementSyncWIthUserCenterConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

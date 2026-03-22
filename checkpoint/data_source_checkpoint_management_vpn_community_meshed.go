@@ -93,6 +93,22 @@ func dataSourceManagementVpnCommunityMeshed() *schema.Resource {
 							Computed:    true,
 							Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 						},
+						"use_standard_proposal": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"use_multiple_key_exchanges": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"multiple_key_exchanges": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"ike_p1_rekey_time_unit": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -126,6 +142,26 @@ func dataSourceManagementVpnCommunityMeshed() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
+						},
+						"use_standard_proposal": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"use_multiple_key_exchanges": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"multiple_key_exchanges": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+						"ike_p2_rekey_time_unit": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -827,7 +863,7 @@ func dataSourceManagementVpnCommunityMeshedRead(d *schema.ResourceData, m interf
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
 							ikePhase1State["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_1"] = ikePhase1State
+						granularEncryptionState["ike_phase_1"] = []interface{}{ikePhase1State}
 					}
 
 					if v := granularEncryptionShow["ike-phase-2"]; v != nil {
@@ -848,7 +884,7 @@ func dataSourceManagementVpnCommunityMeshedRead(d *schema.ResourceData, m interf
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
 							ikePhase2State["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_2"] = ikePhase2State
+						granularEncryptionState["ike_phase_2"] = []interface{}{ikePhase2State}
 					}
 					granularEncryptionsState = append(granularEncryptionsState, granularEncryptionState)
 				}

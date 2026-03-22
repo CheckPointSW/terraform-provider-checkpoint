@@ -104,7 +104,7 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				accessSection["position"] = "top"
 			} else {
@@ -112,15 +112,15 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			accessSection["position"] = map[string]interface{}{"above": v.(string)} // section or rule
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			accessSection["position"] = map[string]interface{}{"below": v.(string)} // section or rule
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				accessSection["position"] = "bottom"
 			} else {

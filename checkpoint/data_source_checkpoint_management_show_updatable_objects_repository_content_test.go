@@ -96,7 +96,7 @@ func testAccCheckCheckpointShowUpdatableObjectsRepositoryContentAttributes(showO
 func testAccDataSourceManagementShowUpdatableObjectsRepositoryContentConfig(objName string) string {
 	return fmt.Sprintf(`
 data "checkpoint_management_show_updatable_objects_repository_content" "test" {
-    filter = {
+    filter {
 		text = "%s"
 	}
 }

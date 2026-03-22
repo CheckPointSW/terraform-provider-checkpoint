@@ -5,7 +5,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementResourceSmtp() *schema.Resource {
@@ -326,7 +325,7 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 	}
 
 	if v := resourceSmtp["exception-track"]; v != nil {
-		_ = d.Set("exception_track", v)
+		_ = d.Set("exception_track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if resourceSmtp["match"] != nil {
@@ -429,19 +428,19 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 			action2MapToReturn["allowed_characters"] = v
 		}
 		if v, _ := action2Map["strip-script-tags"]; v != nil {
-			action2MapToReturn["strip_script_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_script_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-applet-tags"]; v != nil {
-			action2MapToReturn["strip_applet_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_applet_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-activex-tags"]; v != nil {
-			action2MapToReturn["strip_activex_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_activex_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-ftp-links"]; v != nil {
-			action2MapToReturn["strip_ftp_links"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_ftp_links"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-port-strings"]; v != nil {
-			action2MapToReturn["strip_port_strings"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_port_strings"] = v.(bool)
 		}
 		_ = d.Set("action_2", []interface{}{action2MapToReturn})
 	} else {

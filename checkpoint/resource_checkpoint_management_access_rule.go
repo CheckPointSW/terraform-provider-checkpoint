@@ -405,7 +405,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 			actionSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("action_settings.0.enable_identity_captive_portal"); ok {
+			if v, ok := d.GetOkExists("action_settings.0.enable_identity_captive_portal"); ok {
 				actionSettingsPayload["enable-identity-captive-portal"] = v.(bool)
 			}
 			if v, ok := d.GetOk("action_settings.0.limit"); ok {
@@ -481,19 +481,19 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 			trackPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("track.0.accounting"); ok {
+			if v, ok := d.GetOkExists("track.0.accounting"); ok {
 				trackPayload["accounting"] = v.(bool)
 			}
 			if v, ok := d.GetOk("track.0.alert"); ok {
 				trackPayload["alert"] = v.(string)
 			}
-			if v, ok := d.GetOk("track.0.enable_firewall_session"); ok {
+			if v, ok := d.GetOkExists("track.0.enable_firewall_session"); ok {
 				trackPayload["enable-firewall-session"] = v.(bool)
 			}
-			if v, ok := d.GetOk("track.0.per_connection"); ok {
+			if v, ok := d.GetOkExists("track.0.per_connection"); ok {
 				trackPayload["per-connection"] = v.(bool)
 			}
-			if v, ok := d.GetOk("track.0.per_session"); ok {
+			if v, ok := d.GetOkExists("track.0.per_session"); ok {
 				trackPayload["per-session"] = v.(bool)
 			}
 			if v, ok := d.GetOk("track.0.type"); ok {
@@ -620,7 +620,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			actionSettingsMapToReturn["enable_identity_captive_portal"] = v
 		}
 		if v := actionSettingsMap["limit"]; v != nil {
-			actionSettingsMapToReturn["limit"] = v
+			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
 		}
 		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
 

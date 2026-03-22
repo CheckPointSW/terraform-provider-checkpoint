@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementGlobalDomain_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementGlobalDomainConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 				),
 			},
 		},

@@ -526,7 +526,7 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 
 			natSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat_settings.0.auto_rule"); ok {
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
 				natSettingsPayload["auto-rule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
@@ -615,10 +615,10 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 			if v, ok := d.GetOk("logs_settings.0.free_disk_space_metrics"); ok {
 				logsSettingsPayload["free-disk-space-metrics"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.accept_syslog_messages"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.accept_syslog_messages"); ok {
 				logsSettingsPayload["accept-syslog-messages"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.alert_when_free_disk_space_below"); ok {
 				logsSettingsPayload["alert-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below_threshold"); ok {
@@ -627,40 +627,40 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below_type"); ok {
 				logsSettingsPayload["alert-when-free-disk-space-below-type"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.before_delete_keep_logs_from_the_last_days"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.before_delete_keep_logs_from_the_last_days"); ok {
 				logsSettingsPayload["before-delete-keep-logs-from-the-last-days"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.before_delete_keep_logs_from_the_last_days_threshold"); ok {
 				logsSettingsPayload["before-delete-keep-logs-from-the-last-days-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.before_delete_run_script"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.before_delete_run_script"); ok {
 				logsSettingsPayload["before-delete-run-script"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.before_delete_run_script_command"); ok {
 				logsSettingsPayload["before-delete-run-script-command"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.delete_index_files_older_than_days"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.delete_index_files_older_than_days"); ok {
 				logsSettingsPayload["delete-index-files-older-than-days"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.delete_index_files_older_than_days_threshold"); ok {
 				logsSettingsPayload["delete-index-files-older-than-days-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.delete_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.delete_when_free_disk_space_below"); ok {
 				logsSettingsPayload["delete-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.delete_when_free_disk_space_below_threshold"); ok {
 				logsSettingsPayload["delete-when-free-disk-space-below-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.detect_new_citrix_ica_application_names"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.detect_new_citrix_ica_application_names"); ok {
 				logsSettingsPayload["detect-new-citrix-ica-application-names"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.distribute_logs_between_all_active_servers"); ok {
 				logsSettingsPayload["distribute-logs-between-all-active-servers"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.enable_log_indexing"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.enable_log_indexing"); ok {
 				logsSettingsPayload["enable-log-indexing"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.forward_logs_to_log_server"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.forward_logs_to_log_server"); ok {
 				logsSettingsPayload["forward-logs-to-log-server"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.forward_logs_to_log_server_name"); ok {
@@ -669,28 +669,28 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 			if v, ok := d.GetOk("logs_settings.0.forward_logs_to_log_server_schedule_name"); ok {
 				logsSettingsPayload["forward-logs-to-log-server-schedule-name"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.rotate_log_by_file_size"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.rotate_log_by_file_size"); ok {
 				logsSettingsPayload["rotate-log-by-file-size"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.rotate_log_file_size_threshold"); ok {
 				logsSettingsPayload["rotate-log-file-size-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.rotate_log_on_schedule"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.rotate_log_on_schedule"); ok {
 				logsSettingsPayload["rotate-log-on-schedule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.rotate_log_schedule_name"); ok {
 				logsSettingsPayload["rotate-log-schedule-name"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.smart_event_intro_correletion_unit"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.smart_event_intro_correletion_unit"); ok {
 				logsSettingsPayload["smart-event-intro-correletion-unit"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.stop_logging_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.stop_logging_when_free_disk_space_below"); ok {
 				logsSettingsPayload["stop-logging-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.stop_logging_when_free_disk_space_below_threshold"); ok {
 				logsSettingsPayload["stop-logging-when-free-disk-space-below-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.turn_on_qos_logging"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.turn_on_qos_logging"); ok {
 				logsSettingsPayload["turn-on-qos-logging"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.update_account_log_every"); ok {

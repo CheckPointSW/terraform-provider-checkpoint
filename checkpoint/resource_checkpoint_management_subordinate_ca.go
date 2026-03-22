@@ -427,7 +427,7 @@ func readManagementSubordinateCa(d *schema.ResourceData, m interface{}) error {
 				if v, _ := httpSettingsMap["url"]; v != nil {
 					httpSettingsMapToReturn["url"] = v
 				}
-				cmpv2SettingsMapToReturn["http_settings"] = httpSettingsMapToReturn
+				cmpv2SettingsMapToReturn["http_settings"] = []interface{}{httpSettingsMapToReturn}
 			}
 
 			automaticEnrollmentMapToReturn["cmpv2_settings"] = []interface{}{cmpv2SettingsMapToReturn}

@@ -589,34 +589,34 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 
 			endpointPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("endpoint.0.manage_policies_and_software_deployment"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.manage_policies_and_software_deployment"); ok {
 				endpointPayload["manage-policies-and-software-deployment"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.edit_endpoint_policies"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.edit_endpoint_policies"); ok {
 				endpointPayload["edit-endpoint-policies"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.policies_installation"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.policies_installation"); ok {
 				endpointPayload["policies-installation"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.edit_software_deployment"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.edit_software_deployment"); ok {
 				endpointPayload["edit-software-deployment"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.software_deployment_installation"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.software_deployment_installation"); ok {
 				endpointPayload["software-deployment-installation"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.allow_executing_push_operations"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.allow_executing_push_operations"); ok {
 				endpointPayload["allow-executing-push-operations"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.authorize_preboot_users"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.authorize_preboot_users"); ok {
 				endpointPayload["authorize-preboot-users"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.recovery_media"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.recovery_media"); ok {
 				endpointPayload["recovery-media"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.remote_help"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.remote_help"); ok {
 				endpointPayload["remote-help"] = v.(bool)
 			}
-			if v, ok := d.GetOk("endpoint.0.reset_computer_data"); ok {
+			if v, ok := d.GetOkExists("endpoint.0.reset_computer_data"); ok {
 				endpointPayload["reset-computer-data"] = v.(bool)
 			}
 			domainPermissionsProfile["endpoint"] = endpointPayload
@@ -640,7 +640,7 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("events_and_reports.0.policy"); ok {
 				eventsAndReportsPayload["policy"] = v.(string)
 			}
-			if v, ok := d.GetOk("events_and_reports.0.reports"); ok {
+			if v, ok := d.GetOkExists("events_and_reports.0.reports"); ok {
 				eventsAndReportsPayload["reports"] = v.(bool)
 			}
 			domainPermissionsProfile["events-and-reports"] = eventsAndReportsPayload
@@ -664,22 +664,22 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("gateways.0.manage_provisioning_profiles"); ok {
 				gatewaysPayload["manage-provisioning-profiles"] = v.(string)
 			}
-			if v, ok := d.GetOk("gateways.0.vsx_provisioning"); ok {
+			if v, ok := d.GetOkExists("gateways.0.vsx_provisioning"); ok {
 				gatewaysPayload["vsx-provisioning"] = v.(bool)
 			}
-			if v, ok := d.GetOk("gateways.0.system_backup"); ok {
+			if v, ok := d.GetOkExists("gateways.0.system_backup"); ok {
 				gatewaysPayload["system-backup"] = v.(bool)
 			}
-			if v, ok := d.GetOk("gateways.0.system_restore"); ok {
+			if v, ok := d.GetOkExists("gateways.0.system_restore"); ok {
 				gatewaysPayload["system-restore"] = v.(bool)
 			}
-			if v, ok := d.GetOk("gateways.0.open_shell"); ok {
+			if v, ok := d.GetOkExists("gateways.0.open_shell"); ok {
 				gatewaysPayload["open-shell"] = v.(bool)
 			}
-			if v, ok := d.GetOk("gateways.0.run_one_time_script"); ok {
+			if v, ok := d.GetOkExists("gateways.0.run_one_time_script"); ok {
 				gatewaysPayload["run-one-time-script"] = v.(bool)
 			}
-			if v, ok := d.GetOk("gateways.0.run_repository_script"); ok {
+			if v, ok := d.GetOkExists("gateways.0.run_repository_script"); ok {
 				gatewaysPayload["run-repository-script"] = v.(bool)
 			}
 			if v, ok := d.GetOk("gateways.0.manage_repository_scripts"); ok {
@@ -700,25 +700,25 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("management.0.cme_operations"); ok {
 				managementPayload["cme-operations"] = v.(string)
 			}
-			if v, ok := d.GetOk("management.0.manage_admins"); ok {
+			if v, ok := d.GetOkExists("management.0.manage_admins"); ok {
 				managementPayload["manage-admins"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.management_api_login"); ok {
+			if v, ok := d.GetOkExists("management.0.management_api_login"); ok {
 				managementPayload["management-api-login"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.manage_sessions"); ok {
+			if v, ok := d.GetOkExists("management.0.manage_sessions"); ok {
 				managementPayload["manage-sessions"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.high_availability_operations"); ok {
+			if v, ok := d.GetOkExists("management.0.high_availability_operations"); ok {
 				managementPayload["high-availability-operations"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.approve_or_reject_sessions"); ok {
+			if v, ok := d.GetOkExists("management.0.approve_or_reject_sessions"); ok {
 				managementPayload["approve-or-reject-sessions"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.publish_sessions"); ok {
+			if v, ok := d.GetOkExists("management.0.publish_sessions"); ok {
 				managementPayload["publish-sessions"] = v.(bool)
 			}
-			if v, ok := d.GetOk("management.0.manage_integration_with_cloud_services"); ok {
+			if v, ok := d.GetOkExists("management.0.manage_integration_with_cloud_services"); ok {
 				managementPayload["manage-integration-with-cloud-services"] = v.(bool)
 			}
 			domainPermissionsProfile["management"] = managementPayload
@@ -742,28 +742,28 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("monitoring_and_logging.0.track_logs"); ok {
 				monitoringAndLoggingPayload["track-logs"] = v.(string)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.app_and_url_filtering_logs"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.app_and_url_filtering_logs"); ok {
 				monitoringAndLoggingPayload["app-and-url-filtering-logs"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.https_inspection_logs"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.https_inspection_logs"); ok {
 				monitoringAndLoggingPayload["https-inspection-logs"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.packet_capture_and_forensics"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.packet_capture_and_forensics"); ok {
 				monitoringAndLoggingPayload["packet-capture-and-forensics"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.show_packet_capture_by_default"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.show_packet_capture_by_default"); ok {
 				monitoringAndLoggingPayload["show-packet-capture-by-default"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.identities"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.identities"); ok {
 				monitoringAndLoggingPayload["identities"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.show_identities_by_default"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.show_identities_by_default"); ok {
 				monitoringAndLoggingPayload["show-identities-by-default"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.dlp_logs_including_confidential_fields"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.dlp_logs_including_confidential_fields"); ok {
 				monitoringAndLoggingPayload["dlp-logs-including-confidential-fields"] = v.(bool)
 			}
-			if v, ok := d.GetOk("monitoring_and_logging.0.manage_dlp_messages"); ok {
+			if v, ok := d.GetOkExists("monitoring_and_logging.0.manage_dlp_messages"); ok {
 				monitoringAndLoggingPayload["manage-dlp-messages"] = v.(bool)
 			}
 			domainPermissionsProfile["monitoring-and-logging"] = monitoringAndLoggingPayload
@@ -784,7 +784,7 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("threat_prevention.0.edit_layers"); ok {
 				threatPreventionPayload["edit-layers"] = v.(string)
 			}
-			if v, ok := d.GetOk("threat_prevention.0.edit_settings"); ok {
+			if v, ok := d.GetOkExists("threat_prevention.0.edit_settings"); ok {
 				threatPreventionPayload["edit-settings"] = v.(bool)
 			}
 			if v, ok := d.GetOk("threat_prevention.0.policy_exceptions"); ok {
@@ -796,10 +796,10 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOk("threat_prevention.0.protections"); ok {
 				threatPreventionPayload["protections"] = v.(string)
 			}
-			if v, ok := d.GetOk("threat_prevention.0.install_policy"); ok {
+			if v, ok := d.GetOkExists("threat_prevention.0.install_policy"); ok {
 				threatPreventionPayload["install-policy"] = v.(bool)
 			}
-			if v, ok := d.GetOk("threat_prevention.0.ips_update"); ok {
+			if v, ok := d.GetOkExists("threat_prevention.0.ips_update"); ok {
 				threatPreventionPayload["ips-update"] = v.(bool)
 			}
 			domainPermissionsProfile["threat-prevention"] = threatPreventionPayload
@@ -814,10 +814,10 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 
 			othersPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("others.0.client_certificates"); ok {
+			if v, ok := d.GetOkExists("others.0.client_certificates"); ok {
 				othersPayload["client-certificates"] = v.(bool)
 			}
-			if v, ok := d.GetOk("others.0.edit_cp_users_db"); ok {
+			if v, ok := d.GetOkExists("others.0.edit_cp_users_db"); ok {
 				othersPayload["edit-cp-users-db"] = v.(bool)
 			}
 			if v, ok := d.GetOk("others.0.https_inspection"); ok {

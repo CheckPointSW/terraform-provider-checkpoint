@@ -30,10 +30,10 @@ func TestAccCheckpointManagementResourceSmtp_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementResourceSmtpDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementResourceSmtpConfig(objName, "deliverserver", "exception log", true),
+				Config: testAccManagementResourceSmtpConfig(objName, "deliverserver", "Exception Log", true),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementResourceSmtpExists(resourceName, &resourceSmtpMap),
-					testAccCheckCheckpointManagementResourceSmtpAttributes(&resourceSmtpMap, objName, "deliverserver", "exception log", true),
+					testAccCheckCheckpointManagementResourceSmtpAttributes(&resourceSmtpMap, objName, "deliverserver", "Exception Log", true),
 				),
 			},
 		},
@@ -94,7 +94,13 @@ func testAccCheckCheckpointManagementResourceSmtpAttributes(resourceSmtpMap *map
 		if !strings.EqualFold(resourceSmtpMailDeliveryServer, mailDeliveryServer) {
 			return fmt.Errorf("mailDeliveryServer is %s, expected %s", mailDeliveryServer, resourceSmtpMailDeliveryServer)
 		}
-		resourceSmtpExceptionTrack := (*resourceSmtpMap)["exception-track"].(string)
+		resourceSmtpExceptionTrackRaw := (*resourceSmtpMap)["exception-track"]
+		var resourceSmtpExceptionTrack string
+		if obj, ok := resourceSmtpExceptionTrackRaw.(map[string]interface{}); ok {
+			resourceSmtpExceptionTrack = obj["name"].(string)
+		} else {
+			resourceSmtpExceptionTrack = resourceSmtpExceptionTrackRaw.(string)
+		}
 		if !strings.EqualFold(resourceSmtpExceptionTrack, exceptionTrack) {
 			return fmt.Errorf("exceptionTrack is %s, expected %s", exceptionTrack, resourceSmtpExceptionTrack)
 		}

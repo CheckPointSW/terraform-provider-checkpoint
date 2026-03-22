@@ -40,9 +40,9 @@ resource "checkpoint_management_resource_uri" "test" {
 
   name = "%s"
   use_this_resource_to = "optimize_url_logging"
-  connection_methods = {
-    transparent = "false"
-    tunneling = "true"
+  connection_methods {
+    transparent = false
+    tunneling = true
     proxy = false
   }
   uri_match_specification_type = "wildcards"
@@ -69,7 +69,7 @@ resource "checkpoint_management_resource_uri" "test" {
     strip_script_tags = true
 
   }
-  soap = {
+  soap {
     inspection = "allow_all_soap_requests"
     file_id = "scheme1"
     track_connections = "mail_alert"

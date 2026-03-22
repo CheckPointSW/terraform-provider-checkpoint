@@ -119,11 +119,10 @@ resource "checkpoint_management_service_sctp" "test" {
         session_timeout = %d
         match_for_any = %t
         sync_connections_on_cluster = %t
-        aggressive_aging = {
+        aggressive_aging {
             use_default_timeout = true
             enable = true
-            default_timeout = 600
-            timeout = 600
+            default_timeout = 0
         }
 }
 `, name, port, keepConnectionsOpenAfterPolicyInstallation, sessionTimeout, matchForAny, syncConnectionsOnCluster)

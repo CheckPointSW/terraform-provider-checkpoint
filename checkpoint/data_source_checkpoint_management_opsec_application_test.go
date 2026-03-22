@@ -44,12 +44,12 @@ resource "checkpoint_management_host" "myhost1" {
 resource "checkpoint_management_opsec_application" "opsec_application" {
     name = "%s"
     host = "${checkpoint_management_host.myhost1.name}"
-    cpmi = {
+    cpmi {
         enabled = true
         administrator_profile = "read only all"
         use_administrator_credentials = false
     }
-    lea = {
+    lea {
         enabled = true
         access_permissions = "show all"
     }

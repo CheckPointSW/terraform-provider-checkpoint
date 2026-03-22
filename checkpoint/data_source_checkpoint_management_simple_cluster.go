@@ -2449,7 +2449,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 					if v, _ := antiSpoofingSettingsJson["action"]; v != nil {
 						antiSpoofingSettingsState["action"] = v
 					}
-					interfaceState["anti_spoofing_settings"] = antiSpoofingSettingsState
+					interfaceState["anti_spoofing_settings"] = []interface{}{antiSpoofingSettingsState}
 				}
 				if v, _ := interfaceJson["security-zone"]; v != nil {
 					interfaceState["security_zone"] = v
@@ -2463,7 +2463,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 					if v, _ := securityZoneSettingsJson["specific-zone"]; v != nil {
 						securityZoneSettingsState["specific_zone"] = v
 					}
-					interfaceState["security_zone_settings"] = securityZoneSettingsState
+					interfaceState["security_zone_settings"] = []interface{}{securityZoneSettingsState}
 				}
 				if v, _ := interfaceJson["topology"]; v != nil {
 					interfaceState["topology"] = v
@@ -2483,7 +2483,7 @@ func dataSourceManagementSimpleClusterRead(d *schema.ResourceData, m interface{}
 					if v, _ := topologySettingsJson["specific-network"]; v != nil {
 						topologySettingsState["specific_network"] = v
 					}
-					interfaceState["topology_settings"] = topologySettingsState
+					interfaceState["topology_settings"] = []interface{}{topologySettingsState}
 				}
 
 				if v, _ := interfaceJson["color"]; v != nil {

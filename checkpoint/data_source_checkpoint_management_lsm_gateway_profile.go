@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
-	"strconv"
 )
 
 func dataSourceManagementLsmGatewayProfile() *schema.Resource {
@@ -733,26 +732,26 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 				useEarlyVersionMapToReturn := make(map[string]interface{})
 
 				if v, _ := useEarlyVersionMap["enabled"]; v != nil {
-					useEarlyVersionMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+					useEarlyVersionMapToReturn["enabled"] = v.(bool)
 				}
 
 				if v, _ := useEarlyVersionMap["compatibility-mode"]; v != nil {
 					useEarlyVersionMapToReturn["compatibility_mode"] = v
 				}
-				samMapToReturn["use_early_versions"] = useEarlyVersionMapToReturn
+				samMapToReturn["use_early_versions"] = []interface{}{useEarlyVersionMapToReturn}
 			}
 			if purgeSamFile, _ := samSettingsMap["purge-sam-file"]; purgeSamFile != nil {
 				purgeSamFileMap := purgeSamFile.(map[string]interface{})
 				purgeSamFileMapToReturn := make(map[string]interface{})
 
 				if v, _ := purgeSamFileMap["enabled"]; v != nil {
-					purgeSamFileMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+					purgeSamFileMapToReturn["enabled"] = v.(bool)
 				}
 
 				if v, _ := purgeSamFileMap["purge-when-size-reaches-to"]; v != nil {
-					purgeSamFileMapToReturn["purge_when_size_reaches_to"] = strconv.Itoa(int(math.Round(v.(float64))))
+					purgeSamFileMapToReturn["purge_when_size_reaches_to"] = int(math.Round(v.(float64)))
 				}
-				samMapToReturn["purge_sam_file"] = purgeSamFileMapToReturn
+				samMapToReturn["purge_sam_file"] = []interface{}{purgeSamFileMapToReturn}
 			}
 			advancedSettingsMapToReturn["sam"] = []interface{}{samMapToReturn}
 		}
@@ -797,11 +796,11 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 					if v, _ := customModeMap["url-filtering"]; v != nil {
 						customModeMapToReturn["url_filtering"] = v
 					}
-					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+					websiteCategorizationMapToReturn["custom_mode"] = []interface{}{customModeMapToReturn}
 				}
-				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+				overrideGlobalMapToReturn["website_categorization"] = []interface{}{websiteCategorizationMapToReturn}
 			}
-			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+			applicationControlSettingsMapToReturn["override_global_settings"] = []interface{}{overrideGlobalMapToReturn}
 		}
 
 		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
@@ -819,24 +818,24 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 			httpsSettingsMap := actionSettingsMap["bypass-on-failure"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["bypass_on_failure"] = httpsMapToReturn
+			actionSettingsMapToReturn["bypass_on_failure"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["site-categorization-allow-mode"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["site-categorization-allow-mode"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
@@ -846,58 +845,58 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 			if v, _ := httpsSettingsMap["value"]; v != nil {
 				httpsMapToReturn["value"] = v
 			}
-			actionSettingsMapToReturn["site_categorization_allow_mode"] = httpsMapToReturn
+			actionSettingsMapToReturn["site_categorization_allow_mode"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-untrusted-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-untrusted-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_untrusted_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_untrusted_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-revoked-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-revoked-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_revoked_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_revoked_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-expired-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-expired-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_expired_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_expired_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 		err = d.Set("https_inspection", []interface{}{actionSettingsMapToReturn})
 	} else {

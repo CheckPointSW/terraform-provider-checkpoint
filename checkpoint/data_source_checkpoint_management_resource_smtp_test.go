@@ -40,8 +40,8 @@ resource "checkpoint_management_resource_smtp" "test" {
 
   name = "%s"
   mail_delivery_server = "deliverServer"
-  exception_track = "exception log"
-  match = {
+  exception_track = "Exception Log"
+  match {
     sender = "bob"
     recipient = "liza"
   }

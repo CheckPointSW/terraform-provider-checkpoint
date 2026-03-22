@@ -2398,7 +2398,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := antiSpoofingSettingsJson["action"]; v != nil {
 						antiSpoofingSettingsState["action"] = v
 					}
-					interfaceState["anti_spoofing_settings"] = antiSpoofingSettingsState
+					interfaceState["anti_spoofing_settings"] = []interface{}{antiSpoofingSettingsState}
 				}
 				if v, _ := interfaceJson["security-zone"]; v != nil {
 					interfaceState["security_zone"] = v
@@ -2412,7 +2412,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := securityZoneSettingsJson["specific-zone"]; v != nil {
 						securityZoneSettingsState["specific_zone"] = v
 					}
-					interfaceState["security_zone_settings"] = securityZoneSettingsState
+					interfaceState["security_zone_settings"] = []interface{}{securityZoneSettingsState}
 				}
 				if v, _ := interfaceJson["topology"]; v != nil {
 					interfaceState["topology"] = v
@@ -2432,7 +2432,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := topologySettingsJson["specific-network"]; v != nil {
 						topologySettingsState["specific_network"] = v
 					}
-					interfaceState["topology_settings"] = topologySettingsState
+					interfaceState["topology_settings"] = []interface{}{topologySettingsState}
 				}
 				if v, _ := interfaceJson["color"]; v != nil {
 					interfaceState["color"] = v
@@ -2497,11 +2497,11 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := customModeMap["url-filtering"]; v != nil {
 						customModeMapToReturn["url_filtering"] = v
 					}
-					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+					websiteCategorizationMapToReturn["custom_mode"] = []interface{}{customModeMapToReturn}
 				}
-				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+				overrideGlobalMapToReturn["website_categorization"] = []interface{}{websiteCategorizationMapToReturn}
 			}
-			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+			applicationControlSettingsMapToReturn["override_global_settings"] = []interface{}{overrideGlobalMapToReturn}
 		}
 
 		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
@@ -2650,7 +2650,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 			logsSettingsMapToReturn["alert_when_free_disk_space_below"] = v
 		}
 		if v := logsSettingsMap["alert-when-free-disk-space-below-metrics"]; v != nil {
-			logsSettingsMapToReturn["alert_when_free_disk_space_below_metrics"] = v
+			logsSettingsMapToReturn["free_disk_space_metrics"] = v
 		}
 		if v := logsSettingsMap["alert-when-free-disk-space-below-threshold"]; v != nil {
 			logsSettingsMapToReturn["alert_when_free_disk_space_below_threshold"] = v
@@ -2696,9 +2696,6 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		}
 		if v := logsSettingsMap["detect-new-citrix-ica-application-names"]; v != nil {
 			logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = v
-		}
-		if v := logsSettingsMap["distribute-logs-between-all-active-servers"]; v != nil {
-			logsSettingsMapToReturn["distribute_logs_between_all_active_servers"] = v
 		}
 		if v := logsSettingsMap["forward-logs-to-log-server"]; v != nil {
 			logsSettingsMapToReturn["forward_logs_to_log_server"] = v

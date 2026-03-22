@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetInterTrustedCa_basic(t *testing.T) {
 			{
 				Config: testAccManagementSetInternalTrustedCaConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "inspect_archives", commandName, "inspect_archives"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},

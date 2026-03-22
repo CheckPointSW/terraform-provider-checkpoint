@@ -167,7 +167,6 @@ func readManagementOverrideCategorization(d *schema.ResourceData, m interface{})
 	log.Println("Read OverrideCategorization - Show JSON = ", overrideCategorization)
 
 	if v := overrideCategorization["uid"]; v != nil {
-		_ = d.Set("uid", v)
 		d.SetId(v.(string))
 	}
 	if v := overrideCategorization["url"]; v != nil {

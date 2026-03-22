@@ -42,6 +42,11 @@ func resourceManagementNetwork() *schema.Resource {
 				Optional:    true,
 				Description: "IPv6 network mask length.",
 			},
+			"subnet_mask": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IPv4 network mask.",
+			},
 			"nat_settings": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -152,7 +157,7 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 			natSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat_settings.0.auto_rule"); ok {
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
 				natSettingsPayload["auto-rule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {

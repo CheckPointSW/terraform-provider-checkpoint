@@ -2,12 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
-	"log"
-	"math"
-	"strconv"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
+	"math"
 )
 
 func dataSourceManagementTime() *schema.Resource {
@@ -58,7 +56,7 @@ func dataSourceManagementTime() *schema.Resource {
 				Computed:    true,
 				Description: "End never.",
 			},
-			"hour_ranges": {
+			"hours_ranges": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Hours recurrence. Note: Each gateway may interpret this time differently according to its time zone.",
@@ -266,7 +264,7 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 						hoursRangesMapToAdd["from"] = v
 					}
 					if v, _ := hoursRangesMap["index"]; v != nil {
-						hoursRangesMapToAdd["index"] = strconv.Itoa(int(math.Round(v.(float64))))
+						hoursRangesMapToAdd["index"] = int(math.Round(v.(float64)))
 					}
 					if v, _ := hoursRangesMap["to"]; v != nil {
 						hoursRangesMapToAdd["to"] = v

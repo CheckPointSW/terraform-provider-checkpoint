@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetPolicySettings_basic(t *testing.T) {
 			{
 				Config: testAccManagementSetPolicySettingsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},
@@ -36,7 +36,7 @@ func testAccManagementSetPolicySettingsConfig() string {
 resource "checkpoint_management_command_set_policy_settings" "command_set_policy_settings" {
     last_in_cell = "none"
 	none_object_behavior = "none"
-	security_access_defaults = {
+	security_access_defaults {
 		source = "none"
 		destination = "none"
 		service = "none"

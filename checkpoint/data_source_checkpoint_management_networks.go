@@ -349,7 +349,7 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 					natSettingsMapToReturn := make(map[string]interface{})
 
 					if v, _ := natSettingsMap["auto-rule"]; v != nil {
-						natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+						natSettingsMapToReturn["auto_rule"] = v.(bool)
 					}
 
 					if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {

@@ -119,11 +119,10 @@ resource "checkpoint_management_service_other" "test" {
         match_for_any = %t
         sync_connections_on_cluster = %t
         ip_protocol = %d
-        aggressive_aging = {
+        aggressive_aging {
             use_default_timeout = true
             enable = true
-            default_timeout = 600
-            timeout = 600
+            default_timeout = 0
         }
 }
 `, name, keepConnectionsOpenAfterPolicyInstallation, sessionTimeout, matchForAny, syncConnectionsOnCluster, ipProtocol)

@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementPolicySettings_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementPolicySettingsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "last_in_cell"),
 				),
 			},
 		},

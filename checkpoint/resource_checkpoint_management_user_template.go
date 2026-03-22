@@ -5,7 +5,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 	"strings"
 )
 
@@ -230,13 +229,13 @@ func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 			encryptionPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("encryption.0.enable_ike"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_ike"); ok {
 				encryptionPayload["enable-ike"] = v.(bool)
 			}
-			if v, ok := d.GetOk("encryption.0.enable_public_key"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_public_key"); ok {
 				encryptionPayload["enable-public-key"] = v.(bool)
 			}
-			if v, ok := d.GetOk("encryption.0.enable_shared_secret"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
 				encryptionPayload["enable-shared-secret"] = v.(bool)
 			}
 			userTemplate["encryption"] = encryptionPayload
@@ -361,13 +360,9 @@ func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 		if v := allowedLocationsMap["sources"]; v != nil {
 			allowedLocationsMapToReturn["sources"] = v
 		}
-		_, allowedLocationsInConf := d.GetOk("allowed_locations")
-		defaultAllowedLocations := map[string]interface{}{"sources": "['97aeb369-9aea-11d5-bd16-0090272ccb30']", "destinations": "['97aeb369-9aea-11d5-bd16-0090272ccb30']"}
-		if reflect.DeepEqual(defaultAllowedLocations, allowedLocationsMapToReturn) && !allowedLocationsInConf {
-			_ = d.Set("allowed_locations", []interface{}{})
-		} else {
-			_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
-		}
+
+		_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
+
 	} else {
 		_ = d.Set("allowed_locations", nil)
 	}
@@ -387,13 +382,8 @@ func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 		if v := encryptionMap["enable-shared-secret"]; v != nil {
 			encryptionMapToReturn["enable_shared_secret"] = v
 		}
-		_, encryptionInConf := d.GetOk("encryption")
-		defaultEncryption := map[string]interface{}{"enable_ike": "false"}
-		if reflect.DeepEqual(defaultEncryption, encryptionMapToReturn) && !encryptionInConf {
-			_ = d.Set("encryption", []interface{}{})
-		} else {
-			_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
-		}
+
+		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {
 		_ = d.Set("encryption", nil)
@@ -487,7 +477,6 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("allowed_locations") {
-		defaultLocationUid := "97aeb369-9aea-11d5-bd16-0090272ccb30"
 
 		if v, ok := d.GetOk("allowed_locations"); ok {
 
@@ -499,18 +488,12 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 				if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
 					allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
-				} else {
-					allowedLocationsPayload["destinations"] = defaultLocationUid
 				}
 				if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
 					allowedLocationsPayload["sources"] = v.(*schema.Set).List()
-				} else {
-					allowedLocationsPayload["sources"] = defaultLocationUid
 				}
 				userTemplate["allowed-locations"] = allowedLocationsPayload
 			}
-		} else {
-			userTemplate["allowed-locations"] = map[string]interface{}{"sources": defaultLocationUid, "destinations": defaultLocationUid}
 		}
 	}
 
@@ -535,8 +518,6 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 				}
 				userTemplate["encryption"] = encryptionPayload
 			}
-		} else {
-			userTemplate["encryption"] = map[string]interface{}{"enable-ike": false}
 		}
 	}
 

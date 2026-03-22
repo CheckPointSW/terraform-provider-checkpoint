@@ -148,11 +148,11 @@ func readManagementGroupWithExclusion(d *schema.ResourceData, m interface{}) err
 	}
 
 	if v := groupWithExclusion["except"]; v != nil {
-		_ = d.Set("except", v)
+		_ = d.Set("except", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := groupWithExclusion["include"]; v != nil {
-		_ = d.Set("include", v)
+		_ = d.Set("include", v.(map[string]interface{})["name"].(string))
 	}
 
 	if groupWithExclusion["tags"] != nil {

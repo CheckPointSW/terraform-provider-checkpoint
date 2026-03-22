@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementInternalTrustedCa_basic(t *testing.T) 
 			{
 				Config: testAccDataSourceManagementInternalTrustedCa(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 				),
 			},
 		},

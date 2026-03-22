@@ -792,10 +792,6 @@ func readManagementInterface(d *schema.ResourceData, m interface{}) error {
 	if v := interfaceMap["topology-automatic"]; v != nil {
 		_ = d.Set("topology_automatic", v)
 	}
-	if v := interfaceMap["topology-settings"]; v != nil {
-		_ = d.Set("topology_settings", v)
-	}
-
 	if interfaceMap["topology-settings"] != nil {
 
 		topologySettingsMap := interfaceMap["topology-settings"].(map[string]interface{})

@@ -268,7 +268,7 @@ func readManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := resourceTcp["exception-track"]; v != nil {
-		_ = d.Set("exception_track", v)
+		_ = d.Set("exception_track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if resourceTcp["ufp-settings"] != nil {
@@ -278,7 +278,7 @@ func readManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 		ufpSettingsMapToReturn := make(map[string]interface{})
 
 		if v, _ := ufpSettingsMap["server"]; v != nil {
-			ufpSettingsMapToReturn["server"] = v
+			ufpSettingsMapToReturn["server"] = v.(map[string]interface{})["name"].(string)
 		}
 		if v, _ := ufpSettingsMap["caching-control"]; v != nil {
 			ufpSettingsMapToReturn["caching_control"] = v

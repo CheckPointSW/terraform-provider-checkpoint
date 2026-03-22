@@ -223,16 +223,16 @@ func createManagementCheckNetworkFeed(d *schema.ResourceData, m interface{}) err
 			if v, ok := d.GetOk("network_feed.0.json_query"); ok {
 				networkFeedPayload["json-query"] = v.(string)
 			}
-			if v, ok := d.GetOk("network_feed.0.use_gateway_proxy"); ok {
+			if v, ok := d.GetOkExists("network_feed.0.use_gateway_proxy"); ok {
 				networkFeedPayload["use-gateway-proxy"] = v.(bool)
 			}
 			if v, ok := d.GetOk("network_feed.0.domains_to_process"); ok {
 				networkFeedPayload["domains-to-process"] = v
 			}
-			if v, ok := d.GetOk("network_feed.0.ignore_warnings"); ok {
+			if v, ok := d.GetOkExists("network_feed.0.ignore_warnings"); ok {
 				networkFeedPayload["ignore-warnings"] = v.(bool)
 			}
-			if v, ok := d.GetOk("network_feed.0.ignore_errors"); ok {
+			if v, ok := d.GetOkExists("network_feed.0.ignore_errors"); ok {
 				networkFeedPayload["ignore-errors"] = v.(bool)
 			}
 			payload["network-feed"] = networkFeedPayload

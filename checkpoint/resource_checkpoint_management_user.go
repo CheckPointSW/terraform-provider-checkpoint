@@ -3,7 +3,6 @@ package checkpoint
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"strings"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
@@ -257,13 +256,13 @@ func createManagementUser(d *schema.ResourceData, m interface{}) error {
 
 			encryptionPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("encryption.0.enable_ike"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_ike"); ok {
 				encryptionPayload["enable-ike"] = v.(bool)
 			}
-			if v, ok := d.GetOk("encryption.0.enable_public_key"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_public_key"); ok {
 				encryptionPayload["enable-public-key"] = v.(bool)
 			}
-			if v, ok := d.GetOk("encryption.0.enable_shared_secret"); ok {
+			if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
 				encryptionPayload["enable-shared-secret"] = v.(bool)
 			}
 			if v, ok := d.GetOk("encryption.0.shared_secret"); ok {
@@ -398,13 +397,8 @@ func readManagementUser(d *schema.ResourceData, m interface{}) error {
 		if v := allowedLocationsMap["sources"]; v != nil {
 			allowedLocationsMapToReturn["sources"] = v
 		}
-		_, allowedLocationsInConf := d.GetOk("allowed_locations")
-		defaultAllowedLocations := map[string]interface{}{"sources": "['97aeb369-9aea-11d5-bd16-0090272ccb30']", "destinations": "['97aeb369-9aea-11d5-bd16-0090272ccb30']"}
-		if reflect.DeepEqual(defaultAllowedLocations, allowedLocationsMapToReturn) && !allowedLocationsInConf {
-			_ = d.Set("allowed_locations", []interface{}{})
-		} else {
-			_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
-		}
+
+		_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
 
 	} else {
 		_ = d.Set("allowed_locations", nil)
@@ -428,13 +422,8 @@ func readManagementUser(d *schema.ResourceData, m interface{}) error {
 		if v := encryptionMap["shared-secret"]; v != nil {
 			encryptionMapToReturn["shared_secret"] = v
 		}
-		_, encryptionInConf := d.GetOk("encryption")
-		defaultEncryption := map[string]interface{}{"enable_ike": "false"}
-		if reflect.DeepEqual(defaultEncryption, encryptionMapToReturn) && !encryptionInConf {
-			_ = d.Set("encryption", []interface{}{})
-		} else {
-			_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
-		}
+
+		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {
 		_ = d.Set("encryption", nil)

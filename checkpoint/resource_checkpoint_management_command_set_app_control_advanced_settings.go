@@ -142,13 +142,13 @@ func createManagementSetAppControlAdvancedSettings(d *schema.ResourceData, m int
 
 			urlFilteringSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("url_filtering_settings.0.categorize_https_websites"); ok {
+			if v, ok := d.GetOkExists("url_filtering_settings.0.categorize_https_websites"); ok {
 				urlFilteringSettingsPayload["categorize-https-websites"] = v.(bool)
 			}
-			if v, ok := d.GetOk("url_filtering_settings.0.enforce_safe_search"); ok {
+			if v, ok := d.GetOkExists("url_filtering_settings.0.enforce_safe_search"); ok {
 				urlFilteringSettingsPayload["enforce-safe-search"] = v.(bool)
 			}
-			if v, ok := d.GetOk("url_filtering_settings.0.categorize_cached_and_translated_pages"); ok {
+			if v, ok := d.GetOkExists("url_filtering_settings.0.categorize_cached_and_translated_pages"); ok {
 				urlFilteringSettingsPayload["categorize-cached-and-translated-pages"] = v.(bool)
 			}
 			payload["url-filtering-settings"] = urlFilteringSettingsPayload

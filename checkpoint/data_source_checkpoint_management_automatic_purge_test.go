@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementAutomaticPurge_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementAutomaticPurgeConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "enabled"),
 				),
 			},
 		},

@@ -104,7 +104,7 @@ func testAccManagementSimpleClusterConfig(name string, ipv4 string) string {
 resource "checkpoint_management_checkpoint_host" "checkpoint_host" {
 	name = "mycheckpointhost1"
 	ipv4_address = "5.6.9.4"
-	management_blades = {
+	management_blades {
 		network_policy_management = true
 		logging_and_status = true
 	}

@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetSyncWithUserCenter_basic(t *testing.T) {
 			{
 				Config: testAccManagementSetSyncWithUserCenterConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},

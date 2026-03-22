@@ -98,7 +98,9 @@ func testAccManagementHttpsRuleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_https_rule" "test" {
 	name = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	layer = "Default Layer"
 	blade = ["IPS"]
 	destination = ["Internet"]
@@ -107,6 +109,9 @@ resource "checkpoint_management_https_rule" "test" {
 	source = ["DMZNet"]
 	install_on = ["Policy HTTPS Targets"]
 	site_category = ["Any"]
+	action = "Inspect"
+	certificate = "Outbound Certificate"
+	track = "Log"
 }
 `, name)
 }

@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetContentAwarenessSettings_basic(t *testing.T) 
 			{
 				Config: testAccManagementSetContentAwarenessSettingsConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "inspect_archives", commandName, "inspect_archives"),
+					resource.TestCheckResourceAttr(commandName, "inspect_archives", "false"),
 				),
 			},
 		},

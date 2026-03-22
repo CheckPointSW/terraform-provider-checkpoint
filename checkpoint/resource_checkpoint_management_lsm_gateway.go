@@ -568,23 +568,25 @@ func readManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 	if v := lsmGateway["security-profile"]; v != nil {
 		_ = d.Set("security_profile", v)
 	}
-	if v, ok := d.GetOk("sic"); ok {
 
-		sicList := v.([]interface{})
+	if lsmGateway["sic"] != nil {
 
-		if len(sicList) > 0 {
+		sicMap := lsmGateway["sic"].(map[string]interface{})
 
-			sicPayload := make(map[string]interface{})
+		sicMapToReturn := make(map[string]interface{})
 
-			if v, ok := d.GetOk("sic.0.one_time_password"); ok {
-				sicPayload["one-time-password"] = v.(string)
-			}
-			if v, ok := d.GetOk("sic.0.ip_address"); ok {
-				sicPayload["ip-address"] = v.(string)
-			}
-			lsmGateway["sic"] = sicPayload
+		if v := sicMap["one-time-password"]; v != nil {
+			sicMapToReturn["one_time_password"] = v
 		}
+		if v := sicMap["ip-address"]; v != nil {
+			sicMapToReturn["ip_address"] = v
+		}
+		_ = d.Set("sic", []interface{}{sicMapToReturn})
+
+	} else {
+		_ = d.Set("sic", nil)
 	}
+
 	if v := lsmGateway["sic-name"]; v != nil {
 		_ = d.Set("sic_name", v)
 	}

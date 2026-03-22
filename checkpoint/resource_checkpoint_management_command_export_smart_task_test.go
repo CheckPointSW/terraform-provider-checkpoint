@@ -37,8 +37,8 @@ resource "checkpoint_management_smart_task" "smart" {
 	name = "dummy"
 	enabled = true
 	trigger = "After Install Policy"
-	action = {
-		send_web_request = {
+	action {
+		send_web_request {
 			url = "https://demo.example.com/policy-installation-reports"
 			fingerprint = "3FDD902286DBF130EF4CEC7939EF81060AB0FEB6"
 		} 	

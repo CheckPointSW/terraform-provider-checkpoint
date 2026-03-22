@@ -113,18 +113,19 @@ func testAccManagementAccessRuleConfig(name string, layer string) string {
 resource "checkpoint_management_access_rule" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	source = ["Any"]
 	destination = ["Any"]
 	service = ["Any"]
-	track = {
-    accounting = false
-    alert = "none"
-    enable_firewall_session = false
-    per_connection = false
-    per_session = false
-    type = "None"
-  }
+	track {
+        accounting = false
+        alert = "none"
+        per_connection = false
+        per_session = false
+        type = "None"
+    }
 }
 `, name, layer)
 }

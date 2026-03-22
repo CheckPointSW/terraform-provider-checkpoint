@@ -398,13 +398,13 @@ func createManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 			connectionMethodsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("connection_methods.0.transparent"); ok {
+			if v, ok := d.GetOkExists("connection_methods.0.transparent"); ok {
 				connectionMethodsPayload["transparent"] = v.(bool)
 			}
-			if v, ok := d.GetOk("connection_methods.0.proxy"); ok {
+			if v, ok := d.GetOkExists("connection_methods.0.proxy"); ok {
 				connectionMethodsPayload["proxy"] = v.(bool)
 			}
-			if v, ok := d.GetOk("connection_methods.0.tunneling"); ok {
+			if v, ok := d.GetOkExists("connection_methods.0.tunneling"); ok {
 				connectionMethodsPayload["tunneling"] = v.(bool)
 			}
 			resourceUri["connection-methods"] = connectionMethodsPayload

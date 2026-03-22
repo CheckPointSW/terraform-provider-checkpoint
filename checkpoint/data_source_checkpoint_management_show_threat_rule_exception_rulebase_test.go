@@ -84,7 +84,9 @@ func testAccDataSourceManagementShowThreatRuleExceptionRuleBaseConfig(objName st
 
  resource "checkpoint_management_threat_exception" "threat_exception" {
   name = "%s"
-  position = {top = "top"}
+  position {
+        top = "top"
+    }
   exception_group_name = "Global Exceptions"
   track = "Log"
   service = ["AH", "AOL"]

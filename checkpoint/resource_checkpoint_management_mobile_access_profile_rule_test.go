@@ -113,7 +113,9 @@ func testAccManagementMobileAccessProfileRuleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_mobile_access_profile_rule" "test" {
         name = "%s"
-        position = {top = "top"}
+        position {
+        top = "top"
+    }
        
         
 }

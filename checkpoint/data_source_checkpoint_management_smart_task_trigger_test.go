@@ -22,7 +22,7 @@ func TestAccDataSourceCheckpointManagementSmartTaskTrigger_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementSmartTaskTriggerConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 				),
 			},
 		},

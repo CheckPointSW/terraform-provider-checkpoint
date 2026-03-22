@@ -99,13 +99,13 @@ func testAccManagementNetworkProbeConfig(name string) string {
     resource "checkpoint_management_simple_gateway" "example" {
   name = "gw4"
   ipv4_address = "192.0.2.14"
-vpn =true
+  vpn = true
 }
      
 resource "checkpoint_management_network_probe" "test" {
         name = "%s"
         install_on = ["${checkpoint_management_simple_gateway.example.name}"]
- icmp_options = {
+ icmp_options {
     source = "10.10.10.10"
     destination = "25.20.20.20"
   }

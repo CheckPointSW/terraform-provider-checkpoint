@@ -100,7 +100,9 @@ func testAccManagementNatSectionConfig(name string, packageName string, pos stri
 resource "checkpoint_management_nat_section" "nat_section" {
         name = "%s"
         package = "%s"
-		position = { "top": "%s" }
+		position {
+            top = "%s"
+        }
 }
 `, name, packageName, pos)
 }

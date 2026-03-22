@@ -496,8 +496,8 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v := natSettingsMap["enable-address-translation"]; v != nil {
-			natSettingsMapToReturn["enable_address_translation"] = v
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
 		}
 		if v := natSettingsMap["ipv4-address"]; v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
@@ -508,17 +508,11 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 		if v := natSettingsMap["hide-behind"]; v != nil {
 			natSettingsMapToReturn["hide_behind"] = v
 		}
-		if v := natSettingsMap["automatic-nat-rules"]; v != nil {
-			natSettingsMapToReturn["automatic_nat_rules"] = v
-		}
 		if v := natSettingsMap["install-on"]; v != nil {
 			natSettingsMapToReturn["install_on"] = v
 		}
 		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
-		}
-		if v := natSettingsMap["communication-with-this-server"]; v != nil {
-			natSettingsMapToReturn["communication_with_this_server"] = v
 		}
 
 		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})

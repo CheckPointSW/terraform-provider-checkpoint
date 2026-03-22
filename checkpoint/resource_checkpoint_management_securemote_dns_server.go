@@ -180,7 +180,7 @@ func readManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) er
 	}
 
 	if v := securemoteDnsServer["host"]; v != nil {
-		_ = d.Set("host", v)
+		_ = d.Set("host", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := securemoteDnsServer["comments"]; v != nil {
@@ -206,10 +206,10 @@ func readManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) er
 				domainMapToAdd := make(map[string]interface{})
 
 				if v, _ := domainMap["domain-suffix"]; v != nil {
-					domainMapToAdd["domain-suffix"] = v
+					domainMapToAdd["domain_suffix"] = v
 				}
 				if v, _ := domainMap["maximum-prefix-label-count"]; v != nil {
-					domainMapToAdd["maximum-prefix-label-count"] = v
+					domainMapToAdd["maximum_prefix_label_count"] = v
 				}
 
 				domainsListToReturn = append(domainsListToReturn, domainMapToAdd)

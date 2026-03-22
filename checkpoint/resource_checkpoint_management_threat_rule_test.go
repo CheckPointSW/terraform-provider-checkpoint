@@ -101,7 +101,12 @@ func testAccManagementThreatRuleConfig(name string, layerName string) string {
 resource "checkpoint_management_threat_rule" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
+    track_settings {
+        packet_capture = true
+    }
 }
 `, name, layerName)
 }

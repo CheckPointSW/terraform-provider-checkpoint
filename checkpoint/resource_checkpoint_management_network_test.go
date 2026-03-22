@@ -33,10 +33,10 @@ func TestAccCheckpointManagementNetwork_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointNetworkDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementNetworkConfig(objName, "10.20.0.0", 24),
+				Config: testAccManagementNetworkConfig(objName, "10.21.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointNetworkExists(resourceName, &network),
-					testAccCheckCheckpointNetworkAttributes(&network, objName, "10.20.0.0", 24),
+					testAccCheckCheckpointNetworkAttributes(&network, objName, "10.21.0.0", 24),
 				),
 			},
 		},

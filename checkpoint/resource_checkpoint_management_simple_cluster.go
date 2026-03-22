@@ -2096,7 +2096,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 			natSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat_settings.0.auto_rule"); ok {
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
 				natSettingsPayload["auto-rule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
@@ -2513,10 +2513,10 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 			firewallSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("firewall_settings.0.auto_calculate_connections_hash_table_size_and_memory_pool"); ok {
+			if v, ok := d.GetOkExists("firewall_settings.0.auto_calculate_connections_hash_table_size_and_memory_pool"); ok {
 				firewallSettingsPayload["auto-calculate-connections-hash-table-size-and-memory-pool"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall_settings.0.auto_maximum_limit_for_concurrent_connections"); ok {
+			if v, ok := d.GetOkExists("firewall_settings.0.auto_maximum_limit_for_concurrent_connections"); ok {
 				firewallSettingsPayload["auto-maximum-limit-for-concurrent-connections"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall_settings.0.connections_hash_size"); ok {
@@ -2701,10 +2701,10 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 					allocateIpAddressFromPayload := make(map[string]interface{})
 
-					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.radius_server"); ok {
+					if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.radius_server"); ok {
 						allocateIpAddressFromPayload["radius-server"] = strconv.FormatBool(v.(bool))
 					}
-					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.use_allocate_method"); ok {
+					if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.use_allocate_method"); ok {
 						allocateIpAddressFromPayload["use-allocate-method"] = strconv.FormatBool(v.(bool))
 					}
 					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.allocate_method"); ok {
@@ -2726,19 +2726,19 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 						optionalParametersPayload := make(map[string]interface{})
 
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_dns_server"); ok {
 							optionalParametersPayload["use-primary-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.primary_dns_server"); ok {
 							optionalParametersPayload["primary-dns-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_dns_server"); ok {
 							optionalParametersPayload["use-first-backup-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.first_backup_dns_server"); ok {
 							optionalParametersPayload["first-backup-dns-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_dns_server"); ok {
 							optionalParametersPayload["use-second-backup-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.second_backup_dns_server"); ok {
@@ -2747,19 +2747,19 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.dns_suffixes"); ok {
 							optionalParametersPayload["dns-suffixes"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_wins_server"); ok {
 							optionalParametersPayload["use-primary-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.primary_wins_server"); ok {
 							optionalParametersPayload["primary-wins-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_wins_server"); ok {
 							optionalParametersPayload["use-first-backup-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.first_backup_wins_server"); ok {
 							optionalParametersPayload["first-backup-wins-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_wins_server"); ok {
 							optionalParametersPayload["use-second-backup-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.second_backup_wins_server"); ok {
@@ -2772,10 +2772,10 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 					}
 					officeModePayload["allocate-ip-address-from"] = allocateIpAddressFromPayload
 				}
-				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.support_multiple_interfaces"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.support_multiple_interfaces"); ok {
 					officeModePayload["support-multiple-interfaces"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.perform_anti_spoofing"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.perform_anti_spoofing"); ok {
 					officeModePayload["perform-anti-spoofing"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.anti_spoofing_additional_addresses"); ok {
@@ -2787,7 +2787,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 				remoteAccessPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_l2tp"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_l2tp"); ok {
 					remoteAccessPayload["support-l2tp"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.l2tp_auth_method"); ok {
@@ -2796,16 +2796,16 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.l2tp_certificate"); ok {
 					remoteAccessPayload["l2tp-certificate"] = v.(string)
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.allow_vpn_clients_to_route_traffic"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.allow_vpn_clients_to_route_traffic"); ok {
 					remoteAccessPayload["allow-vpn-clients-to-route-traffic"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_nat_traversal_mechanism"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_nat_traversal_mechanism"); ok {
 					remoteAccessPayload["support-nat-traversal-mechanism"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.nat_traversal_service"); ok {
 					remoteAccessPayload["nat-traversal-service"] = v.(string)
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_visitor_mode"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_visitor_mode"); ok {
 					remoteAccessPayload["support-visitor-mode"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.visitor_mode_service"); ok {
@@ -2900,7 +2900,7 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain"); ok {
 				vpnSettingsPayload["vpn-domain"] = v.(string)
 			}
-			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
+			if v, ok := d.GetOkExists("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
 				vpnSettingsPayload["vpn-domain-exclude-external-ip-addresses"] = v.(bool)
 			}
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_type"); ok {

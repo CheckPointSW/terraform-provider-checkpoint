@@ -40,13 +40,17 @@ func testAccDataSourceManagementThreatExceptionConfig(name string, layerName str
 resource "checkpoint_management_threat_rule" "threat_rule" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 
 resource "checkpoint_management_threat_exception" "threat_exception" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	rule_name = "${checkpoint_management_threat_rule.threat_rule.name}"
 }
 

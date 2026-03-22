@@ -621,7 +621,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 					if v, _ = defaultJson["track"]; v != nil {
 						defaultState["track"] = v
 					}
-					overrideState["default"] = defaultState
+					overrideState["default"] = []interface{}{defaultState}
 				}
 
 				if v, _ := overridesJson["final"]; v != nil {
@@ -636,7 +636,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 					if v, _ = finalJson["track"]; v != nil {
 						finalState["track"] = v
 					}
-					overrideState["final"] = finalState
+					overrideState["final"] = []interface{}{finalState}
 				}
 				overridesListState = append(overridesListState, overrideState)
 			}

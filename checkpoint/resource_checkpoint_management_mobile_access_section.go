@@ -95,7 +95,7 @@ func createManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				mobileAccessSection["position"] = "top" // entire rule-base
 			} else {
@@ -103,15 +103,15 @@ func createManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			mobileAccessSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			mobileAccessSection["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				mobileAccessSection["position"] = "bottom" // entire rule-base
 			} else {
@@ -216,7 +216,7 @@ func updateManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					mobileAccessSection["new-position"] = "top" // entire rule-base
 				} else {
@@ -224,15 +224,15 @@ func updateManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				mobileAccessSection["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				mobileAccessSection["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					mobileAccessSection["new-position"] = "bottom" // entire rule-base
 				} else {

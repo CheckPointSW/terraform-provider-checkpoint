@@ -270,7 +270,7 @@ func readManagementIfMapServer(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := ifMapServer["host"]; v != nil {
-		_ = d.Set("host", v)
+		_ = d.Set("host", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := ifMapServer["path"]; v != nil {

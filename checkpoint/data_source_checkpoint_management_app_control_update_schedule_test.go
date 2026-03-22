@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementAppControlUpdateSchedule_basic(t *test
 			{
 				Config: testAccDataSourceManagementAppControlUpdateScheduleConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

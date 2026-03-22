@@ -105,13 +105,17 @@ func testAccManagementThreatExceptionConfig(name string, layerName string, threa
 resource "checkpoint_management_threat_rule" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 
 resource "checkpoint_management_threat_exception" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	rule_name = "${checkpoint_management_threat_rule.test.name}"
 }
 `, threatRuleName, layerName, name, layerName)

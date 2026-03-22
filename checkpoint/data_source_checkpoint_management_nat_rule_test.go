@@ -39,7 +39,9 @@ func testAccDataSourceManagementNatRuleConfig(name string, packageName string) s
 resource "checkpoint_management_nat_rule" "test" {
 	name = "%s"
     package = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 
 data "checkpoint_management_nat_rule" "test_rule" {

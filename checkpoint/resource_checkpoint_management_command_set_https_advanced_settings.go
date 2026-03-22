@@ -198,13 +198,13 @@ func createManagementSetHttpsAdvancedSettings(d *schema.ResourceData, m interfac
 
 			serverCertificateValidationActionsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("server_certificate_validation_actions.0.block_expired"); ok {
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_expired"); ok {
 				serverCertificateValidationActionsPayload["block-expired"] = v.(bool)
 			}
-			if v, ok := d.GetOk("server_certificate_validation_actions.0.block_revoked"); ok {
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_revoked"); ok {
 				serverCertificateValidationActionsPayload["block-revoked"] = v.(bool)
 			}
-			if v, ok := d.GetOk("server_certificate_validation_actions.0.block_untrusted"); ok {
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_untrusted"); ok {
 				serverCertificateValidationActionsPayload["block-untrusted"] = v.(bool)
 			}
 			if v, ok := d.GetOk("server_certificate_validation_actions.0.track_errors"); ok {

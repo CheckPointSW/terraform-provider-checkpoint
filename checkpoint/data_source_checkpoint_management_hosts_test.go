@@ -30,7 +30,7 @@ func TestAccDataSourceCheckpointManagementShowHosts_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementShowHostsConfig(1, hostName, ipv4Address),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointShowHosts(dataSourceShowHosts, &showHostsQuery),
+					testAccCheckCheckpointShowHosts(dataSourceShowHosts, &showHostsQuery, hostName),
 					testAccCheckCheckpointShowHostsAttributes(&showHostsQuery, hostName, ipv4Address),
 				),
 			},
@@ -38,7 +38,7 @@ func TestAccDataSourceCheckpointManagementShowHosts_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCheckpointShowHosts(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointShowHosts(resourceTfName string, res *map[string]interface{}, hostName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		rs, ok := s.RootModule().Resources[resourceTfName]
@@ -51,7 +51,7 @@ func testAccCheckCheckpointShowHosts(resourceTfName string, res *map[string]inte
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-hosts", map[string]interface{}{"filter": "host1", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
+		response, _ := client.ApiCall("show-hosts", map[string]interface{}{"filter": hostName, "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
 			return fmt.Errorf(response.ErrorMsg)
 		}

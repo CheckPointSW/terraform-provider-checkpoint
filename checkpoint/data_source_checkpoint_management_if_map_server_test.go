@@ -11,7 +11,7 @@ import (
 func TestAccDataSourceCheckpointManagementIfMapServer_basic(t *testing.T) {
 
 	objName := "tfTestManagementDataIfMapServer_" + acctest.RandString(6)
-	resourceName := "checkpoint_management_if_map_server.test"
+	resourceName := "checkpoint_management_if_map_server.test1"
 	dataSourceName := "data.checkpoint_management_if_map_server.data_if_map_server"
 	hostName := "tfTestManagementHost_" + acctest.RandString(6)
 	version := "2.0"
@@ -50,6 +50,7 @@ func testAccDataSourceManagementIfMapServerConfig(host string, name string, vers
 resource "checkpoint_management_host" "test_host" {
     name = "%s"
     ipv4_address = "6.6.6.6"
+    ignore_warnings = true
 }
 
 resource "checkpoint_management_if_map_server" "test1" {
@@ -65,7 +66,7 @@ resource "checkpoint_management_if_map_server" "test1" {
 }
 
 data "checkpoint_management_if_map_server" "data_if_map_server" {
-	name = "${checkpoint_management_if_map_server.test.name}"
+	name = "${checkpoint_management_if_map_server.test1.name}"
 }
 `, host, name, version, port, path)
 }

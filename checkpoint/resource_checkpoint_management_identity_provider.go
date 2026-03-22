@@ -203,7 +203,7 @@ func readManagementIdentityProvider(d *schema.ResourceData, m interface{}) error
 	}
 
 	if v := identityProvider["gateway"]; v != nil {
-		_ = d.Set("gateway", v)
+		_ = d.Set("gateway", v.(map[string]interface{})["name"].(string))
 	}
 
 	if d.Get("service").(string) != "" {

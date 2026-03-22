@@ -3,6 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
@@ -17,6 +18,14 @@ func resourceManagementSimpleGateway() *schema.Resource {
 		Delete: deleteManagementSimpleGateway,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementSimpleGatewayV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementSimpleGatewayStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -1190,6 +1199,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 						},
 						"override_global_settings": {
 							Type:        schema.TypeList,
+							MaxItems:    1,
 							Optional:    true,
 							Description: "override global settings object.",
 							Elem: &schema.Resource{
@@ -1201,6 +1211,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 									},
 									"website_categorization": {
 										Type:        schema.TypeList,
+										MaxItems:    1,
 										Optional:    true,
 										Description: "Website categorization object.",
 										Elem: &schema.Resource{
@@ -1453,6 +1464,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 			},
 			"logs_settings": {
 				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
@@ -1694,6 +1706,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 						},
 						"office_mode": {
 							Type:        schema.TypeList,
+							MaxItems:    1,
 							Optional:    true,
 							Description: "Office Mode. Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to the Mobile Access Software Blade clients.",
 							Elem: &schema.Resource{
@@ -2218,7 +2231,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 			natSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("nat_settings.0.auto_rule"); ok {
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
 				natSettingsPayload["auto-rule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
@@ -2279,8 +2292,20 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.allow_access_from"); ok {
 					accessibilityPayload["allow-access-from"] = v.(string)
 				}
-				if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings"); ok {
-					accessibilityPayload["internal-access-settings"] = v
+				if _, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings"); ok {
+
+					internalAccessSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.undefined"); ok {
+						internalAccessSettingsPayload["undefined"] = v.(bool)
+					}
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.dmz"); ok {
+						internalAccessSettingsPayload["dmz"] = v.(bool)
+					}
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.vpn"); ok {
+						internalAccessSettingsPayload["vpn"] = v.(bool)
+					}
+					accessibilityPayload["internal-access-settings"] = internalAccessSettingsPayload
 				}
 				platformPortalSettingsPayload["accessibility"] = accessibilityPayload
 			}
@@ -2355,8 +2380,20 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.allow_access_from"); ok {
 					accessibilityPayload["allow-access-from"] = v.(string)
 				}
-				if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.internal_access_settings"); ok {
-					accessibilityPayload["internal-access-settings"] = v
+				if _, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings"); ok {
+
+					internalAccessSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.undefined"); ok {
+						internalAccessSettingsPayload["undefined"] = v.(bool)
+					}
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.dmz"); ok {
+						internalAccessSettingsPayload["dmz"] = v.(bool)
+					}
+					if v, ok := d.GetOk("platform_portal_settings.0.accessibility.0.internal_access_settings.0.vpn"); ok {
+						internalAccessSettingsPayload["vpn"] = v.(bool)
+					}
+					accessibilityPayload["internal-access-settings"] = internalAccessSettingsPayload
 				}
 				usercheckPortalSettingsPayload["accessibility"] = accessibilityPayload
 			}
@@ -2613,10 +2650,10 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 			firewallSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("firewall_settings.0.auto_calculate_connections_hash_table_size_and_memory_pool"); ok {
+			if v, ok := d.GetOkExists("firewall_settings.0.auto_calculate_connections_hash_table_size_and_memory_pool"); ok {
 				firewallSettingsPayload["auto-calculate-connections-hash-table-size-and-memory-pool"] = v.(bool)
 			}
-			if v, ok := d.GetOk("firewall_settings.0.auto_maximum_limit_for_concurrent_connections"); ok {
+			if v, ok := d.GetOkExists("firewall_settings.0.auto_maximum_limit_for_concurrent_connections"); ok {
 				firewallSettingsPayload["auto-maximum-limit-for-concurrent-connections"] = v.(bool)
 			}
 			if v, ok := d.GetOk("firewall_settings.0.connections_hash_size"); ok {
@@ -2801,10 +2838,10 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 					allocateIpAddressFromPayload := make(map[string]interface{})
 
-					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.radius_server"); ok {
+					if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.radius_server"); ok {
 						allocateIpAddressFromPayload["radius-server"] = strconv.FormatBool(v.(bool))
 					}
-					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.use_allocate_method"); ok {
+					if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.use_allocate_method"); ok {
 						allocateIpAddressFromPayload["use-allocate-method"] = strconv.FormatBool(v.(bool))
 					}
 					if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.allocate_method"); ok {
@@ -2826,19 +2863,19 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 						optionalParametersPayload := make(map[string]interface{})
 
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_dns_server"); ok {
 							optionalParametersPayload["use-primary-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.primary_dns_server"); ok {
 							optionalParametersPayload["primary-dns-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_dns_server"); ok {
 							optionalParametersPayload["use-first-backup-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.first_backup_dns_server"); ok {
 							optionalParametersPayload["first-backup-dns-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_dns_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_dns_server"); ok {
 							optionalParametersPayload["use-second-backup-dns-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.second_backup_dns_server"); ok {
@@ -2847,19 +2884,19 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.dns_suffixes"); ok {
 							optionalParametersPayload["dns-suffixes"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_primary_wins_server"); ok {
 							optionalParametersPayload["use-primary-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.primary_wins_server"); ok {
 							optionalParametersPayload["primary-wins-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_first_backup_wins_server"); ok {
 							optionalParametersPayload["use-first-backup-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.first_backup_wins_server"); ok {
 							optionalParametersPayload["first-backup-wins-server"] = v.(string)
 						}
-						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_wins_server"); ok {
+						if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.use_second_backup_wins_server"); ok {
 							optionalParametersPayload["use-second-backup-wins-server"] = strconv.FormatBool(v.(bool))
 						}
 						if v, ok := d.GetOk("vpn_settings.0.office_mode.0.allocate_ip_address_from.0.optional_parameters.0.second_backup_wins_server"); ok {
@@ -2872,10 +2909,10 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 					}
 					officeModePayload["allocate-ip-address-from"] = allocateIpAddressFromPayload
 				}
-				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.support_multiple_interfaces"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.support_multiple_interfaces"); ok {
 					officeModePayload["support-multiple-interfaces"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.perform_anti_spoofing"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.office_mode.0.perform_anti_spoofing"); ok {
 					officeModePayload["perform-anti-spoofing"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.office_mode.0.anti_spoofing_additional_addresses"); ok {
@@ -2887,7 +2924,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 				remoteAccessPayload := make(map[string]interface{})
 
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_l2tp"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_l2tp"); ok {
 					remoteAccessPayload["support-l2tp"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.l2tp_auth_method"); ok {
@@ -2896,16 +2933,16 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.l2tp_certificate"); ok {
 					remoteAccessPayload["l2tp-certificate"] = v.(string)
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.allow_vpn_clients_to_route_traffic"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.allow_vpn_clients_to_route_traffic"); ok {
 					remoteAccessPayload["allow-vpn-clients-to-route-traffic"] = strconv.FormatBool(v.(bool))
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_nat_traversal_mechanism"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_nat_traversal_mechanism"); ok {
 					remoteAccessPayload["support-nat-traversal-mechanism"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.nat_traversal_service"); ok {
 					remoteAccessPayload["nat-traversal-service"] = v.(string)
 				}
-				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.support_visitor_mode"); ok {
+				if v, ok := d.GetOkExists("vpn_settings.0.remote_access.0.support_visitor_mode"); ok {
 					remoteAccessPayload["support-visitor-mode"] = strconv.FormatBool(v.(bool))
 				}
 				if v, ok := d.GetOk("vpn_settings.0.remote_access.0.visitor_mode_service"); ok {
@@ -2959,13 +2996,13 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 						internalAccessSettingsPayload := make(map[string]interface{})
 
 						if v, ok := d.GetOk("vpn_settings.0.saml_portal_settings.0.accessibility.0.internal_access_settings.0.undefined"); ok {
-							internalAccessSettingsPayload["undefined"] = strconv.FormatBool(v.(bool))
+							internalAccessSettingsPayload["undefined"] = v.(bool)
 						}
 						if v, ok := d.GetOk("vpn_settings.0.saml_portal_settings.0.accessibility.0.internal_access_settings.0.dmz"); ok {
-							internalAccessSettingsPayload["dmz"] = strconv.FormatBool(v.(bool))
+							internalAccessSettingsPayload["dmz"] = v.(bool)
 						}
 						if v, ok := d.GetOk("vpn_settings.0.saml_portal_settings.0.accessibility.0.internal_access_settings.0.vpn"); ok {
-							internalAccessSettingsPayload["vpn"] = strconv.FormatBool(v.(bool))
+							internalAccessSettingsPayload["vpn"] = v.(bool)
 						}
 						accessibilityPayload["internal-access-settings"] = internalAccessSettingsPayload
 					}
@@ -3000,7 +3037,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain"); ok {
 				vpnSettingsPayload["vpn-domain"] = v.(string)
 			}
-			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
+			if v, ok := d.GetOkExists("vpn_settings.0.vpn_domain_exclude_external_ip_addresses"); ok {
 				vpnSettingsPayload["vpn-domain-exclude-external-ip-addresses"] = v.(bool)
 			}
 			if v, ok := d.GetOk("vpn_settings.0.vpn_domain_type"); ok {
@@ -3056,7 +3093,7 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 
 			logsSettingsPayload := make(map[string]interface{})
 
-			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.alert_when_free_disk_space_below"); ok {
 				logsSettingsPayload["alert-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below_threshold"); ok {
@@ -3065,43 +3102,43 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			if v, ok := d.GetOk("logs_settings.0.alert_when_free_disk_space_below_type"); ok {
 				logsSettingsPayload["alert-when-free-disk-space-below-type"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.before_delete_keep_logs_from_the_last_days"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.before_delete_keep_logs_from_the_last_days"); ok {
 				logsSettingsPayload["before-delete-keep-logs-from-the-last-days"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.before_delete_keep_logs_from_the_last_days_threshold"); ok {
 				logsSettingsPayload["before-delete-keep-logs-from-the-last-days-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.before_delete_run_script"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.before_delete_run_script"); ok {
 				logsSettingsPayload["before-delete-run-script"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.before_delete_run_script_command"); ok {
 				logsSettingsPayload["before-delete-run-script-command"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.delete_index_files_older_than_days"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.delete_index_files_older_than_days"); ok {
 				logsSettingsPayload["delete-index-files-older-than-days"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.delete_index_files_older_than_days_threshold"); ok {
 				logsSettingsPayload["delete-index-files-older-than-days-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.delete_index_files_when_index_size_above"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.delete_index_files_when_index_size_above"); ok {
 				logsSettingsPayload["delete-index-files-when-index-size-above"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.delete_index_files_when_index_size_above_threshold"); ok {
 				logsSettingsPayload["delete-index-files-when-index-size-above-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.delete_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.delete_when_free_disk_space_below"); ok {
 				logsSettingsPayload["delete-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.delete_when_free_disk_space_below_threshold"); ok {
 				logsSettingsPayload["delete-when-free-disk-space-below-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.detect_new_citrix_ica_application_names"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.detect_new_citrix_ica_application_names"); ok {
 				logsSettingsPayload["detect-new-citrix-ica-application-names"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.distribute_logs_between_all_active_servers"); ok {
 				logsSettingsPayload["distribute-logs-between-all-active-servers"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.forward_logs_to_log_server"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.forward_logs_to_log_server"); ok {
 				logsSettingsPayload["forward-logs-to-log-server"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.forward_logs_to_log_server_name"); ok {
@@ -3113,10 +3150,10 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			if v, ok := d.GetOk("logs_settings.0.free_disk_space_metrics"); ok {
 				logsSettingsPayload["free-disk-space-metrics"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.perform_log_rotate_before_log_forwarding"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.perform_log_rotate_before_log_forwarding"); ok {
 				logsSettingsPayload["perform-log-rotate-before-log-forwarding"] = v.(bool)
 			}
-			if v, ok := d.GetOk("logs_settings.0.reject_connections_when_free_disk_space_below_threshold"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.reject_connections_when_free_disk_space_below_threshold"); ok {
 				logsSettingsPayload["reject-connections-when-free-disk-space-below-threshold"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.reserve_for_packet_capture_metrics"); ok {
@@ -3125,25 +3162,25 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 			if v, ok := d.GetOk("logs_settings.0.reserve_for_packet_capture_threshold"); ok {
 				logsSettingsPayload["reserve-for-packet-capture-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.rotate_log_by_file_size"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.rotate_log_by_file_size"); ok {
 				logsSettingsPayload["rotate-log-by-file-size"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.rotate_log_file_size_threshold"); ok {
 				logsSettingsPayload["rotate-log-file-size-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.rotate_log_on_schedule"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.rotate_log_on_schedule"); ok {
 				logsSettingsPayload["rotate-log-on-schedule"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.rotate_log_schedule_name"); ok {
 				logsSettingsPayload["rotate-log-schedule-name"] = v.(string)
 			}
-			if v, ok := d.GetOk("logs_settings.0.stop_logging_when_free_disk_space_below"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.stop_logging_when_free_disk_space_below"); ok {
 				logsSettingsPayload["stop-logging-when-free-disk-space-below"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.stop_logging_when_free_disk_space_below_threshold"); ok {
 				logsSettingsPayload["stop-logging-when-free-disk-space-below-threshold"] = v.(int)
 			}
-			if v, ok := d.GetOk("logs_settings.0.turn_on_qos_logging"); ok {
+			if v, ok := d.GetOkExists("logs_settings.0.turn_on_qos_logging"); ok {
 				logsSettingsPayload["turn-on-qos-logging"] = v.(bool)
 			}
 			if v, ok := d.GetOk("logs_settings.0.update_account_log_every"); ok {
@@ -3573,8 +3610,21 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := accessibilityMap["allow-access-from"]; v != nil {
 						accessibilityMapToReturn["allow_access_from"] = v
 					}
-					if v, _ := accessibilityMap["internal-access-settings"]; v != nil {
-						accessibilityMapToReturn["internal_access_settings"] = v
+					if v := accessibilityMap["internal-access-settings"]; v != nil {
+
+						internalAccessSettingsMap := v.(map[string]interface{})
+						internalAccessSettingsMapToReturn := make(map[string]interface{})
+
+						if v, _ := internalAccessSettingsMap["undefined"]; v != nil {
+							internalAccessSettingsMapToReturn["undefined"] = v
+						}
+						if v, _ := internalAccessSettingsMap["dmz"]; v != nil {
+							internalAccessSettingsMapToReturn["dmz"] = v
+						}
+						if v, _ := internalAccessSettingsMap["vpn"]; v != nil {
+							internalAccessSettingsMapToReturn["vpn"] = v
+						}
+						accessibilityMapToReturn["internal_access_settings"] = []interface{}{internalAccessSettingsMapToReturn}
 					}
 					platformPortalSettingsMapToReturn["accessibility"] = []interface{}{accessibilityMapToReturn}
 				}
@@ -3660,8 +3710,21 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := accessibilityMap["allow-access-from"]; v != nil {
 						accessibilityMapToReturn["allow_access_from"] = v
 					}
-					if v, _ := accessibilityMap["internal-access-settings"]; v != nil {
-						accessibilityMapToReturn["internal_access_settings"] = v
+					if v := accessibilityMap["internal-access-settings"]; v != nil {
+
+						internalAccessSettingsMap := v.(map[string]interface{})
+						internalAccessSettingsMapToReturn := make(map[string]interface{})
+
+						if v, _ := internalAccessSettingsMap["undefined"]; v != nil {
+							internalAccessSettingsMapToReturn["undefined"] = v
+						}
+						if v, _ := internalAccessSettingsMap["dmz"]; v != nil {
+							internalAccessSettingsMapToReturn["dmz"] = v
+						}
+						if v, _ := internalAccessSettingsMap["vpn"]; v != nil {
+							internalAccessSettingsMapToReturn["vpn"] = v
+						}
+						accessibilityMapToReturn["internal_access_settings"] = []interface{}{internalAccessSettingsMapToReturn}
 					}
 					usercheckPortalSettingsMapToReturn["accessibility"] = []interface{}{accessibilityMapToReturn}
 				}
@@ -3695,7 +3758,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					interfaceState["ipv4_address"] = v
 				}
 				if v, _ := interfaceJson["ipv4-mask-length"]; v != nil {
-					interfaceState["ipv4_mask_length"] = v
+					interfaceState["ipv4_mask_length"] = strconv.Itoa(int(math.Round(v.(float64))))
 				}
 				if v, _ := interfaceJson["ipv4-network-mask"]; v != nil {
 					interfaceState["ipv4_network_mask"] = v
@@ -3704,7 +3767,7 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					interfaceState["ipv6_address"] = v
 				}
 				if v, _ := interfaceJson["ipv6-mask-length"]; v != nil {
-					interfaceState["ipv6_mask_length"] = v
+					interfaceState["ipv6_mask_length"] = strconv.Itoa(int(math.Round(v.(float64))))
 				}
 				if v, _ := interfaceJson["ipv6-network-mask"]; v != nil {
 					interfaceState["ipv6_network_mask"] = v
@@ -3946,11 +4009,11 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 					if v, _ := customModeMap["url-filtering"]; v != nil {
 						customModeMapToReturn["url_filtering"] = v.(string)
 					}
-					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+					websiteCategorizationMapToReturn["custom_mode"] = []interface{}{customModeMapToReturn}
 				}
-				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+				overrideGlobalMapToReturn["website_categorization"] = []interface{}{websiteCategorizationMapToReturn}
 			}
-			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+			applicationControlSettingsMapToReturn["override_global_settings"] = []interface{}{overrideGlobalMapToReturn}
 		}
 		if len(applicationControlSettingsMapToReturn) > 0 {
 			_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
@@ -4707,8 +4770,20 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 					if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.allow_access_from"); ok {
 						accessibilityPayload["allow-access-from"] = v.(string)
 					}
-					if v, ok := d.GetOk("usercheck_portal_settings.0.accessibility.0.internal_access_settings"); ok {
-						accessibilityPayload["internal-access-settings"] = v
+					if _, ok := d.GetOk("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings.0.accessibility.0.internal_access_settings"); ok {
+
+						internalAccessSettingsPayload := make(map[string]interface{})
+
+						if v, ok := d.GetOkExists("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings.0.accessibility.0.internal_access_settings.0.undefined"); ok {
+							internalAccessSettingsPayload["undefined"] = strconv.FormatBool(v.(bool))
+						}
+						if v, ok := d.GetOkExists("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings.0.accessibility.0.internal_access_settings.0.dmz"); ok {
+							internalAccessSettingsPayload["dmz"] = strconv.FormatBool(v.(bool))
+						}
+						if v, ok := d.GetOkExists("identity_awareness_settings.0.browser_based_authentication_settings.0.browser_based_authentication_portal_settings.0.accessibility.0.internal_access_settings.0.vpn"); ok {
+							internalAccessSettingsPayload["vpn"] = strconv.FormatBool(v.(bool))
+						}
+						accessibilityPayload["internal-access-settings"] = internalAccessSettingsPayload
 					}
 					usercheckPortalSettingsPayload["accessibility"] = accessibilityPayload
 				}
@@ -4784,13 +4859,13 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 				if _, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings"); ok {
 					topologySettings := make(map[string]interface{})
 
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.interface_leads_to_dmz"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.interface_leads_to_dmz"); ok {
 						topologySettings["interface-leads-to-dmz"] = v
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.ip_address_behind_this_interface"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.ip_address_behind_this_interface"); ok {
 						topologySettings["ip-address-behind-this-interface"] = v.(string)
 					}
-					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.specific_network"); ok {
+					if v, ok := d.GetOk("interfaces." + strconv.Itoa(i) + ".topology_settings.0.specific_network"); ok {
 						topologySettings["specific-network"] = v.(string)
 					}
 					interfacePayload["topology-settings"] = topologySettings

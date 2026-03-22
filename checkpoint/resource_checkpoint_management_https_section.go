@@ -94,16 +94,16 @@ func createManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
+		if _, ok := d.GetOk("position.0.top"); ok {
 			httpsSection["position"] = "top"
 		}
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			httpsSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			httpsSection["position"] = map[string]interface{}{"bottom": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
+		if _, ok := d.GetOk("position.0.bottom"); ok {
 			httpsSection["position"] = "bottom"
 		}
 	}

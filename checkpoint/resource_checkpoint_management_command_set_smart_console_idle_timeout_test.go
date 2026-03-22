@@ -9,7 +9,7 @@ import (
 
 func TestAccCheckpointManagementSmartConsoleIdleTimeout_basic(t *testing.T) {
 
-	commandName := "checkpoint_management_command_set_smart_console_idle_timeout.command_set_smart_console_idle_timeout"
+	commandName := "checkpoint_management_set_smart_console_idle_timeout.command_set_smart_console_idle_timeout"
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "web_api" {
@@ -34,7 +34,7 @@ func TestAccCheckpointManagementSmartConsoleIdleTimeout_basic(t *testing.T) {
 
 func testAccManagementSmartConsoleIdleTimeoutConfig() string {
 	return fmt.Sprintf(`
-resource "checkpoint_management_command_set_smart_console_idle_timeout" "command_set_smart_console_idle_timeout" {
+resource "checkpoint_management_set_smart_console_idle_timeout" "command_set_smart_console_idle_timeout" {
 	enabled = true
 	timeout_duration = 30
 }

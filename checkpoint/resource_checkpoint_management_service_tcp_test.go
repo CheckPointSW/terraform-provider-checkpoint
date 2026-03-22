@@ -105,6 +105,11 @@ func testAccManagementServiceTcpConfig(name string, port string) string {
 resource "checkpoint_management_service_tcp" "test" {
     name = "%s"
 	port = "%s"
+    aggressive_aging {
+        enable              = true
+        use_default_timeout = true
+        default_timeout     = 0
+    }
 }
 `, name, port)
 }

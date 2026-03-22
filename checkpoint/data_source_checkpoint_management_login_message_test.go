@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementLoginMessage_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementLoginMessageConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "show_message"),
 				),
 			},
 		},

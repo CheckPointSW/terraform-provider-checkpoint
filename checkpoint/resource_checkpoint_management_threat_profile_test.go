@@ -111,6 +111,12 @@ resource "checkpoint_management_threat_profile" "test" {
 	name = "%s"
 	active_protections_performance_impact = "%s"
 	active_protections_severity	 = "%s"
+	threat_extraction = true
+	zero_phishing = true
+	scan_malicious_links {
+		max_bytes = 5000000
+		max_links = 50
+	}
 }
 `, name, performanceImpact, protectionsSeverity)
 }

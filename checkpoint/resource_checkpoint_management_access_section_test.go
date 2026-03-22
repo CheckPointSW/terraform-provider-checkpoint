@@ -98,7 +98,9 @@ func testAccManagementAccessSectionConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_access_section" "test" {
         name = "%s"
-        position = {top = "top"}
+        position {
+            top = "top"
+        }
         layer = "network"
 }
 `, name)

@@ -39,7 +39,9 @@ func testAccDataSourceManagementHttpsSectionConfig(name string) string {
 resource "checkpoint_management_https_section" "https_section" {
         name = "%s"
 		layer = "Default Layer"
-        position = {top = "top"}
+        position {
+        top = "top"
+    }
 }
 
 data "checkpoint_management_data_https_section" "data_https_section" {

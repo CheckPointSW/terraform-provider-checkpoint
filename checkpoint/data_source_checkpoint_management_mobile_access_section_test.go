@@ -38,7 +38,9 @@ func testAccDataSourceManagementMobileAccessSectionConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_mobile_access_section" "test" {
   name = "%s"
-  position = {top = "top"}
+  position {
+        top = "top"
+    }
 
 }
 data "checkpoint_management_mobile_access_section" "data" {

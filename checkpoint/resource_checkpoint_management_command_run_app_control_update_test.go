@@ -23,7 +23,7 @@ func TestAccCheckpointManagementRunAppControlUpdate_basic(t *testing.T) {
 			{
 				Config: testAccManagementRunAppControlUpdateConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},

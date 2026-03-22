@@ -98,7 +98,9 @@ func testAccManagementMobileAccessProfileSectionConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_mobile_access_profile_section" "test" {
         name = "%s"
-        position = {top = "top"}
+        position {
+        top = "top"
+    }
 }
 `, name)
 }

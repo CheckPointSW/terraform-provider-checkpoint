@@ -405,22 +405,6 @@ func dataSourceManagementOpsecTrustedCaRead(d *schema.ResourceData, m interface{
 		_ = d.Set("comments", v)
 	}
 
-	if opsecTrustedCa["domains_to_process"] != nil {
-		domainsToProcessJson, ok := opsecTrustedCa["domains_to_process"].([]interface{})
-		if ok {
-			domainsToProcessIds := make([]string, 0)
-			if len(domainsToProcessJson) > 0 {
-				for _, domains_to_process := range domainsToProcessJson {
-					domains_to_process := domains_to_process.(map[string]interface{})
-					domainsToProcessIds = append(domainsToProcessIds, domains_to_process["name"].(string))
-				}
-			}
-			_ = d.Set("domains_to_process", domainsToProcessIds)
-		}
-	} else {
-		_ = d.Set("domains_to_process", nil)
-	}
-
 	if v := opsecTrustedCa["ignore-warnings"]; v != nil {
 		_ = d.Set("ignore_warnings", v)
 	}

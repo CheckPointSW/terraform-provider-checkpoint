@@ -98,7 +98,9 @@ func testAccManagementHttpsSectionConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_https_section" "test" {
         name = "%s"
-        position = {top = "top"}
+        position {
+        top = "top"
+    }
         layer = "Default Layer"
 }
 `, name)

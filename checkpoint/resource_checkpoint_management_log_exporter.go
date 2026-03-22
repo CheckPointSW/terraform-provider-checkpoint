@@ -293,7 +293,7 @@ func readManagementLogExporter(d *schema.ResourceData, m interface{}) error {
 			dataManipulationMapToReturn["format"] = v
 		}
 
-		_ = d.Set("attachments", []interface{}{dataManipulationMapToReturn})
+		_ = d.Set("data_manipulation", []interface{}{dataManipulationMapToReturn})
 	} else {
 		_ = d.Set("data_manipulation", nil)
 	}

@@ -26,7 +26,7 @@ func TestAccDataSourceCheckpointManagementSubrodinateCa_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementSubrodinateCaConfig(objName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(objName, "name", dataSourceShowObject, "name"),
+					resource.TestCheckResourceAttr(dataSourceShowObject, "name", objName),
 				),
 			},
 		},

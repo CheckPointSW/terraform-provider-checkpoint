@@ -99,6 +99,20 @@ func testAccManagementTimeConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_time" "test" {
         name = "%s"
+        start {
+            date = "01-Jan-1970"
+            time = "00:00"
+        }
+        end {
+            date = "01-Jan-1970"
+            time = "00:00"
+        }
+        recurrence {
+            pattern  = "Daily"
+            month    = "Any"
+            days     = []
+            weekdays = []
+        }
 }
 `, name)
 }

@@ -251,16 +251,16 @@ func createManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
+		if _, ok := d.GetOk("position.0.top"); ok {
 			httpsRule["position"] = "top"
 		}
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			httpsRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			httpsRule["position"] = map[string]interface{}{"bottom": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
+		if _, ok := d.GetOk("position.0.bottom"); ok {
 			httpsRule["position"] = "bottom"
 		}
 	}
@@ -361,7 +361,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["action"]; v != nil {
-		_ = d.Set("action", v)
+		_ = d.Set("action", v.(map[string]interface{})["name"].(string))
 	}
 
 	if httpsRule["blade"] != nil {
@@ -381,7 +381,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["certificate"]; v != nil {
-		_ = d.Set("certificate", v)
+		_ = d.Set("certificate", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := httpsRule["destination-negate"]; v != nil {
@@ -437,7 +437,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["track"]; v != nil {
-		_ = d.Set("track", v)
+		_ = d.Set("track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := httpsRule["comments"]; v != nil {
@@ -572,16 +572,16 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("position"); ok {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
+			if _, ok := d.GetOk("position.0.top"); ok {
 				httpsRule["new-position"] = "top"
 			}
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				httpsRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				httpsRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
+			if _, ok := d.GetOk("position.0.bottom"); ok {
 				httpsRule["new-position"] = "bottom"
 			}
 		}

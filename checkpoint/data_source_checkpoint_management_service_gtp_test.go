@@ -40,11 +40,11 @@ func testAccDataSourceManagementServiceGtpConfig(name string) string {
         version = "v2"
         reverse_service = true
         trace_management = true
- imsi_prefix = {
+ imsi_prefix {
     enable = true
     prefix = "123"
   }
-  interface_profile = {
+  interface_profile {
     profile = "Custom"
     custom_message_types = "32-35"
   }
@@ -52,15 +52,15 @@ func testAccDataSourceManagementServiceGtpConfig(name string) string {
     enable = true
     mode = 1
   }
-   ms_isdn= {
-    enable =  true
+  ms_isdn {
+    enable = true
     ms_isdn = "312"
   }
-  access_point_name ={
+  access_point_name {
     enable = true
     apn = "AccP2"
   }
-  apply_access_policy_on_user_traffic ={
+  apply_access_policy_on_user_traffic {
     enable = true
     add_imsi_field_to_log = true
   }
@@ -70,7 +70,7 @@ func testAccDataSourceManagementServiceGtpConfig(name string) string {
       types = "11-50"
     }
   }
- ldap_group = {
+  ldap_group {
     enable = true
     group = "ldap_group_1"
     according_to = "MS-ISDN"

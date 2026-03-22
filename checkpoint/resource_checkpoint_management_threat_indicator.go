@@ -379,7 +379,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error 
 			}
 			_ = d.Set("profile_overrides", profileOverridesListToReturn)
 		} else {
-			_ = d.Set("interfaces", profileOverridesList)
+			_ = d.Set("profile_overrides", nil)
 		}
 	} else {
 		_ = d.Set("profile_overrides", nil)

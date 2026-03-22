@@ -5,7 +5,6 @@ import (
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -255,13 +254,13 @@ func dataSourceManagementUserRead(d *schema.ResourceData, m interface{}) error {
 		encryptionMapToReturn := make(map[string]interface{})
 
 		if v, _ := encryptionMap["ike"]; v != nil {
-			encryptionMapToReturn["enable_ike"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_ike"] = v.(bool)
 		}
 		if v, _ := encryptionMap["public-key"]; v != nil {
-			encryptionMapToReturn["enable_public_key"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_public_key"] = v.(bool)
 		}
 		if v, _ := encryptionMap["shared-secret"]; v != nil {
-			encryptionMapToReturn["enable_shared_secret"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_shared_secret"] = v.(bool)
 		}
 
 		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
