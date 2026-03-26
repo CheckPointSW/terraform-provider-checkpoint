@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,6 +17,14 @@ func resourceManagementSimpleCluster() *schema.Resource {
 		Delete: deleteManagementSimpleCluster,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementSimpleClusterV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementSimpleClusterStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {

@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"log"
 	"math"
@@ -18,6 +19,14 @@ func resourceManagementTime() *schema.Resource {
 		Delete: deleteManagementTime,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementTimeV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementTimeStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {

@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -12,6 +13,14 @@ func resourceManagementSetIpsUpdateSchedule() *schema.Resource {
 		Create: createManagementSetIpsUpdateSchedule,
 		Read:   readManagementSetIpsUpdateSchedule,
 		Delete: deleteManagementSetIpsUpdateSchedule,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetIpsUpdateScheduleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetIpsUpdateScheduleStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"enabled": {
 				Type:        schema.TypeBool,

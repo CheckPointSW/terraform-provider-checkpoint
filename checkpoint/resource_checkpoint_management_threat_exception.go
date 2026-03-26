@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -27,6 +28,14 @@ func resourceManagementThreatException() *schema.Resource {
 				_ = d.Set(arr[1], arr[2]) // Set exception_group_uid or rule_uid
 				d.SetId(arr[3])
 				return []*schema.ResourceData{d}, nil
+			},
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementThreatExceptionV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementThreatExceptionStateUpgradeV0,
+				Version: 0,
 			},
 		},
 		Schema: map[string]*schema.Schema{

@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -13,6 +14,14 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 		Create: createManagementSetGlobalProperties,
 		Read:   readManagementSetGlobalProperties,
 		Delete: deleteManagementSetGlobalProperties,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetGlobalPropertiesV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetGlobalPropertiesStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"firewall": {
 				Type:        schema.TypeList,

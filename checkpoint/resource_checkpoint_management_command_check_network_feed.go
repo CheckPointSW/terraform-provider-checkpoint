@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"strconv"
 
@@ -14,6 +15,14 @@ func resourceManagementCheckNetworkFeed() *schema.Resource {
 		Create: createManagementCheckNetworkFeed,
 		Read:   readManagementCheckNetworkFeed,
 		Delete: deleteManagementCheckNetworkFeed,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandCheckNetworkFeedV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandCheckNetworkFeedStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"network_feed": {
 				Type:        schema.TypeList,

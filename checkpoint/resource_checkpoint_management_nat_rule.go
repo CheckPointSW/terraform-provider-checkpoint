@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -23,6 +24,14 @@ func resourceManagementNatRule() *schema.Resource {
 				_ = d.Set("package", arr[0])
 				d.SetId(arr[1])
 				return []*schema.ResourceData{d}, nil
+			},
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNatRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNatRuleStateUpgradeV0,
+				Version: 0,
 			},
 		},
 		Schema: map[string]*schema.Schema{

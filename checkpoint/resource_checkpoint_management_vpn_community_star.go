@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"log"
 	"strconv"
@@ -17,6 +18,14 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 		Delete: deleteManagementVpnCommunityStar,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementVpnCommunityStarV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementVpnCommunityStarStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {

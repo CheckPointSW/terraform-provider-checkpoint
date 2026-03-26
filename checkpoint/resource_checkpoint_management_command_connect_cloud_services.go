@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -13,6 +14,14 @@ func resourceManagementConnectCloudServices() *schema.Resource {
 		Create: createManagementConnectCloudServices,
 		Read:   readManagementConnectCloudServices,
 		Delete: deleteManagementConnectCloudServices,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandConnectCloudServicesV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandConnectCloudServicesStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"auth_token": {
 				Type:        schema.TypeString,

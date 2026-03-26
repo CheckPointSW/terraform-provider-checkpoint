@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -12,6 +13,14 @@ func resourceManagementVsxRunOperation() *schema.Resource {
 		Create: createManagementVsxRunOperation,
 		Read:   readManagementVsxRunOperation,
 		Delete: deleteManagementVsxRunOperation,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandVsxRunOperationV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandVsxRunOperationStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"operation": {
 				Type:        schema.TypeString,

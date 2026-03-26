@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"log"
 
@@ -16,6 +17,14 @@ func resourceManagementDomainPermissionsProfile() *schema.Resource {
 		Read:   readManagementDomainPermissionsProfile,
 		Update: updateManagementDomainPermissionsProfile,
 		Delete: deleteManagementDomainPermissionsProfile,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementDomainPermissionsProfileV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementDomainPermissionsProfileStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

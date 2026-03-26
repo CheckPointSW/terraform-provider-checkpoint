@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"log"
 	"strings"
@@ -24,6 +25,14 @@ func resourceManagementAccessRule() *schema.Resource {
 				_ = d.Set("layer", arr[0])
 				d.SetId(arr[1])
 				return []*schema.ResourceData{d}, nil
+			},
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementAccessRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementAccessRuleStateUpgradeV0,
+				Version: 0,
 			},
 		},
 		Schema: map[string]*schema.Schema{

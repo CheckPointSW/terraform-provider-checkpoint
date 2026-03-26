@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -15,6 +16,14 @@ func resourceDataCenterObject() *schema.Resource {
 		Read:   readManagementDataCenterObject,
 		Update: updateManagementDataCenterObject,
 		Delete: deleteManagementDataCenterObject,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementDataCenterObjectV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementDataCenterObjectStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"data_center_name": {
 				Type:        schema.TypeString,

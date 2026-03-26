@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -13,6 +14,14 @@ func resourceManagementNetworkProbe() *schema.Resource {
 		Read:   readManagementNetworkProbe,
 		Update: updateManagementNetworkProbe,
 		Delete: deleteManagementNetworkProbe,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNetworkProbeV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNetworkProbeStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

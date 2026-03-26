@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"strconv"
 
@@ -14,6 +15,14 @@ func resourceManagementCheckThreatIocFeed() *schema.Resource {
 		Create: createManagementCheckThreatIocFeed,
 		Read:   readManagementCheckThreatIocFeed,
 		Delete: deleteManagementCheckThreatIocFeed,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandCheckThreatIocFeedV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandCheckThreatIocFeedStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"ioc_feed": {
 				Type:        schema.TypeList,

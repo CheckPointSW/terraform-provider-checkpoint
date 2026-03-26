@@ -2,6 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"log"
 	"strings"
 
@@ -11,10 +12,18 @@ import (
 
 func resourceManagementUser() *schema.Resource {
 	return &schema.Resource{
-		Create: createManagementUser,
-		Read:   readManagementUser,
-		Update: updateManagementUser,
-		Delete: deleteManagementUser,
+		Create:        createManagementUser,
+		Read:          readManagementUser,
+		Update:        updateManagementUser,
+		Delete:        deleteManagementUser,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementUserV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementUserStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

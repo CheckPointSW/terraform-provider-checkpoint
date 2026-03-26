@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -11,6 +12,14 @@ func resourceManagementSetAppControlAdvancedSettings() *schema.Resource {
 		Create: createManagementSetAppControlAdvancedSettings,
 		Read:   readManagementSetAppControlAdvancedSettings,
 		Delete: deleteManagementSetAppControlAdvancedSettings,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetAppControlAdvancedSettingsV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetAppControlAdvancedSettingsStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"uid": {
 				Type:        schema.TypeString,

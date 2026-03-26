@@ -1,6 +1,7 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	"log"
 	"math"
@@ -17,6 +18,14 @@ func resourceManagementInteroperableDevice() *schema.Resource {
 		Read:   readManagementInteroperableDevice,
 		Update: updateManagementInteroperableDevice,
 		Delete: deleteManagementInteroperableDevice,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementInteroperableDeviceV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementInteroperableDeviceStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

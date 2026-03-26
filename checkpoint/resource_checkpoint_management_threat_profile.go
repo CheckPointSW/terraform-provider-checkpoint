@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 	"strconv"
 )
 
@@ -17,6 +17,14 @@ func resourceManagementThreatProfile() *schema.Resource {
 		Delete: deleteManagementThreatProfile,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementThreatProfileV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementThreatProfileStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
