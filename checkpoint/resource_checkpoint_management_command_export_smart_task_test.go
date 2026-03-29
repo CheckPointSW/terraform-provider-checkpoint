@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -37,8 +37,8 @@ resource "checkpoint_management_smart_task" "smart" {
 	name = "dummy"
 	enabled = true
 	trigger = "After Install Policy"
-	action = {
-		send_web_request = {
+	action {
+		send_web_request {
 			url = "https://demo.example.com/policy-installation-reports"
 			fingerprint = "3FDD902286DBF130EF4CEC7939EF81060AB0FEB6"
 		} 	

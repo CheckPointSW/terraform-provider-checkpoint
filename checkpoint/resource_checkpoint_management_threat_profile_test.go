@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -70,7 +70,7 @@ func testAccCheckCheckpointThreatProfileExists(resourceTfName string, res *map[s
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-threat-profile", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -111,6 +111,12 @@ resource "checkpoint_management_threat_profile" "test" {
 	name = "%s"
 	active_protections_performance_impact = "%s"
 	active_protections_severity	 = "%s"
+	threat_extraction = true
+	zero_phishing = true
+	scan_malicious_links {
+		max_bytes = 5000000
+		max_links = 50
+	}
 }
 `, name, performanceImpact, protectionsSeverity)
 }

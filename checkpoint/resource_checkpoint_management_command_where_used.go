@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementWhereUsed() *schema.Resource {
@@ -73,7 +73,7 @@ func createManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 
 	WhereUsedRes, _ := client.ApiCall("where-used", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !WhereUsedRes.Success {
-		return fmt.Errorf(WhereUsedRes.ErrorMsg)
+		return fmt.Errorf("%s", WhereUsedRes.ErrorMsg)
 	}
 
 	d.SetId("where-used-" + acctest.RandString(10))

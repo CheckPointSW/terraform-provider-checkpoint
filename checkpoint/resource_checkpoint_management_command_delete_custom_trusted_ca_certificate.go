@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteCustomTrustedCaCertificate() *schema.Resource {
@@ -64,7 +64,7 @@ func createManagementDeleteCustomTrustedCaCertificate(d *schema.ResourceData, m 
 
 	DeleteCustomTrustedCaCertificateRes, _ := client.ApiCall("delete-custom-trusted-ca-certificate", payload, client.GetSessionID(), true, false)
 	if !DeleteCustomTrustedCaCertificateRes.Success {
-		return fmt.Errorf(DeleteCustomTrustedCaCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteCustomTrustedCaCertificateRes.ErrorMsg)
 	}
 	d.SetId("delete-custom-trusted-ca-certificate-" + acctest.RandString(10))
 

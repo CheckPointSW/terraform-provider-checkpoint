@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -38,8 +38,6 @@ func testAccDataSourceManagementSimpleGatewayConfig(name string, ipv4 string) st
 resource "checkpoint_management_simple_gateway" "test" {
 	name = "%s"
 	ipv4_address = "%s"
-	version = "R81.20"
-	send_logs_to_server = ["ivory-main-take-323"]
 }
 
 data "checkpoint_management_simple_gateway" "simple_gateway" {

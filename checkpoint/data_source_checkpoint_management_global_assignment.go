@@ -2,9 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementGlobalAssignment() *schema.Resource {
@@ -34,7 +35,7 @@ func dataSourceManagementGlobalAssignment() *schema.Resource {
 				Computed: true,
 			},
 			"assignment_up_to_date": {
-				Type:     schema.TypeMap,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -107,10 +108,10 @@ func dataSourceManagementGlobalAssignmentRead(d *schema.ResourceData, m interfac
 
 	showGlobalAssignmentRes, err := client.ApiCall("show-global-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalAssignmentRes.Success {
-		return fmt.Errorf(showGlobalAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalAssignmentRes.ErrorMsg)
 	}
 
 	globalAssignment := showGlobalAssignmentRes.GetData()
@@ -126,18 +127,23 @@ func dataSourceManagementGlobalAssignmentRead(d *schema.ResourceData, m interfac
 		_ = d.Set("assignment_status", v)
 	}
 
-	if globalAssignment["assigment-up-to-date"] != nil {
-		assignmentUpToDateMap := globalAssignment["assigment-up-to-date"].(map[string]interface{})
+	if globalAssignment["assignment-up-to-date"] != nil {
+
+		assignmentUpToDateMap := globalAssignment["assignment-up-to-date"].(map[string]interface{})
+
 		assignmentUpToDateMapToReturn := make(map[string]interface{})
 
-		if v, _ := assignmentUpToDateMap["iso-8601"]; v != nil {
+		if v := assignmentUpToDateMap["iso-8601"]; v != nil {
 			assignmentUpToDateMapToReturn["iso_8601"] = v
 		}
-		if v, _ := assignmentUpToDateMap["posix"]; v != nil {
+		if v := assignmentUpToDateMap["posix"]; v != nil {
 			assignmentUpToDateMapToReturn["posix"] = v
 		}
 
-		_ = d.Set("assignment_up_to_date", assignmentUpToDateMapToReturn)
+		_ = d.Set("assignment_up_to_date", []interface{}{assignmentUpToDateMapToReturn})
+
+	} else {
+		_ = d.Set("assignment_up_to_date", nil)
 	}
 
 	if globalAssignment["dependent-domain"] != nil {

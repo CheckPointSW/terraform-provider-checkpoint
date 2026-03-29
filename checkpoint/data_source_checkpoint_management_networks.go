@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -110,7 +110,7 @@ func dataSourceManagementNetworks() *schema.Resource {
 							Description: "IPv4 network mask.",
 						},
 						"nat_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "NAT settings.",
 							Elem: &schema.Resource{
@@ -180,7 +180,7 @@ func dataSourceManagementNetworks() *schema.Resource {
 							Description: "Color of the object. Should be one of existing colors.",
 						},
 						"domain": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Information about the domain that holds the Object.",
 							Elem: &schema.Resource{
@@ -270,10 +270,10 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworksRes.Success {
-		return fmt.Errorf(showNetworksRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworksRes.ErrorMsg)
 	}
 
 	networks := showNetworksRes.GetData()
@@ -349,7 +349,7 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 					natSettingsMapToReturn := make(map[string]interface{})
 
 					if v, _ := natSettingsMap["auto-rule"]; v != nil {
-						natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+						natSettingsMapToReturn["auto_rule"] = v.(bool)
 					}
 
 					if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {
@@ -372,7 +372,7 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 						natSettingsMapToReturn["method"] = v
 					}
 
-					objectMapToAdd["nat_settings"] = natSettingsMapToReturn
+					objectMapToAdd["nat_settings"] = []interface{}{natSettingsMapToReturn}
 
 				} else {
 					objectMapToAdd["nat_settings"] = nil
@@ -423,7 +423,7 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 					if v := domainMap["domain-type"]; v != nil {
 						domainMapToAdd["domain_type"] = v
 					}
-					objectMapToAdd["domain"] = domainMapToAdd
+					objectMapToAdd["domain"] = []interface{}{domainMapToAdd}
 				}
 
 				if v := objectMap["icon"]; v != nil {

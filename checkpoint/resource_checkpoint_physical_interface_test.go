@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"log"
 	"os"
 	"testing"
@@ -64,7 +64,7 @@ func testAccCheckCheckpointPhysicalInterfaceExists(resourceTfName string, res *m
 
 		response, _ := client.ApiCall("show-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 		// init res with response data for next step (CheckAttributes)
 		*res = response.GetData()

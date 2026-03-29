@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -85,14 +85,14 @@ func dataManagementMobileAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 	showMobileAccessRuleRes, err := client.ApiCall("show-mobile-access-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessRuleRes.Success {
 		if objectNotFound(showMobileAccessRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessRuleRes.ErrorMsg)
 	}
 
 	mobileAccessRule := showMobileAccessRuleRes.GetData()

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteThreatProtections() *schema.Resource {
@@ -38,7 +38,7 @@ func createManagementDeleteThreatProtections(d *schema.ResourceData, m interface
 
 	DeleteThreatProtectionsRes, _ := client.ApiCall("delete-threat-protections", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteThreatProtectionsRes.Success {
-		return fmt.Errorf(DeleteThreatProtectionsRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteThreatProtectionsRes.ErrorMsg)
 	}
 
 	d.SetId("delete-threat-protections-" + acctest.RandString(10))

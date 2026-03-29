@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementBackupDomain() *schema.Resource {
@@ -48,7 +48,7 @@ func createManagementBackupDomain(d *schema.ResourceData, m interface{}) error {
 
 	BackupDomainRes, _ := client.ApiCall("backup-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !BackupDomainRes.Success {
-		return fmt.Errorf(BackupDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", BackupDomainRes.ErrorMsg)
 	}
 
 	d.SetId("backup-domain-" + acctest.RandString(10))

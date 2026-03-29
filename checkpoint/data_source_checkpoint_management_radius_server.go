@@ -3,10 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
-	"strconv"
 )
 
 func dataSourceManagementRadiusServer() *schema.Resource {
@@ -55,7 +53,7 @@ func dataSourceManagementRadiusServer() *schema.Resource {
 				Description: "The priority of the RADIUS Server in case it is a member of a RADIUS Group.",
 			},
 			"accounting": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Accounting settings.",
 				Elem: &schema.Resource{
@@ -111,10 +109,10 @@ func dataSourceManagementRadiusServerRead(d *schema.ResourceData, m interface{})
 
 	showRadiusServerRes, err := client.ApiCall("show-radius-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRadiusServerRes.Success {
-		return fmt.Errorf(showRadiusServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showRadiusServerRes.ErrorMsg)
 	}
 
 	radiusServer := showRadiusServerRes.GetData()
@@ -154,25 +152,19 @@ func dataSourceManagementRadiusServerRead(d *schema.ResourceData, m interface{})
 	}
 
 	if radiusServer["accounting"] != nil {
+
 		accountingMap := radiusServer["accounting"].(map[string]interface{})
 
 		accountingMapToReturn := make(map[string]interface{})
 
-		if v, _ := accountingMap["enable-ip-pool-management"]; v != nil {
-			accountingMapToReturn["enable_ip_pool_management"] = strconv.FormatBool(v.(bool))
+		if v := accountingMap["enable-ip-pool-management"]; v != nil {
+			accountingMapToReturn["enable_ip_pool_management"] = v
 		}
-
 		if v, _ := accountingMap["accounting-service"]; v != "" && v != nil {
-			accountingMapToReturn["accounting_service"] = v
+			accountingMapToReturn["accounting_service"] = v.(map[string]interface{})["name"].(string)
 		}
 
-		_, accountingInConf := d.GetOk("accounting")
-		defaultAccounting := map[string]interface{}{"enable_ip_pool_management": "false"}
-		if reflect.DeepEqual(defaultAccounting, accountingMapToReturn) && !accountingInConf {
-			_ = d.Set("accounting", map[string]interface{}{})
-		} else {
-			_ = d.Set("accounting", accountingMapToReturn)
-		}
+		_ = d.Set("accounting", []interface{}{accountingMapToReturn})
 
 	} else {
 		_ = d.Set("accounting", nil)

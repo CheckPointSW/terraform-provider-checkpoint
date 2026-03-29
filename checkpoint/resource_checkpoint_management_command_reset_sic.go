@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -45,7 +45,7 @@ func createManagementResetSic(d *schema.ResourceData, m interface{}) error {
 
 	ResetSicRes, _ := client.ApiCall("reset-sic", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !ResetSicRes.Success {
-		return fmt.Errorf(ResetSicRes.ErrorMsg)
+		return fmt.Errorf("%s", ResetSicRes.ErrorMsg)
 	}
 
 	d.SetId("reset-sic" + acctest.RandString(10))

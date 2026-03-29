@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -88,9 +88,9 @@ func createManagementDynamicGlobalNetworkObject(d *schema.ResourceData, m interf
 	addDynamicGlobalNetworkObjectRes, err := client.ApiCall("add-dynamic-global-network-object", dynamicGlobalNetworkObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDynamicGlobalNetworkObjectRes.Success {
 		if addDynamicGlobalNetworkObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(addDynamicGlobalNetworkObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", addDynamicGlobalNetworkObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDynamicGlobalNetworkObjectRes.GetData()["uid"].(string))
@@ -108,14 +108,14 @@ func readManagementDynamicGlobalNetworkObject(d *schema.ResourceData, m interfac
 
 	showDynamicGlobalNetworkObjectRes, err := client.ApiCall("show-dynamic-global-network-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDynamicGlobalNetworkObjectRes.Success {
 		if objectNotFound(showDynamicGlobalNetworkObjectRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDynamicGlobalNetworkObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showDynamicGlobalNetworkObjectRes.ErrorMsg)
 	}
 
 	dynamicGlobalNetworkObject := showDynamicGlobalNetworkObjectRes.GetData()
@@ -205,9 +205,9 @@ func updateManagementDynamicGlobalNetworkObject(d *schema.ResourceData, m interf
 	updateDynamicGlobalNetworkObjectRes, err := client.ApiCall("set-dynamic-global-network-object", dynamicGlobalNetworkObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDynamicGlobalNetworkObjectRes.Success {
 		if updateDynamicGlobalNetworkObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDynamicGlobalNetworkObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDynamicGlobalNetworkObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDynamicGlobalNetworkObject(d, m)
@@ -232,9 +232,9 @@ func deleteManagementDynamicGlobalNetworkObject(d *schema.ResourceData, m interf
 	deleteDynamicGlobalNetworkObjectRes, err := client.ApiCall("delete-dynamic-global-network-object", dynamicGlobalNetworkObjectPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDynamicGlobalNetworkObjectRes.Success {
 		if deleteDynamicGlobalNetworkObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDynamicGlobalNetworkObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDynamicGlobalNetworkObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -224,9 +224,9 @@ func createManagementAdministrator(d *schema.ResourceData, m interface{}) error 
 	addAdministratorRes, err := client.ApiCall("add-administrator", administrator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAdministratorRes.Success {
 		if addAdministratorRes.ErrorMsg != "" {
-			return fmt.Errorf(addAdministratorRes.ErrorMsg)
+			return fmt.Errorf("%s", addAdministratorRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAdministratorRes.GetData()["uid"].(string))
@@ -242,7 +242,7 @@ func readManagementAdministrator(d *schema.ResourceData, m interface{}) error {
 
 	showAdministratorRes, err := client.ApiCall("show-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAdministratorRes.Success {
 		// Handle delete resource from other clients
@@ -250,7 +250,7 @@ func readManagementAdministrator(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAdministratorRes.ErrorMsg)
+		return fmt.Errorf("%s", showAdministratorRes.ErrorMsg)
 	}
 
 	administrator := showAdministratorRes.GetData()
@@ -476,9 +476,9 @@ func updateManagementAdministrator(d *schema.ResourceData, m interface{}) error 
 	updateAdministratorRes, err := client.ApiCall("set-administrator", administrator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAdministratorRes.Success {
 		if updateAdministratorRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAdministratorRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAdministratorRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAdministrator(d, m)
@@ -501,9 +501,9 @@ func deleteManagementAdministrator(d *schema.ResourceData, m interface{}) error 
 	deleteAdministratorRes, err := client.ApiCall("delete-administrator", administratorPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAdministratorRes.Success {
 		if deleteAdministratorRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAdministratorRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAdministratorRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

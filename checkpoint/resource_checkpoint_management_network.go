@@ -1,12 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
-	"strconv"
 )
 
 func resourceManagementNetwork() *schema.Resource {
@@ -17,6 +16,14 @@ func resourceManagementNetwork() *schema.Resource {
 		Delete: deleteManagementNetwork,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNetworkV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNetworkStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -44,8 +51,14 @@ func resourceManagementNetwork() *schema.Resource {
 				Optional:    true,
 				Description: "IPv6 network mask length.",
 			},
+			"subnet_mask": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IPv4 network mask.",
+			},
 			"nat_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -145,29 +158,34 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 		network["mask-length6"] = val.(int)
 	}
 
-	if _, ok := d.GetOk("nat_settings"); ok {
+	if v, ok := d.GetOk("nat_settings"); ok {
 
-		res := make(map[string]interface{})
+		natSettingsList := v.([]interface{})
 
-		if v, ok := d.GetOk("nat_settings.auto_rule"); ok {
-			res["auto-rule"] = v
+		if len(natSettingsList) > 0 {
+
+			natSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
+				natSettingsPayload["auto-rule"] = v.(bool)
+			}
+			if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
+				natSettingsPayload["ipv4-address"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.ipv6_address"); ok {
+				natSettingsPayload["ipv6-address"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.hide_behind"); ok {
+				natSettingsPayload["hide-behind"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.install_on"); ok {
+				natSettingsPayload["install-on"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.method"); ok {
+				natSettingsPayload["method"] = v.(string)
+			}
+			network["nat-settings"] = natSettingsPayload
 		}
-		if v, ok := d.GetOk("nat_settings.ipv4_address"); ok {
-			res["ipv4-address"] = v.(string)
-		}
-		if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
-			res["ipv6-address"] = v.(string)
-		}
-		if v, ok := d.GetOk("nat_settings.hide_behind"); ok {
-			res["hide-behind"] = v.(string)
-		}
-		if v, ok := d.GetOk("nat_settings.install_on"); ok {
-			res["install-on"] = v.(string)
-		}
-		if v, ok := d.GetOk("nat_settings.method"); ok {
-			res["method"] = v.(string)
-		}
-		network["nat-settings"] = res
 	}
 
 	if val, ok := d.GetOk("tags"); ok {
@@ -195,9 +213,9 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	addNetworkRes, err := client.ApiCall("add-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNetworkRes.Success {
 		if addNetworkRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkRes.ErrorMsg)
+			return fmt.Errorf("%s", addNetworkRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
@@ -215,7 +233,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkRes.Success {
 		// Handle delete resource from other clients
@@ -223,7 +241,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkRes.ErrorMsg)
 	}
 
 	network := showNetworkRes.GetData()
@@ -270,38 +288,25 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := natSettingsMap["auto-rule"]; v != nil {
-			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
 		}
-
-		if v, _ := natSettingsMap["ipv4-address"]; v != "" && v != nil {
+		if v := natSettingsMap["ipv4-address"]; v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
 		}
-
-		if v, _ := natSettingsMap["ipv6-address"]; v != "" && v != nil {
+		if v := natSettingsMap["ipv6-address"]; v != nil {
 			natSettingsMapToReturn["ipv6_address"] = v
 		}
-
-		if v, _ := natSettingsMap["hide-behind"]; v != nil {
+		if v := natSettingsMap["hide-behind"]; v != nil {
 			natSettingsMapToReturn["hide_behind"] = v
 		}
-
-		if v, _ := natSettingsMap["install-on"]; v != nil {
+		if v := natSettingsMap["install-on"]; v != nil {
 			natSettingsMapToReturn["install_on"] = v
 		}
-
-		if v, _ := natSettingsMap["method"]; v != nil {
+		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
-
-		_, natSettingInConf := d.GetOk("nat_settings")
-		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
-
-		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingInConf {
-			_ = d.Set("nat_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("nat_settings", natSettingsMapToReturn)
-		}
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {
 		_ = d.Set("nat_settings", nil)
@@ -361,30 +366,34 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("nat_settings"); ok {
 
-		if _, ok := d.GetOk("nat_settings"); ok {
+		if v, ok := d.GetOk("nat_settings"); ok {
 
-			res := make(map[string]interface{})
+			natSettingsList := v.([]interface{})
 
-			if v, ok := d.GetOk("nat_settings.auto_rule"); ok {
-				res["auto-rule"] = v
-			}
-			if v, ok := d.GetOk("nat_settings.ipv4_address"); ok {
-				res["ipv4-address"] = v.(string)
-			}
-			if v, ok := d.GetOk("nat_settings.ipv6_address"); ok {
-				res["ipv6-address"] = v.(string)
-			}
-			if v, ok := d.GetOk("nat_settings.hide_behind"); ok {
-				res["hide-behind"] = v
-			}
-			if v, ok := d.GetOk("nat_settings.install_on"); ok {
-				res["install-on"] = v
-			}
-			if v, ok := d.GetOk("nat_settings.method"); ok {
-				res["method"] = v
-			}
+			if len(natSettingsList) > 0 {
 
-			network["nat-settings"] = res
+				natSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("nat_settings.0.auto_rule"); ok {
+					natSettingsPayload["auto-rule"] = v.(bool)
+				}
+				if v, ok := d.GetOk("nat_settings.0.ipv4_address"); ok {
+					natSettingsPayload["ipv4-address"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.ipv6_address"); ok {
+					natSettingsPayload["ipv6-address"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.hide_behind"); ok {
+					natSettingsPayload["hide-behind"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.install_on"); ok {
+					natSettingsPayload["install-on"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.method"); ok {
+					natSettingsPayload["method"] = v.(string)
+				}
+				network["nat-settings"] = natSettingsPayload
+			}
 		}
 		//else { //argument deleted - go back to defaults
 		//	network["nat-settings"] = map[string]interface{}{"auto-rule": "false"}
@@ -428,10 +437,10 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	if len(network) != 3 {
 		setNetworkRes, err := client.ApiCall("set-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 		if !setNetworkRes.Success {
-			return fmt.Errorf(setNetworkRes.ErrorMsg)
+			return fmt.Errorf("%s", setNetworkRes.ErrorMsg)
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -455,7 +464,7 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteNetworkRes, _ := client.ApiCall("delete-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteNetworkRes.Success {
-		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteNetworkRes.ErrorMsg)
 	}
 	d.SetId("")
 

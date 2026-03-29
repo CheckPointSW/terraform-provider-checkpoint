@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 	"strings"
@@ -181,24 +181,24 @@ func createManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 
 	addVMwareDataCenterServerRes, err := client.ApiCall("add-data-center-server", vmwareDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addVMwareDataCenterServerRes.Success {
 		if addVMwareDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addVMwareDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addVMwareDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addVMwareDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": vmwareDataCenterServer["name"],
 	}
 	showVMwareDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVMwareDataCenterServerRes.Success {
-		return fmt.Errorf(showVMwareDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showVMwareDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showVMwareDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementVMwareDataCenterServer(d, m)
@@ -212,14 +212,14 @@ func readManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{})
 
 	showVMwareDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVMwareDataCenterServerRes.Success {
 		if objectNotFound(showVMwareDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVMwareDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showVMwareDataCenterServerRes.ErrorMsg)
 	}
 	vmwareDataCenterServer := showVMwareDataCenterServerRes.GetData()
 
@@ -364,14 +364,14 @@ func updateManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 
 	updateVMwareDataCenterServerRes, err := client.ApiCall("set-data-center-server", vmwareDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateVMwareDataCenterServerRes.Success {
 		if updateVMwareDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVMwareDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVMwareDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateVMwareDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementVMwareDataCenterServer(d, m)
@@ -396,9 +396,9 @@ func deleteManagementVMwareDataCenterServer(d *schema.ResourceData, m interface{
 	deleteVMwareDataCenterServerRes, err := client.ApiCall("delete-data-center-server", vmwareDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVMwareDataCenterServerRes.Success {
 		if deleteVMwareDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVMwareDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVMwareDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

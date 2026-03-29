@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementClusterMember() *schema.Resource {
@@ -113,7 +112,7 @@ func dataSourceManagementClusterMember() *schema.Resource {
 				Description: "In a High Availability New mode cluster each machine is given a priority. The highest priority machine serves as the gateway in normal circumstances. If this machine fails, control is passed to the next highest priority machine. If that machine fails, control is passed to the next machine, and so on. In Load Sharing Unicast mode cluster, the highest priority is the pivot machine. The values must be in a range from 1 to N, where N is number of cluster members.",
 			},
 			"nat_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -172,14 +171,14 @@ func dataSourceManagementClusterMemberRead(d *schema.ResourceData, m interface{}
 
 	showClusterMemberRes, err := client.ApiCall("show-cluster-member", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showClusterMemberRes.Success {
 		if objectNotFound(showClusterMemberRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showClusterMemberRes.ErrorMsg)
+		return fmt.Errorf("%s", showClusterMemberRes.ErrorMsg)
 	}
 
 	clusterMember := showClusterMemberRes.GetData()
@@ -267,35 +266,31 @@ func dataSourceManagementClusterMemberRead(d *schema.ResourceData, m interface{}
 
 	if clusterMember["nat-settings"] != nil {
 
-		actionSettingsMap := clusterMember["nat-settings"].(map[string]interface{})
+		natSettingsMap := clusterMember["nat-settings"].(map[string]interface{})
 
-		actionSettingsMapToReturn := make(map[string]interface{})
+		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := actionSettingsMap["auto-rule"]; v != nil {
-			actionSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
+		}
+		if v := natSettingsMap["hide-behind"]; v != nil {
+			natSettingsMapToReturn["hide_behind"] = v
+		}
+		if v := natSettingsMap["install-on"]; v != nil {
+			natSettingsMapToReturn["install_on"] = v
+		}
+		if v := natSettingsMap["ipv4-address"]; v != nil {
+			natSettingsMapToReturn["ipv4_address"] = v
+		}
+		if v := natSettingsMap["ipv6-address"]; v != nil {
+			natSettingsMapToReturn["ipv6_address"] = v
+		}
+		if v := natSettingsMap["method"]; v != nil {
+			natSettingsMapToReturn["method"] = v
 		}
 
-		if v, _ := actionSettingsMap["hide-behind"]; v != nil {
-			actionSettingsMapToReturn["hide_behind"] = v
-		}
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
-		if v, _ := actionSettingsMap["install-on"]; v != nil {
-			actionSettingsMapToReturn["install_on"] = v
-		}
-
-		if v, _ := actionSettingsMap["ipv4-address"]; v != nil {
-			actionSettingsMapToReturn["ipv4_address"] = v
-		}
-
-		if v, _ := actionSettingsMap["ipv6-address"]; v != nil {
-			actionSettingsMapToReturn["ipv6_address"] = v
-		}
-
-		if v, _ := actionSettingsMap["method"]; v != nil {
-			actionSettingsMapToReturn["method"] = v
-		}
-
-		_ = d.Set("nat_settings", actionSettingsMapToReturn)
 	} else {
 		_ = d.Set("nat_settings", nil)
 	}

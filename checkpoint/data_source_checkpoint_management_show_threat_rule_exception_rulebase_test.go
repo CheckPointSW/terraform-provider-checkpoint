@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"log"
 	"os"
 	"testing"
@@ -70,7 +70,7 @@ func testAccCheckCheckpointThreatRuleExceptionRulebase(resourceTfName string, re
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-threat-rule-exception-rulebase", map[string]interface{}{"name": "Standard Threat Prevention", "rule-name": "rule1", "use-object-dictionary": "false"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -84,7 +84,9 @@ func testAccDataSourceManagementShowThreatRuleExceptionRuleBaseConfig(objName st
 
  resource "checkpoint_management_threat_exception" "threat_exception" {
   name = "%s"
-  position = {top = "top"}
+  position {
+        top = "top"
+    }
   exception_group_name = "Global Exceptions"
   track = "Log"
   service = ["AH", "AOL"]

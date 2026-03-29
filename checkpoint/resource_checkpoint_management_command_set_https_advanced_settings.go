@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
 )
 
@@ -12,6 +13,14 @@ func resourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 		Create: createManagementSetHttpsAdvancedSettings,
 		Read:   readManagementSetHttpsAdvancedSettings,
 		Delete: deleteManagementSetHttpsAdvancedSettings,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetHttpsAdvancedSettingsV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetHttpsAdvancedSettingsStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"uid": {
 				Type:        schema.TypeString,
@@ -31,7 +40,8 @@ func resourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 				Description: "Whether all requests should be bypassed or blocked-in case of server errors (for example validation error during GW-Server authentication)<br><ul style=\"list-style-type:square\"><li>true - Fail-open (bypass all requests).</li><li>false - Fail-close (block all requests.</li></ul><br>The default value is true.",
 			},
 			"bypass_under_load": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Bypass the HTTPS Inspection temporarily to improve connectivity during a heavy load on the Security Gateway. The HTTPS Inspection would resume as soon as the load decreases.",
 				ForceNew:    true,
@@ -53,7 +63,8 @@ func resourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 				Description: "Whether all requests should be allowed or blocked until categorization is complete.<br><ul style=\"list-style-type:square\"><li>Background - to allow requests until categorization is complete.</li><li>Hold- to block requests until categorization is complete.</li></ul><br>The default value is hold.",
 			},
 			"server_certificate_validation_actions": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "When a Security Gateway receives an untrusted certificate from a website server, define when to drop the connection and how to track it.",
 				ForceNew:    true,
@@ -169,37 +180,47 @@ func createManagementSetHttpsAdvancedSettings(d *schema.ResourceData, m interfac
 		payload["bypass-on-failure"] = v.(bool)
 	}
 
-	if _, ok := d.GetOk("bypass_under_load"); ok {
+	if v, ok := d.GetOk("bypass_under_load"); ok {
 
-		res := make(map[string]interface{})
+		bypassUnderLoadList := v.([]interface{})
 
-		if v, ok := d.GetOk("bypass_under_load.track"); ok {
-			res["track"] = v.(string)
+		if len(bypassUnderLoadList) > 0 {
+
+			bypassUnderLoadPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("bypass_under_load.0.track"); ok {
+				bypassUnderLoadPayload["track"] = v.(string)
+			}
+			payload["bypass-under-load"] = bypassUnderLoadPayload
 		}
-		payload["bypass-under-load"] = res
 	}
 
 	if v, ok := d.GetOk("site_categorization_allow_mode"); ok {
 		payload["site-categorization-allow-mode"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("server_certificate_validation_actions"); ok {
+	if v, ok := d.GetOk("server_certificate_validation_actions"); ok {
 
-		res := make(map[string]interface{})
+		serverCertificateValidationActionsList := v.([]interface{})
 
-		if v, ok := d.GetOk("server_certificate_validation_actions.block_expired"); ok {
-			res["block-expired"] = v
+		if len(serverCertificateValidationActionsList) > 0 {
+
+			serverCertificateValidationActionsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_expired"); ok {
+				serverCertificateValidationActionsPayload["block-expired"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_revoked"); ok {
+				serverCertificateValidationActionsPayload["block-revoked"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("server_certificate_validation_actions.0.block_untrusted"); ok {
+				serverCertificateValidationActionsPayload["block-untrusted"] = v.(bool)
+			}
+			if v, ok := d.GetOk("server_certificate_validation_actions.0.track_errors"); ok {
+				serverCertificateValidationActionsPayload["track-errors"] = v.(string)
+			}
+			payload["server-certificate-validation-actions"] = serverCertificateValidationActionsPayload
 		}
-		if v, ok := d.GetOk("server_certificate_validation_actions.block_revoked"); ok {
-			res["block-revoked"] = v
-		}
-		if v, ok := d.GetOk("server_certificate_validation_actions.block_untrusted"); ok {
-			res["block-untrusted"] = v
-		}
-		if v, ok := d.GetOk("server_certificate_validation_actions.track_errors"); ok {
-			res["track-errors"] = v
-		}
-		payload["server-certificate-validation-actions"] = res
 	}
 
 	if v, ok := d.GetOkExists("retrieve_intermediate_ca_certificates"); ok {
@@ -259,7 +280,7 @@ func createManagementSetHttpsAdvancedSettings(d *schema.ResourceData, m interfac
 
 	SetHttpsAdvancedSettingsRes, _ := client.ApiCall("set-https-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !SetHttpsAdvancedSettingsRes.Success {
-		return fmt.Errorf(SetHttpsAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetHttpsAdvancedSettingsRes.ErrorMsg)
 	}
 
 	setHttpsAdvancedSettingsResData := SetHttpsAdvancedSettingsRes.GetData()

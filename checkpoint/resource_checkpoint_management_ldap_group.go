@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -151,9 +151,9 @@ func createManagementLdapGroup(d *schema.ResourceData, m interface{}) error {
 	addLdapGroupRes, err := client.ApiCallSimple("add-ldap-group", ldapGroup)
 	if err != nil || !addLdapGroupRes.Success {
 		if addLdapGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addLdapGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addLdapGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLdapGroupRes.GetData()["uid"].(string))
@@ -171,14 +171,14 @@ func readManagementLdapGroup(d *schema.ResourceData, m interface{}) error {
 
 	showLdapGroupRes, err := client.ApiCallSimple("show-ldap-group", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLdapGroupRes.Success {
 		if objectNotFound(showLdapGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLdapGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showLdapGroupRes.ErrorMsg)
 	}
 
 	ldapGroup := showLdapGroupRes.GetData()
@@ -321,9 +321,9 @@ func updateManagementLdapGroup(d *schema.ResourceData, m interface{}) error {
 	updateLdapGroupRes, err := client.ApiCallSimple("set-ldap-group", ldapGroup)
 	if err != nil || !updateLdapGroupRes.Success {
 		if updateLdapGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLdapGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLdapGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLdapGroup(d, m)
@@ -342,9 +342,9 @@ func deleteManagementLdapGroup(d *schema.ResourceData, m interface{}) error {
 	deleteLdapGroupRes, err := client.ApiCallSimple("delete-ldap-group", ldapGroupPayload)
 	if err != nil || !deleteLdapGroupRes.Success {
 		if deleteLdapGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLdapGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLdapGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

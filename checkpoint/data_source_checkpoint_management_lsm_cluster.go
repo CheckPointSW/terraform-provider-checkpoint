@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -53,7 +53,6 @@ func dataSourceManagementLsmCluster() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "IPv4 Address range.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"from_ipv4_address": {
@@ -169,7 +168,6 @@ func dataSourceManagementLsmCluster() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Provisioning settings. This field is relevant just for SMB clusters.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"provisioning_profile": {
@@ -220,7 +218,6 @@ func dataSourceManagementLsmCluster() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Topology.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"manual_vpn_domain": {
@@ -304,10 +301,10 @@ func dataSourceManagementLsmClusterRead(d *schema.ResourceData, m interface{}) e
 	}
 	showLsmClusterRes, err := client.ApiCall("show-lsm-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmClusterRes.Success {
-		return fmt.Errorf(showLsmClusterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmClusterRes.ErrorMsg)
 	}
 
 	LsmCluster := showLsmClusterRes.GetData()

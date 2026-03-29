@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetSyncWithUserCenter_basic(t *testing.T) {
 			{
 				Config: testAccManagementSetSyncWithUserCenterConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},

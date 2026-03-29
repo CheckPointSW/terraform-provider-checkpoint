@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -52,14 +52,14 @@ func dataSourceManagementMobileAccessSectionRead(d *schema.ResourceData, m inter
 
 	showMobileAccessSectionRes, err := client.ApiCall("show-mobile-access-section", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessSectionRes.Success {
 		if objectNotFound(showMobileAccessSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessSectionRes.ErrorMsg)
 	}
 
 	mobileAccessSection := showMobileAccessSectionRes.GetData()

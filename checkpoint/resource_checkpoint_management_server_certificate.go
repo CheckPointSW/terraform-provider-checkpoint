@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -81,9 +81,9 @@ func createManagementServerCertificate(d *schema.ResourceData, m interface{}) er
 	addServerCertificateRes, err := client.ApiCall("add-server-certificate", serverCertificate, client.GetSessionID(), true, false)
 	if err != nil || !addServerCertificateRes.Success {
 		if addServerCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(addServerCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", addServerCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServerCertificateRes.GetData()["uid"].(string))
@@ -101,14 +101,14 @@ func readManagementServerCertificate(d *schema.ResourceData, m interface{}) erro
 
 	showServerCertificateRes, err := client.ApiCall("show-server-certificate", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServerCertificateRes.Success {
 		if objectNotFound(showServerCertificateRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServerCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", showServerCertificateRes.ErrorMsg)
 	}
 
 	serverCertificate := showServerCertificateRes.GetData()
@@ -163,9 +163,9 @@ func updateManagementServerCertificate(d *schema.ResourceData, m interface{}) er
 	updateServerCertificateRes, err := client.ApiCall("set-server-certificate", serverCertificate, client.GetSessionID(), true, false)
 	if err != nil || !updateServerCertificateRes.Success {
 		if updateServerCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServerCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServerCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServerCertificate(d, m)
@@ -184,9 +184,9 @@ func deleteManagementServerCertificate(d *schema.ResourceData, m interface{}) er
 	deleteServerCertificateRes, err := client.ApiCall("delete-server-certificate", serverCertificatePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteServerCertificateRes.Success {
 		if deleteServerCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServerCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServerCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

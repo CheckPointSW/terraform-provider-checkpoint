@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceHostname() *schema.Resource {
@@ -40,7 +40,7 @@ func createHostname(d *schema.ResourceData, m interface{}) error {
 	payload := hostnameParseSchemaToMap(d)
 	setPIRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
-		return fmt.Errorf(setPIRes.ErrorMsg)
+		return fmt.Errorf("%s", setPIRes.ErrorMsg)
 	}
 
 	// Set Schema UID = Object key
@@ -59,7 +59,7 @@ func readHostname(d *schema.ResourceData, m interface{}) error {
 			d.SetId("") // Destroy resource
 			return nil
 		}
-		return fmt.Errorf(showHostnameRes.ErrorMsg)
+		return fmt.Errorf("%s", showHostnameRes.ErrorMsg)
 	}
 	hostnameJson := showHostnameRes.GetData()
 
@@ -73,7 +73,7 @@ func updateHostname(d *schema.ResourceData, m interface{}) error {
 	payload := hostnameParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("set-hostname", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", setNetworkRes.ErrorMsg)
 	}
 	return readHostname(d, m)
 }

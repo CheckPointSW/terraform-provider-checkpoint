@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -224,9 +224,9 @@ func createManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	addMdPermissionsProfileRes, err := client.ApiCall("add-md-permissions-profile", mdPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addMdPermissionsProfileRes.Success {
 		if addMdPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addMdPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addMdPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMdPermissionsProfileRes.GetData()["uid"].(string))
@@ -244,14 +244,14 @@ func readManagementMdPermissionsProfile(d *schema.ResourceData, m interface{}) e
 
 	showMdPermissionsProfileRes, err := client.ApiCall("show-md-permissions-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMdPermissionsProfileRes.Success {
 		if objectNotFound(showMdPermissionsProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMdPermissionsProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showMdPermissionsProfileRes.ErrorMsg)
 	}
 
 	mdPermissionsProfile := showMdPermissionsProfileRes.GetData()
@@ -470,9 +470,9 @@ func updateManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	updateMdPermissionsProfileRes, err := client.ApiCall("set-md-permissions-profile", mdPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateMdPermissionsProfileRes.Success {
 		if updateMdPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMdPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMdPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMdPermissionsProfile(d, m)
@@ -497,9 +497,9 @@ func deleteManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	deleteMdPermissionsProfileRes, err := client.ApiCall("delete-md-permissions-profile", mdPermissionsProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteMdPermissionsProfileRes.Success {
 		if deleteMdPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMdPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMdPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

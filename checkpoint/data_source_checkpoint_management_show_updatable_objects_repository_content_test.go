@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	_ "github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	_ "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"strings"
 	_ "strings"
@@ -54,7 +54,7 @@ func testAccCheckCheckpointShowUpdatableObjectsRepositoryContent(resourceTfName 
 		payload["filter"] = map[string]interface{}{"text": objName}
 		response, _ := client.ApiCall("show-updatable-objects-repository-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -96,7 +96,7 @@ func testAccCheckCheckpointShowUpdatableObjectsRepositoryContentAttributes(showO
 func testAccDataSourceManagementShowUpdatableObjectsRepositoryContentConfig(objName string) string {
 	return fmt.Sprintf(`
 data "checkpoint_management_show_updatable_objects_repository_content" "test" {
-    filter = {
+    filter {
 		text = "%s"
 	}
 }

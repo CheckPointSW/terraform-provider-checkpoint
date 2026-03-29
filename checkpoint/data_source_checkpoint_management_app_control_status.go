@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -20,7 +20,6 @@ func dataSourceManagementAppControlStatus() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The last time Application Control & URL Filtering was updated on the management server.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"iso_8601": {
@@ -45,7 +44,6 @@ func dataSourceManagementAppControlStatus() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Installed Application Control & URL Filtering version creation time.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"iso_8601": {
@@ -72,10 +70,10 @@ func dataSourceManagementAppControlStatusRead(d *schema.ResourceData, m interfac
 
 	showAppControlStatusRes, err := client.ApiCallSimple("show-app-control-status", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAppControlStatusRes.Success {
-		return fmt.Errorf(showAppControlStatusRes.ErrorMsg)
+		return fmt.Errorf("%s", showAppControlStatusRes.ErrorMsg)
 	}
 
 	appControlStatus := showAppControlStatusRes.GetData()

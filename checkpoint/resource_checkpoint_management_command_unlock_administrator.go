@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementUnlockAdministrator() *schema.Resource {
@@ -33,7 +33,7 @@ func createManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) 
 
 	UnlockAdministratorRes, _ := client.ApiCall("unlock-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UnlockAdministratorRes.Success {
-		return fmt.Errorf(UnlockAdministratorRes.ErrorMsg)
+		return fmt.Errorf("%s", UnlockAdministratorRes.ErrorMsg)
 	}
 
 	d.SetId("unlock-administrator-" + acctest.RandString(10))

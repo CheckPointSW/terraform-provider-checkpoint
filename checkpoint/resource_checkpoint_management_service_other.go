@@ -1,12 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
-	"log"
-	"reflect"
-
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
 )
 
 func resourceManagementServiceOther() *schema.Resource {
@@ -17,6 +16,14 @@ func resourceManagementServiceOther() *schema.Resource {
 		Delete: deleteManagementServiceOther,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementServiceOtherV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementServiceOtherStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -36,7 +43,8 @@ func resourceManagementServiceOther() *schema.Resource {
 				Description: "Contains an INSPECT expression that defines the action to take if a rule containing this service is matched. Example: set r_mhandler &open_ssl_handler sets a handler on the connection.",
 			},
 			"aggressive_aging": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Sets short (aggressive) timeouts for idle connections.",
 				Elem: &schema.Resource{
@@ -162,23 +170,28 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 		serviceOther["action"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("aggressive_aging"); ok {
+	if v, ok := d.GetOk("aggressive_aging"); ok {
 
-		res := make(map[string]interface{})
+		aggressiveAgingList := v.([]interface{})
 
-		if v, ok := d.GetOk("aggressive_aging.default_timeout"); ok {
-			res["default-timeout"] = v
+		if len(aggressiveAgingList) > 0 {
+
+			aggressiveAgingPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("aggressive_aging.0.default_timeout"); ok {
+				aggressiveAgingPayload["default-timeout"] = v.(int)
+			}
+			if v, ok := d.GetOkExists("aggressive_aging.0.enable"); ok {
+				aggressiveAgingPayload["enable"] = v.(bool)
+			}
+			if v, ok := d.GetOk("aggressive_aging.0.timeout"); ok {
+				aggressiveAgingPayload["timeout"] = v.(int)
+			}
+			if v, ok := d.GetOkExists("aggressive_aging.0.use_default_timeout"); ok {
+				aggressiveAgingPayload["use-default-timeout"] = v.(bool)
+			}
+			serviceOther["aggressive-aging"] = aggressiveAgingPayload
 		}
-		if v, ok := d.GetOk("aggressive_aging.enable"); ok {
-			res["enable"] = v
-		}
-		if v, ok := d.GetOk("aggressive_aging.timeout"); ok {
-			res["timeout"] = v
-		}
-		if v, ok := d.GetOk("aggressive_aging.use_default_timeout"); ok {
-			res["use-default-timeout"] = v
-		}
-		serviceOther["aggressive-aging"] = res
 	}
 
 	if v, ok := d.GetOk("ip_protocol"); ok {
@@ -238,9 +251,9 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	addServiceOtherRes, err := client.ApiCall("add-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceOtherRes.Success {
 		if addServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceOtherRes.GetData()["uid"].(string))
@@ -258,14 +271,14 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceOtherRes.Success {
 		if objectNotFound(showServiceOtherRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceOtherRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceOtherRes.ErrorMsg)
 	}
 
 	serviceOther := showServiceOtherRes.GetData()
@@ -290,31 +303,20 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 		aggressiveAgingMapToReturn := make(map[string]interface{})
 
-		if v, _ := aggressiveAgingMap["default-timeout"]; v != nil {
+		if v := aggressiveAgingMap["default-timeout"]; v != nil {
 			aggressiveAgingMapToReturn["default_timeout"] = v
 		}
-		if v, _ := aggressiveAgingMap["enable"]; v != nil {
+		if v := aggressiveAgingMap["enable"]; v != nil {
 			aggressiveAgingMapToReturn["enable"] = v
 		}
-		if v, _ := aggressiveAgingMap["timeout"]; v != nil {
+		if v := aggressiveAgingMap["timeout"]; v != nil {
 			aggressiveAgingMapToReturn["timeout"] = v
 		}
-		if v, _ := aggressiveAgingMap["use-default-timeout"]; v != nil {
+		if v := aggressiveAgingMap["use-default-timeout"]; v != nil {
 			aggressiveAgingMapToReturn["use_default_timeout"] = v
 		}
 
-		_, aggressiveAgingInConf := d.GetOk("aggressive_aging")
-		defaultAggressiveAging := map[string]interface{}{
-			"enable":              true,
-			"timeout":             600,
-			"use_default_timeout": true,
-			"default_timeout":     600,
-		}
-		if reflect.DeepEqual(defaultAggressiveAging, aggressiveAgingMapToReturn) && !aggressiveAgingInConf {
-			_ = d.Set("aggressive_aging", map[string]interface{}{})
-		} else {
-			_ = d.Set("aggressive_aging", aggressiveAgingMapToReturn)
-		}
+		_ = d.Set("aggressive_aging", []interface{}{aggressiveAgingMapToReturn})
 
 	} else {
 		_ = d.Set("aggressive_aging", nil)
@@ -411,25 +413,28 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("aggressive_aging") {
 
-		if _, ok := d.GetOk("aggressive_aging"); ok {
+		if v, ok := d.GetOk("aggressive_aging"); ok {
 
-			res := make(map[string]interface{})
+			aggressiveAgingList := v.([]interface{})
 
-			if d.HasChange("aggressive_aging.default_timeout") {
-				res["default-timeout"] = d.Get("aggressive_aging.default_timeout")
+			if len(aggressiveAgingList) > 0 {
+
+				aggressiveAgingPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("aggressive_aging.0.default_timeout"); ok {
+					aggressiveAgingPayload["default-timeout"] = v.(int)
+				}
+				if v, ok := d.GetOkExists("aggressive_aging.0.enable"); ok {
+					aggressiveAgingPayload["enable"] = v.(bool)
+				}
+				if v, ok := d.GetOk("aggressive_aging.0.timeout"); ok {
+					aggressiveAgingPayload["timeout"] = v.(int)
+				}
+				if v, ok := d.GetOkExists("aggressive_aging.0.use_default_timeout"); ok {
+					aggressiveAgingPayload["use-default-timeout"] = v.(bool)
+				}
+				serviceOther["aggressive-aging"] = aggressiveAgingPayload
 			}
-			if d.HasChange("aggressive_aging.enable") {
-				res["enable"] = d.Get("aggressive_aging.enable")
-			}
-			if d.HasChange("aggressive_aging.timeout") {
-				res["timeout"] = d.Get("aggressive_aging.timeout")
-			}
-			if d.HasChange("aggressive_aging.use_default_timeout") {
-				res["use-default-timeout"] = d.Get("aggressive_aging.use_default_timeout")
-			}
-			serviceOther["aggressive-aging"] = res
-		} else {
-			serviceOther["aggressive-aging"] = map[string]interface{}{"enable": true, "timeout": "15", "use-default-timeout": true, "default-timeout": "0"}
 		}
 	}
 
@@ -495,9 +500,9 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	updateServiceOtherRes, err := client.ApiCall("set-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceOtherRes.Success {
 		if updateServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceOther(d, m)
@@ -523,9 +528,9 @@ func deleteManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	deleteServiceOtherRes, err := client.ApiCall("delete-service-other", serviceOtherPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceOtherRes.Success {
 		if deleteServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

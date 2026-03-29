@@ -5,7 +5,7 @@ import (
 	"log"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSubordinateCa() *schema.Resource {
@@ -306,9 +306,9 @@ func createManagementSubordinateCa(d *schema.ResourceData, m interface{}) error 
 	addSubordinateCaRes, err := client.ApiCall("add-subordinate-ca", subordinateCa, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addSubordinateCaRes.Success {
 		if addSubordinateCaRes.ErrorMsg != "" {
-			return fmt.Errorf(addSubordinateCaRes.ErrorMsg)
+			return fmt.Errorf("%s", addSubordinateCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSubordinateCaRes.GetData()["uid"].(string))
@@ -326,14 +326,14 @@ func readManagementSubordinateCa(d *schema.ResourceData, m interface{}) error {
 
 	showSubordinateCaRes, err := client.ApiCall("show-subordinate-ca", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSubordinateCaRes.Success {
 		if objectNotFound(showSubordinateCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSubordinateCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showSubordinateCaRes.ErrorMsg)
 	}
 
 	subordinateCa := showSubordinateCaRes.GetData()
@@ -427,7 +427,7 @@ func readManagementSubordinateCa(d *schema.ResourceData, m interface{}) error {
 				if v, _ := httpSettingsMap["url"]; v != nil {
 					httpSettingsMapToReturn["url"] = v
 				}
-				cmpv2SettingsMapToReturn["http_settings"] = httpSettingsMapToReturn
+				cmpv2SettingsMapToReturn["http_settings"] = []interface{}{httpSettingsMapToReturn}
 			}
 
 			automaticEnrollmentMapToReturn["cmpv2_settings"] = []interface{}{cmpv2SettingsMapToReturn}
@@ -621,9 +621,9 @@ func updateManagementSubordinateCa(d *schema.ResourceData, m interface{}) error 
 	updateSubordinateCaRes, err := client.ApiCall("set-subordinate-ca", subordinateCa, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateSubordinateCaRes.Success {
 		if updateSubordinateCaRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSubordinateCaRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSubordinateCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSubordinateCa(d, m)
@@ -642,9 +642,9 @@ func deleteManagementSubordinateCa(d *schema.ResourceData, m interface{}) error 
 	deleteSubordinateCaRes, err := client.ApiCall("delete-subordinate-ca", subordinateCaPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteSubordinateCaRes.Success {
 		if deleteSubordinateCaRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSubordinateCaRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSubordinateCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

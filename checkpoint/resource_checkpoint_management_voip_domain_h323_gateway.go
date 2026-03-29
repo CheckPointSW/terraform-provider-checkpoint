@@ -5,7 +5,7 @@ import (
 	"log"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementVoipDomainH323Gateway() *schema.Resource {
@@ -146,9 +146,9 @@ func createManagementVoipDomainH323Gateway(d *schema.ResourceData, m interface{}
 	addVoipDomainH323GatewayRes, err := client.ApiCall("add-voip-domain-h323-gateway", voipDomainH323Gateway, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVoipDomainH323GatewayRes.Success {
 		if addVoipDomainH323GatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(addVoipDomainH323GatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", addVoipDomainH323GatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVoipDomainH323GatewayRes.GetData()["uid"].(string))
@@ -166,14 +166,14 @@ func readManagementVoipDomainH323Gateway(d *schema.ResourceData, m interface{}) 
 
 	showVoipDomainH323GatewayRes, err := client.ApiCall("show-voip-domain-h323-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainH323GatewayRes.Success {
 		if objectNotFound(showVoipDomainH323GatewayRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainH323GatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainH323GatewayRes.ErrorMsg)
 	}
 
 	voipDomainH323Gateway := showVoipDomainH323GatewayRes.GetData()
@@ -323,9 +323,9 @@ func updateManagementVoipDomainH323Gateway(d *schema.ResourceData, m interface{}
 	updateVoipDomainH323GatewayRes, err := client.ApiCall("set-voip-domain-h323-gateway", voipDomainH323Gateway, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVoipDomainH323GatewayRes.Success {
 		if updateVoipDomainH323GatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVoipDomainH323GatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVoipDomainH323GatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVoipDomainH323Gateway(d, m)
@@ -344,9 +344,9 @@ func deleteManagementVoipDomainH323Gateway(d *schema.ResourceData, m interface{}
 	deleteVoipDomainH323GatewayRes, err := client.ApiCall("delete-voip-domain-h323-gateway", voipDomainH323GatewayPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVoipDomainH323GatewayRes.Success {
 		if deleteVoipDomainH323GatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVoipDomainH323GatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVoipDomainH323GatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

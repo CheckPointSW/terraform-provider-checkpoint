@@ -5,7 +5,7 @@ import (
 	"log"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementApplicationSite() *schema.Resource {
@@ -105,10 +105,10 @@ func dataSourceManagementApplicationSiteRead(d *schema.ResourceData, m interface
 
 	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showApplicationSiteRes.Success {
-		return fmt.Errorf(showApplicationSiteRes.ErrorMsg)
+		return fmt.Errorf("%s", showApplicationSiteRes.ErrorMsg)
 	}
 
 	applicationSite := showApplicationSiteRes.GetData()

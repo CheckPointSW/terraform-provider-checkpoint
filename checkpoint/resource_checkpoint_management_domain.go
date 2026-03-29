@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -158,23 +158,23 @@ func createManagementDomain(d *schema.ResourceData, m interface{}) error {
 
 	addDomainRes, err := client.ApiCall("add-domain", domain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addDomainRes.Success {
 		if addDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(addDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", addDomainRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-domain", addDomainRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	// add-simple-cluster returns task-id. Call show-simple-cluster for object uid.
 	showDomainRes, err := client.ApiCall("show-domain", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDomainRes.Success {
-		return fmt.Errorf(showDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showDomainRes.ErrorMsg)
 	}
 
 	d.SetId(showDomainRes.GetData()["uid"].(string))
@@ -192,14 +192,14 @@ func readManagementDomain(d *schema.ResourceData, m interface{}) error {
 
 	showDomainRes, err := client.ApiCall("show-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDomainRes.Success {
 		if objectNotFound(showDomainRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showDomainRes.ErrorMsg)
 	}
 
 	domain := showDomainRes.GetData()
@@ -338,9 +338,9 @@ func updateManagementDomain(d *schema.ResourceData, m interface{}) error {
 	updateDomainRes, err := client.ApiCall("set-domain", domain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDomainRes.Success {
 		if updateDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDomainRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDomain(d, m)
@@ -367,9 +367,9 @@ func deleteManagementDomain(d *schema.ResourceData, m interface{}) error {
 	deleteDomainRes, err := client.ApiCall("delete-domain", domainPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDomainRes.Success {
 		if deleteDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDomainRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

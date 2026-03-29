@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -21,8 +21,6 @@ func TestAccCheckpointManagementCMEGWConfigurationsAzure_basic(t *testing.T) {
 	gwConfigurationColor := "black"
 	gwConfigurationXForwardedFor := true
 	gwConfigurationCommunicationWithServersBehindNAT := "translated-ip-only"
-
-
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -113,7 +111,7 @@ resource "checkpoint_management_cme_gw_configurations_azure" "gw_configuration_t
   communication_with_servers_behind_nat = "%s"
 }
 `, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationIpv6, gwConfigurationXForwardedFor,
-  gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
+		gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
 }
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -137,7 +135,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfNa
 		*res = response.GetData()
 		if checkIfRequestFailed(*res) {
 			errMessage := buildErrorMessage(*res)
-			return fmt.Errorf(errMessage)
+			return fmt.Errorf("%s", errMessage)
 		}
 		return nil
 	}
@@ -146,7 +144,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureExists(resourceTfNa
 func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, httpsInspectionFlag bool,
 	applicationControlFlag bool, IDAFlag bool, gwConfigurationIpv6 bool, gwConfigurationXForwardedFor bool,
-    gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
+	gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*azureGWConfiguration)["result"].(map[string]interface{})
 		if gwConfiguration["name"] != gwConfigurationName {
@@ -176,7 +174,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAzureAttributes(azureGWC
 		}
 		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
 		enableCgController := IDASettings["enable-cloudguard-controller"]
-		if enableCgController != IDAFlag{
+		if enableCgController != IDAFlag {
 			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, IDAFlag)
 		}
 		if gwConfiguration["ipv6"] != gwConfigurationIpv6 {

@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -20,8 +20,7 @@ func TestAccDataSourceCheckpointManagementIdpDefaultAssignment_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementIdpDefaultAssignmentConfig(),
-				Check: resource.ComposeTestCheckFunc(
-				),
+				Check:  resource.ComposeTestCheckFunc(),
 			},
 		},
 	})

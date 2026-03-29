@@ -1,11 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 )
 
 func resourceManagementLsvProfile() *schema.Resource {
@@ -16,6 +16,14 @@ func resourceManagementLsvProfile() *schema.Resource {
 		Delete: deleteManagementLsvProfile,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementLsvProfileV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementLsvProfileStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -51,7 +59,8 @@ func resourceManagementLsvProfile() *schema.Resource {
 				},
 			},
 			"vpn_domain": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "peers' VPN Domain properties.",
 				Elem: &schema.Resource{
@@ -123,17 +132,22 @@ func createManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 		lsvProfile["tags"] = v.(*schema.Set).List()
 	}
 
-	if _, ok := d.GetOk("vpn_domain"); ok {
-		res := make(map[string]interface{})
+	if v, ok := d.GetOk("vpn_domain"); ok {
 
-		if v, ok := d.GetOk("vpn_domain.limit_peer_domain_size"); ok {
-			res["limit-peer-domain-size"] = v
-		}
-		if v, ok := d.GetOk("vpn_domain.max_allowed_addresses"); ok {
-			res["max-allowed-addresses"] = v
-		}
+		vpnDomainList := v.([]interface{})
 
-		lsvProfile["vpn-domain"] = res
+		if len(vpnDomainList) > 0 {
+
+			vpnDomainPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("vpn_domain.0.limit_peer_domain_size"); ok {
+				vpnDomainPayload["limit-peer-domain-size"] = v.(bool)
+			}
+			if v, ok := d.GetOk("vpn_domain.0.max_allowed_addresses"); ok {
+				vpnDomainPayload["max-allowed-addresses"] = v.(int)
+			}
+			lsvProfile["vpn-domain"] = vpnDomainPayload
+		}
 	}
 
 	if v, ok := d.GetOk("color"); ok {
@@ -157,9 +171,9 @@ func createManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	addLsvProfileRes, err := client.ApiCall("add-lsv-profile", lsvProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addLsvProfileRes.Success {
 		if addLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLsvProfileRes.GetData()["uid"].(string))
@@ -176,7 +190,7 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 
 	showLsvProfileRes, err := client.ApiCall("show-lsv-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsvProfileRes.Success {
 		// Handle delete resource from other clients
@@ -184,7 +198,7 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsvProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsvProfileRes.ErrorMsg)
 	}
 
 	lsvProfile := showLsvProfileRes.GetData()
@@ -233,24 +247,19 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if lsvProfile["vpn-domain"] != nil {
+
 		vpnDomainMap := lsvProfile["vpn-domain"].(map[string]interface{})
 
 		vpnDomainMapToReturn := make(map[string]interface{})
 
-		if v, _ := vpnDomainMap["limit-peer-domain-size"]; v != nil {
+		if v := vpnDomainMap["limit-peer-domain-size"]; v != nil {
 			vpnDomainMapToReturn["limit_peer_domain_size"] = v
 		}
-		if v, _ := vpnDomainMap["max-allowed-addresses"]; v != nil {
+		if v := vpnDomainMap["max-allowed-addresses"]; v != nil {
 			vpnDomainMapToReturn["max_allowed_addresses"] = v
 		}
 
-		_, vpnDomainInConf := d.GetOk("vpn_domain")
-		defaultVpnDomain := map[string]interface{}{"limit_peer_domain_size": "false", "max_allowed_addresses": "256"}
-		if reflect.DeepEqual(defaultVpnDomain, vpnDomainMapToReturn) && !vpnDomainInConf {
-			_ = d.Set("vpn_domain", map[string]interface{}{})
-		} else {
-			_ = d.Set("vpn_domain", vpnDomainMapToReturn)
-		}
+		_ = d.Set("vpn_domain", []interface{}{vpnDomainMapToReturn})
 
 	} else {
 		_ = d.Set("vpn_domain", nil)
@@ -307,17 +316,22 @@ func updateManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("vpn_domain"); ok {
 
-		if _, ok := d.GetOk("vpn_domain"); ok {
-			res := make(map[string]interface{})
+		if v, ok := d.GetOk("vpn_domain"); ok {
 
-			if v, ok := d.GetOk("vpn_domain.limit_peer_domain_size"); ok {
-				res["limit-peer-domain-size"] = v
-			}
-			if v, ok := d.GetOk("vpn_domain.max_allowed_addresses"); ok {
-				res["max-allowed-addresses"] = v
-			}
+			vpnDomainList := v.([]interface{})
 
-			lsvProfile["vpn-domain"] = res
+			if len(vpnDomainList) > 0 {
+
+				vpnDomainPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("vpn_domain.0.limit_peer_domain_size"); ok {
+					vpnDomainPayload["limit-peer-domain-size"] = v.(bool)
+				}
+				if v, ok := d.GetOk("vpn_domain.0.max_allowed_addresses"); ok {
+					vpnDomainPayload["max-allowed-addresses"] = v.(int)
+				}
+				lsvProfile["vpn-domain"] = vpnDomainPayload
+			}
 		} else {
 			lsvProfile["vpn-domain"] = map[string]interface{}{"limit-peer-domain_size": "false", "max-allowed-addresses": "256"}
 		}
@@ -343,9 +357,9 @@ func updateManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	updateLsvProfileRes, err := client.ApiCall("set-lsv-profile", lsvProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateLsvProfileRes.Success {
 		if updateLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLsvProfile(d, m)
@@ -366,9 +380,9 @@ func deleteManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	deleteLsvProfileRes, err := client.ApiCall("delete-lsv-profile", lsvProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteLsvProfileRes.Success {
 		if deleteLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId("")

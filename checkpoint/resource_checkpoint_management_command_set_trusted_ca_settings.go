@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetTrustedCaSettings() *schema.Resource {
@@ -34,7 +34,7 @@ func createManagementSetTrustedCaSettings(d *schema.ResourceData, m interface{})
 
 	SetTrustedCaSettingsRes, _ := client.ApiCall("set-trusted-ca-settings", payload, client.GetSessionID(), true, false)
 	if !SetTrustedCaSettingsRes.Success {
-		return fmt.Errorf(SetTrustedCaSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetTrustedCaSettingsRes.ErrorMsg)
 	}
 	d.SetId("set-trusted-ca-settings" + acctest.RandString(10))
 	return readManagementSetTrustedCaSettings(d, m)

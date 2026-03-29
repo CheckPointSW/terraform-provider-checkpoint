@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementServiceGroup() *schema.Resource {
@@ -75,7 +75,7 @@ func dataSourceManagementServiceGroupRead(d *schema.ResourceData, m interface{})
 
 	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceGroupRes.Success {
 		// Handle delete resource from other clients
@@ -83,7 +83,7 @@ func dataSourceManagementServiceGroupRead(d *schema.ResourceData, m interface{})
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceGroupRes.ErrorMsg)
 	}
 
 	serviceGroup := showServiceGroupRes.GetData()

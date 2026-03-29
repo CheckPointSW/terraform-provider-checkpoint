@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementInstallLsmSettings() *schema.Resource {
@@ -46,7 +46,7 @@ func readManagementInstallLsmSettings(d *schema.ResourceData, m interface{}) err
 
 	InstallLsmSettingsRes, _ := client.ApiCall("install-lsm-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallLsmSettingsRes.Success {
-		return fmt.Errorf(InstallLsmSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallLsmSettingsRes.ErrorMsg)
 	}
 
 	d.SetId("install-lsm-settings" + acctest.RandString(10))

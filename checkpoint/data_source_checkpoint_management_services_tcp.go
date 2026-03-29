@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -93,7 +93,6 @@ func dataSourceManagementServicesTcp() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Sets short (aggressive) timeouts for idle connections.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"default_timeout": {
@@ -201,7 +200,7 @@ func dataSourceManagementServicesTcp() *schema.Resource {
 							Description: "Comments string.",
 						},
 						"domain": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Information about the domain that holds the Object.",
 							Elem: &schema.Resource{
@@ -291,10 +290,10 @@ func dataSourceManagementServicesTcpRead(d *schema.ResourceData, m interface{}) 
 	}
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServicesTcpRes.Success {
-		return fmt.Errorf(showServicesTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServicesTcpRes.ErrorMsg)
 	}
 
 	servicesTcp := showServicesTcpRes.GetData()
@@ -455,7 +454,7 @@ func dataSourceManagementServicesTcpRead(d *schema.ResourceData, m interface{}) 
 					if v := domainMap["domain-type"]; v != nil {
 						domainMapToAdd["domain_type"] = v
 					}
-					objectMapToAdd["domain"] = domainMapToAdd
+					objectMapToAdd["domain"] = []interface{}{domainMapToAdd}
 				}
 
 				if v := objectMap["icon"]; v != nil {

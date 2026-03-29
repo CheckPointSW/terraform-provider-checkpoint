@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
@@ -19,7 +19,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Application Control & URL Filtering Update Schedule on Management Server.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -31,7 +30,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Schedule Configuration.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"time": {
@@ -43,7 +41,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Days recurrence.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"pattern": {
@@ -80,7 +77,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Application Control & URL Filtering Update Schedule on Gateway.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -92,7 +88,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Schedule Configuration.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"time": {
@@ -104,7 +99,6 @@ func dataSourceManagementAppControlUpdateSchedule() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Days recurrence.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"pattern": {
@@ -164,10 +158,10 @@ func dataSourceManagementAppControlUpdateScheduleRead(d *schema.ResourceData, m 
 
 	appControlUpdateScheduleRes, err := client.ApiCallSimple("show-app-control-update-schedule", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !appControlUpdateScheduleRes.Success {
-		return fmt.Errorf(appControlUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", appControlUpdateScheduleRes.ErrorMsg)
 	}
 	appControlUpdateScheduleData := appControlUpdateScheduleRes.GetData()
 

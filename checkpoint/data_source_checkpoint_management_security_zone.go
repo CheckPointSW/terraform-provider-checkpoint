@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -60,10 +60,10 @@ func dataSourceManagementSecurityZoneRead(d *schema.ResourceData, m interface{})
 
 	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecurityZoneRes.Success {
-		return fmt.Errorf(showSecurityZoneRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecurityZoneRes.ErrorMsg)
 	}
 
 	securityZone := showSecurityZoneRes.GetData()

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -118,9 +118,9 @@ func createManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 	addGsnHandoverGroupRes, err := client.ApiCall("add-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGsnHandoverGroupRes.Success {
 		if addGsnHandoverGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addGsnHandoverGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addGsnHandoverGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGsnHandoverGroupRes.GetData()["uid"].(string))
@@ -138,14 +138,14 @@ func readManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) error
 
 	showGsnHandoverGroupRes, err := client.ApiCall("show-gsn-handover-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGsnHandoverGroupRes.Success {
 		if objectNotFound(showGsnHandoverGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGsnHandoverGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showGsnHandoverGroupRes.ErrorMsg)
 	}
 
 	gsnHandoverGroup := showGsnHandoverGroupRes.GetData()
@@ -267,9 +267,9 @@ func updateManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 	updateGsnHandoverGroupRes, err := client.ApiCall("set-gsn-handover-group", gsnHandoverGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGsnHandoverGroupRes.Success {
 		if updateGsnHandoverGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGsnHandoverGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGsnHandoverGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementGsnHandoverGroup(d, m)
@@ -296,9 +296,9 @@ func deleteManagementGsnHandoverGroup(d *schema.ResourceData, m interface{}) err
 	deleteGsnHandoverGroupRes, err := client.ApiCall("delete-gsn-handover-group", gsnHandoverGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGsnHandoverGroupRes.Success {
 		if deleteGsnHandoverGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGsnHandoverGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGsnHandoverGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementRunAppControlUpdate() *schema.Resource {
@@ -29,10 +29,10 @@ func createManagementRunAppControlUpdate(d *schema.ResourceData, m interface{}) 
 
 	RunAppControlUpdateRes, err := client.ApiCallSimple("run-app-control-update", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !RunAppControlUpdateRes.Success {
-		return fmt.Errorf(RunAppControlUpdateRes.ErrorMsg)
+		return fmt.Errorf("%s", RunAppControlUpdateRes.ErrorMsg)
 	}
 
 	d.SetId("app-control-update-" + acctest.RandString(10))

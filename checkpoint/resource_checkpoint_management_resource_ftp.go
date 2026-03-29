@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -177,9 +177,9 @@ func createManagementResourceFtp(d *schema.ResourceData, m interface{}) error {
 	addResourceFtpRes, err := client.ApiCall("add-resource-ftp", resourceFtp, client.GetSessionID(), true, false)
 	if err != nil || !addResourceFtpRes.Success {
 		if addResourceFtpRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceFtpRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceFtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceFtpRes.GetData()["uid"].(string))
@@ -197,14 +197,14 @@ func readManagementResourceFtp(d *schema.ResourceData, m interface{}) error {
 
 	showResourceFtpRes, err := client.ApiCall("show-resource-ftp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceFtpRes.Success {
 		if objectNotFound(showResourceFtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceFtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceFtpRes.ErrorMsg)
 	}
 
 	resourceFtp := showResourceFtpRes.GetData()
@@ -380,9 +380,9 @@ func updateManagementResourceFtp(d *schema.ResourceData, m interface{}) error {
 	updateResourceFtpRes, err := client.ApiCall("set-resource-ftp", resourceFtp, client.GetSessionID(), true, false)
 	if err != nil || !updateResourceFtpRes.Success {
 		if updateResourceFtpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceFtpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceFtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceFtp(d, m)
@@ -401,9 +401,9 @@ func deleteManagementResourceFtp(d *schema.ResourceData, m interface{}) error {
 	deleteResourceFtpRes, err := client.ApiCall("delete-resource-ftp", resourceFtpPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteResourceFtpRes.Success {
 		if deleteResourceFtpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceFtpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceFtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

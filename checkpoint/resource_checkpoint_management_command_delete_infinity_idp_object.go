@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteInfinityIdpObject() *schema.Resource {
@@ -63,7 +63,7 @@ func createManagementDeleteInfinityIdpObject(d *schema.ResourceData, m interface
 
 	DeleteInfinityIdpObjectRes, _ := client.ApiCall("delete-infinity-idp-object", payload, client.GetSessionID(), true, false)
 	if !DeleteInfinityIdpObjectRes.Success {
-		return fmt.Errorf(DeleteInfinityIdpObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteInfinityIdpObjectRes.ErrorMsg)
 	}
 
 	d.SetId("delete-infinity-idp-object-" + acctest.RandString(10))

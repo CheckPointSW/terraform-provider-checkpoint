@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementInstallPolicy() *schema.Resource {
@@ -127,7 +127,7 @@ func createManagementInstallPolicy(d *schema.ResourceData, m interface{}) error 
 
 	installPolicyRes, _ := client.ApiCall("install-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !installPolicyRes.Success {
-		return fmt.Errorf(installPolicyRes.ErrorMsg)
+		return fmt.Errorf("%s", installPolicyRes.ErrorMsg)
 	}
 
 	d.SetId("install-policy-" + acctest.RandString(10))

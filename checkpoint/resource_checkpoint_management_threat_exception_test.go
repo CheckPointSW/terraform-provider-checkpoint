@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -74,7 +74,7 @@ func testAccCheckCheckpointThreatExceptionExists(resourceTfName string, res *map
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-threat-exception", map[string]interface{}{"uid": rs.Primary.ID, "layer": layerName, "rule-name": ruleName}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -105,13 +105,17 @@ func testAccManagementThreatExceptionConfig(name string, layerName string, threa
 resource "checkpoint_management_threat_rule" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 
 resource "checkpoint_management_threat_exception" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	rule_name = "${checkpoint_management_threat_rule.test.name}"
 }
 `, threatRuleName, layerName, name, layerName)

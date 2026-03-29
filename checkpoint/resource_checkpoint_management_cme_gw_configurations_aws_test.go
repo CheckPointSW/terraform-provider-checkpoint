@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -20,7 +20,6 @@ func TestAccCheckpointManagementCMEGWConfigurationsAWS_basic(t *testing.T) {
 	gwConfigurationXForwardedFor := true
 	gwConfigurationColor := "black"
 	gwConfigurationCommunicationWithServersBehindNAT := "translated-ip-only"
-
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -108,7 +107,7 @@ resource "checkpoint_management_cme_gw_configurations_aws" "gw_configuration_tes
   }
 }
 `, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationXForwardedFor,
-   gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
+		gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
 }
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -132,7 +131,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSExists(resourceTfName
 		*res = response.GetData()
 		if checkIfRequestFailed(*res) {
 			errMessage := buildErrorMessage(*res)
-			return fmt.Errorf(errMessage)
+			return fmt.Errorf("%s", errMessage)
 		}
 		return nil
 	}
@@ -170,7 +169,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsAWSAttributes(awsGWConfi
 		}
 		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
 		enableCgController := IDASettings["enable-cloudguard-controller"]
-		if enableCgController != IDAFlag{
+		if enableCgController != IDAFlag {
 			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, IDAFlag)
 		}
 		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {

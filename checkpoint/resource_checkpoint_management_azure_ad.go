@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -151,9 +151,9 @@ func createManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 	addAzureAdRes, err := client.ApiCall("add-azure-ad", azureAd, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAzureAdRes.Success {
 		if addAzureAdRes.ErrorMsg != "" {
-			return fmt.Errorf(addAzureAdRes.ErrorMsg)
+			return fmt.Errorf("%s", addAzureAdRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	payload := map[string]interface{}{
@@ -162,14 +162,14 @@ func createManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 
 	showAzureAdRes, err := client.ApiCall("show-azure-ad", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureAdRes.Success {
 		if objectNotFound(showAzureAdRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAzureAdRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureAdRes.ErrorMsg)
 	}
 
 	d.SetId(showAzureAdRes.GetData()["uid"].(string))
@@ -188,14 +188,14 @@ func readManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 
 	showAzureAdRes, err := client.ApiCall("show-azure-ad", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureAdRes.Success {
 		if objectNotFound(showAzureAdRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAzureAdRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureAdRes.ErrorMsg)
 	}
 
 	azureAd := showAzureAdRes.GetData()
@@ -355,9 +355,9 @@ func updateManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 	updateAzureAdRes, err := client.ApiCall("set-azure-ad", azureAd, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAzureAdRes.Success {
 		if updateAzureAdRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAzureAdRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAzureAdRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAzureAd(d, m)
@@ -384,9 +384,9 @@ func deleteManagementAzureAd(d *schema.ResourceData, m interface{}) error {
 	deleteAzureAdRes, err := client.ApiCall("delete-azure-ad", azureAdPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAzureAdRes.Success {
 		if deleteAzureAdRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAzureAdRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAzureAdRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

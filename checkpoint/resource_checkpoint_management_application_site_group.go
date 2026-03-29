@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -103,9 +103,9 @@ func createManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 	addApplicationSiteGroupRes, err := client.ApiCall("add-application-site-group", applicationSiteGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteGroupRes.Success {
 		if addApplicationSiteGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addApplicationSiteGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addApplicationSiteGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addApplicationSiteGroupRes.GetData()["uid"].(string))
@@ -123,14 +123,14 @@ func readManagementApplicationSiteGroup(d *schema.ResourceData, m interface{}) e
 
 	showApplicationSiteGroupRes, err := client.ApiCall("show-application-site-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showApplicationSiteGroupRes.Success {
 		if objectNotFound(showApplicationSiteGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showApplicationSiteGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showApplicationSiteGroupRes.ErrorMsg)
 	}
 
 	applicationSiteGroup := showApplicationSiteGroupRes.GetData()
@@ -245,9 +245,9 @@ func updateManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 	updateApplicationSiteGroupRes, err := client.ApiCall("set-application-site-group", applicationSiteGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteGroupRes.Success {
 		if updateApplicationSiteGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateApplicationSiteGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateApplicationSiteGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementApplicationSiteGroup(d, m)
@@ -274,9 +274,9 @@ func deleteManagementApplicationSiteGroup(d *schema.ResourceData, m interface{})
 	deleteApplicationSiteGroupRes, err := client.ApiCall("delete-application-site-group", applicationSiteGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteGroupRes.Success {
 		if deleteApplicationSiteGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteApplicationSiteGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteApplicationSiteGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

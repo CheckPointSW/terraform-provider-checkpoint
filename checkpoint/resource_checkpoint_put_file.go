@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourcePutFile() *schema.Resource {
@@ -53,7 +53,7 @@ func createPutFile(d *schema.ResourceData, m interface{}) error {
 	payload := putFileParseSchemaToMap(d)
 	setPIRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
-		return fmt.Errorf(setPIRes.ErrorMsg)
+		return fmt.Errorf("%s", setPIRes.ErrorMsg)
 	}
 
 	// Set Schema UID = Object key
@@ -71,7 +71,7 @@ func updatePutFile(d *schema.ResourceData, m interface{}) error {
 	payload := putFileParseSchemaToMap(d)
 	setNetworkRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", setNetworkRes.ErrorMsg)
 	}
 	return readPutFile(d, m)
 }

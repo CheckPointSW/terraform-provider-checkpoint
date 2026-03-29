@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetInternalTrustedCa() *schema.Resource {
@@ -157,7 +157,7 @@ func createManagementSetInternalTrustedCa(d *schema.ResourceData, m interface{})
 
 	SetInternalTrustedCaRes, _ := client.ApiCall("set-internal-trusted-ca", payload, client.GetSessionID(), true, false)
 	if !SetInternalTrustedCaRes.Success {
-		return fmt.Errorf(SetInternalTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", SetInternalTrustedCaRes.ErrorMsg)
 	}
 
 	res := SetInternalTrustedCaRes.GetData()

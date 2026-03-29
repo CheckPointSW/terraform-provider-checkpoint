@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -143,9 +143,9 @@ func createManagementOutboundInspectionCertificate(d *schema.ResourceData, m int
 	addOutboundInspectionCertificateRes, err := client.ApiCall("add-outbound-inspection-certificate", outboundInspectionCertificate, client.GetSessionID(), true, false)
 	if err != nil || !addOutboundInspectionCertificateRes.Success {
 		if addOutboundInspectionCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(addOutboundInspectionCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", addOutboundInspectionCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addOutboundInspectionCertificateRes.GetData()["uid"].(string))
@@ -163,14 +163,14 @@ func readManagementOutboundInspectionCertificate(d *schema.ResourceData, m inter
 
 	showOutboundInspectionCertificateRes, err := client.ApiCall("show-outbound-inspection-certificate", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOutboundInspectionCertificateRes.Success {
 		if objectNotFound(showOutboundInspectionCertificateRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOutboundInspectionCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", showOutboundInspectionCertificateRes.ErrorMsg)
 	}
 
 	outboundInspectionCertificate := showOutboundInspectionCertificateRes.GetData()
@@ -312,9 +312,9 @@ func updateManagementOutboundInspectionCertificate(d *schema.ResourceData, m int
 	updateOutboundInspectionCertificateRes, err := client.ApiCall("set-outbound-inspection-certificate", outboundInspectionCertificate, client.GetSessionID(), true, false)
 	if err != nil || !updateOutboundInspectionCertificateRes.Success {
 		if updateOutboundInspectionCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(updateOutboundInspectionCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", updateOutboundInspectionCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementOutboundInspectionCertificate(d, m)
@@ -333,9 +333,9 @@ func deleteManagementOutboundInspectionCertificate(d *schema.ResourceData, m int
 	deleteOutboundInspectionCertificateRes, err := client.ApiCall("delete-outbound-inspection-certificate", outboundInspectionCertificatePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteOutboundInspectionCertificateRes.Success {
 		if deleteOutboundInspectionCertificateRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteOutboundInspectionCertificateRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteOutboundInspectionCertificateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

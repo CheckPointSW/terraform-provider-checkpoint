@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -70,14 +70,14 @@ func dataSourceManagementRepositoryScriptRead(d *schema.ResourceData, m interfac
 
 	showRepositoryScriptRes, err := client.ApiCall("show-repository-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRepositoryScriptRes.Success {
 		if objectNotFound(showRepositoryScriptRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showRepositoryScriptRes.ErrorMsg)
+		return fmt.Errorf("%s", showRepositoryScriptRes.ErrorMsg)
 	}
 
 	repositoryScript := showRepositoryScriptRes.GetData()

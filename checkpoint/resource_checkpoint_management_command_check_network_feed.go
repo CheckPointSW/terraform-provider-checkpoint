@@ -1,10 +1,13 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
+	"strconv"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementCheckNetworkFeed() *schema.Resource {
@@ -12,9 +15,18 @@ func resourceManagementCheckNetworkFeed() *schema.Resource {
 		Create: createManagementCheckNetworkFeed,
 		Read:   readManagementCheckNetworkFeed,
 		Delete: deleteManagementCheckNetworkFeed,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandCheckNetworkFeedV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandCheckNetworkFeedStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"network_feed": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "network feed parameters.",
 				ForceNew:    true,
@@ -153,62 +165,87 @@ func createManagementCheckNetworkFeed(d *schema.ResourceData, m interface{}) err
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	if _, ok := d.GetOk("network_feed"); ok {
+	if v, ok := d.GetOk("network_feed"); ok {
 
-		res := make(map[string]interface{})
+		networkFeedList := v.([]interface{})
 
-		if v, ok := d.GetOk("network_feed.name"); ok {
-			res["name"] = v.(string)
+		if len(networkFeedList) > 0 {
+
+			networkFeedPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("network_feed.0.name"); ok {
+				networkFeedPayload["name"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.feed_url"); ok {
+				networkFeedPayload["feed-url"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.certificate_id"); ok {
+				networkFeedPayload["certificate-id"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.feed_format"); ok {
+				networkFeedPayload["feed-format"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.feed_type"); ok {
+				networkFeedPayload["feed-type"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.password"); ok {
+				networkFeedPayload["password"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.username"); ok {
+				networkFeedPayload["username"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.custom_header"); ok {
+
+				customHeaderList := v.([]interface{})
+
+				if len(customHeaderList) > 0 {
+
+					var customHeaderPayload []map[string]interface{}
+
+					for j := range customHeaderList {
+
+						customHeaderMapToAdd := make(map[string]interface{})
+
+						if v, ok := d.GetOk("network_feed.0.custom_header." + strconv.Itoa(j) + ".header_name"); ok {
+							customHeaderMapToAdd["header-name"] = v.(string)
+						}
+						if v, ok := d.GetOk("network_feed.0.custom_header." + strconv.Itoa(j) + ".header_value"); ok {
+							customHeaderMapToAdd["header-value"] = v.(string)
+						}
+						customHeaderPayload = append(customHeaderPayload, customHeaderMapToAdd)
+					}
+					networkFeedPayload["custom-header"] = customHeaderPayload
+				}
+			}
+			if v, ok := d.GetOk("network_feed.0.update_interval"); ok {
+				networkFeedPayload["update-interval"] = v.(int)
+			}
+			if v, ok := d.GetOk("network_feed.0.data_column"); ok {
+				networkFeedPayload["data-column"] = v.(int)
+			}
+			if v, ok := d.GetOk("network_feed.0.fields_delimiter"); ok {
+				networkFeedPayload["fields-delimiter"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.ignore_lines_that_start_with"); ok {
+				networkFeedPayload["ignore-lines-that-start-with"] = v.(string)
+			}
+			if v, ok := d.GetOk("network_feed.0.json_query"); ok {
+				networkFeedPayload["json-query"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("network_feed.0.use_gateway_proxy"); ok {
+				networkFeedPayload["use-gateway-proxy"] = v.(bool)
+			}
+			if v, ok := d.GetOk("network_feed.0.domains_to_process"); ok {
+				networkFeedPayload["domains-to-process"] = v
+			}
+			if v, ok := d.GetOkExists("network_feed.0.ignore_warnings"); ok {
+				networkFeedPayload["ignore-warnings"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("network_feed.0.ignore_errors"); ok {
+				networkFeedPayload["ignore-errors"] = v.(bool)
+			}
+			payload["network-feed"] = networkFeedPayload
 		}
-		if v, ok := d.GetOk("network_feed.feed_url"); ok {
-			res["feed-url"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.certificate_id"); ok {
-			res["certificate-id"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.feed_format"); ok {
-			res["feed-format"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.feed_type"); ok {
-			res["feed-type"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.password"); ok {
-			res["password"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.username"); ok {
-			res["username"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.custom_header"); ok {
-			res["custom-header"] = v
-		}
-		if v, ok := d.GetOk("network_feed.update_interval"); ok {
-			res["update-interval"] = v
-		}
-		if v, ok := d.GetOk("network_feed.data_column"); ok {
-			res["data-column"] = v
-		}
-		if v, ok := d.GetOk("network_feed.fields_delimiter"); ok {
-			res["fields-delimiter"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.ignore_lines_that_start_with"); ok {
-			res["ignore-lines-that-start-with"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.json_query"); ok {
-			res["json-query"] = v.(string)
-		}
-		if v, ok := d.GetOk("network_feed.use_gateway_proxy"); ok {
-			res["use-gateway-proxy"] = v
-		}
-		if v, ok := d.GetOk("network_feed.domains_to_process"); ok {
-			res["domains-to-process"] = v
-		}
-		if v, ok := d.GetOk("network_feed.ignore_warnings"); ok {
-			res["ignore-warnings"] = v
-		}
-		if v, ok := d.GetOk("network_feed.ignore_errors"); ok {
-			res["ignore-errors"] = v
-		}
-		payload["network-feed"] = res
 	}
 
 	if v, ok := d.GetOk("targets"); ok {
@@ -217,7 +254,7 @@ func createManagementCheckNetworkFeed(d *schema.ResourceData, m interface{}) err
 
 	CheckNetworkFeedRes, _ := client.ApiCall("check-network-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !CheckNetworkFeedRes.Success {
-		return fmt.Errorf(CheckNetworkFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", CheckNetworkFeedRes.ErrorMsg)
 	}
 
 	d.SetId("check-network-feed" + acctest.RandString(10))

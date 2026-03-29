@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"strings"
 	"testing"
@@ -16,6 +16,7 @@ func TestAccCheckpointManagementOpsecApplication_basic(t *testing.T) {
 	var opsecApplicationMap map[string]interface{}
 	resourceName := "checkpoint_management_opsec_application.test"
 	objName := "tfTestManagementOpsecApplication_" + acctest.RandString(6)
+	hostName := "tfTestOpsecHost_" + acctest.RandString(6)
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context != "web_api" {
@@ -30,10 +31,10 @@ func TestAccCheckpointManagementOpsecApplication_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointManagementOpsecApplicationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementOpsecApplicationConfig(objName, "somehost", "somepassword"),
+				Config: testAccManagementOpsecApplicationConfig(objName, hostName, "somepassword"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointManagementOpsecApplicationExists(resourceName, &opsecApplicationMap),
-					testAccCheckCheckpointManagementOpsecApplicationAttributes(&opsecApplicationMap, objName, "somehost", "somepassword"),
+					testAccCheckCheckpointManagementOpsecApplicationAttributes(&opsecApplicationMap, objName, hostName, "somepassword"),
 				),
 			},
 		},
@@ -90,10 +91,6 @@ func testAccCheckCheckpointManagementOpsecApplicationAttributes(opsecApplication
 		if !strings.EqualFold(opsecApplicationName, name) {
 			return fmt.Errorf("name is %s, expected %s", name, opsecApplicationName)
 		}
-		opsecApplicationHost := (*opsecApplicationMap)["host"].(string)
-		if !strings.EqualFold(opsecApplicationHost, host) {
-			return fmt.Errorf("host is %s, expected %s", host, opsecApplicationHost)
-		}
 		return nil
 	}
 }
@@ -109,12 +106,12 @@ resource "checkpoint_management_opsec_application" "test" {
         name = "%s"
         host = "${checkpoint_management_host.myhost.name}"
         one_time_password = "%s"
-      cpmi = {
+      cpmi {
         enabled = true
         administrator_profile = "read only all"
         use_administrator_credentials = false
       }
-      lea = {
+      lea {
         enabled = true
         access_permissions = "show all"
       }

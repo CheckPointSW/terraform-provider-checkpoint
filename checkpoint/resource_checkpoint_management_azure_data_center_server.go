@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
 )
@@ -169,24 +169,24 @@ func createManagementAzureDataCenterServer(d *schema.ResourceData, m interface{}
 
 	addAzureDataCenterServerRes, err := client.ApiCall("add-data-center-server", azureDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addAzureDataCenterServerRes.Success {
 		if addAzureDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addAzureDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addAzureDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addAzureDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": azureDataCenterServer["name"],
 	}
 	showAzureDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureDataCenterServerRes.Success {
-		return fmt.Errorf(showAzureDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showAzureDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementAzureDataCenterServer(d, m)
@@ -200,14 +200,14 @@ func readManagementAzureDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	showAzureDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureDataCenterServerRes.Success {
 		if objectNotFound(showAzureDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAzureDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureDataCenterServerRes.ErrorMsg)
 	}
 	azureDataCenterServer := showAzureDataCenterServerRes.GetData()
 
@@ -343,14 +343,14 @@ func updateManagementAzureDataCenterServer(d *schema.ResourceData, m interface{}
 
 	updateAzureDataCenterServerRes, err := client.ApiCall("set-data-center-server", azureDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateAzureDataCenterServerRes.Success {
 		if updateAzureDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAzureDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAzureDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateAzureDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementAzureDataCenterServer(d, m)
@@ -377,9 +377,9 @@ func deleteManagementAzureDataCenterServer(d *schema.ResourceData, m interface{}
 	deleteAzureDataCenterServerRes, err := client.ApiCall("delete-data-center-server", azureDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAzureDataCenterServerRes.Success {
 		if deleteAzureDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAzureDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAzureDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

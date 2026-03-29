@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementServiceGtp() *schema.Resource {
@@ -29,7 +28,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				Description: "GTP version.",
 			},
 			"access_point_name": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by Access Point Name.",
 				Elem: &schema.Resource{
@@ -53,7 +52,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				Description: "Allow usage of static IP addresses.",
 			},
 			"apply_access_policy_on_user_traffic": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Apply Access Policy on user traffic.",
 				Elem: &schema.Resource{
@@ -77,7 +76,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				Description: "CS Fallback and SRVCC (Relevant for V2 only).",
 			},
 			"imsi_prefix": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by IMSI prefix.",
 				Elem: &schema.Resource{
@@ -96,7 +95,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				},
 			},
 			"interface_profile": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match only message types relevant to the given GTP interface. Relevant only for GTP V1 or V2.",
 				Elem: &schema.Resource{
@@ -115,7 +114,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				},
 			},
 			"ldap_group": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by an LDAP Group.",
 				Elem: &schema.Resource{
@@ -139,7 +138,7 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				},
 			},
 			"ms_isdn": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by an MS-ISDN.",
 				Elem: &schema.Resource{
@@ -161,7 +160,6 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by Radio Access Technology.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"utran": {
@@ -208,7 +206,6 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "(9-255).",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enable": {
@@ -241,7 +238,6 @@ func dataSourceManagementServiceGtp() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match by a selection mode.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable": {
@@ -319,10 +315,10 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 	showServiceGtpRes, err := client.ApiCall("show-service-gtp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceGtpRes.Success {
-		return fmt.Errorf(showServiceGtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceGtpRes.ErrorMsg)
 	}
 
 	serviceGtp := showServiceGtpRes.GetData()
@@ -340,23 +336,19 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 	if v := serviceGtp["version"]; v != nil {
 		_ = d.Set("version", v)
 	}
-	if v := serviceGtp["access-point-name"]; v != nil {
+	if serviceGtp["access-point-name"] != nil {
 
-		accessPointMap := make(map[string]interface{})
+		accessPointNameMap := serviceGtp["access-point-name"].(map[string]interface{})
 
-		payload := v.(map[string]interface{})
+		accessPointNameMapToReturn := make(map[string]interface{})
 
-		if v := payload["enable"]; v != nil {
-			accessPointMap["enable"] = strconv.FormatBool(v.(bool))
+		if v := accessPointNameMap["enable"]; v != nil {
+			accessPointNameMapToReturn["enable"] = v
 		}
 		if v := payload["apn"]; v != nil {
-			innerMap := v.(map[string]interface{})
-
-			accessPointMap["apn"] = innerMap["name"].(string)
-
+			accessPointNameMapToReturn["apn"] = v.(map[string]interface{})["name"].(string)
 		}
-		log.Println("map is ", accessPointMap)
-		_ = d.Set("access_point_name", accessPointMap)
+		_ = d.Set("access_point_name", []interface{}{accessPointNameMapToReturn})
 
 	} else {
 		_ = d.Set("access_point_name", nil)
@@ -365,62 +357,66 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 		d.Set("allow_usage_of_static_ip", v)
 	}
 
-	if v := serviceGtp["apply-access-policy-on-user-traffic"]; v != nil {
+	if serviceGtp["apply-access-policy-on-user-traffic"] != nil {
 
-		payload := v.(map[string]interface{})
+		applyAccessPolicyOnUserTrafficMap := serviceGtp["apply-access-policy-on-user-traffic"].(map[string]interface{})
 
-		res := make(map[string]interface{})
+		applyAccessPolicyOnUserTrafficMapToReturn := make(map[string]interface{})
 
-		if v := payload["enable"]; v != nil {
-			res["enable"] = strconv.FormatBool(v.(bool))
+		if v := applyAccessPolicyOnUserTrafficMap["enable"]; v != nil {
+			applyAccessPolicyOnUserTrafficMapToReturn["enable"] = v
 		}
-		if v := payload["add-imsi-field-to-log"]; v != nil {
-			res["add_imsi_field_to_log"] = strconv.FormatBool(v.(bool))
+		if v := applyAccessPolicyOnUserTrafficMap["add-imsi-field-to-log"]; v != nil {
+			applyAccessPolicyOnUserTrafficMapToReturn["add_imsi_field_to_log"] = v
 		}
-		d.Set("apply_access_policy_on_user_traffic", res)
+
+		_ = d.Set("apply_access_policy_on_user_traffic", []interface{}{applyAccessPolicyOnUserTrafficMapToReturn})
+
 	} else {
-		d.Set("apply_access_policy_on_user_traffic", nil)
+		_ = d.Set("apply_access_policy_on_user_traffic", nil)
 	}
 
 	if v := serviceGtp["cs-fallback-and-srvcc"]; v != nil {
 		d.Set("cs_fallback_and_srvcc", v)
 	}
 
-	if v := serviceGtp["imsi-prefix"]; v != nil {
-		payload := v.(map[string]interface{})
+	if serviceGtp["imsi-prefix"] != nil {
 
-		res := make(map[string]interface{})
+		imsiPrefixMap := serviceGtp["imsi-prefix"].(map[string]interface{})
 
-		if v := payload["enable"]; v != nil {
-			res["enable"] = strconv.FormatBool(v.(bool))
+		imsiPrefixMapToReturn := make(map[string]interface{})
+
+		if v := imsiPrefixMap["enable"]; v != nil {
+			imsiPrefixMapToReturn["enable"] = v
 		}
-		if v := payload["prefix"]; v != nil {
-			res["prefix"] = v
+		if v := imsiPrefixMap["prefix"]; v != nil {
+			imsiPrefixMapToReturn["prefix"] = v
 		}
 
-		d.Set("imsi_prefix", res)
+		_ = d.Set("imsi_prefix", []interface{}{imsiPrefixMapToReturn})
+
 	} else {
-		d.Set("imsi_prefix", nil)
+		_ = d.Set("imsi_prefix", nil)
 	}
 
-	if v := serviceGtp["interface-profile"]; v != nil {
-		payload := v.(map[string]interface{})
+	if serviceGtp["interface-profile"] != nil {
 
-		res := make(map[string]interface{})
+		interfaceProfileMap := serviceGtp["interface-profile"].(map[string]interface{})
 
-		if v := payload["profile"]; v != nil {
-			profileMap := v.(map[string]interface{})
-			if j, _ := profileMap["name"]; j != nil {
-				res["profile"] = j
-			}
-		}
-		if v := payload["custom-message-types"]; v != nil {
-			res["custom_message_types"] = v
+		interfaceProfileMapToReturn := make(map[string]interface{})
+
+		if v := interfaceProfileMap["profile"]; v != nil {
+			interfaceProfileMapToReturn["profile"] = v.(map[string]interface{})["name"].(string)
 		}
 
-		d.Set("interface_profile", res)
+		if v := interfaceProfileMap["custom-message-types"]; v != nil {
+			interfaceProfileMapToReturn["custom_message_types"] = v
+		}
+
+		_ = d.Set("interface_profile", []interface{}{interfaceProfileMapToReturn})
+
 	} else {
-		d.Set("interface_profile", nil)
+		_ = d.Set("interface_profile", nil)
 	}
 
 	if serviceGtp["ldap-group"] != nil {
@@ -429,19 +425,20 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 
 		ldapGroupMapToReturn := make(map[string]interface{})
 
-		if v, _ := ldapGroupMap["enable"]; v != nil {
-			ldapGroupMapToReturn["enable"] = strconv.FormatBool(v.(bool))
+		if v := ldapGroupMap["enable"]; v != nil {
+			ldapGroupMapToReturn["enable"] = v
 		}
+
 		if v, _ := ldapGroupMap["group"]; v != nil {
-			groupMap := v.(map[string]interface{})
-			if j, _ := groupMap["name"]; j != nil {
-				ldapGroupMapToReturn["group"] = j.(string)
-			}
+			ldapGroupMapToReturn["group"] = v.(map[string]interface{})["name"].(string)
 		}
-		if v, _ := ldapGroupMap["according-to"]; v != nil {
+
+		if v := ldapGroupMap["according-to"]; v != nil {
 			ldapGroupMapToReturn["according_to"] = v
 		}
-		_ = d.Set("ldap_group", ldapGroupMapToReturn)
+
+		_ = d.Set("ldap_group", []interface{}{ldapGroupMapToReturn})
+
 	} else {
 		_ = d.Set("ldap_group", nil)
 	}
@@ -452,13 +449,15 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 
 		msIsdnMapToReturn := make(map[string]interface{})
 
-		if v, _ := msIsdnMap["enable"]; v != nil {
-			msIsdnMapToReturn["enable"] = strconv.FormatBool(v.(bool))
+		if v := msIsdnMap["enable"]; v != nil {
+			msIsdnMapToReturn["enable"] = v
 		}
-		if v, _ := msIsdnMap["ms-isdn"]; v != nil {
+		if v := msIsdnMap["ms-isdn"]; v != nil {
 			msIsdnMapToReturn["ms_isdn"] = v
 		}
-		_ = d.Set("ms_isdn", msIsdnMapToReturn)
+
+		_ = d.Set("ms_isdn", []interface{}{msIsdnMapToReturn})
+
 	} else {
 		_ = d.Set("ms_isdn", nil)
 	}

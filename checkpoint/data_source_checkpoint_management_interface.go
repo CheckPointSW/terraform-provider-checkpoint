@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -36,7 +36,6 @@ func dataSourceManagementInterface() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Anti Spoofing Settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"action": {
@@ -180,7 +179,6 @@ func dataSourceManagementInterface() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Security Zone Settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auto_calculated": {
@@ -243,7 +241,6 @@ func dataSourceManagementInterface() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Topology Settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"interface_leads_to_dmz": {
@@ -273,7 +270,6 @@ func dataSourceManagementInterface() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Topology Settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"interface_leads_to_dmz": {
@@ -303,7 +299,6 @@ func dataSourceManagementInterface() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Topology Settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"interface_leads_to_dmz": {
@@ -363,14 +358,14 @@ func dataSourceManagementInterfaceRead(d *schema.ResourceData, m interface{}) er
 	}
 	showInterfaceRes, err := client.ApiCall("show-interface", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInterfaceRes.Success {
 		if objectNotFound(showInterfaceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInterfaceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInterfaceRes.ErrorMsg)
 	}
 
 	interfaceMap := showInterfaceRes.GetData()

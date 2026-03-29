@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 
 	"strconv"
@@ -151,9 +151,9 @@ func createManagementIdpAdministratorGroup(d *schema.ResourceData, m interface{}
 	addIdpAdministratorGroupRes, err := client.ApiCall("add-idp-administrator-group", idpAdministratorGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addIdpAdministratorGroupRes.Success {
 		if addIdpAdministratorGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addIdpAdministratorGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addIdpAdministratorGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addIdpAdministratorGroupRes.GetData()["uid"].(string))
@@ -171,14 +171,14 @@ func readManagementIdpAdministratorGroup(d *schema.ResourceData, m interface{}) 
 
 	showIdpAdministratorGroupRes, err := client.ApiCall("show-idp-administrator-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdpAdministratorGroupRes.Success {
 		if objectNotFound(showIdpAdministratorGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdpAdministratorGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdpAdministratorGroupRes.ErrorMsg)
 	}
 
 	idpAdministratorGroup := showIdpAdministratorGroupRes.GetData()
@@ -343,9 +343,9 @@ func updateManagementIdpAdministratorGroup(d *schema.ResourceData, m interface{}
 	updateIdpAdministratorGroupRes, err := client.ApiCall("set-idp-administrator-group", idpAdministratorGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateIdpAdministratorGroupRes.Success {
 		if updateIdpAdministratorGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateIdpAdministratorGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateIdpAdministratorGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementIdpAdministratorGroup(d, m)
@@ -370,9 +370,9 @@ func deleteManagementIdpAdministratorGroup(d *schema.ResourceData, m interface{}
 	deleteIdpAdministratorGroupRes, err := client.ApiCall("delete-idp-administrator-group", idpAdministratorGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteIdpAdministratorGroupRes.Success {
 		if deleteIdpAdministratorGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteIdpAdministratorGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteIdpAdministratorGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

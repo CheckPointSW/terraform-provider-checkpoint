@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
 )
@@ -25,6 +26,14 @@ func resourceManagementNatRule() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNatRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNatRuleStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"package": {
 				Type:        schema.TypeString,
@@ -32,7 +41,8 @@ func resourceManagementNatRule() *schema.Resource {
 				Description: "Name of the package.",
 			},
 			"position": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -156,9 +166,10 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("package"); ok {
 		natRule["package"] = v.(string)
 	}
+
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				natRule["position"] = "top" // entire rule-base
 			} else {
@@ -166,15 +177,15 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			natRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			natRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				natRule["position"] = "bottom" // entire rule-base
 			} else {
@@ -239,9 +250,9 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	addNatRuleRes, err := client.ApiCall("add-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatRuleRes.Success {
 		if addNatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addNatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addNatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNatRuleRes.GetData()["uid"].(string))
@@ -260,7 +271,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 
 	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNatRuleRes.Success {
 		// Handle delete resource from other clients
@@ -268,7 +279,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showNatRuleRes.ErrorMsg)
 	}
 
 	natRule := showNatRuleRes.GetData()
@@ -354,7 +365,7 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					natRule["new-position"] = "top" // entire rule-base
 				} else {
@@ -362,15 +373,15 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				natRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				natRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					natRule["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -437,9 +448,9 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	updateNatRuleRes, err := client.ApiCall("set-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatRuleRes.Success {
 		if updateNatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementNatRule(d, m)
 }
@@ -456,9 +467,9 @@ func deleteManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	deleteAccessRuleRes, err := client.ApiCall("delete-nat-rule", natRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId("")

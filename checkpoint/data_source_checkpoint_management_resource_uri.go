@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataDourceManagementResourceUri() *schema.Resource {
@@ -29,7 +28,7 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				Description: "Select the use of the URI resource.",
 			},
 			"connection_methods": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Connection methods.",
 				Elem: &schema.Resource{
@@ -66,7 +65,6 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match - UFP settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"server": {
@@ -101,14 +99,12 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Match - Wildcards settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"schemes": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Select the URI Schemes to which this resource applies.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"http": {
@@ -153,7 +149,6 @@ func dataDourceManagementResourceUri() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Select the URI Schemes to which this resource applies.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"get": {
@@ -206,7 +201,6 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Action settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"replacement_uri": {
@@ -246,7 +240,6 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "CVP settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable_cvp": {
@@ -288,7 +281,7 @@ func dataDourceManagementResourceUri() *schema.Resource {
 				},
 			},
 			"soap": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "SOAP settings.",
 				Elem: &schema.Resource{
@@ -350,14 +343,14 @@ func dataSourceManagementResourceUriRead(d *schema.ResourceData, m interface{}) 
 
 	showResourceUriRes, err := client.ApiCall("show-resource-uri", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriRes.Success {
 		if objectNotFound(showResourceUriRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceUriRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriRes.ErrorMsg)
 	}
 
 	resourceUri := showResourceUriRes.GetData()
@@ -383,16 +376,18 @@ func dataSourceManagementResourceUriRead(d *schema.ResourceData, m interface{}) 
 
 		connectionMethodsMapToReturn := make(map[string]interface{})
 
-		if v, _ := connectionMethodsMap["transparent"]; v != nil {
-			connectionMethodsMapToReturn["transparent"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["transparent"]; v != nil {
+			connectionMethodsMapToReturn["transparent"] = v
 		}
-		if v, _ := connectionMethodsMap["proxy"]; v != nil {
-			connectionMethodsMapToReturn["proxy"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["proxy"]; v != nil {
+			connectionMethodsMapToReturn["proxy"] = v
 		}
-		if v, _ := connectionMethodsMap["tunneling"]; v != nil {
-			connectionMethodsMapToReturn["tunneling"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["tunneling"]; v != nil {
+			connectionMethodsMapToReturn["tunneling"] = v
 		}
-		_ = d.Set("connection_methods", connectionMethodsMapToReturn)
+
+		_ = d.Set("connection_methods", []interface{}{connectionMethodsMapToReturn})
+
 	} else {
 		_ = d.Set("connection_methods", nil)
 	}
@@ -581,16 +576,18 @@ func dataSourceManagementResourceUriRead(d *schema.ResourceData, m interface{}) 
 
 		soapMapToReturn := make(map[string]interface{})
 
-		if v, _ := soapMap["inspection"]; v != nil {
+		if v := soapMap["inspection"]; v != nil {
 			soapMapToReturn["inspection"] = v
 		}
-		if v, _ := soapMap["file-id"]; v != nil {
+		if v := soapMap["file-id"]; v != nil {
 			soapMapToReturn["file_id"] = v
 		}
-		if v, _ := soapMap["track-connections"]; v != nil {
+		if v := soapMap["track-connections"]; v != nil {
 			soapMapToReturn["track_connections"] = v
 		}
-		_ = d.Set("soap", soapMapToReturn)
+
+		_ = d.Set("soap", []interface{}{soapMapToReturn})
+
 	} else {
 		_ = d.Set("soap", nil)
 	}

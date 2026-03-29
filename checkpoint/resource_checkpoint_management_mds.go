@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -198,9 +198,9 @@ func createManagementMds(d *schema.ResourceData, m interface{}) error {
 	addMdsRes, err := client.ApiCall("add-mds", mds, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addMdsRes.Success {
 		if addMdsRes.ErrorMsg != "" {
-			return fmt.Errorf(addMdsRes.ErrorMsg)
+			return fmt.Errorf("%s", addMdsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMdsRes.GetData()["uid"].(string))
@@ -218,14 +218,14 @@ func readManagementMds(d *schema.ResourceData, m interface{}) error {
 
 	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMdsRes.Success {
 		if objectNotFound(showMdsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMdsRes.ErrorMsg)
+		return fmt.Errorf("%s", showMdsRes.ErrorMsg)
 	}
 
 	mds := showMdsRes.GetData()
@@ -413,9 +413,9 @@ func updateManagementMds(d *schema.ResourceData, m interface{}) error {
 	updateMdsRes, err := client.ApiCall("set-mds", mds, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateMdsRes.Success {
 		if updateMdsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMdsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMdsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMds(d, m)
@@ -440,9 +440,9 @@ func deleteManagementMds(d *schema.ResourceData, m interface{}) error {
 	deleteMdsRes, err := client.ApiCall("delete-mds", mdsPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteMdsRes.Success {
 		if deleteMdsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMdsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMdsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

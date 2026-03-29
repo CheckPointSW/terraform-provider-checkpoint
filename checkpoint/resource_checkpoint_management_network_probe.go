@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -13,6 +14,14 @@ func resourceManagementNetworkProbe() *schema.Resource {
 		Read:   readManagementNetworkProbe,
 		Update: updateManagementNetworkProbe,
 		Delete: deleteManagementNetworkProbe,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNetworkProbeV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNetworkProbeStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -20,7 +29,8 @@ func resourceManagementNetworkProbe() *schema.Resource {
 				Description: "Object name.",
 			},
 			"http_options": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Additional options when [protocol] is set to \"http\".",
 				Elem: &schema.Resource{
@@ -34,7 +44,8 @@ func resourceManagementNetworkProbe() *schema.Resource {
 				},
 			},
 			"icmp_options": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Additional options when [protocol] is set to \"icmp\".",
 				Elem: &schema.Resource{
@@ -122,27 +133,37 @@ func createManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 		networkProbe["name"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("http_options"); ok {
+	if v, ok := d.GetOk("http_options"); ok {
 
-		res := make(map[string]interface{})
+		httpOptionsList := v.([]interface{})
 
-		if v, ok := d.GetOk("http_options.destination"); ok {
-			res["destination"] = v.(string)
+		if len(httpOptionsList) > 0 {
+
+			httpOptionsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("http_options.0.destination"); ok {
+				httpOptionsPayload["destination"] = v.(string)
+			}
+			networkProbe["http-options"] = httpOptionsPayload
 		}
-		networkProbe["http-options"] = res
 	}
 
-	if _, ok := d.GetOk("icmp_options"); ok {
+	if v, ok := d.GetOk("icmp_options"); ok {
 
-		res := make(map[string]interface{})
+		icmpOptionsList := v.([]interface{})
 
-		if v, ok := d.GetOk("icmp_options.destination"); ok {
-			res["destination"] = v.(string)
+		if len(icmpOptionsList) > 0 {
+
+			icmpOptionsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("icmp_options.0.destination"); ok {
+				icmpOptionsPayload["destination"] = v.(string)
+			}
+			if v, ok := d.GetOk("icmp_options.0.source"); ok {
+				icmpOptionsPayload["source"] = v.(string)
+			}
+			networkProbe["icmp-options"] = icmpOptionsPayload
 		}
-		if v, ok := d.GetOk("icmp_options.source"); ok {
-			res["source"] = v.(string)
-		}
-		networkProbe["icmp-options"] = res
 	}
 
 	if v, ok := d.GetOk("install_on"); ok {
@@ -186,9 +207,9 @@ func createManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	addNetworkProbeRes, err := client.ApiCall("add-network-probe", networkProbe, client.GetSessionID(), true, false)
 	if err != nil || !addNetworkProbeRes.Success {
 		if addNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", addNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNetworkProbeRes.GetData()["uid"].(string))
@@ -206,14 +227,14 @@ func readManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 
 	showNetworkProbeRes, err := client.ApiCall("show-network-probe", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkProbeRes.Success {
 		if objectNotFound(showNetworkProbeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkProbeRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkProbeRes.ErrorMsg)
 	}
 
 	networkProbe := showNetworkProbeRes.GetData()
@@ -230,10 +251,11 @@ func readManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 
 		httpOptionsMapToReturn := make(map[string]interface{})
 
-		if v, _ := httpOptionsMap["destination"]; v != nil {
+		if v := httpOptionsMap["destination"]; v != nil {
 			httpOptionsMapToReturn["destination"] = v
 		}
-		_ = d.Set("http_options", httpOptionsMapToReturn)
+		_ = d.Set("http_options", []interface{}{httpOptionsMapToReturn})
+
 	} else {
 		_ = d.Set("http_options", nil)
 	}
@@ -244,13 +266,14 @@ func readManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 
 		icmpOptionsMapToReturn := make(map[string]interface{})
 
-		if v, _ := icmpOptionsMap["destination"]; v != nil {
+		if v := icmpOptionsMap["destination"]; v != nil {
 			icmpOptionsMapToReturn["destination"] = v
 		}
-		if v, _ := icmpOptionsMap["source"]; v != nil {
+		if v := icmpOptionsMap["source"]; v != nil {
 			icmpOptionsMapToReturn["source"] = v
 		}
-		_ = d.Set("icmp_options", icmpOptionsMapToReturn)
+		_ = d.Set("icmp_options", []interface{}{icmpOptionsMapToReturn})
+
 	} else {
 		_ = d.Set("icmp_options", nil)
 	}
@@ -334,30 +357,40 @@ func updateManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("http_options") {
 
-		if _, ok := d.GetOk("http_options"); ok {
+		if v, ok := d.GetOk("http_options"); ok {
 
-			res := make(map[string]interface{})
+			httpOptionsList := v.([]interface{})
 
-			if v, ok := d.GetOk("http_options.destination"); ok {
-				res["destination"] = v.(string)
+			if len(httpOptionsList) > 0 {
+
+				httpOptionsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("http_options.0.destination"); ok {
+					httpOptionsPayload["destination"] = v.(string)
+				}
+				networkProbe["http-options"] = httpOptionsPayload
 			}
-			networkProbe["http-options"] = res
 		}
 	}
 
 	if d.HasChange("icmp_options") {
 
-		if _, ok := d.GetOk("icmp_options"); ok {
+		if v, ok := d.GetOk("icmp_options"); ok {
 
-			res := make(map[string]interface{})
+			icmpOptionsList := v.([]interface{})
 
-			if v, ok := d.GetOk("icmp_options.destination"); ok {
-				res["destination"] = v.(string)
+			if len(icmpOptionsList) > 0 {
+
+				icmpOptionsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("icmp_options.0.destination"); ok {
+					icmpOptionsPayload["destination"] = v.(string)
+				}
+				if v, ok := d.GetOk("icmp_options.0.source"); ok {
+					icmpOptionsPayload["source"] = v.(string)
+				}
+				networkProbe["icmp-options"] = icmpOptionsPayload
 			}
-			if d.HasChange("icmp_options.source") {
-				res["source"] = d.Get("icmp_options.source")
-			}
-			networkProbe["icmp-options"] = res
 		}
 	}
 
@@ -412,9 +445,9 @@ func updateManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	updateNetworkProbeRes, err := client.ApiCall("set-network-probe", networkProbe, client.GetSessionID(), true, false)
 	if err != nil || !updateNetworkProbeRes.Success {
 		if updateNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementNetworkProbe(d, m)
@@ -433,9 +466,9 @@ func deleteManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	deleteNetworkProbeRes, err := client.ApiCall("delete-network-probe", networkProbePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteNetworkProbeRes.Success {
 		if deleteNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -3,10 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
-	"strconv"
 )
 
 func dataSourceManagementCheckpointHost() *schema.Resource {
@@ -83,7 +81,7 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 				Description: "IPv6 address.",
 			},
 			"nat_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -147,7 +145,7 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 				Description: "State the Secure Internal Connection Trust.",
 			},
 			"management_blades": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Management blades.",
 				Elem: &schema.Resource{
@@ -192,7 +190,7 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 							Computed:    true,
 							Description: "Secondary Management enabled.",
 						},
-						"identity-logging": {
+						"identity_logging": {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Identity Logging enabled.",
@@ -201,7 +199,7 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 				},
 			},
 			"logs_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
@@ -412,10 +410,10 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 	showCheckpointHostRes, err := client.ApiCall("show-checkpoint-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showCheckpointHostRes.Success {
-		return fmt.Errorf(showCheckpointHostRes.ErrorMsg)
+		return fmt.Errorf("%s", showCheckpointHostRes.ErrorMsg)
 	}
 
 	checkpointHost := showCheckpointHostRes.GetData()
@@ -498,32 +496,26 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := natSettingsMap["auto-rule"]; v != nil {
-			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
 		}
-		if v, _ := natSettingsMap["ipv4-address"]; v != nil && v != "" {
+		if v := natSettingsMap["ipv4-address"]; v != nil {
 			natSettingsMapToReturn["ipv4_address"] = v
 		}
-		if v, _ := natSettingsMap["ipv6-address"]; v != nil && v != "" {
+		if v := natSettingsMap["ipv6-address"]; v != nil {
 			natSettingsMapToReturn["ipv6_address"] = v
 		}
-		if v, _ := natSettingsMap["hide-behind"]; v != nil {
+		if v := natSettingsMap["hide-behind"]; v != nil {
 			natSettingsMapToReturn["hide_behind"] = v
 		}
-		if v, _ := natSettingsMap["install-on"]; v != nil {
+		if v := natSettingsMap["install-on"]; v != nil {
 			natSettingsMapToReturn["install_on"] = v
 		}
-		if v, _ := natSettingsMap["method"]; v != nil {
+		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
 
-		_, natSettingsInConf := d.GetOk("nat_settings")
-		defaultNatSettings := map[string]interface{}{"auto_rule": "false"}
-		if reflect.DeepEqual(defaultNatSettings, natSettingsMapToReturn) && !natSettingsInConf {
-			_ = d.Set("nat_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("nat_settings", natSettingsMapToReturn)
-		}
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {
 		_ = d.Set("nat_settings", nil)
@@ -559,41 +551,35 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 		managementBladesMapToReturn := make(map[string]interface{})
 
-		if v, _ := managementBladesMap["network-policy-management"]; v != nil {
-			managementBladesMapToReturn["network_policy_management"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["network-policy-management"]; v != nil {
+			managementBladesMapToReturn["network_policy_management"] = v
 		}
-		if v, _ := managementBladesMap["logging-and-status"]; v != nil {
-			managementBladesMapToReturn["logging_and_status"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["secondary"]; v != nil {
+			managementBladesMapToReturn["secondary"] = v
 		}
-		if v, _ := managementBladesMap["smart-event-server"]; v != nil {
-			managementBladesMapToReturn["smart_event_server"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["logging-and-status"]; v != nil {
+			managementBladesMapToReturn["logging_and_status"] = v
 		}
-		if v, _ := managementBladesMap["smart-event-correlation"]; v != nil {
-			managementBladesMapToReturn["smart_event_correlation"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["endpoint-policy"]; v != nil {
+			managementBladesMapToReturn["endpoint_policy"] = v
 		}
-		if v, _ := managementBladesMap["endpoint-policy"]; v != nil {
-			managementBladesMapToReturn["endpoint_policy"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["identity-logging"]; v != nil {
+			managementBladesMapToReturn["identity_logging"] = v
 		}
-		if v, _ := managementBladesMap["compliance"]; v != nil {
-			managementBladesMapToReturn["compliance"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["smart-event-correlation"]; v != nil {
+			managementBladesMapToReturn["smart_event_correlation"] = v
 		}
-		if v, _ := managementBladesMap["user-directory"]; v != nil {
-			managementBladesMapToReturn["user_directory"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["smart-event-server"]; v != nil {
+			managementBladesMapToReturn["smart_event_server"] = v
 		}
-		if v, _ := managementBladesMap["secondary"]; v != nil {
-			managementBladesMapToReturn["secondary"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["compliance"]; v != nil {
+			managementBladesMapToReturn["compliance"] = v
 		}
-		if v, _ := managementBladesMap["identity-logging"]; v != nil {
-			managementBladesMapToReturn["identity_logging"] = strconv.FormatBool(v.(bool))
+		if v := managementBladesMap["user-directory"]; v != nil {
+			managementBladesMapToReturn["user_directory"] = v
 		}
 
-		_, managementBladesInConf := d.GetOk("management_blades")
-		defaultManagementBlades := map[string]interface{}{"network_policy_management": "false", "logging_and_status": "false", "smart_event_server": "false", "smart_event_correlation": "false", "endpoint_policy": "false", "compliance": "false", "user_directory": "false", "secondary": "true", "identity_logging": "false"}
-		if reflect.DeepEqual(defaultManagementBlades, managementBladesMapToReturn) && !managementBladesInConf {
-			_ = d.Set("management_blades", map[string]interface{}{})
-		} else {
-			_ = d.Set("management_blades", managementBladesMapToReturn)
-		}
+		_ = d.Set("management_blades", []interface{}{managementBladesMapToReturn})
 
 	} else {
 		_ = d.Set("management_blades", nil)
@@ -605,88 +591,99 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 		logsSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := logsSettingsMap["free-disk-space-metrics"]; v != nil {
-			logsSettingsMapToReturn["free_disk_space_metrics"] = v
+		if v := logsSettingsMap["accept-syslog-messages"]; v != nil {
+			logsSettingsMapToReturn["accept_syslog_messages"] = v
 		}
-		if v, _ := logsSettingsMap["accept-syslog-messages"]; v != nil {
-			logsSettingsMapToReturn["accept_syslog_messages"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["alert-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below"] = v
 		}
-		if v, _ := logsSettingsMap["alert-when-free-disk-space-below"]; v != nil {
-			logsSettingsMapToReturn["alert_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["alert-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below_metrics"] = v
 		}
-		if v, _ := logsSettingsMap["alert-when-free-disk-space-below-threshold"]; v != nil {
+		if v := logsSettingsMap["alert-when-free-disk-space-below-threshold"]; v != nil {
 			logsSettingsMapToReturn["alert_when_free_disk_space_below_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["alert-when-free-disk-space-below-type"]; v != nil {
+		if v := logsSettingsMap["alert-when-free-disk-space-below-type"]; v != nil {
 			logsSettingsMapToReturn["alert_when_free_disk_space_below_type"] = v
 		}
-		if v, _ := logsSettingsMap["before-delete-keep-logs-from-the-last-days"]; v != nil {
-			logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["before-delete-keep-logs-from-the-last-days"]; v != nil {
+			logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days"] = v
 		}
-		if v, _ := logsSettingsMap["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
+		if v := logsSettingsMap["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
 			logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["before-delete-run-script"]; v != nil {
-			logsSettingsMapToReturn["before_delete_run_script"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["before-delete-run-script"]; v != nil {
+			logsSettingsMapToReturn["before_delete_run_script"] = v
 		}
-		if v, _ := logsSettingsMap["before-delete-run-script-command"]; v != nil {
+		if v := logsSettingsMap["before-delete-run-script-command"]; v != nil {
 			logsSettingsMapToReturn["before_delete_run_script_command"] = v
 		}
-		if v, _ := logsSettingsMap["delete-index-files-older-than-days"]; v != nil {
-			logsSettingsMapToReturn["delete_index_files_older_than_days"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-index-files-older-than-days"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_older_than_days"] = v
 		}
-		if v, _ := logsSettingsMap["delete-index-files-older-than-days-threshold"]; v != nil {
+		if v := logsSettingsMap["delete-index-files-older-than-days-threshold"]; v != nil {
 			logsSettingsMapToReturn["delete_index_files_older_than_days_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["delete-when-free-disk-space-below"]; v != nil {
-			logsSettingsMapToReturn["delete_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below"] = v
 		}
-		if v, _ := logsSettingsMap["delete-when-free-disk-space-below-threshold"]; v != nil {
+		if v := logsSettingsMap["delete-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logsSettingsMap["delete-when-free-disk-space-below-threshold"]; v != nil {
 			logsSettingsMapToReturn["delete_when_free_disk_space_below_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["detect-new-citrix-ica-application-names"]; v != nil {
-			logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["detect-new-citrix-ica-application-names"]; v != nil {
+			logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = v
 		}
-		if v, _ := logsSettingsMap["enable-log-indexing"]; v != nil {
-			logsSettingsMapToReturn["enable_log_indexing"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["distribute-logs-between-all-active-servers"]; v != nil {
+			logsSettingsMapToReturn["distribute_logs_between_all_active_servers"] = v
 		}
-		if v, _ := logsSettingsMap["forward-logs-to-log-server"]; v != nil {
-			logsSettingsMapToReturn["forward_logs_to_log_server"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["enable-log-indexing"]; v != nil {
+			logsSettingsMapToReturn["enable_log_indexing"] = v
 		}
-		if v, _ := logsSettingsMap["forward-logs-to-log-server-name"]; v != nil {
+		if v := logsSettingsMap["forward-logs-to-log-server"]; v != nil {
+			logsSettingsMapToReturn["forward_logs_to_log_server"] = v
+		}
+		if v := logsSettingsMap["forward-logs-to-log-server-name"]; v != nil {
 			logsSettingsMapToReturn["forward_logs_to_log_server_name"] = v
 		}
-		if v, _ := logsSettingsMap["forward-logs-to-log-server-schedule-name"]; v != nil {
+		if v := logsSettingsMap["forward-logs-to-log-server-schedule-name"]; v != nil {
 			logsSettingsMapToReturn["forward_logs_to_log_server_schedule_name"] = v
 		}
-		if v, _ := logsSettingsMap["rotate-log-by-file-size"]; v != nil {
-			logsSettingsMapToReturn["rotate_log_by_file_size"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["rotate-log-by-file-size"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_by_file_size"] = v
 		}
-		if v, _ := logsSettingsMap["rotate-log-file-size-threshold"]; v != nil {
+		if v := logsSettingsMap["rotate-log-file-size-threshold"]; v != nil {
 			logsSettingsMapToReturn["rotate_log_file_size_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["rotate-log-on-schedule"]; v != nil {
-			logsSettingsMapToReturn["rotate_log_on_schedule"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["rotate-log-on-schedule"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_on_schedule"] = v
 		}
-		if v, _ := logsSettingsMap["rotate-log-schedule-name"]; v != nil {
+		if v := logsSettingsMap["rotate-log-schedule-name"]; v != nil {
 			logsSettingsMapToReturn["rotate_log_schedule_name"] = v
 		}
-		if v, _ := logsSettingsMap["smart-event-intro-correletion-unit"]; v != nil {
-			logsSettingsMapToReturn["smart_event_intro_correletion_unit"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["smart-event-intro-correlation-unit"]; v != nil {
+			logsSettingsMapToReturn["smart_event_intro_correlation_unit"] = v
 		}
-		if v, _ := logsSettingsMap["stop-logging-when-free-disk-space-below"]; v != nil {
-			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below"] = v
 		}
-		if v, _ := logsSettingsMap["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
 			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_threshold"] = v
 		}
-		if v, _ := logsSettingsMap["turn-on-qos-logging"]; v != nil {
-			logsSettingsMapToReturn["turn_on_qos_logging"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["turn-on-qos-logging"]; v != nil {
+			logsSettingsMapToReturn["turn_on_qos_logging"] = v
 		}
-		if v, _ := logsSettingsMap["update-account-log-every"]; v != nil {
+		if v := logsSettingsMap["update-account-log-every"]; v != nil {
 			logsSettingsMapToReturn["update_account_log_every"] = v
 		}
-		_ = d.Set("logs_settings", logsSettingsMapToReturn)
+
+		_ = d.Set("logs_settings", []interface{}{logsSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("logs_settings", nil)
 	}

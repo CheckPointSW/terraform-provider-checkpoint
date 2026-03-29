@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -45,7 +45,6 @@ func dataSourceManagementLogExporter() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Log exporter attachments.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"add_link_to_log_attachment": {
@@ -70,7 +69,6 @@ func dataSourceManagementLogExporter() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Log exporter data manipulation.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"aggregate_log_updates": {
@@ -125,10 +123,10 @@ func dataSourceManagementLogExporterRead(d *schema.ResourceData, m interface{}) 
 
 	showLogExporterRes, err := client.ApiCallSimple("show-log-exporter", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLogExporterRes.Success {
-		return fmt.Errorf(showLogExporterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLogExporterRes.ErrorMsg)
 	}
 
 	logExporter := showLogExporterRes.GetData()

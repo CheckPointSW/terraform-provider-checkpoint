@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -108,9 +108,9 @@ func createManagementResourceMms(d *schema.ResourceData, m interface{}) error {
 	addResourceMmsRes, err := client.ApiCallSimple("add-resource-mms", resourceMms)
 	if err != nil || !addResourceMmsRes.Success {
 		if addResourceMmsRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceMmsRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceMmsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceMmsRes.GetData()["uid"].(string))
@@ -128,14 +128,14 @@ func readManagementResourceMms(d *schema.ResourceData, m interface{}) error {
 
 	showResourceMmsRes, err := client.ApiCallSimple("show-resource-mms", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceMmsRes.Success {
 		if objectNotFound(showResourceMmsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceMmsRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceMmsRes.ErrorMsg)
 	}
 
 	resourceMms := showResourceMmsRes.GetData()
@@ -238,9 +238,9 @@ func updateManagementResourceMms(d *schema.ResourceData, m interface{}) error {
 	updateResourceMmsRes, err := client.ApiCallSimple("set-resource-mms", resourceMms)
 	if err != nil || !updateResourceMmsRes.Success {
 		if updateResourceMmsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceMmsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceMmsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceMms(d, m)
@@ -259,9 +259,9 @@ func deleteManagementResourceMms(d *schema.ResourceData, m interface{}) error {
 	deleteResourceMmsRes, err := client.ApiCallSimple("delete-resource-mms", resourceMmsPayload)
 	if err != nil || !deleteResourceMmsRes.Success {
 		if deleteResourceMmsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceMmsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceMmsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

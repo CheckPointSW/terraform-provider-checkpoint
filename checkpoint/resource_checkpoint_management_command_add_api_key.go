@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAddApiKey() *schema.Resource {
@@ -49,7 +49,7 @@ func createManagementAddApiKey(d *schema.ResourceData, m interface{}) error {
 
 	AddApiKeyRes, _ := client.ApiCall("add-api-key", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddApiKeyRes.Success {
-		return fmt.Errorf(AddApiKeyRes.ErrorMsg)
+		return fmt.Errorf("%s", AddApiKeyRes.ErrorMsg)
 	}
 
 	d.SetId("add-api-key-" + acctest.RandString(10))

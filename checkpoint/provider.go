@@ -2,15 +2,15 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"log"
 	"strings"
 	"time"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"server": {
@@ -689,7 +689,7 @@ func login(client *checkpoint.ApiClient, username string, pwd string, apiKey str
 		return Session{}, err
 	}
 	if !loginRes.Success {
-		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
+		return Session{}, fmt.Errorf("%s", loginRes.ErrorMsg)
 	}
 
 	uid := ""

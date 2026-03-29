@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementRunThreatEmulationFileTypesOfflineUpdate() *schema.Resource {
@@ -43,7 +43,7 @@ func createManagementRunThreatEmulationFileTypesOfflineUpdate(d *schema.Resource
 
 	RunThreatEmulationFileTypesOfflineUpdateRes, _ := client.ApiCall("run-threat-emulation-file-types-offline-update", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RunThreatEmulationFileTypesOfflineUpdateRes.Success {
-		return fmt.Errorf(RunThreatEmulationFileTypesOfflineUpdateRes.ErrorMsg)
+		return fmt.Errorf("%s", RunThreatEmulationFileTypesOfflineUpdateRes.ErrorMsg)
 	}
 
 	d.SetId("run-threat-emulation-file-types-offline-update-" + acctest.RandString(10))

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -37,7 +37,7 @@ func dataSourceManagementShowUpdatableObject() *schema.Resource {
 				Description: "Unique identifier of the object in the Updatable Objects Repository.",
 			},
 			"additional_properties": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Additional properties on the object.",
 				Elem: &schema.Resource{
@@ -68,14 +68,12 @@ func dataSourceManagementShowUpdatableObject() *schema.Resource {
 			"updatable_object_meta_info": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"updated_on_updatable_objects_repository": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Last update time from the Updatable Objects Repository",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -132,10 +130,10 @@ func dataSourceManagementShowUpdatableObjectRead(d *schema.ResourceData, m inter
 	}
 	showUpdatableObjectRes, err := client.ApiCall("show-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUpdatableObjectRes.Success {
-		return fmt.Errorf(showUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showUpdatableObjectRes.ErrorMsg)
 	}
 
 	updatableObjectJson := showUpdatableObjectRes.GetData()
@@ -162,23 +160,27 @@ func dataSourceManagementShowUpdatableObjectRead(d *schema.ResourceData, m inter
 	if v := updatableObjectJson["uid-in-updatable-objects-repository"]; v != nil {
 		_ = d.Set("uid_in_updatable_objects_repository", v.(string))
 	}
-	if v := updatableObjectJson["additional-properties"]; v != nil {
-		additionalPropertiesJson := v.(map[string]interface{})
-		additionalPropertiesState := make(map[string]interface{})
-		if v := additionalPropertiesJson["description"]; v != nil {
-			additionalPropertiesState["description"] = v
+	if updatableObjectJson["additional-properties"] != nil {
+
+		additionalPropertiesMap := updatableObjectJson["additional-properties"].(map[string]interface{})
+
+		additionalPropertiesMapToReturn := make(map[string]interface{})
+
+		if v := additionalPropertiesMap["description"]; v != nil {
+			additionalPropertiesMapToReturn["description"] = v
 		}
-		if v := additionalPropertiesJson["info-text"]; v != nil {
-			additionalPropertiesState["info_text"] = v
+		if v := additionalPropertiesMap["info-text"]; v != nil {
+			additionalPropertiesMapToReturn["info_text"] = v
 		}
-		if v := additionalPropertiesJson["info-url"]; v != nil {
-			additionalPropertiesState["info_url"] = v
+		if v := additionalPropertiesMap["info-url"]; v != nil {
+			additionalPropertiesMapToReturn["info_url"] = v
 		}
-		if v := additionalPropertiesJson["uri"]; v != nil {
-			additionalPropertiesState["uri"] = v
+		if v := additionalPropertiesMap["uri"]; v != nil {
+			additionalPropertiesMapToReturn["uri"] = v
 		}
 
-		_ = d.Set("additional_properties", additionalPropertiesState)
+		_ = d.Set("additional_properties", []interface{}{additionalPropertiesMapToReturn})
+
 	} else {
 		_ = d.Set("additional_properties", nil)
 	}

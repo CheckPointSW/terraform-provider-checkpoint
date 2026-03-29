@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementAppControlAdvancedSettings() *schema.Resource {
@@ -24,7 +24,6 @@ func dataSourceManagementAppControlAdvancedSettings() *schema.Resource {
 			"url_filtering_settings": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "In this section user can enable  URL Filtering features.<br>This property is not available in the Global domain of an MDS machine.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -80,7 +79,7 @@ func dataSourceManagementAppControlAdvancedSettings() *schema.Resource {
 				Description: "Hold - Requests are blocked until categorization is complete.<br>Background - Requests are allowed until categorization is complete.<br>Custom - configure different settings depending on the service -Lets you set different modes for URL Filtering and Social Networking Widgets.<br>This property is not available in the Global domain of an MDS machine.",
 			},
 			"custom_categorization_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Website categorization mode - select the mode that is used for website categorization.<br>This property is not available in the Global domain of an MDS machine.",
 				Elem: &schema.Resource{
@@ -120,7 +119,7 @@ func dataSourceManagementAppControlAdvancedSettingsRead(d *schema.ResourceData, 
 
 	appControlAdvancedSettingsRes, _ := client.ApiCall("show-app-control-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !appControlAdvancedSettingsRes.Success {
-		return fmt.Errorf(appControlAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", appControlAdvancedSettingsRes.ErrorMsg)
 	}
 	appControlAdvancedSettingsData := appControlAdvancedSettingsRes.GetData()
 
@@ -186,20 +185,23 @@ func dataSourceManagementAppControlAdvancedSettingsRead(d *schema.ResourceData, 
 		_ = d.Set("website_categorization_mode", v)
 	}
 
-	if v := appControlAdvancedSettingsData["custom-categorization-settings"]; v != nil {
+	if appControlAdvancedSettingsData["custom-categorization-settings"] != nil {
 
-		innerMap := v.(map[string]interface{})
-		mapToReturn := make(map[string]interface{})
+		customCategorizationSettingsMap := appControlAdvancedSettingsData["custom-categorization-settings"].(map[string]interface{})
 
-		if v := innerMap["url-filtering-mode"]; v != nil {
-			mapToReturn["url_filtering_mode"] = v
+		customCategorizationSettingsMapToReturn := make(map[string]interface{})
+
+		if v := customCategorizationSettingsMap["url-filtering-mode"]; v != nil {
+			customCategorizationSettingsMapToReturn["url_filtering_mode"] = v
+		}
+		if v := customCategorizationSettingsMap["social-network-widgets-mode"]; v != nil {
+			customCategorizationSettingsMapToReturn["social_network_widgets_mode"] = v
 		}
 
-		if v := innerMap["social-network-widgets-mode"]; v != nil {
-			mapToReturn["social_network_widgets_mode"] = v
-		}
+		_ = d.Set("custom_categorization_settings", []interface{}{customCategorizationSettingsMapToReturn})
 
-		_ = d.Set("custom_categorization_settings", mapToReturn)
+	} else {
+		_ = d.Set("custom_categorization_settings", nil)
 	}
 
 	if v := appControlAdvancedSettingsData["categorize-social-network-widgets"]; v != nil {

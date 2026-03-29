@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -133,7 +133,7 @@ func resourceManagementHttpsRule() *schema.Resource {
 				Default:     false,
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -251,16 +251,16 @@ func createManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
+		if _, ok := d.GetOk("position.0.top"); ok {
 			httpsRule["position"] = "top"
 		}
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			httpsRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			httpsRule["position"] = map[string]interface{}{"bottom": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
+		if _, ok := d.GetOk("position.0.bottom"); ok {
 			httpsRule["position"] = "bottom"
 		}
 	}
@@ -269,9 +269,9 @@ func createManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	addHttpsRuleRes, err := client.ApiCall("add-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsRuleRes.Success {
 		if addHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHttpsRuleRes.GetData()["uid"].(string))
@@ -290,14 +290,14 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsRuleRes.Success {
 		if objectNotFound(showHttpsRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHttpsRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsRuleRes.ErrorMsg)
 	}
 
 	httpsRule := showHttpsRuleRes.GetData()
@@ -361,7 +361,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["action"]; v != nil {
-		_ = d.Set("action", v)
+		_ = d.Set("action", v.(map[string]interface{})["name"].(string))
 	}
 
 	if httpsRule["blade"] != nil {
@@ -381,7 +381,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["certificate"]; v != nil {
-		_ = d.Set("certificate", v)
+		_ = d.Set("certificate", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := httpsRule["destination-negate"]; v != nil {
@@ -437,7 +437,7 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := httpsRule["track"]; v != nil {
-		_ = d.Set("track", v)
+		_ = d.Set("track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := httpsRule["comments"]; v != nil {
@@ -572,16 +572,16 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	if ok := d.HasChange("position"); ok {
 		if _, ok := d.GetOk("position"); ok {
-			if _, ok := d.GetOk("position.top"); ok {
+			if _, ok := d.GetOk("position.0.top"); ok {
 				httpsRule["new-position"] = "top"
 			}
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				httpsRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				httpsRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-			if _, ok := d.GetOk("position.bottom"); ok {
+			if _, ok := d.GetOk("position.0.bottom"); ok {
 				httpsRule["new-position"] = "bottom"
 			}
 		}
@@ -592,9 +592,9 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	updateHttpsRuleRes, err := client.ApiCall("set-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsRuleRes.Success {
 		if updateHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementHttpsRule(d, m)
@@ -612,9 +612,9 @@ func deleteManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsRuleRes.Success {
 		if deleteHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

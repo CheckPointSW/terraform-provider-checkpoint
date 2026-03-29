@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -65,10 +65,10 @@ func dataSourceManagementResourceUriForQosRead(d *schema.ResourceData, m interfa
 	}
 	showResourceUriForQosRes, err := client.ApiCallSimple("show-resource-uri-for-qos", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriForQosRes.Success {
-		return fmt.Errorf(showResourceUriForQosRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriForQosRes.ErrorMsg)
 	}
 
 	resourceUriForQos := showResourceUriForQosRes.GetData()

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementSubordinateCa() *schema.Resource {
@@ -26,7 +26,6 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Certificate automatic enrollment.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"automatically_enroll_certificate": {
@@ -43,7 +42,6 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Scep protocol settings. Available only if \"protocol\" is set to \"scep\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ca_identifier": {
@@ -63,14 +61,12 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Cmpv1 protocol settings. Available only if \"protocol\" is set to \"cmpv1\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"direct_tcp_settings": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Direct tcp transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"port": {
@@ -88,7 +84,6 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Cmpv2 protocol settings. Available only if \"protocol\" is set to \"cmpv1\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"transport_layer": {
@@ -100,7 +95,6 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Direct tcp transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"port": {
@@ -115,7 +109,6 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Http transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"url": {
@@ -188,10 +181,10 @@ func dataSourceManagementSubordinateCaRead(d *schema.ResourceData, m interface{}
 
 	showSubordinateCaRes, err := client.ApiCall("show-subordinate-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSubordinateCaRes.Success {
-		return fmt.Errorf(showSubordinateCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showSubordinateCaRes.ErrorMsg)
 	}
 
 	subordinateCa := showSubordinateCaRes.GetData()

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -160,9 +160,9 @@ func createManagementIdentityProvider(d *schema.ResourceData, m interface{}) err
 	addIdentityProviderRes, err := client.ApiCallSimple("add-identity-provider", identityProvider)
 	if err != nil || !addIdentityProviderRes.Success {
 		if addIdentityProviderRes.ErrorMsg != "" {
-			return fmt.Errorf(addIdentityProviderRes.ErrorMsg)
+			return fmt.Errorf("%s", addIdentityProviderRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addIdentityProviderRes.GetData()["uid"].(string))
@@ -180,14 +180,14 @@ func readManagementIdentityProvider(d *schema.ResourceData, m interface{}) error
 
 	showIdentityProviderRes, err := client.ApiCallSimple("show-identity-provider", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdentityProviderRes.Success {
 		if objectNotFound(showIdentityProviderRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdentityProviderRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdentityProviderRes.ErrorMsg)
 	}
 
 	identityProvider := showIdentityProviderRes.GetData()
@@ -203,7 +203,7 @@ func readManagementIdentityProvider(d *schema.ResourceData, m interface{}) error
 	}
 
 	if v := identityProvider["gateway"]; v != nil {
-		_ = d.Set("gateway", v)
+		_ = d.Set("gateway", v.(map[string]interface{})["name"].(string))
 	}
 
 	if d.Get("service").(string) != "" {
@@ -340,9 +340,9 @@ func updateManagementIdentityProvider(d *schema.ResourceData, m interface{}) err
 	updateIdentityProviderRes, err := client.ApiCallSimple("set-identity-provider", identityProvider)
 	if err != nil || !updateIdentityProviderRes.Success {
 		if updateIdentityProviderRes.ErrorMsg != "" {
-			return fmt.Errorf(updateIdentityProviderRes.ErrorMsg)
+			return fmt.Errorf("%s", updateIdentityProviderRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementIdentityProvider(d, m)
@@ -361,9 +361,9 @@ func deleteManagementIdentityProvider(d *schema.ResourceData, m interface{}) err
 	deleteIdentityProviderRes, err := client.ApiCallSimple("delete-identity-provider", identityProviderPayload)
 	if err != nil || !deleteIdentityProviderRes.Success {
 		if deleteIdentityProviderRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteIdentityProviderRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteIdentityProviderRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -1,12 +1,14 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"math"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementTime() *schema.Resource {
@@ -18,6 +20,14 @@ func resourceManagementTime() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementTimeV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementTimeStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -25,8 +35,9 @@ func resourceManagementTime() *schema.Resource {
 				Description: "Object name.",
 			},
 			"end": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
+				MaxItems:    1,
 				Description: "End time. Note: Each gateway may interpret this time differently according to its time zone.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -79,8 +90,9 @@ func resourceManagementTime() *schema.Resource {
 				},
 			},
 			"start": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
+				MaxItems:    1,
 				Description: "Starting time. Note: Each gateway may interpret this time differently according to its time zone.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -187,11 +199,11 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 
 		res := make(map[string]interface{})
 
-		if v, ok := d.GetOk("end.date"); ok {
-			res["date"] = v
+		if v, ok := d.GetOk("end.0.date"); ok {
+			res["date"] = v.(string)
 		}
-		if v, ok := d.GetOk("end.time"); ok {
-			res["time"] = v
+		if v, ok := d.GetOk("end.0.time"); ok {
+			res["time"] = v.(string)
 		}
 		time["end"] = res
 	}
@@ -233,11 +245,11 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 
 		res := make(map[string]interface{})
 
-		if v, ok := d.GetOk("start.date"); ok {
-			res["date"] = v
+		if v, ok := d.GetOk("start.0.date"); ok {
+			res["date"] = v.(string)
 		}
-		if v, ok := d.GetOk("start.time"); ok {
-			res["time"] = v
+		if v, ok := d.GetOk("start.0.time"); ok {
+			res["time"] = v.(string)
 		}
 		time["start"] = res
 	}
@@ -255,16 +267,16 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		res := make(map[string]interface{})
 
 		if v, ok := d.GetOk("recurrence.days"); ok {
-			res["days"] = v
+			res["days"] = v.(*schema.Set).List()
 		}
 		if v, ok := d.GetOk("recurrence.month"); ok {
-			res["month"] = v
+			res["month"] = v.(string)
 		}
 		if v, ok := d.GetOk("recurrence.pattern"); ok {
 			res["pattern"] = v.(string)
 		}
 		if v, ok := d.GetOk("recurrence.weekdays"); ok {
-			res["weekdays"] = v
+			res["weekdays"] = v.(*schema.Set).List()
 		}
 		time["recurrence"] = res
 	}
@@ -290,9 +302,9 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 	addTimeRes, err := client.ApiCall("add-time", time, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTimeRes.Success {
 		if addTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(addTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", addTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTimeRes.GetData()["uid"].(string))
@@ -310,14 +322,14 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	showTimeRes, err := client.ApiCall("show-time", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTimeRes.Success {
 		if objectNotFound(showTimeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTimeRes.ErrorMsg)
+		return fmt.Errorf("%s", showTimeRes.ErrorMsg)
 	}
 
 	time := showTimeRes.GetData()
@@ -329,22 +341,18 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["end"] != nil {
-		defaultEndMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
 		endMap := time["end"].(map[string]interface{})
 
 		endMapToReturn := make(map[string]interface{})
 
-		if v, _ := endMap["date"]; v != nil && isArgDefault(v.(string), d, "end.date", defaultEndMap["date"].(string)) {
-			endMapToReturn["date"] = v
+		if v, _ := endMap["date"]; v != nil {
+			endMapToReturn["date"] = v.(string)
 		}
-		if v, _ := endMap["time"]; v != nil && isArgDefault(v.(string), d, "end.time", defaultEndMap["time"].(string)) {
-			endMapToReturn["time"] = v
+		if v, _ := endMap["time"]; v != nil {
+			endMapToReturn["time"] = v.(string)
 		}
 
-		_ = d.Set("end", endMapToReturn)
+		_ = d.Set("end", []interface{}{endMapToReturn})
 	}
 
 	if v := time["end-never"]; v != nil {
@@ -368,16 +376,16 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 					hoursRangesMapToAdd := make(map[string]interface{})
 
 					if v, _ := hoursRangesMap["enabled"]; v != nil {
-						hoursRangesMapToAdd["enabled"] = v
+						hoursRangesMapToAdd["enabled"] = v.(bool)
 					}
 					if v, _ := hoursRangesMap["from"]; v != nil {
-						hoursRangesMapToAdd["from"] = v
+						hoursRangesMapToAdd["from"] = v.(string)
 					}
 					if v, _ := hoursRangesMap["index"]; v != nil {
 						hoursRangesMapToAdd["index"] = int(math.Round(v.(float64)))
 					}
 					if v, _ := hoursRangesMap["to"]; v != nil {
-						hoursRangesMapToAdd["to"] = v
+						hoursRangesMapToAdd["to"] = v.(string)
 					}
 
 					hourRangesListToReturn = append(hourRangesListToReturn, hoursRangesMapToAdd)
@@ -388,23 +396,18 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["start"] != nil {
-
-		defaultStartMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
 		startMap := time["start"].(map[string]interface{})
 
 		startMapToReturn := make(map[string]interface{})
 
-		if v, _ := startMap["date"]; v != nil && isArgDefault(v.(string), d, "end.date", defaultStartMap["date"].(string)) {
-			startMapToReturn["date"] = v
+		if v, _ := startMap["date"]; v != nil {
+			startMapToReturn["date"] = v.(string)
 		}
-		if v, _ := startMap["time"]; v != nil && isArgDefault(v.(string), d, "end.time", defaultStartMap["time"].(string)) {
-			startMapToReturn["time"] = v
+		if v, _ := startMap["time"]; v != nil {
+			startMapToReturn["time"] = v.(string)
 		}
 
-		_ = d.Set("start", startMapToReturn)
+		_ = d.Set("start", []interface{}{startMapToReturn})
 	}
 
 	if v := time["start-now"]; v != nil {
@@ -428,10 +431,6 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if time["recurrence"] != nil {
-		defaultRecurrenceMap := map[string]interface{}{
-			"pattern": "Daily",
-			"month":   "Any",
-		}
 		endMap := time["recurrence"].(map[string]interface{})
 
 		endMapToReturn := make(map[string]interface{})
@@ -448,11 +447,11 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 		}
-		if v, _ := endMap["month"]; v != nil && isArgDefault(v.(string), d, "recurrence.month", defaultRecurrenceMap["month"].(string)) {
-			endMapToReturn["month"] = v
+		if v, _ := endMap["month"]; v != nil {
+			endMapToReturn["month"] = v.(string)
 		}
-		if v, _ := endMap["pattern"]; v != nil && isArgDefault(v.(string), d, "recurrence.pattern", defaultRecurrenceMap["pattern"].(string)) {
-			endMapToReturn["pattern"] = v
+		if v, _ := endMap["pattern"]; v != nil {
+			endMapToReturn["pattern"] = v.(string)
 		}
 		if v, _ := endMap["weekdays"]; v != nil {
 			tagsJson, ok := endMap["weekdays"].([]interface{})
@@ -505,23 +504,25 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("end") {
-		defaultEndMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
 
-		res := make(map[string]interface{})
+		if v, ok := d.GetOk("end"); ok {
 
-		if v := d.Get("end.date"); v != nil && v != "" {
-			res["date"] = d.Get("end.date")
-		}
-		if v := d.Get("end.time"); v != nil && v != "" {
-			res["time"] = d.Get("end.time")
-		}
-		if len(res) > 0 {
-			time["end"] = res
-		} else {
-			time["end"] = defaultEndMap
+			endList := v.([]interface{})
+
+			if len(endList) > 0 {
+
+				endPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("end.0.date"); ok {
+					endPayload["date"] = v.(string)
+				}
+				if v, ok := d.GetOk("end.0.time"); ok {
+					endPayload["time"] = v.(string)
+				}
+				if len(endPayload) > 0 {
+					time["end"] = endPayload
+				}
+			}
 		}
 	}
 
@@ -540,7 +541,7 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				serverPayload["enabled"] = false
 			}
 			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".from"); ok {
-				serverPayload["from"] = v
+				serverPayload["from"] = v.(string)
 			} else {
 				serverPayload["from"] = "00:00"
 			}
@@ -550,7 +551,7 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 				serverPayload["index"] = i + 1
 			}
 			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".to"); ok {
-				serverPayload["to"] = v
+				serverPayload["to"] = v.(string)
 			} else {
 				serverPayload["to"] = "00:00"
 			}
@@ -560,24 +561,26 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("start") {
-		defaultStartMap := map[string]interface{}{
-			"date": "01-Jan-1970",
-			"time": "00:00",
-		}
-		res := make(map[string]interface{})
 
-		if v := d.Get("start.date"); v != nil && v != "" {
-			res["date"] = d.Get("start.date")
-		}
-		if v := d.Get("start.time"); v != nil && v != "" {
-			res["time"] = d.Get("start.time")
-		}
-		if len(res) > 0 {
-			time["start"] = res
-		} else {
-			time["start"] = defaultStartMap
-		}
+		if v, ok := d.GetOk("start"); ok {
 
+			startList := v.([]interface{})
+
+			if len(startList) > 0 {
+
+				startPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("start.0.date"); ok {
+					startPayload["date"] = v.(string)
+				}
+				if v, ok := d.GetOk("start.0.time"); ok {
+					startPayload["time"] = v.(string)
+				}
+				if len(startPayload) > 0 {
+					time["start"] = startPayload
+				}
+			}
+		}
 	}
 
 	if d.HasChange("start_now") {
@@ -644,9 +647,9 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	updateTimeRes, err := client.ApiCall("set-time", time, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTimeRes.Success {
 		if updateTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTime(d, m)
@@ -671,9 +674,9 @@ func deleteManagementTime(d *schema.ResourceData, m interface{}) error {
 	deleteTimeRes, err := client.ApiCall("delete-time", timePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTimeRes.Success {
 		if deleteTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

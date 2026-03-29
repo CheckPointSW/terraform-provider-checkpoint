@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -70,10 +70,10 @@ func dataSourceManagementExceptionGroupRead(d *schema.ResourceData, m interface{
 
 	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showExceptionGroupRes.Success {
-		return fmt.Errorf(showExceptionGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showExceptionGroupRes.ErrorMsg)
 	}
 
 	exceptionGroup := showExceptionGroupRes.GetData()

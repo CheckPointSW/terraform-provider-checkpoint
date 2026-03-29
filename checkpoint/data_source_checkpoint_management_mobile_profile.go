@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -26,7 +26,6 @@ func dataSourceManagementMobileProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Applications settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable_print_mails": {
@@ -116,7 +115,6 @@ func dataSourceManagementMobileProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Client customization settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"app_theme_color_dark": {
@@ -176,7 +174,6 @@ func dataSourceManagementMobileProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Data leak prevention settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"open_extension_with_external_app": {
@@ -261,7 +258,6 @@ func dataSourceManagementMobileProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Integrations settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"protect_policy_enabled": {
@@ -346,7 +342,6 @@ func dataSourceManagementMobileProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Security settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"session_timeout": {
@@ -436,14 +431,14 @@ func dataSourceManagementMobileProfileRead(d *schema.ResourceData, m interface{}
 
 	showMobileProfileRes, err := client.ApiCall("show-mobile-profile", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileProfileRes.Success {
 		if objectNotFound(showMobileProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileProfileRes.ErrorMsg)
 	}
 
 	mobileProfile := showMobileProfileRes.GetData()

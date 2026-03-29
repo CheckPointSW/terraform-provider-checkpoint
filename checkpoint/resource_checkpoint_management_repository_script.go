@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -111,9 +111,9 @@ func createManagementRepositoryScript(d *schema.ResourceData, m interface{}) err
 	addRepositoryScriptRes, err := client.ApiCall("add-repository-script", repositoryScript, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addRepositoryScriptRes.Success {
 		if addRepositoryScriptRes.ErrorMsg != "" {
-			return fmt.Errorf(addRepositoryScriptRes.ErrorMsg)
+			return fmt.Errorf("%s", addRepositoryScriptRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addRepositoryScriptRes.GetData()["uid"].(string))
@@ -131,14 +131,14 @@ func readManagementRepositoryScript(d *schema.ResourceData, m interface{}) error
 
 	showRepositoryScriptRes, err := client.ApiCall("show-repository-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRepositoryScriptRes.Success {
 		if objectNotFound(showRepositoryScriptRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showRepositoryScriptRes.ErrorMsg)
+		return fmt.Errorf("%s", showRepositoryScriptRes.ErrorMsg)
 	}
 
 	repositoryScript := showRepositoryScriptRes.GetData()
@@ -244,9 +244,9 @@ func updateManagementRepositoryScript(d *schema.ResourceData, m interface{}) err
 	updateRepositoryScriptRes, err := client.ApiCall("set-repository-script", repositoryScript, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateRepositoryScriptRes.Success {
 		if updateRepositoryScriptRes.ErrorMsg != "" {
-			return fmt.Errorf(updateRepositoryScriptRes.ErrorMsg)
+			return fmt.Errorf("%s", updateRepositoryScriptRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementRepositoryScript(d, m)
@@ -272,9 +272,9 @@ func deleteManagementRepositoryScript(d *schema.ResourceData, m interface{}) err
 	deleteRepositoryScriptRes, err := client.ApiCall("delete-repository-script", repositoryScriptPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteRepositoryScriptRes.Success {
 		if deleteRepositoryScriptRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteRepositoryScriptRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteRepositoryScriptRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

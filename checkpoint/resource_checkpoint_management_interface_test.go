@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"strings"
 	"testing"
@@ -98,7 +98,7 @@ func testAccCheckCheckpointManagementInterfaceAttributes(interfaceMap *map[strin
 func testAccManagementInterfaceConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_simple_gateway" "fw" {
-  name = "gw3"
+  name = "gw3_%s"
   ipv4_address = "192.0.2.1"
 }
 
@@ -134,5 +134,5 @@ resource "checkpoint_management_interface" "test" {
   }
 
 }
-`, name)
+`, name, name)
 }

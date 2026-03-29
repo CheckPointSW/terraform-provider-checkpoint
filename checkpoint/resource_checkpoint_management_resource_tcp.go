@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -225,9 +225,9 @@ func createManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 	addResourceTcpRes, err := client.ApiCallSimple("add-resource-tcp", resourceTcp)
 	if err != nil || !addResourceTcpRes.Success {
 		if addResourceTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceTcpRes.GetData()["uid"].(string))
@@ -245,14 +245,14 @@ func readManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 
 	showResourceTcpRes, err := client.ApiCallSimple("show-resource-tcp", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceTcpRes.Success {
 		if objectNotFound(showResourceTcpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceTcpRes.ErrorMsg)
 	}
 
 	resourceTcp := showResourceTcpRes.GetData()
@@ -268,7 +268,7 @@ func readManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := resourceTcp["exception-track"]; v != nil {
-		_ = d.Set("exception_track", v)
+		_ = d.Set("exception_track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if resourceTcp["ufp-settings"] != nil {
@@ -278,7 +278,7 @@ func readManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 		ufpSettingsMapToReturn := make(map[string]interface{})
 
 		if v, _ := ufpSettingsMap["server"]; v != nil {
-			ufpSettingsMapToReturn["server"] = v
+			ufpSettingsMapToReturn["server"] = v.(map[string]interface{})["name"].(string)
 		}
 		if v, _ := ufpSettingsMap["caching-control"]; v != nil {
 			ufpSettingsMapToReturn["caching_control"] = v
@@ -463,9 +463,9 @@ func updateManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 	updateResourceTcpRes, err := client.ApiCallSimple("set-resource-tcp", resourceTcp)
 	if err != nil || !updateResourceTcpRes.Success {
 		if updateResourceTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceTcp(d, m)
@@ -484,9 +484,9 @@ func deleteManagementResourceTcp(d *schema.ResourceData, m interface{}) error {
 	deleteResourceTcpRes, err := client.ApiCallSimple("delete-resource-tcp", resourceTcpPayload)
 	if err != nil || !deleteResourceTcpRes.Success {
 		if deleteResourceTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

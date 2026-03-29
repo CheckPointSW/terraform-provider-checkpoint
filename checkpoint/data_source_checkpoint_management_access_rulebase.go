@@ -2,12 +2,11 @@ package checkpoint
 
 import (
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"math"
-	"strconv"
-	"strings"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementAccessRuleBase() *schema.Resource {
@@ -31,7 +30,8 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 				Description: "Search expression to filter the rulebase. The provided text should be exactly the same as it would be given in Smart Console. The logical operators in the expression ('AND', 'OR') should be provided in capital letters. If an operator is not used, the default OR operator applies.",
 			},
 			"filter_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Sets filter preferences.",
 				Elem: &schema.Resource{
@@ -122,7 +122,8 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 				Description: "N/A",
 			},
 			"hits_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "N/A",
 				Elem: &schema.Resource{
@@ -204,7 +205,6 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 						},
 						"rulebase": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "N/A",
 							Elem: &schema.Resource{
@@ -285,7 +285,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 										Description: "\"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".",
 									},
 									"action_settings": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Action settings.",
 										Elem: &schema.Resource{
@@ -322,7 +322,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 										Description: "True if negate is set for data.",
 									},
 									"custom_fields": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Custom fields.",
 										Elem: &schema.Resource{
@@ -374,7 +374,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 										},
 									},
 									"track": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Track Settings.",
 										Elem: &schema.Resource{
@@ -499,7 +499,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 													Description: "\"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".",
 												},
 												"action_settings": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Action settings.",
 													Elem: &schema.Resource{
@@ -536,7 +536,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 													Description: "True if negate is set for data.",
 												},
 												"custom_fields": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Custom fields.",
 													Elem: &schema.Resource{
@@ -578,7 +578,7 @@ func dataSourceManagementAccessRuleBase() *schema.Resource {
 													},
 												},
 												"track": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Track Settings.",
 													Elem: &schema.Resource{
@@ -651,50 +651,46 @@ func dataSourceManagementAccessRuleBaseRead(d *schema.ResourceData, m interface{
 		payload["filter"] = v.(string)
 	}
 	if v, ok := d.GetOk("filter_settings"); ok {
-		filters, ok := v.(map[string]interface{})
-		if ok {
+		fsList := v.([]interface{})
+		if len(fsList) > 0 {
+			fsPayload := make(map[string]interface{})
 
-			filtersMapToReturn := make(map[string]interface{})
-			packetSearchMap := make(map[string]interface{})
-
-			if val, ok := filters["search_mode"]; ok {
-				filtersMapToReturn["search-mode"] = val
-			} else {
-				filtersMapToReturn["search-mode"] = "general"
+			if v, ok := d.GetOk("filter_settings.0.search_mode"); ok {
+				fsPayload["search-mode"] = v.(string)
 			}
 
-			if val, ok := filters["expand_group_members"]; ok {
-				packetSearchMap["expand-group-members"] = val
-			} else {
-				packetSearchMap["expand-group-members"] = false
+			if v, ok := d.GetOk("filter_settings.0.packet_search_settings"); ok {
+				pssList := v.([]interface{})
+				if len(pssList) > 0 {
+					pssPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.expand_group_members"); ok {
+						pssPayload["expand-group-members"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.expand_group_with_exclusion_members"); ok {
+						pssPayload["expand-group-with-exclusion-members"] = v.(bool)
+					}
+					if v, ok := d.GetOk("filter_settings.0.packet_search_settings.0.intersection_mode_dst"); ok {
+						pssPayload["intersection-mode-dst"] = v.(string)
+					}
+					if v, ok := d.GetOk("filter_settings.0.packet_search_settings.0.intersection_mode_src"); ok {
+						pssPayload["intersection-mode-src"] = v.(string)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_any"); ok {
+						pssPayload["match-on-any"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_group_with_exclusion"); ok {
+						pssPayload["match-on-group-with-exclusion"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_negate"); ok {
+						pssPayload["match-on-negate"] = v.(bool)
+					}
+
+					fsPayload["packet-search-settings"] = pssPayload
+				}
 			}
 
-			if val, ok := filters["expand_group_with_exclusion_members"]; ok {
-				packetSearchMap["expand-group-with-exclusion-members"] = val
-			} else {
-				packetSearchMap["expand-group-with-exclusion-members"] = false
-			}
-
-			if val, ok := filters["match_on_any"]; ok {
-				packetSearchMap["match-on-any"] = val
-			} else {
-				packetSearchMap["match-on-any"] = true
-			}
-
-			if val, ok := filters["match_on_group_with_exclusion"]; ok {
-				packetSearchMap["match-on-group-with-exclusion"] = val
-			} else {
-				packetSearchMap["match-on-group-with-exclusion"] = true
-			}
-
-			if val, ok := filters["match_on_negate"]; ok {
-				packetSearchMap["match-on-negate"] = val
-			} else {
-				packetSearchMap["match-on-negate"] = true
-			}
-
-			filtersMapToReturn["packet-search-settings"] = packetSearchMap
-			payload["filter-settings"] = filtersMapToReturn
+			payload["filter-settings"] = fsPayload
 		}
 	}
 	if v, ok := d.GetOk("limit"); ok {
@@ -763,10 +759,10 @@ func dataSourceManagementAccessRuleBaseRead(d *schema.ResourceData, m interface{
 	}
 	showRuleBaseRes, err := client.ApiCall("show-access-rulebase", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRuleBaseRes.Success {
-		return fmt.Errorf(showRuleBaseRes.ErrorMsg)
+		return fmt.Errorf("%s", showRuleBaseRes.ErrorMsg)
 	}
 	ruleBaseJson := showRuleBaseRes.GetData()
 
@@ -910,19 +906,19 @@ func readAccessRuleBaseField(RuleBase map[string]interface{}) []map[string]inter
 				tempRulebase["action"] = v
 			}
 
-			if v, _ := ruleBaseMap["action-settings"]; v != nil {
-				propsJson, ok := ruleBaseMap["action-settings"].(map[string]interface{})
-				if ok {
-					actionSettingsMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						if propName == "enable_identity_captive_portal" {
-							value = strconv.FormatBool(value.(bool))
-						}
-						actionSettingsMapToReturn[propName] = value
-					}
-					tempRulebase["action_settings"] = actionSettingsMapToReturn
+			if ruleBaseMap["action-settings"] != nil {
+
+				actionSettingsMap := ruleBaseMap["action-settings"].(map[string]interface{})
+
+				actionSettingsMapToReturn := make(map[string]interface{})
+
+				if v := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
+					actionSettingsMapToReturn["enable_identity_captive_portal"] = v
 				}
+				if v := actionSettingsMap["limit"]; v != nil {
+					actionSettingsMapToReturn["limit"] = v
+				}
+				tempRulebase["action_settings"] = []interface{}{actionSettingsMapToReturn}
 			}
 			if v, _ := ruleBaseMap["content"]; v != nil {
 				tempRulebase["content"] = v
@@ -948,31 +944,56 @@ func readAccessRuleBaseField(RuleBase map[string]interface{}) []map[string]inter
 				tempRulebase["to"] = int(math.Round(v.(float64)))
 			}
 
-			if v, _ := ruleBaseMap["track"]; v != nil {
-				propsJson, ok := ruleBaseMap["track"].(map[string]interface{})
-				if ok {
-					trackMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						if propName != "type" && propName != "alert" {
-							value = strconv.FormatBool(value.(bool))
-						}
-						trackMapToReturn[propName] = value
-					}
-					tempRulebase["track"] = trackMapToReturn
+			if ruleBaseMap["track"] != nil {
+
+				trackMap := ruleBaseMap["track"].(map[string]interface{})
+
+				trackMapToReturn := make(map[string]interface{})
+				if v := trackMap["accounting"]; v != nil {
+					trackMapToReturn["accounting"] = v.(bool)
 				}
+
+				if v, _ := trackMap["alert"]; v != nil {
+					trackMapToReturn["alert"] = v.(string)
+				}
+
+				if v := trackMap["enable-firewall-session"]; v != nil {
+					trackMapToReturn["enable_firewall_session"] = v.(bool)
+				}
+
+				if v := trackMap["per-connection"]; v != nil {
+					trackMapToReturn["per_connection"] = v.(bool)
+				}
+
+				if v := trackMap["per-session"]; v != nil {
+					trackMapToReturn["per_session"] = v.(bool)
+				}
+
+				if v, _ := trackMap["type"]; v != nil {
+					trackMapToReturn["type"] = v.(string)
+				}
+
+				tempRulebase["track"] = []interface{}{trackMapToReturn}
 			}
 
-			if v, _ := ruleBaseMap["custom-fields"]; v != nil {
-				propsJson, ok := ruleBaseMap["custom-fields"].(map[string]interface{})
-				if ok {
-					customFieldMapToReturn := make(map[string]interface{})
-					for field, value := range propsJson {
-						propName := strings.ReplaceAll(field, "-", "_")
-						customFieldMapToReturn[propName] = value
-					}
-					tempRulebase["custom_fields"] = customFieldMapToReturn
+			if ruleBaseMap["custom-fields"] != nil {
+
+				customFieldsMap := ruleBaseMap["custom-fields"].(map[string]interface{})
+
+				customFieldsMapToReturn := make(map[string]interface{})
+
+				if v, _ := customFieldsMap["field-1"]; v != nil {
+					customFieldsMapToReturn["field_1"] = v
 				}
+
+				if v, _ := customFieldsMap["field-2"]; v != nil {
+					customFieldsMapToReturn["field_2"] = v
+				}
+
+				if v, _ := customFieldsMap["field-3"]; v != nil {
+					customFieldsMapToReturn["field_3"] = v
+				}
+				tempRulebase["custom_fields"] = []interface{}{customFieldsMapToReturn}
 			}
 
 			if v := ruleBaseMap["rule-number"]; v != nil {

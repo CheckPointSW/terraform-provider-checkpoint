@@ -1,11 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 	"strings"
 )
 
@@ -26,6 +26,14 @@ func resourceManagementThreatRule() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementThreatRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementThreatRuleStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"layer": {
 				Type:        schema.TypeString,
@@ -33,7 +41,8 @@ func resourceManagementThreatRule() *schema.Resource {
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
 			"position": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -149,7 +158,8 @@ func resourceManagementThreatRule() *schema.Resource {
 				Default:     "Log",
 			},
 			"track_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Threat rule track settings.",
 				Elem: &schema.Resource{
@@ -202,7 +212,7 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	}
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				threatRule["position"] = "top" // entire rule-base
 			} else {
@@ -210,15 +220,15 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			threatRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			threatRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				threatRule["position"] = "bottom" // entire rule-base
 			} else {
@@ -279,12 +289,19 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		threatRule["track"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("track_settings"); ok {
-		trackSettings := make(map[string]interface{})
-		if v, ok := d.GetOkExists("track_settings.packet_capture"); ok {
-			trackSettings["packet-capture"] = v.(bool)
+	if v, ok := d.GetOk("track_settings"); ok {
+
+		trackSettingsList := v.([]interface{})
+
+		if len(trackSettingsList) > 0 {
+
+			trackSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
+				trackSettingsPayload["packet-capture"] = v.(bool)
+			}
+			threatRule["track-settings"] = trackSettingsPayload
 		}
-		threatRule["track-settings"] = trackSettings
 	}
 
 	if v, ok := d.GetOk("comments"); ok {
@@ -304,9 +321,9 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatRuleRes.Success {
 		if addThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatRuleRes.GetData()["uid"].(string))
@@ -325,7 +342,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	showThreatRuleRes, err := client.ApiCall("show-threat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatRuleRes.Success {
 		// Handle delete resource from other clients
@@ -333,7 +350,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleRes.ErrorMsg)
 	}
 
 	threatRule := showThreatRuleRes.GetData()
@@ -463,14 +480,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		if v := trackSettingsMap["packet-capture"]; v != nil {
 			trackSettingsState["packet_capture"] = v.(bool)
 		}
-
-		_, trackSettingsInConf := d.GetOk("track_settings")
-		defaultTrackSettings := map[string]interface{}{"packet-capture": true}
-		if reflect.DeepEqual(defaultTrackSettings, trackSettingsState) && !trackSettingsInConf {
-			_ = d.Set("track_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("track_settings", trackSettingsState)
-		}
+		_ = d.Set("track_settings", []interface{}{trackSettingsState})
 	}
 
 	if threatRule["exceptions"] != nil {
@@ -501,24 +511,20 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
-
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					threatRule["new-position"] = "top" // entire rule-base
 				} else {
 					threatRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
 				}
 			}
-
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				threatRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
-
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				threatRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
-
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					threatRule["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -605,8 +611,20 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("track_settings") {
-		if v, ok := d.GetOkExists("track_settings.packet_capture"); ok {
-			threatRule["track-settings"] = map[string]interface{}{"packet-capture": v}
+
+		if v, ok := d.GetOk("track_settings"); ok {
+
+			trackSettingsList := v.([]interface{})
+
+			if len(trackSettingsList) > 0 {
+
+				trackSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
+					trackSettingsPayload["packet-capture"] = v.(bool)
+				}
+				threatRule["track-settings"] = trackSettingsPayload
+			}
 		}
 	}
 
@@ -627,9 +645,9 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	updateThreatRuleRes, err := client.ApiCall("set-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatRuleRes.Success {
 		if updateThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementThreatRule(d, m)
 }
@@ -645,9 +663,9 @@ func deleteManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatRuleRes.Success {
 		if deleteThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 	return nil

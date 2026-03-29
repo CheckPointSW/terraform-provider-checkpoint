@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -188,9 +188,9 @@ func createManagementGaiaBestPractice(d *schema.ResourceData, m interface{}) err
 	addGaiaBestPracticeRes, err := client.ApiCall("add-gaia-best-practice", gaiaBestPractice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGaiaBestPracticeRes.Success {
 		if addGaiaBestPracticeRes.ErrorMsg != "" {
-			return fmt.Errorf(addGaiaBestPracticeRes.ErrorMsg)
+			return fmt.Errorf("%s", addGaiaBestPracticeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGaiaBestPracticeRes.GetData()["uid"].(string))
@@ -208,14 +208,14 @@ func readManagementGaiaBestPractice(d *schema.ResourceData, m interface{}) error
 
 	showGaiaBestPracticeRes, err := client.ApiCall("show-gaia-best-practice", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGaiaBestPracticeRes.Success {
 		if objectNotFound(showGaiaBestPracticeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGaiaBestPracticeRes.ErrorMsg)
+		return fmt.Errorf("%s", showGaiaBestPracticeRes.ErrorMsg)
 	}
 
 	gaiaBestPractice := showGaiaBestPracticeRes.GetData()
@@ -386,9 +386,9 @@ func updateManagementGaiaBestPractice(d *schema.ResourceData, m interface{}) err
 	updateGaiaBestPracticeRes, err := client.ApiCall("set-gaia-best-practice", gaiaBestPractice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGaiaBestPracticeRes.Success {
 		if updateGaiaBestPracticeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGaiaBestPracticeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGaiaBestPracticeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementGaiaBestPractice(d, m)
@@ -415,9 +415,9 @@ func deleteManagementGaiaBestPractice(d *schema.ResourceData, m interface{}) err
 	deleteGaiaBestPracticeRes, err := client.ApiCall("delete-gaia-best-practice", gaiaBestPracticePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGaiaBestPracticeRes.Success {
 		if deleteGaiaBestPracticeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGaiaBestPracticeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGaiaBestPracticeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

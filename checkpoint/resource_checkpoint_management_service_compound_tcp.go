@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -108,9 +108,9 @@ func createManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 	addServiceCompoundTcpRes, err := client.ApiCall("add-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceCompoundTcpRes.Success {
 		if addServiceCompoundTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceCompoundTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceCompoundTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceCompoundTcpRes.GetData()["uid"].(string))
@@ -128,14 +128,14 @@ func readManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) err
 
 	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceCompoundTcpRes.Success {
 		if objectNotFound(showServiceCompoundTcpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceCompoundTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceCompoundTcpRes.ErrorMsg)
 	}
 
 	serviceCompoundTcp := showServiceCompoundTcpRes.GetData()
@@ -232,9 +232,9 @@ func updateManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 	updateServiceCompoundTcpRes, err := client.ApiCall("set-service-compound-tcp", serviceCompoundTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceCompoundTcpRes.Success {
 		if updateServiceCompoundTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceCompoundTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceCompoundTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceCompoundTcp(d, m)
@@ -260,9 +260,9 @@ func deleteManagementServiceCompoundTcp(d *schema.ResourceData, m interface{}) e
 	deleteServiceCompoundTcpRes, err := client.ApiCall("delete-service-compound-tcp", serviceCompoundTcpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceCompoundTcpRes.Success {
 		if deleteServiceCompoundTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceCompoundTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceCompoundTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

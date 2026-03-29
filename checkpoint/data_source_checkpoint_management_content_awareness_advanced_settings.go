@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementContentAwarenessAdvancedSettings() *schema.Resource {
@@ -51,7 +51,7 @@ func dataSourceManagementSetContentAwarenessAdvancedSettingsRead(d *schema.Resou
 
 	contentAwarenessAdvancedSettingsRes, _ := client.ApiCall("show-content-awareness-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !contentAwarenessAdvancedSettingsRes.Success {
-		return fmt.Errorf(contentAwarenessAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", contentAwarenessAdvancedSettingsRes.ErrorMsg)
 	}
 	contentAwarenessAdvancedSettingsData := contentAwarenessAdvancedSettingsRes.GetData()
 

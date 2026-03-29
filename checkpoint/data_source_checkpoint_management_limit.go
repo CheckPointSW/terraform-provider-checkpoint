@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -91,14 +91,14 @@ func dataSourceManagementLimitRead(d *schema.ResourceData, m interface{}) error 
 
 	showLimitRes, err := client.ApiCall("show-limit", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLimitRes.Success {
 		if objectNotFound(showLimitRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLimitRes.ErrorMsg)
+		return fmt.Errorf("%s", showLimitRes.ErrorMsg)
 	}
 
 	limit := showLimitRes.GetData()

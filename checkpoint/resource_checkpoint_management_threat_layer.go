@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -112,9 +112,9 @@ func createManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 
 	if err != nil || !addThreatLayerRes.Success {
 		if addThreatLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatLayerRes.GetData()["uid"].(string))
@@ -132,7 +132,7 @@ func readManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 	showThreatLayerRes, err := client.ApiCall("show-threat-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatLayerRes.Success {
 		// Handle delete resource from other clients
@@ -140,7 +140,7 @@ func readManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatLayerRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatLayerRes.ErrorMsg)
 	}
 
 	threatLayer := showThreatLayerRes.GetData()
@@ -232,9 +232,9 @@ func updateManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 
 	if err != nil || !updateThreatLayerRes.Success {
 		if updateThreatLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementThreatLayer(d, m)
@@ -256,9 +256,9 @@ func deleteManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 	deleteThreatLayerRes, err := client.ApiCall("delete-threat-layer", threatLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatLayerRes.Success {
 		if deleteThreatLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

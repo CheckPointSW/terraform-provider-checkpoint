@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteDataCenterObject() *schema.Resource {
@@ -54,7 +54,7 @@ func createManagementDeleteDataCenterObject(d *schema.ResourceData, m interface{
 
 	DeleteDataCenterObjectRes, _ := client.ApiCall("delete-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteDataCenterObjectRes.Success {
-		return fmt.Errorf(DeleteDataCenterObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteDataCenterObjectRes.ErrorMsg)
 	}
 
 	d.SetId("delete-data-center-object-" + acctest.RandString(10))

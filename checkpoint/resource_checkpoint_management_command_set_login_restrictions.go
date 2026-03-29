@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetLoginRestrictions() *schema.Resource {
@@ -74,10 +74,10 @@ func createManagementSetLoginRestrictions(d *schema.ResourceData, m interface{})
 
 	SetLoginRestrictionsRes, err := client.ApiCall("set-login-restrictions", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetLoginRestrictionsRes.Success {
-		return fmt.Errorf(SetLoginRestrictionsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetLoginRestrictionsRes.ErrorMsg)
 	}
 
 	d.SetId("set-login-restrictions-" + acctest.RandString(10))

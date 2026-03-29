@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -30,7 +30,7 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 				Description: "Gateway platform version.",
 			},
 			"restrictions": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Set of restrictions.",
 				Elem: &schema.Resource{
@@ -132,7 +132,6 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 						"threat_prevention": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Threat Prevention blades.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -193,7 +192,6 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 			"supported_firmware_platforms": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Supported firmware platforms according to restrictions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -216,7 +214,6 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 			"supported_hardware": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Supported firmware platforms according to restrictions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -239,7 +236,6 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 			"supported_versions": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Supported firmware platforms according to restrictions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -281,10 +277,10 @@ func dataSourceManagementSetGatewayCapabilitiesRead(d *schema.ResourceData, m in
 
 	showGatewayCapabilitiesRes, err := client.ApiCall("show-gateway-capabilities", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGatewayCapabilitiesRes.Success {
-		return fmt.Errorf(showGatewayCapabilitiesRes.ErrorMsg)
+		return fmt.Errorf("%s", showGatewayCapabilitiesRes.ErrorMsg)
 	}
 
 	gatewayCapabilities := showGatewayCapabilitiesRes.GetData()
@@ -308,7 +304,7 @@ func dataSourceManagementSetGatewayCapabilitiesRead(d *schema.ResourceData, m in
 		if v := objMap["version"]; v != nil {
 			restrictionsMapToAdd["version"] = v
 		}
-		_ = d.Set("restrictions", restrictionsMapToAdd)
+		_ = d.Set("restrictions", []interface{}{restrictionsMapToAdd})
 	}
 
 	if v := gatewayCapabilities["supported-platforms"]; v != nil {

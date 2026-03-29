@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -22,7 +22,7 @@ func TestAccDataSourceCheckpointManagementSmartTaskTrigger_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementSmartTaskTriggerConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "name"),
 				),
 			},
 		},

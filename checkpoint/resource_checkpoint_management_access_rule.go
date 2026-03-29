@@ -1,13 +1,13 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-	"reflect"
-	"strconv"
 	"strings"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAccessRule() *schema.Resource {
@@ -27,6 +27,14 @@ func resourceManagementAccessRule() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementAccessRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementAccessRuleStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"layer": &schema.Schema{
 				Type:        schema.TypeString,
@@ -35,7 +43,8 @@ func resourceManagementAccessRule() *schema.Resource {
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -75,7 +84,8 @@ func resourceManagementAccessRule() *schema.Resource {
 				Default:     "Drop",
 			},
 			"action_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Action settings.",
 				Elem: &schema.Resource{
@@ -114,7 +124,8 @@ func resourceManagementAccessRule() *schema.Resource {
 				Default:     false,
 			},
 			"custom_fields": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Custom fields.",
 				Elem: &schema.Resource{
@@ -208,9 +219,10 @@ func resourceManagementAccessRule() *schema.Resource {
 				},
 			},
 			"track": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Track Settings.",
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"accounting": {
@@ -363,7 +375,7 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				accessRule["position"] = "top" // entire rule-base
 			} else {
@@ -371,15 +383,15 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			accessRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			accessRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				accessRule["position"] = "bottom" // entire rule-base
 			} else {
@@ -394,17 +406,22 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("action"); ok {
 		accessRule["action"] = v.(string)
 	}
-	if _, ok := d.GetOk("action_settings"); ok {
+	if v, ok := d.GetOk("action_settings"); ok {
 
-		res := make(map[string]interface{})
+		actionSettingsList := v.([]interface{})
 
-		if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
-			res["enable-identity-captive-portal"] = v
+		if len(actionSettingsList) > 0 {
+
+			actionSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("action_settings.0.enable_identity_captive_portal"); ok {
+				actionSettingsPayload["enable-identity-captive-portal"] = v.(bool)
+			}
+			if v, ok := d.GetOk("action_settings.0.limit"); ok {
+				actionSettingsPayload["limit"] = v.(string)
+			}
+			accessRule["action-settings"] = actionSettingsPayload
 		}
-		if v, ok := d.GetOk("action_settings.limit"); ok {
-			res["limit"] = v.(string)
-		}
-		accessRule["action-settings"] = res
 	}
 	if v, ok := d.GetOk("content"); ok {
 		accessRule["content"] = v.(*schema.Set).List()
@@ -415,20 +432,25 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("content_negate"); ok {
 		accessRule["content-negate"] = v.(bool)
 	}
-	if _, ok := d.GetOk("custom_fields"); ok {
+	if v, ok := d.GetOk("custom_fields"); ok {
 
-		res := make(map[string]interface{})
+		customFieldsList := v.([]interface{})
 
-		if v, ok := d.GetOk("custom_fields.field_1"); ok {
-			res["field-1"] = v.(string)
+		if len(customFieldsList) > 0 {
+
+			customFieldsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("custom_fields.0.field_1"); ok {
+				customFieldsPayload["field-1"] = v.(string)
+			}
+			if v, ok := d.GetOk("custom_fields.0.field_2"); ok {
+				customFieldsPayload["field-2"] = v.(string)
+			}
+			if v, ok := d.GetOk("custom_fields.0.field_3"); ok {
+				customFieldsPayload["field-3"] = v.(string)
+			}
+			accessRule["custom-fields"] = customFieldsPayload
 		}
-		if v, ok := d.GetOk("custom_fields.field_2"); ok {
-			res["field-2"] = v.(string)
-		}
-		if v, ok := d.GetOk("custom_fields.field_3"); ok {
-			res["field-3"] = v.(string)
-		}
-		accessRule["custom-fields"] = res
 	}
 	if val, ok := d.GetOk("destination"); ok {
 		accessRule["destination"] = val.(*schema.Set).List()
@@ -460,30 +482,34 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("time"); ok {
 		accessRule["time"] = v.(*schema.Set).List()
 	}
-	if _, ok := d.GetOk("track"); ok {
+	if v, ok := d.GetOk("track"); ok {
 
-		res := make(map[string]interface{})
+		trackList := v.([]interface{})
 
-		if v, ok := d.GetOk("track.accounting"); ok {
-			res["accounting"] = v
-		}
-		if v, ok := d.GetOk("track.alert"); ok {
-			res["alert"] = v.(string)
-		}
-		if v, ok := d.GetOk("track.enable_firewall_session"); ok {
-			res["enable-firewall-session"] = v
-		}
-		if v, ok := d.GetOk("track.per_connection"); ok {
-			res["per-connection"] = v
-		}
-		if v, ok := d.GetOk("track.per_session"); ok {
-			res["per-session"] = v
-		}
-		if v, ok := d.GetOk("track.type"); ok {
-			res["type"] = v.(string)
-		}
+		if len(trackList) > 0 {
 
-		accessRule["track"] = res
+			trackPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("track.0.accounting"); ok {
+				trackPayload["accounting"] = v.(bool)
+			}
+			if v, ok := d.GetOk("track.0.alert"); ok {
+				trackPayload["alert"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("track.0.enable_firewall_session"); ok {
+				trackPayload["enable-firewall-session"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("track.0.per_connection"); ok {
+				trackPayload["per-connection"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("track.0.per_session"); ok {
+				trackPayload["per-session"] = v.(bool)
+			}
+			if v, ok := d.GetOk("track.0.type"); ok {
+				trackPayload["type"] = v.(string)
+			}
+			accessRule["track"] = trackPayload
+		}
 	}
 
 	if v, ok := d.GetOk("user_check"); ok {
@@ -545,9 +571,9 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessRuleRes.GetData()["uid"].(string))
@@ -566,7 +592,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessRuleRes.Success {
 		// Handle delete resource from other clients
@@ -574,7 +600,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessRuleRes.ErrorMsg)
 	}
 
 	accessRule := showAccessRuleRes.GetData()
@@ -599,15 +625,14 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 		actionSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
-			actionSettingsMapToReturn["enable_identity_captive_portal"] = strconv.FormatBool(v.(bool))
+		if v := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
+			actionSettingsMapToReturn["enable_identity_captive_portal"] = v
 		}
-
-		if v, _ := actionSettingsMap["limit"]; v != nil {
-			actionSettingsMapToReturn["limit"] = v
+		if v := actionSettingsMap["limit"]; v != nil {
+			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
 		}
+		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
 
-		_ = d.Set("action_settings", actionSettingsMapToReturn)
 	} else {
 		_ = d.Set("action_settings", nil)
 	}
@@ -633,25 +658,18 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 		customFieldsMapToReturn := make(map[string]interface{})
 
-		if v, _ := customFieldsMap["field-1"]; v != nil {
+		if v := customFieldsMap["field-1"]; v != nil {
 			customFieldsMapToReturn["field_1"] = v
 		}
-
-		if v, _ := customFieldsMap["field-2"]; v != nil {
+		if v := customFieldsMap["field-2"]; v != nil {
 			customFieldsMapToReturn["field_2"] = v
 		}
-
-		if v, _ := customFieldsMap["field-3"]; v != nil {
+		if v := customFieldsMap["field-3"]; v != nil {
 			customFieldsMapToReturn["field_3"] = v
 		}
 
-		_, customFieldsInConf := d.GetOk("custom_fields")
-		defaultCustomField := map[string]interface{}{"field_1": "", "field_2": "", "field_3": ""}
-		if reflect.DeepEqual(defaultCustomField, customFieldsMapToReturn) && !customFieldsInConf {
-			_ = d.Set("custom_fields", map[string]interface{}{})
-		} else {
-			_ = d.Set("custom_fields", customFieldsMapToReturn)
-		}
+		_ = d.Set("custom_fields", []interface{}{customFieldsMapToReturn})
+
 	} else {
 		_ = d.Set("custom_fields", nil)
 	}
@@ -706,37 +724,31 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		trackMap := accessRule["track"].(map[string]interface{})
 
 		trackMapToReturn := make(map[string]interface{})
-		defaultTrack := map[string]interface{}{
-			"accounting":              "false",
-			"alert":                   "none",
-			"enable-firewall-session": "false",
-			"per-connection":          "false",
-			"per-session":             "false",
-			"type":                    "None"}
-		if v := trackMap["accounting"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.accounting", defaultTrack["accounting"].(string)) {
-			trackMapToReturn["accounting"] = strconv.FormatBool(v.(bool))
+
+		if v := trackMap["accounting"]; v != nil {
+			trackMapToReturn["accounting"] = v.(bool)
 		}
 
-		if v, _ := trackMap["alert"]; v != nil && isArgDefault(v.(string), d, "track.alert", defaultTrack["alert"].(string)) {
+		if v, _ := trackMap["alert"]; v != nil {
 			trackMapToReturn["alert"] = v.(string)
 		}
 
-		if v := trackMap["enable-firewall-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.enable_firewall_session", defaultTrack["enable-firewall-session"].(string)) {
-			trackMapToReturn["enable_firewall_session"] = strconv.FormatBool(v.(bool))
+		if v := trackMap["enable-firewall-session"]; v != nil {
+			trackMapToReturn["enable_firewall_session"] = v.(bool)
 		}
 
-		if v := trackMap["per-connection"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.per_connection", defaultTrack["per-connection"].(string)) {
-			trackMapToReturn["per_connection"] = strconv.FormatBool(v.(bool))
+		if v := trackMap["per-connection"]; v != nil {
+			trackMapToReturn["per_connection"] = v.(bool)
 		}
 
-		if v := trackMap["per-session"]; v != nil && isArgDefault(strconv.FormatBool(v.(bool)), d, "track.per_session", defaultTrack["per-session"].(string)) {
-			trackMapToReturn["per_session"] = strconv.FormatBool(v.(bool))
+		if v := trackMap["per-session"]; v != nil {
+			trackMapToReturn["per_session"] = v.(bool)
 		}
 
-		if v, _ := trackMap["type"]; v != nil && isArgDefault(v.(map[string]interface{})["name"].(string), d, "track.type", defaultTrack["type"].(string)) {
+		if v, _ := trackMap["type"]; v != nil {
 			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
 		}
-		err = d.Set("track", trackMapToReturn)
+		_ = d.Set("track", []interface{}{trackMapToReturn})
 
 	} else {
 		_ = d.Set("track", nil)
@@ -816,7 +828,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				_ = d.Set("vpn_communities", nil)
 				_ = d.Set("vpn", nil)
 			} else {
-				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+				return fmt.Errorf("Cannot read invalid VPN type [%s]", vpnType)
 			}
 		}
 	}
@@ -838,7 +850,7 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					accessRule["new-position"] = "top" // entire rule-base
 				} else {
@@ -846,15 +858,15 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				accessRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				accessRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					accessRule["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -881,19 +893,24 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("action_settings") {
-		if _, ok := d.GetOk("action_settings"); ok {
-			res := make(map[string]interface{})
-			if v, ok := d.GetOk("action_settings.enable_identity_captive_portal"); ok {
-				res["enable-identity-captive-portal"] = v
+
+		if v, ok := d.GetOk("action_settings"); ok {
+
+			actionSettingsList := v.([]interface{})
+
+			if len(actionSettingsList) > 0 {
+
+				actionSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("action_settings.0.enable_identity_captive_portal"); ok {
+					actionSettingsPayload["enable-identity-captive-portal"] = v.(bool)
+				}
+				if v, ok := d.GetOk("action_settings.0.limit"); ok {
+					actionSettingsPayload["limit"] = v.(string)
+				}
+				accessRule["action-settings"] = actionSettingsPayload
 			}
-			if v, ok := d.GetOk("action_settings.limit"); ok {
-				res["limit"] = v.(string)
-			}
-			accessRule["action-settings"] = res
 		}
-		//else { //argument deleted - go back to defaults
-		//	accessRule["action-settings"] = map[string]interface{}{"enable-identity-captive-portal": "false"}
-		//}
 	}
 
 	if d.HasChange("content") {
@@ -921,23 +938,27 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("custom_fields") {
-		if _, ok := d.GetOk("custom_fields"); ok {
-			res := make(map[string]interface{})
-			if v, ok := d.GetOk("custom_fields.field_1"); ok {
-				res["field-1"] = v
+
+		if v, ok := d.GetOk("custom_fields"); ok {
+
+			customFieldsList := v.([]interface{})
+
+			if len(customFieldsList) > 0 {
+
+				customFieldsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("custom_fields.0.field_1"); ok {
+					customFieldsPayload["field-1"] = v.(string)
+				}
+				if v, ok := d.GetOk("custom_fields.0.field_2"); ok {
+					customFieldsPayload["field-2"] = v.(string)
+				}
+				if v, ok := d.GetOk("custom_fields.0.field_3"); ok {
+					customFieldsPayload["field-3"] = v.(string)
+				}
+				accessRule["custom-fields"] = customFieldsPayload
 			}
-			if v, ok := d.GetOk("custom_fields.field_2"); ok {
-				res["field-2"] = v
-			}
-			if v, ok := d.GetOk("custom_fields.field_3"); ok {
-				res["field-3"] = v
-			}
-			accessRule["custom-fields"] = res
 		}
-		//else {
-		//	defaultCustomField := map[string]interface{}{"field-1": "", "field-2": "", "field-3": ""}
-		//	accessRule["custom-fields"] = defaultCustomField
-		//}
 	}
 
 	if d.HasChange("destination") {
@@ -1020,27 +1041,35 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("track") {
-		if _, ok := d.GetOk("track"); ok {
-			res := make(map[string]interface{})
-			if v, ok := d.GetOk("track.accounting"); ok {
-				res["accounting"] = v
+
+		if v, ok := d.GetOk("track"); ok {
+
+			trackList := v.([]interface{})
+
+			if len(trackList) > 0 {
+
+				trackPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("track.0.accounting"); ok {
+					trackPayload["accounting"] = v.(bool)
+				}
+				if v, ok := d.GetOk("track.0.alert"); ok {
+					trackPayload["alert"] = v.(string)
+				}
+				if v, ok := d.GetOkExists("track.0.enable_firewall_session"); ok {
+					trackPayload["enable-firewall-session"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("track.0.per_connection"); ok {
+					trackPayload["per-connection"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("track.0.per_session"); ok {
+					trackPayload["per-session"] = v.(bool)
+				}
+				if v, ok := d.GetOk("track.0.type"); ok {
+					trackPayload["type"] = v.(string)
+				}
+				accessRule["track"] = trackPayload
 			}
-			if v, ok := d.GetOk("track.alert"); ok {
-				res["alert"] = v
-			}
-			if v, ok := d.GetOk("track.enable_firewall_session"); ok {
-				res["enable-firewall-session"] = v
-			}
-			if v, ok := d.GetOk("track.per_connection"); ok {
-				res["per-connection"] = v
-			}
-			if v, ok := d.GetOk("track.per_session"); ok {
-				res["per-session"] = v
-			}
-			if v, ok := d.GetOk("track.type"); ok {
-				res["type"] = v
-			}
-			accessRule["track"] = res
 		}
 	}
 
@@ -1111,9 +1140,9 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil || !updateAccessRuleRes.Success {
 			if updateAccessRuleRes.ErrorMsg != "" {
-				return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
+				return fmt.Errorf("%s", updateAccessRuleRes.ErrorMsg)
 			}
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	} else {
 		// Payload contain only required fields: uid, layer, ignore-warnings, ignore-errors
@@ -1136,9 +1165,9 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	deleteAccessRuleRes, err := client.ApiCall("delete-access-rule", accessRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

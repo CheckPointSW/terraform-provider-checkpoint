@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -42,7 +42,6 @@ func dataSourceManagementResourceFtp() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Configure CVP inspection on mail messages.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable_cvp": {
@@ -106,14 +105,14 @@ func dataSourceManagementResourceFtpRead(d *schema.ResourceData, m interface{}) 
 
 	showResourceFtpRes, err := client.ApiCall("show-resource-ftp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceFtpRes.Success {
 		if objectNotFound(showResourceFtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceFtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceFtpRes.ErrorMsg)
 	}
 
 	resourceFtp := showResourceFtpRes.GetData()

@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
@@ -36,7 +35,6 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Access Control permissions.<br>Only a 'Customized' permission-type profile can edit these permissions.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"show_policy": {
@@ -48,7 +46,6 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Layer editing permissions.<br>Available only if show-policy is set to true.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"edit_layers": {
@@ -118,7 +115,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"endpoint": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Endpoint permissions. Not supported for Multi-Domain Servers.<br>Only a 'Customized' permission-type profile can edit these permissions.",
 				Elem: &schema.Resource{
@@ -177,7 +174,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"events_and_reports": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Events and Reports permissions.<br>Only a 'Customized' permission-type profile can edit these permissions.",
 				Elem: &schema.Resource{
@@ -206,7 +203,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"gateways": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Gateways permissions. <br>Only a 'Customized' permission-type profile can edit these permissions.",
 				Elem: &schema.Resource{
@@ -265,7 +262,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"management": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Management permissions.",
 				Elem: &schema.Resource{
@@ -314,7 +311,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"monitoring_and_logging": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Monitoring and Logging permissions.<br>'Customized' permission-type profile can edit all these permissions. \"Read Write All\" permission-type can edit only dlp-logs-including-confidential-fields and manage-dlp-messages permissions.",
 				Elem: &schema.Resource{
@@ -378,7 +375,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"threat_prevention": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Threat Prevention permissions.<br>Only a 'Customized' permission-type profile can edit these permissions.",
 				Elem: &schema.Resource{
@@ -427,7 +424,7 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				},
 			},
 			"others": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Additional permissions.<br>Only a 'Customized' permission-type profile can edit these permissions.",
 				Elem: &schema.Resource{
@@ -504,14 +501,14 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 	showDomainPermissionsProfileRes, err := client.ApiCall("show-domain-permissions-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDomainPermissionsProfileRes.Success {
 		if objectNotFound(showDomainPermissionsProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDomainPermissionsProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showDomainPermissionsProfileRes.ErrorMsg)
 	}
 
 	domainPermissionsProfile := showDomainPermissionsProfileRes.GetData()
@@ -603,37 +600,39 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		endpointMapToReturn := make(map[string]interface{})
 
-		if v, _ := endpointMap["manage-policies-and-software-deployment"]; v != nil {
-			endpointMapToReturn["manage_policies_and_software_deployment"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["manage-policies-and-software-deployment"]; v != nil {
+			endpointMapToReturn["manage_policies_and_software_deployment"] = v
 		}
-		if v, _ := endpointMap["edit-endpoint-policies"]; v != nil {
-			endpointMapToReturn["edit_endpoint_policies"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["edit-endpoint-policies"]; v != nil {
+			endpointMapToReturn["edit_endpoint_policies"] = v
 		}
-		if v, _ := endpointMap["policies-installation"]; v != nil {
-			endpointMapToReturn["policies_installation"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["policies-installation"]; v != nil {
+			endpointMapToReturn["policies_installation"] = v
 		}
-		if v, _ := endpointMap["edit-software-deployment"]; v != nil {
-			endpointMapToReturn["edit_software_deployment"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["edit-software-deployment"]; v != nil {
+			endpointMapToReturn["edit_software_deployment"] = v
 		}
-		if v, _ := endpointMap["software-deployment-installation"]; v != nil {
-			endpointMapToReturn["software_deployment_installation"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["software-deployment-installation"]; v != nil {
+			endpointMapToReturn["software_deployment_installation"] = v
 		}
-		if v, _ := endpointMap["allow-executing-push-operations"]; v != nil {
-			endpointMapToReturn["allow_executing_push_operations"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["allow-executing-push-operations"]; v != nil {
+			endpointMapToReturn["allow_executing_push_operations"] = v
 		}
-		if v, _ := endpointMap["authorize-preboot-users"]; v != nil {
-			endpointMapToReturn["authorize_preboot_users"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["authorize-preboot-users"]; v != nil {
+			endpointMapToReturn["authorize_preboot_users"] = v
 		}
-		if v, _ := endpointMap["recovery-media"]; v != nil {
-			endpointMapToReturn["recovery_media"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["recovery-media"]; v != nil {
+			endpointMapToReturn["recovery_media"] = v
 		}
-		if v, _ := endpointMap["remote-help"]; v != nil {
-			endpointMapToReturn["remote_help"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["remote-help"]; v != nil {
+			endpointMapToReturn["remote_help"] = v
 		}
-		if v, _ := endpointMap["reset-computer-data"]; v != nil {
-			endpointMapToReturn["reset_computer_data"] = strconv.FormatBool(v.(bool))
+		if v := endpointMap["reset-computer-data"]; v != nil {
+			endpointMapToReturn["reset_computer_data"] = v
 		}
-		_ = d.Set("endpoint", endpointMapToReturn)
+
+		_ = d.Set("endpoint", []interface{}{endpointMapToReturn})
+
 	} else {
 		_ = d.Set("endpoint", nil)
 	}
@@ -644,19 +643,21 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		eventsAndReportsMapToReturn := make(map[string]interface{})
 
-		if v, _ := eventsAndReportsMap["smart-event"]; v != nil {
+		if v := eventsAndReportsMap["smart-event"]; v != nil {
 			eventsAndReportsMapToReturn["smart_event"] = v
 		}
-		if v, _ := eventsAndReportsMap["events"]; v != nil {
+		if v := eventsAndReportsMap["events"]; v != nil {
 			eventsAndReportsMapToReturn["events"] = v
 		}
-		if v, _ := eventsAndReportsMap["policy"]; v != nil {
+		if v := eventsAndReportsMap["policy"]; v != nil {
 			eventsAndReportsMapToReturn["policy"] = v
 		}
-		if v, _ := eventsAndReportsMap["reports"]; v != nil {
-			eventsAndReportsMapToReturn["reports"] = strconv.FormatBool(v.(bool))
+		if v := eventsAndReportsMap["reports"]; v != nil {
+			eventsAndReportsMapToReturn["reports"] = v
 		}
-		_ = d.Set("events_and_reports", eventsAndReportsMapToReturn)
+
+		_ = d.Set("events_and_reports", []interface{}{eventsAndReportsMapToReturn})
+
 	} else {
 		_ = d.Set("events_and_reports", nil)
 	}
@@ -667,37 +668,39 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		gatewaysMapToReturn := make(map[string]interface{})
 
-		if v, _ := gatewaysMap["smart-update"]; v != nil {
+		if v := gatewaysMap["smart-update"]; v != nil {
 			gatewaysMapToReturn["smart_update"] = v
 		}
-		if v, _ := gatewaysMap["lsm-gw-db"]; v != nil {
+		if v := gatewaysMap["lsm-gw-db"]; v != nil {
 			gatewaysMapToReturn["lsm_gw_db"] = v
 		}
-		if v, _ := gatewaysMap["manage-provisioning-profiles"]; v != nil {
+		if v := gatewaysMap["manage-provisioning-profiles"]; v != nil {
 			gatewaysMapToReturn["manage_provisioning_profiles"] = v
 		}
-		if v, _ := gatewaysMap["vsx-provisioning"]; v != nil {
-			gatewaysMapToReturn["vsx_provisioning"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["vsx-provisioning"]; v != nil {
+			gatewaysMapToReturn["vsx_provisioning"] = v
 		}
-		if v, _ := gatewaysMap["system-backup"]; v != nil {
-			gatewaysMapToReturn["system_backup"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["system-backup"]; v != nil {
+			gatewaysMapToReturn["system_backup"] = v
 		}
-		if v, _ := gatewaysMap["system-restore"]; v != nil {
-			gatewaysMapToReturn["system_restore"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["system-restore"]; v != nil {
+			gatewaysMapToReturn["system_restore"] = v
 		}
-		if v, _ := gatewaysMap["open-shell"]; v != nil {
-			gatewaysMapToReturn["open_shell"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["open-shell"]; v != nil {
+			gatewaysMapToReturn["open_shell"] = v
 		}
-		if v, _ := gatewaysMap["run-one-time-script"]; v != nil {
-			gatewaysMapToReturn["run_one_time_script"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["run-one-time-script"]; v != nil {
+			gatewaysMapToReturn["run_one_time_script"] = v
 		}
-		if v, _ := gatewaysMap["run-repository-script"]; v != nil {
-			gatewaysMapToReturn["run_repository_script"] = strconv.FormatBool(v.(bool))
+		if v := gatewaysMap["run-repository-script"]; v != nil {
+			gatewaysMapToReturn["run_repository_script"] = v
 		}
-		if v, _ := gatewaysMap["manage-repository-scripts"]; v != nil {
+		if v := gatewaysMap["manage-repository-scripts"]; v != nil {
 			gatewaysMapToReturn["manage_repository_scripts"] = v
 		}
-		_ = d.Set("gateways", gatewaysMapToReturn)
+
+		_ = d.Set("gateways", []interface{}{gatewaysMapToReturn})
+
 	} else {
 		_ = d.Set("gateways", nil)
 	}
@@ -708,31 +711,33 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		managementMapToReturn := make(map[string]interface{})
 
-		if v, _ := managementMap["cme-operations"]; v != nil {
+		if v := managementMap["cme-operations"]; v != nil {
 			managementMapToReturn["cme_operations"] = v
 		}
-		if v, _ := managementMap["manage-admins"]; v != nil {
-			managementMapToReturn["manage_admins"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["manage-admins"]; v != nil {
+			managementMapToReturn["manage_admins"] = v
 		}
-		if v, _ := managementMap["management-api-login"]; v != nil {
-			managementMapToReturn["management_api_login"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["management-api-login"]; v != nil {
+			managementMapToReturn["management_api_login"] = v
 		}
-		if v, _ := managementMap["manage-sessions"]; v != nil {
-			managementMapToReturn["manage_sessions"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["manage-sessions"]; v != nil {
+			managementMapToReturn["manage_sessions"] = v
 		}
-		if v, _ := managementMap["high-availability-operations"]; v != nil {
-			managementMapToReturn["high_availability_operations"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["high-availability-operations"]; v != nil {
+			managementMapToReturn["high_availability_operations"] = v
 		}
-		if v, _ := managementMap["approve-or-reject-sessions"]; v != nil {
-			managementMapToReturn["approve_or_reject_sessions"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["approve-or-reject-sessions"]; v != nil {
+			managementMapToReturn["approve_or_reject_sessions"] = v
 		}
-		if v, _ := managementMap["publish-sessions"]; v != nil {
-			managementMapToReturn["publish_sessions"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["publish-sessions"]; v != nil {
+			managementMapToReturn["publish_sessions"] = v
 		}
-		if v, _ := managementMap["manage-integration-with-cloud-services"]; v != nil {
-			managementMapToReturn["manage_integration_with_cloud_services"] = strconv.FormatBool(v.(bool))
+		if v := managementMap["manage-integration-with-cloud-services"]; v != nil {
+			managementMapToReturn["manage_integration_with_cloud_services"] = v
 		}
-		_ = d.Set("management", managementMapToReturn)
+
+		_ = d.Set("management", []interface{}{managementMapToReturn})
+
 	} else {
 		_ = d.Set("management", nil)
 	}
@@ -743,40 +748,42 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		monitoringAndLoggingMapToReturn := make(map[string]interface{})
 
-		if v, _ := monitoringAndLoggingMap["monitoring"]; v != nil {
+		if v := monitoringAndLoggingMap["monitoring"]; v != nil {
 			monitoringAndLoggingMapToReturn["monitoring"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["management-logs"]; v != nil {
+		if v := monitoringAndLoggingMap["management-logs"]; v != nil {
 			monitoringAndLoggingMapToReturn["management_logs"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["track-logs"]; v != nil {
+		if v := monitoringAndLoggingMap["track-logs"]; v != nil {
 			monitoringAndLoggingMapToReturn["track_logs"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["app-and-url-filtering-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["app_and_url_filtering_logs"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["app-and-url-filtering-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["app_and_url_filtering_logs"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["https-inspection-logs"]; v != nil {
-			monitoringAndLoggingMapToReturn["https_inspection_logs"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["https-inspection-logs"]; v != nil {
+			monitoringAndLoggingMapToReturn["https_inspection_logs"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["packet-capture-and-forensics"]; v != nil {
-			monitoringAndLoggingMapToReturn["packet_capture_and_forensics"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["packet-capture-and-forensics"]; v != nil {
+			monitoringAndLoggingMapToReturn["packet_capture_and_forensics"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["show-packet-capture-by-default"]; v != nil {
-			monitoringAndLoggingMapToReturn["show_packet_capture_by_default"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["show-packet-capture-by-default"]; v != nil {
+			monitoringAndLoggingMapToReturn["show_packet_capture_by_default"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["identities"]; v != nil {
-			monitoringAndLoggingMapToReturn["identities"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["identities"]; v != nil {
+			monitoringAndLoggingMapToReturn["identities"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["show-identities-by-default"]; v != nil {
-			monitoringAndLoggingMapToReturn["show_identities_by_default"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["show-identities-by-default"]; v != nil {
+			monitoringAndLoggingMapToReturn["show_identities_by_default"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["dlp-logs-including-confidential-fields"]; v != nil {
-			monitoringAndLoggingMapToReturn["dlp_logs_including_confidential_fields"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["dlp-logs-including-confidential-fields"]; v != nil {
+			monitoringAndLoggingMapToReturn["dlp_logs_including_confidential_fields"] = v
 		}
-		if v, _ := monitoringAndLoggingMap["manage-dlp-messages"]; v != nil {
-			monitoringAndLoggingMapToReturn["manage_dlp_messages"] = strconv.FormatBool(v.(bool))
+		if v := monitoringAndLoggingMap["manage-dlp-messages"]; v != nil {
+			monitoringAndLoggingMapToReturn["manage_dlp_messages"] = v
 		}
-		_ = d.Set("monitoring_and_logging", monitoringAndLoggingMapToReturn)
+
+		_ = d.Set("monitoring_and_logging", []interface{}{monitoringAndLoggingMapToReturn})
+
 	} else {
 		_ = d.Set("monitoring_and_logging", nil)
 	}
@@ -787,31 +794,33 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		threatPreventionMapToReturn := make(map[string]interface{})
 
-		if v, _ := threatPreventionMap["policy-layers"]; v != nil {
+		if v := threatPreventionMap["policy-layers"]; v != nil {
 			threatPreventionMapToReturn["policy_layers"] = v
 		}
-		if v, _ := threatPreventionMap["edit-layers"]; v != nil {
+		if v := threatPreventionMap["edit-layers"]; v != nil {
 			threatPreventionMapToReturn["edit_layers"] = v
 		}
-		if v, _ := threatPreventionMap["edit-settings"]; v != nil {
-			threatPreventionMapToReturn["edit_settings"] = strconv.FormatBool(v.(bool))
+		if v := threatPreventionMap["edit-settings"]; v != nil {
+			threatPreventionMapToReturn["edit_settings"] = v
 		}
-		if v, _ := threatPreventionMap["policy-exceptions"]; v != nil {
+		if v := threatPreventionMap["policy-exceptions"]; v != nil {
 			threatPreventionMapToReturn["policy_exceptions"] = v
 		}
-		if v, _ := threatPreventionMap["profiles"]; v != nil {
+		if v := threatPreventionMap["profiles"]; v != nil {
 			threatPreventionMapToReturn["profiles"] = v
 		}
-		if v, _ := threatPreventionMap["protections"]; v != nil {
+		if v := threatPreventionMap["protections"]; v != nil {
 			threatPreventionMapToReturn["protections"] = v
 		}
-		if v, _ := threatPreventionMap["install-policy"]; v != nil {
-			threatPreventionMapToReturn["install_policy"] = strconv.FormatBool(v.(bool))
+		if v := threatPreventionMap["install-policy"]; v != nil {
+			threatPreventionMapToReturn["install_policy"] = v
 		}
-		if v, _ := threatPreventionMap["ips-update"]; v != nil {
-			threatPreventionMapToReturn["ips_update"] = strconv.FormatBool(v.(bool))
+		if v := threatPreventionMap["ips-update"]; v != nil {
+			threatPreventionMapToReturn["ips_update"] = v
 		}
-		_ = d.Set("threat_prevention", threatPreventionMapToReturn)
+
+		_ = d.Set("threat_prevention", []interface{}{threatPreventionMapToReturn})
+
 	} else {
 		_ = d.Set("threat_prevention", nil)
 	}
@@ -822,25 +831,27 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 		othersMapToReturn := make(map[string]interface{})
 
-		if v, _ := othersMap["client-certificates"]; v != nil {
-			othersMapToReturn["client_certificates"] = strconv.FormatBool(v.(bool))
+		if v := othersMap["edit-cp-users-db"]; v != nil {
+			othersMapToReturn["edit_cp_users_db"] = v
 		}
-		if v, _ := othersMap["edit-cp-users-db"]; v != nil {
-			othersMapToReturn["edit_cp_users_db"] = strconv.FormatBool(v.(bool))
+		if v := othersMap["client-certificates"]; v != nil {
+			othersMapToReturn["client_certificates"] = v
 		}
-		if v, _ := othersMap["https-inspection"]; v != nil {
+		if v := othersMap["https-inspection"]; v != nil {
 			othersMapToReturn["https_inspection"] = v
 		}
-		if v, _ := othersMap["ldap-users-db"]; v != nil {
+		if v := othersMap["ldap-users-db"]; v != nil {
 			othersMapToReturn["ldap_users_db"] = v
 		}
-		if v, _ := othersMap["user-authority-access"]; v != nil {
+		if v := othersMap["user-authority-access"]; v != nil {
 			othersMapToReturn["user_authority_access"] = v
 		}
-		if v, _ := othersMap["user-device-mgmt-conf"]; v != nil {
+		if v := othersMap["user-device-mgmt-conf"]; v != nil {
 			othersMapToReturn["user_device_mgmt_conf"] = v
 		}
-		_ = d.Set("others", othersMapToReturn)
+
+		_ = d.Set("others", []interface{}{othersMapToReturn})
+
 	} else {
 		_ = d.Set("others", nil)
 	}

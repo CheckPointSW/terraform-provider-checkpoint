@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -35,7 +34,7 @@ func dataSourceManagementAccessRule() *schema.Resource {
 				Description: "\"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".",
 			},
 			"action_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Action settings.",
 				Elem: &schema.Resource{
@@ -72,7 +71,7 @@ func dataSourceManagementAccessRule() *schema.Resource {
 				Description: "True if negate is set for data.",
 			},
 			"custom_fields": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Custom fields.",
 				Elem: &schema.Resource{
@@ -161,7 +160,7 @@ func dataSourceManagementAccessRule() *schema.Resource {
 				},
 			},
 			"track": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Track Settings.",
 				Elem: &schema.Resource{
@@ -201,7 +200,6 @@ func dataSourceManagementAccessRule() *schema.Resource {
 			},
 			"user_check": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "User check settings.",
 				Elem: &schema.Resource{
@@ -213,7 +211,6 @@ func dataSourceManagementAccessRule() *schema.Resource {
 						},
 						"custom_frequency": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "N/A",
 							Elem: &schema.Resource{
@@ -312,10 +309,10 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessRuleRes.Success {
-		return fmt.Errorf(showAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessRuleRes.ErrorMsg)
 	}
 
 	accessRule := showAccessRuleRes.GetData()
@@ -345,14 +342,14 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		actionSettingsMapToReturn := make(map[string]interface{})
 
 		if v, _ := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
-			actionSettingsMapToReturn["enable_identity_captive_portal"] = strconv.FormatBool(v.(bool))
+			actionSettingsMapToReturn["enable_identity_captive_portal"] = v.(bool)
 		}
 
 		if v, _ := actionSettingsMap["limit"]; v != nil {
-			actionSettingsMapToReturn["limit"] = v
+			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
 		}
 
-		_ = d.Set("action_settings", actionSettingsMapToReturn)
+		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
 	} else {
 		_ = d.Set("action_settings", nil)
 	}
@@ -389,7 +386,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		if v, _ := customFieldsMap["field-3"]; v != nil {
 			customFieldsMapToReturn["field_3"] = v
 		}
-		_ = d.Set("custom_fields", customFieldsMapToReturn)
+		_ = d.Set("custom_fields", []interface{}{customFieldsMapToReturn})
 	} else {
 		_ = d.Set("custom_fields", nil)
 	}
@@ -444,7 +441,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 		trackMapToReturn := make(map[string]interface{})
 		if v := trackMap["accounting"]; v != nil {
-			trackMapToReturn["accounting"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["accounting"] = v.(bool)
 		}
 
 		if v, _ := trackMap["alert"]; v != nil {
@@ -452,21 +449,21 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 		}
 
 		if v := trackMap["enable-firewall-session"]; v != nil {
-			trackMapToReturn["enable_firewall_session"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["enable_firewall_session"] = v.(bool)
 		}
 
 		if v := trackMap["per-connection"]; v != nil {
-			trackMapToReturn["per_connection"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["per_connection"] = v.(bool)
 		}
 
 		if v := trackMap["per-session"]; v != nil {
-			trackMapToReturn["per_session"] = strconv.FormatBool(v.(bool))
+			trackMapToReturn["per_session"] = v.(bool)
 		}
 
 		if v, _ := trackMap["type"]; v != nil {
 			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
 		}
-		err = d.Set("track", trackMapToReturn)
+		err = d.Set("track", []interface{}{trackMapToReturn})
 
 	} else {
 		_ = d.Set("track", nil)
@@ -540,7 +537,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 				_ = d.Set("vpn_communities", nil)
 				_ = d.Set("vpn", nil)
 			} else {
-				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+				return fmt.Errorf("Cannot read invalid VPN type [%s]", vpnType)
 			}
 		}
 	}

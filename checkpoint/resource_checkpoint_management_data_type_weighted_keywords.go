@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 
 	"strconv"
@@ -170,9 +170,9 @@ func createManagementDataTypeWeightedKeywords(d *schema.ResourceData, m interfac
 	addDataTypeWeightedKeywordsRes, err := client.ApiCall("add-data-type-weighted-keywords", dataTypeWeightedKeywords, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypeWeightedKeywordsRes.Success {
 		if addDataTypeWeightedKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypeWeightedKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypeWeightedKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypeWeightedKeywordsRes.GetData()["uid"].(string))
@@ -190,14 +190,14 @@ func readManagementDataTypeWeightedKeywords(d *schema.ResourceData, m interface{
 
 	showDataTypeWeightedKeywordsRes, err := client.ApiCall("show-data-type-weighted-keywords", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeWeightedKeywordsRes.Success {
 		if objectNotFound(showDataTypeWeightedKeywordsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeWeightedKeywordsRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeWeightedKeywordsRes.ErrorMsg)
 	}
 
 	dataTypeWeightedKeywords := showDataTypeWeightedKeywordsRes.GetData()
@@ -377,9 +377,9 @@ func updateManagementDataTypeWeightedKeywords(d *schema.ResourceData, m interfac
 	updateDataTypeWeightedKeywordsRes, err := client.ApiCall("set-data-type-weighted-keywords", dataTypeWeightedKeywords, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypeWeightedKeywordsRes.Success {
 		if updateDataTypeWeightedKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypeWeightedKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypeWeightedKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypeWeightedKeywords(d, m)
@@ -398,9 +398,9 @@ func deleteManagementDataTypeWeightedKeywords(d *schema.ResourceData, m interfac
 	deleteDataTypeWeightedKeywordsRes, err := client.ApiCall("delete-data-type-weighted-keywords", dataTypeWeightedKeywordsPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypeWeightedKeywordsRes.Success {
 		if deleteDataTypeWeightedKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypeWeightedKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypeWeightedKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

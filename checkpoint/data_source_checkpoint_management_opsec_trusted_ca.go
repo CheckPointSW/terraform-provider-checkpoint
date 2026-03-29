@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -31,7 +31,6 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Certificate automatic enrollment.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"automatically_enroll_certificate": {
@@ -48,7 +47,6 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Scep protocol settings. Available only if \"protocol\" is set to \"scep\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ca_identifier": {
@@ -68,14 +66,12 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Cmpv1 protocol settings. Available only if \"protocol\" is set to \"cmpv1\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"direct_tcp_settings": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Direct tcp transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"ip_address": {
@@ -98,7 +94,6 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Cmpv2 protocol settings. Available only if \"protocol\" is set to \"cmpv1\".",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"transport_layer": {
@@ -110,7 +105,6 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Direct tcp transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"ip_address": {
@@ -130,7 +124,6 @@ func dataSourceManagementOpsecTrustedCa() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Http transport layer settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"url": {
@@ -224,14 +217,14 @@ func dataSourceManagementOpsecTrustedCaRead(d *schema.ResourceData, m interface{
 
 	showOpsecTrustedCaRes, err := client.ApiCall("show-opsec-trusted-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpsecTrustedCaRes.Success {
 		if objectNotFound(showOpsecTrustedCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOpsecTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpsecTrustedCaRes.ErrorMsg)
 	}
 
 	opsecTrustedCa := showOpsecTrustedCaRes.GetData()
@@ -410,22 +403,6 @@ func dataSourceManagementOpsecTrustedCaRead(d *schema.ResourceData, m interface{
 
 	if v := opsecTrustedCa["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if opsecTrustedCa["domains_to_process"] != nil {
-		domainsToProcessJson, ok := opsecTrustedCa["domains_to_process"].([]interface{})
-		if ok {
-			domainsToProcessIds := make([]string, 0)
-			if len(domainsToProcessJson) > 0 {
-				for _, domains_to_process := range domainsToProcessJson {
-					domains_to_process := domains_to_process.(map[string]interface{})
-					domainsToProcessIds = append(domainsToProcessIds, domains_to_process["name"].(string))
-				}
-			}
-			_ = d.Set("domains_to_process", domainsToProcessIds)
-		}
-	} else {
-		_ = d.Set("domains_to_process", nil)
 	}
 
 	if v := opsecTrustedCa["ignore-warnings"]; v != nil {

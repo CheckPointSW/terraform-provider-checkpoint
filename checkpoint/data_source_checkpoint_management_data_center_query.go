@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -38,7 +38,7 @@ func dataSourceManagementDataCenterQuery() *schema.Resource {
 						"key_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The type of the \"key\" parameter.<br>Use \"predefined\" for these keys: type-in-data-center, name-in-data-center, and ip-address.<br>Use \"tag\" to query the Data Center tag�s property.",
+							Description: "The type of the \"key\" parameter.<br>Use \"predefined\" for these keys: type-in-data-center, name-in-data-center, and ip-address.<br>Use \"tag\" to query the Data Center tagï¿½s property.",
 						},
 						"key": {
 							Type:        schema.TypeString,
@@ -98,10 +98,10 @@ func dataSourceDataCenterQueryRead(d *schema.ResourceData, m interface{}) error 
 	}
 	showDataCenterQueryRes, err := client.ApiCall("show-data-center-query", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterQueryRes.Success {
-		return fmt.Errorf(showDataCenterQueryRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterQueryRes.ErrorMsg)
 	}
 
 	dataCenterQuery := showDataCenterQueryRes.GetData()

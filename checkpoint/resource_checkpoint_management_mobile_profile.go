@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -799,9 +799,9 @@ func createManagementMobileProfile(d *schema.ResourceData, m interface{}) error 
 	addMobileProfileRes, err := client.ApiCall("add-mobile-profile", mobileProfile, client.GetSessionID(), true, false)
 	if err != nil || !addMobileProfileRes.Success {
 		if addMobileProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileProfileRes.GetData()["uid"].(string))
@@ -819,14 +819,14 @@ func readManagementMobileProfile(d *schema.ResourceData, m interface{}) error {
 
 	showMobileProfileRes, err := client.ApiCall("show-mobile-profile", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileProfileRes.Success {
 		if objectNotFound(showMobileProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileProfileRes.ErrorMsg)
 	}
 
 	mobileProfile := showMobileProfileRes.GetData()
@@ -1465,9 +1465,9 @@ func updateManagementMobileProfile(d *schema.ResourceData, m interface{}) error 
 	updateMobileProfileRes, err := client.ApiCall("set-mobile-profile", mobileProfile, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileProfileRes.Success {
 		if updateMobileProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileProfile(d, m)
@@ -1486,9 +1486,9 @@ func deleteManagementMobileProfile(d *schema.ResourceData, m interface{}) error 
 	deleteMobileProfileRes, err := client.ApiCall("delete-mobile-profile", mobileProfilePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileProfileRes.Success {
 		if deleteMobileProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

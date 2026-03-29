@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -70,7 +70,7 @@ func testAccCheckCheckpointAccessRuleExists(resourceTfName string, res *map[stri
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-access-rule", map[string]interface{}{"uid": rs.Primary.ID, "layer": "Network"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -92,7 +92,7 @@ func testAccCheckCheckpointAccessRuleAttributes(accessRule *map[string]interface
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-access-layer", map[string]interface{}{"uid": accessRuleLayerUid}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		accessRuleLayerName := response.GetData()["name"]
@@ -113,18 +113,19 @@ func testAccManagementAccessRuleConfig(name string, layer string) string {
 resource "checkpoint_management_access_rule" "test" {
 	name = "%s"
     layer = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 	source = ["Any"]
 	destination = ["Any"]
 	service = ["Any"]
-	track = {
-    accounting = false
-    alert = "none"
-    enable_firewall_session = false
-    per_connection = false
-    per_session = false
-    type = "None"
-  }
+	track {
+        accounting = false
+        alert = "none"
+        per_connection = false
+        per_session = false
+        type = "None"
+    }
 }
 `, name, layer)
 }

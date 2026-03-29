@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 )
 
 func dataSourceManagementThreatRule() *schema.Resource {
@@ -103,7 +102,7 @@ func dataSourceManagementThreatRule() *schema.Resource {
 				Description: "Packet tracking.",
 			},
 			"track_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Threat rule track settings.",
 				Elem: &schema.Resource{
@@ -152,10 +151,10 @@ func dataSourceManagementThreatRuleRead(d *schema.ResourceData, m interface{}) e
 
 	showThreatRuleRes, err := client.ApiCall("show-threat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatRuleRes.Success {
-		return fmt.Errorf(showThreatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleRes.ErrorMsg)
 	}
 
 	threatRule := showThreatRuleRes.GetData()
@@ -291,13 +290,7 @@ func dataSourceManagementThreatRuleRead(d *schema.ResourceData, m interface{}) e
 			trackSettingsState["packet_capture"] = v.(bool)
 		}
 
-		_, trackSettingsInConf := d.GetOk("track_settings")
-		defaultTrackSettings := map[string]interface{}{"packet-capture": true}
-		if reflect.DeepEqual(defaultTrackSettings, trackSettingsState) && !trackSettingsInConf {
-			_ = d.Set("track_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("track_settings", trackSettingsState)
-		}
+		_ = d.Set("track_settings", []interface{}{trackSettingsState})
 	}
 
 	if threatRule["exceptions"] != nil {

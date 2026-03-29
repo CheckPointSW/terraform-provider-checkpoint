@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAddRepositoryPackage() *schema.Resource {
@@ -58,7 +58,7 @@ func createManagementAddRepositoryPackage(d *schema.ResourceData, m interface{})
 
 	AddRepositoryPackageRes, _ := client.ApiCall("add-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddRepositoryPackageRes.Success {
-		return fmt.Errorf(AddRepositoryPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", AddRepositoryPackageRes.ErrorMsg)
 	}
 
 	d.SetId("add-repository-package" + acctest.RandString(10))

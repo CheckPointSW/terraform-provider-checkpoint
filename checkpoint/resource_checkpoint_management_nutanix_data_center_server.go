@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -149,24 +149,24 @@ func createManagementNutanixDataCenterServer(d *schema.ResourceData, m interface
 
 	addNutanixDataCenterServerRes, err := client.ApiCall("add-data-center-server", nutanixDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addNutanixDataCenterServerRes.Success {
 		if addNutanixDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addNutanixDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addNutanixDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addNutanixDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": nutanixDataCenterServer["name"],
 	}
 	showNutanixDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNutanixDataCenterServerRes.Success {
-		return fmt.Errorf(showNutanixDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showNutanixDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showNutanixDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementNutanixDataCenterServer(d, m)
@@ -181,14 +181,14 @@ func readManagementNutanixDataCenterServer(d *schema.ResourceData, m interface{}
 
 	showNutanixDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNutanixDataCenterServerRes.Success {
 		if objectNotFound(showNutanixDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNutanixDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showNutanixDataCenterServerRes.ErrorMsg)
 	}
 
 	nutanixDataCenterServer := showNutanixDataCenterServerRes.GetData()
@@ -317,14 +317,14 @@ func updateManagementNutanixDataCenterServer(d *schema.ResourceData, m interface
 
 	updateNutanixDataCenterServerRes, err := client.ApiCall("set-data-center-server", nutanixDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateNutanixDataCenterServerRes.Success {
 		if updateNutanixDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNutanixDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNutanixDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateNutanixDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementNutanixDataCenterServer(d, m)
@@ -350,9 +350,9 @@ func deleteManagementNutanixDataCenterServer(d *schema.ResourceData, m interface
 	deleteNutanixDataCenterServerRes, err := client.ApiCall("delete-data-center-server", nutanixDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteNutanixDataCenterServerRes.Success {
 		if deleteNutanixDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNutanixDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNutanixDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

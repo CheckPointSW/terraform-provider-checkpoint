@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 	"time"
@@ -15,6 +16,14 @@ func resourceDataCenterObject() *schema.Resource {
 		Read:   readManagementDataCenterObject,
 		Update: updateManagementDataCenterObject,
 		Delete: deleteManagementDataCenterObject,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementDataCenterObjectV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementDataCenterObjectStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"data_center_name": {
 				Type:        schema.TypeString,
@@ -89,7 +98,6 @@ func resourceDataCenterObject() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Data Center Object",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -135,7 +143,7 @@ func resourceDataCenterObject() *schema.Resource {
 				},
 			},
 			"updated_on_data_center": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Last update time of data center",
 				Elem: &schema.Resource{
@@ -240,10 +248,10 @@ func createManagementDataCenterObject(d *schema.ResourceData, m interface{}) err
 
 	AddDataCenterObjectRes, err := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !AddDataCenterObjectRes.Success {
-		return fmt.Errorf(AddDataCenterObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", AddDataCenterObjectRes.ErrorMsg)
 	}
 
 	d.SetId(AddDataCenterObjectRes.GetData()["uid"].(string))
@@ -292,7 +300,7 @@ func readManagementDataCenterObject(d *schema.ResourceData, m interface{}) error
 	showDataCenterObjRes, err := client.ApiCall("show-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterObjRes.Success {
 		// Handle delete resource from other clients
@@ -300,7 +308,7 @@ func readManagementDataCenterObject(d *schema.ResourceData, m interface{}) error
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataCenterObjRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterObjRes.ErrorMsg)
 	}
 
 	dataCenterObj := showDataCenterObjRes.GetData()
@@ -383,7 +391,7 @@ func readManagementDataCenterObject(d *schema.ResourceData, m interface{}) error
 				dataCenterObjMetaInfoState["posix"] = strconv.Itoa(int(v.(float64)))
 			}
 		}
-		_ = d.Set("updated_on_data_center", dataCenterObjMetaInfoState)
+		_ = d.Set("updated_on_data_center", []interface{}{dataCenterObjMetaInfoState})
 
 	} else {
 		_ = d.Set("updated_on_data_center", nil)
@@ -509,9 +517,9 @@ func updateManagementDataCenterObject(d *schema.ResourceData, m interface{}) err
 	updateDataCenterRes, err := client.ApiCall("set-data-center-object", dataCenter, client.GetSessionID(), true, false)
 	if err != nil || !updateDataCenterRes.Success {
 		if updateDataCenterRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataCenterRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataCenterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataCenterObject(d, m)
@@ -529,9 +537,9 @@ func deleteManagementDataCenterObject(d *schema.ResourceData, m interface{}) err
 	deleteLsmClusterRes, err := client.ApiCall("delete-data-center-object", dataCenterPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteLsmClusterRes.Success {
 		if deleteLsmClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLsmClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLsmClusterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

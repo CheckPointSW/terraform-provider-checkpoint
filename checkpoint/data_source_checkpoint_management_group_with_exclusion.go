@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -78,10 +78,10 @@ func dataSourceManagementGroupWithExclusionRead(d *schema.ResourceData, m interf
 
 	showGroupWithExclusionRes, err := client.ApiCall("show-group-with-exclusion", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGroupWithExclusionRes.Success {
-		return fmt.Errorf(showGroupWithExclusionRes.ErrorMsg)
+		return fmt.Errorf("%s", showGroupWithExclusionRes.ErrorMsg)
 	}
 
 	groupWithExclusion := showGroupWithExclusionRes.GetData()
@@ -98,11 +98,11 @@ func dataSourceManagementGroupWithExclusionRead(d *schema.ResourceData, m interf
 	}
 
 	if v := groupWithExclusion["except"]; v != nil {
-		_ = d.Set("except", v)
+		_ = d.Set("except", v.(map[string]interface{})["name"].(string))
 	}
 
 	if v := groupWithExclusion["include"]; v != nil {
-		_ = d.Set("include", v)
+		_ = d.Set("include", v.(map[string]interface{})["name"].(string))
 	}
 
 	if groupWithExclusion["tags"] != nil {

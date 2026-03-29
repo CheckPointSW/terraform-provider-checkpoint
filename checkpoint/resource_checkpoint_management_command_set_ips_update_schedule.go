@@ -1,10 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetIpsUpdateSchedule() *schema.Resource {
@@ -12,6 +13,14 @@ func resourceManagementSetIpsUpdateSchedule() *schema.Resource {
 		Create: createManagementSetIpsUpdateSchedule,
 		Read:   readManagementSetIpsUpdateSchedule,
 		Delete: deleteManagementSetIpsUpdateSchedule,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetIpsUpdateScheduleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetIpsUpdateScheduleStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -26,7 +35,8 @@ func resourceManagementSetIpsUpdateSchedule() *schema.Resource {
 				Description: "Time in format HH:mm.",
 			},
 			"recurrence": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Days recurrence.",
 				ForceNew:    true,
@@ -77,28 +87,33 @@ func createManagementSetIpsUpdateSchedule(d *schema.ResourceData, m interface{})
 		payload["time"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("recurrence"); ok {
+	if v, ok := d.GetOk("recurrence"); ok {
 
-		res := make(map[string]interface{})
+		recurrenceList := v.([]interface{})
 
-		if v, ok := d.GetOk("recurrence.days"); ok {
-			res["days"] = v
+		if len(recurrenceList) > 0 {
+
+			recurrencePayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("recurrence.0.days"); ok {
+				recurrencePayload["days"] = v
+			}
+			if v, ok := d.GetOk("recurrence.0.minutes"); ok {
+				recurrencePayload["minutes"] = v.(int)
+			}
+			if v, ok := d.GetOk("recurrence.0.pattern"); ok {
+				recurrencePayload["pattern"] = v.(string)
+			}
+			if v, ok := d.GetOk("recurrence.0.weekdays"); ok {
+				recurrencePayload["weekdays"] = v
+			}
+			payload["recurrence"] = recurrencePayload
 		}
-		if v, ok := d.GetOk("recurrence.minutes"); ok {
-			res["minutes"] = v
-		}
-		if v, ok := d.GetOk("recurrence.pattern"); ok {
-			res["pattern"] = v.(string)
-		}
-		if v, ok := d.GetOk("recurrence.weekdays"); ok {
-			res["weekdays"] = v
-		}
-		payload["recurrence"] = res
 	}
 
 	SetIpsUpdateScheduleRes, _ := client.ApiCall("set-ips-update-schedule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetIpsUpdateScheduleRes.Success {
-		return fmt.Errorf(SetIpsUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", SetIpsUpdateScheduleRes.ErrorMsg)
 	}
 
 	d.SetId("set-ips-update-schedule-" + acctest.RandString(10))

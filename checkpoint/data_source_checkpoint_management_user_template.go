@@ -3,10 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -73,7 +71,7 @@ func dataSourceManagementUserTemplate() *schema.Resource {
 				Description: "Allow users connect until hour.",
 			},
 			"allowed_locations": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "User allowed locations.",
 				Elem: &schema.Resource{
@@ -98,7 +96,7 @@ func dataSourceManagementUserTemplate() *schema.Resource {
 				},
 			},
 			"encryption": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "User encryption.",
 				Elem: &schema.Resource{
@@ -159,10 +157,10 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 
 	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUserTemplateRes.Success {
-		return fmt.Errorf(showUserTemplateRes.ErrorMsg)
+		return fmt.Errorf("%s", showUserTemplateRes.ErrorMsg)
 	}
 
 	userTemplate := showUserTemplateRes.GetData()
@@ -234,13 +232,7 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 			allowedLocationsMapToReturn["sources"] = v
 		}
 
-		_, allowedLocationsInConf := d.GetOk("allowed_locations")
-		defaultAllowedLocations := map[string]interface{}{"sources": "['97aeb369-9aea-11d5-bd16-0090272ccb30']", "destinations": "['97aeb369-9aea-11d5-bd16-0090272ccb30']"}
-		if reflect.DeepEqual(defaultAllowedLocations, allowedLocationsMapToReturn) && !allowedLocationsInConf {
-			_ = d.Set("allowed_locations", map[string]interface{}{})
-		} else {
-			_ = d.Set("allowed_locations", allowedLocationsMapToReturn)
-		}
+		_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
 
 	} else {
 		_ = d.Set("allowed_locations", nil)
@@ -253,22 +245,16 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 		encryptionMapToReturn := make(map[string]interface{})
 
 		if v, _ := encryptionMap["ike"]; v != nil {
-			encryptionMapToReturn["enable_ike"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_ike"] = v.(bool)
 		}
 		if v, _ := encryptionMap["public-key"]; v != nil {
-			encryptionMapToReturn["enable_public_key"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_public_key"] = v.(bool)
 		}
 		if v, _ := encryptionMap["shared-secret"]; v != nil {
-			encryptionMapToReturn["enable_shared_secret"] = strconv.FormatBool(v.(bool))
+			encryptionMapToReturn["enable_shared_secret"] = v.(bool)
 		}
 
-		_, encryptionInConf := d.GetOk("encryption")
-		defaultEncryption := map[string]interface{}{"enable_ike": "false"}
-		if reflect.DeepEqual(defaultEncryption, encryptionMapToReturn) && !encryptionInConf {
-			_ = d.Set("encryption", map[string]interface{}{})
-		} else {
-			_ = d.Set("encryption", encryptionMapToReturn)
-		}
+		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {
 		_ = d.Set("encryption", nil)

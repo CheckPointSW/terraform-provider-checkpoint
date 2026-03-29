@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteUpdatableObject() *schema.Resource {
@@ -53,7 +53,7 @@ func createManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}
 
 	DeleteUpdatableObjectRes, _ := client.ApiCall("delete-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteUpdatableObjectRes.Success {
-		return fmt.Errorf(DeleteUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteUpdatableObjectRes.ErrorMsg)
 	}
 
 	d.SetId("delete-updatable-object-" + acctest.RandString(10))

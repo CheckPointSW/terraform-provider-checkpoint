@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	_ "github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	_ "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	_ "strings"
 	"testing"
@@ -13,7 +13,7 @@ import (
 
 func TestAccDataSourceCheckpointManagementShowServicesUdp_basic(t *testing.T) {
 	var showServicesUdpQuery map[string]interface{}
-	dataSourceShowServicesUdp := "data.checkpoint_management_data_services_udp.my_query"
+	dataSourceShowServicesUdp := "data.checkpoint_management_services_udp.my_query"
 	serviceUdpName := "serviceUdp_test"
 	serviceUdpPort := "5683"
 
@@ -29,7 +29,7 @@ func TestAccDataSourceCheckpointManagementShowServicesUdp_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementShowServicesUdpConfig(1, serviceUdpName, serviceUdpPort),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointShowServicesUdp(dataSourceShowServicesUdp, &showServicesUdpQuery),
+					testAccCheckCheckpointShowServicesUdp(dataSourceShowServicesUdp, &showServicesUdpQuery, serviceUdpName),
 					testAccCheckCheckpointShowServicesUdpAttributes(&showServicesUdpQuery, serviceUdpName, serviceUdpPort),
 				),
 			},
@@ -37,7 +37,7 @@ func TestAccDataSourceCheckpointManagementShowServicesUdp_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCheckpointShowServicesUdp(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointShowServicesUdp(resourceTfName string, res *map[string]interface{}, serviceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		rs, ok := s.RootModule().Resources[resourceTfName]
@@ -50,9 +50,9 @@ func testAccCheckCheckpointShowServicesUdp(resourceTfName string, res *map[strin
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-services-udp", map[string]interface{}{"filter": "serviceUdp_test", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
+		response, _ := client.ApiCall("show-services-udp", map[string]interface{}{"filter": serviceName, "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -104,13 +104,13 @@ resource "checkpoint_management_service_udp" "example" {
   port = "%s"
 }
 
-data "checkpoint_management_data_services_udp" "my_query" {
+data "checkpoint_management_services_udp" "my_query" {
 	filter = "${checkpoint_management_service_udp.example.name}"
 	limit = %d
 }
 
 data "checkpoint_management_data_service_udp" "data_service_udp" {
-    name = "${data.checkpoint_management_data_services_udp.my_query.objects[0].name}"
+    name = "${data.checkpoint_management_services_udp.my_query.objects[0].name}"
 }
 `, objName, objPort, limit)
 }

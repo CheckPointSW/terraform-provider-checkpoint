@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -43,13 +43,13 @@ func dataSourceManagementThreatAdvancedSettings() *schema.Resource {
 				Description: "Session unification timeout for logs (minutes).",
 			},
 			"resource_classification": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Allow (Background) or Block (Hold) requests until categorization is complete.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"custom_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Custom resources classification per service.",
 							Elem: &schema.Resource{
@@ -96,10 +96,10 @@ func dataSourceManagementThreatAdvancedSettingsRead(d *schema.ResourceData, m in
 
 	showThreatAdvancedSettingsRes, err := client.ApiCall("show-threat-advanced-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatAdvancedSettingsRes.Success {
-		return fmt.Errorf(showThreatAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatAdvancedSettingsRes.ErrorMsg)
 	}
 
 	threatAdvancedSettings := showThreatAdvancedSettingsRes.GetData()
@@ -133,36 +133,39 @@ func dataSourceManagementThreatAdvancedSettingsRead(d *schema.ResourceData, m in
 	}
 
 	if threatAdvancedSettings["resource-classification"] != nil {
+
 		resourceClassificationMap := threatAdvancedSettings["resource-classification"].(map[string]interface{})
 
 		resourceClassificationMapToReturn := make(map[string]interface{})
 
-		if resourceClassificationMap["custom-settings"] != nil {
-			customSettingsMap := resourceClassificationMap["custom-settings"].(map[string]interface{})
+		if v := resourceClassificationMap["custom-settings"]; v != nil {
+
+			customSettingsMap := v.(map[string]interface{})
 
 			customSettingsMapToReturn := make(map[string]interface{})
 
-			if v, _ := customSettingsMap["anti-bot"]; v != nil {
+			if v := customSettingsMap["anti-bot"]; v != nil {
 				customSettingsMapToReturn["anti_bot"] = v
 			}
-			if v, _ := customSettingsMap["anti-virus"]; v != nil {
+			if v := customSettingsMap["anti-virus"]; v != nil {
 				customSettingsMapToReturn["anti_virus"] = v
 			}
-			if v, _ := customSettingsMap["zero-phishing"]; v != nil {
+			if v := customSettingsMap["zero-phishing"]; v != nil {
 				customSettingsMapToReturn["zero_phishing"] = v
 			}
 
-			resourceClassificationMapToReturn["custom_settings"] = customSettingsMapToReturn
+			resourceClassificationMapToReturn["custom_settings"] = []interface{}{customSettingsMapToReturn}
 		}
 
-		if v, _ := resourceClassificationMap["mode"]; v != nil {
+		if v := resourceClassificationMap["mode"]; v != nil {
 			resourceClassificationMapToReturn["mode"] = v
 		}
-		if v, _ := resourceClassificationMap["web-service-fail-mode"]; v != nil {
+		if v := resourceClassificationMap["web-service-fail-mode"]; v != nil {
 			resourceClassificationMapToReturn["web_service_fail_mode"] = v
 		}
 
-		_ = d.Set("resource_classification", resourceClassificationMapToReturn)
+		_ = d.Set("resource_classification", []interface{}{resourceClassificationMapToReturn})
+
 	} else {
 		_ = d.Set("resource_classification", nil)
 	}

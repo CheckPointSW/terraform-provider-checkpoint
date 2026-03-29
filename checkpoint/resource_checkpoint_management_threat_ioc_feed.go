@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 
 	"strconv"
@@ -290,9 +290,9 @@ func createManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 	addThreatIocFeedRes, err := client.ApiCall("add-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatIocFeedRes.Success {
 		if addThreatIocFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatIocFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatIocFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatIocFeedRes.GetData()["uid"].(string))
@@ -310,14 +310,14 @@ func readManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error {
 
 	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatIocFeedRes.Success {
 		if objectNotFound(showThreatIocFeedRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatIocFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatIocFeedRes.ErrorMsg)
 	}
 
 	threatIocFeed := showThreatIocFeedRes.GetData()
@@ -599,9 +599,9 @@ func updateManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 	updateThreatIocFeedRes, err := client.ApiCall("set-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatIocFeedRes.Success {
 		if updateThreatIocFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatIocFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatIocFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementThreatIocFeed(d, m)
@@ -626,9 +626,9 @@ func deleteManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 	deleteThreatIocFeedRes, err := client.ApiCall("delete-threat-ioc-feed", threatIocFeedPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatIocFeedRes.Success {
 		if deleteThreatIocFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatIocFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatIocFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

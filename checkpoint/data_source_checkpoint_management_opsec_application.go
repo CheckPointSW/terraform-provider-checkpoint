@@ -3,10 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-
-	"strconv"
 )
 
 func dataSourceManagementOpsecApplication() *schema.Resource {
@@ -24,7 +22,7 @@ func dataSourceManagementOpsecApplication() *schema.Resource {
 				Description: "Object unique identifier.",
 			},
 			"cpmi": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Used to setup the CPMI client entity.",
 				Elem: &schema.Resource{
@@ -48,7 +46,7 @@ func dataSourceManagementOpsecApplication() *schema.Resource {
 				},
 			},
 			"lea": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Used to setup the LEA client entity.",
 				Elem: &schema.Resource{
@@ -110,10 +108,10 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 
 	showOpsecApplicationRes, err := client.ApiCall("show-opsec-application", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpsecApplicationRes.Success {
-		return fmt.Errorf(showOpsecApplicationRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpsecApplicationRes.ErrorMsg)
 	}
 
 	opsecApplication := showOpsecApplicationRes.GetData()
@@ -135,16 +133,18 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 
 		cpmiMapToReturn := make(map[string]interface{})
 
-		if v, _ := cpmiMap["administrator-profile"]; v != nil {
+		if v := cpmiMap["administrator-profile"]; v != nil {
 			cpmiMapToReturn["administrator_profile"] = v
 		}
-		if v, _ := cpmiMap["enabled"]; v != nil {
-			cpmiMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+		if v := cpmiMap["enabled"]; v != nil {
+			cpmiMapToReturn["enabled"] = v
 		}
-		if v, _ := cpmiMap["use-administrator-credentials"]; v != nil {
-			cpmiMapToReturn["use_administrator_credentials"] = strconv.FormatBool(v.(bool))
+		if v := cpmiMap["use-administrator-credentials"]; v != nil {
+			cpmiMapToReturn["use_administrator_credentials"] = v
 		}
-		_ = d.Set("cpmi", cpmiMapToReturn)
+
+		_ = d.Set("cpmi", []interface{}{cpmiMapToReturn})
+
 	} else {
 		_ = d.Set("cpmi", nil)
 	}
@@ -159,16 +159,18 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 
 		leaMapToReturn := make(map[string]interface{})
 
-		if v, _ := leaMap["access-permissions"]; v != nil {
+		if v := leaMap["access-permissions"]; v != nil {
 			leaMapToReturn["access_permissions"] = v
 		}
-		if v, _ := leaMap["administrator-profile"]; v != nil {
+		if v := leaMap["administrator-profile"]; v != nil {
 			leaMapToReturn["administrator_profile"] = v
 		}
-		if v, _ := leaMap["enabled"]; v != nil {
-			leaMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+		if v := leaMap["enabled"]; v != nil {
+			leaMapToReturn["enabled"] = v
 		}
-		_ = d.Set("lea", leaMapToReturn)
+
+		_ = d.Set("lea", []interface{}{leaMapToReturn})
+
 	} else {
 		_ = d.Set("lea", nil)
 	}

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAddDataCenterObject() *schema.Resource {
@@ -139,7 +139,7 @@ func createManagementAddDataCenterObject(d *schema.ResourceData, m interface{}) 
 
 	AddDataCenterObjectRes, _ := client.ApiCall("add-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddDataCenterObjectRes.Success {
-		return fmt.Errorf(AddDataCenterObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", AddDataCenterObjectRes.ErrorMsg)
 	}
 
 	d.SetId(AddDataCenterObjectRes.GetData()["uid"].(string))

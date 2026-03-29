@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -564,9 +564,9 @@ func createManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 	addLsmClusterRes, err := client.ApiCall("add-lsm-cluster", lsmCluster, client.GetSessionID(), true, false)
 	if err != nil || !addLsmClusterRes.Success {
 		if addLsmClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(addLsmClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", addLsmClusterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLsmClusterRes.GetData()["uid"].(string))
@@ -584,14 +584,14 @@ func readManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 
 	showLsmClusterRes, err := client.ApiCall("show-lsm-cluster", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmClusterRes.Success {
 		if objectNotFound(showLsmClusterRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmClusterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmClusterRes.ErrorMsg)
 	}
 
 	lsmCluster := showLsmClusterRes.GetData()
@@ -1201,9 +1201,9 @@ func updateManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 	updateLsmClusterRes, err := client.ApiCall("set-lsm-cluster", lsmCluster, client.GetSessionID(), true, false)
 	if err != nil || !updateLsmClusterRes.Success {
 		if updateLsmClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLsmClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLsmClusterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLsmCluster(d, m)
@@ -1222,9 +1222,9 @@ func deleteManagementLsmCluster(d *schema.ResourceData, m interface{}) error {
 	deleteLsmClusterRes, err := client.ApiCall("delete-lsm-cluster", lsmClusterPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteLsmClusterRes.Success {
 		if deleteLsmClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLsmClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLsmClusterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

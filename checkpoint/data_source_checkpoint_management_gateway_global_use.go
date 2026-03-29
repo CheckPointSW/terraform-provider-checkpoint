@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementSetGatewayGlobalUse() *schema.Resource {
@@ -33,7 +33,7 @@ func dataSourceManagementSetGatewayGlobalUse() *schema.Resource {
 				Description: "Indicates whether global use is enabled on the target.",
 			},
 			"domain": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Information about the domain that holds the Object.",
 				Elem: &schema.Resource{
@@ -72,7 +72,7 @@ func dataSourceManagementSetGatewayGlobalUseRead(d *schema.ResourceData, m inter
 
 	ShowGatewayGlobalUseRes, _ := client.ApiCall("show-gateway-global-use", payload, client.GetSessionID(), true, false)
 	if !ShowGatewayGlobalUseRes.Success {
-		return fmt.Errorf(ShowGatewayGlobalUseRes.ErrorMsg)
+		return fmt.Errorf("%s", ShowGatewayGlobalUseRes.ErrorMsg)
 	}
 
 	showGatewatGlobalUseData := ShowGatewayGlobalUseRes.GetData()
@@ -102,7 +102,7 @@ func dataSourceManagementSetGatewayGlobalUseRead(d *schema.ResourceData, m inter
 			mapToReturn["domain_type"] = v
 		}
 
-		d.Set("domain", mapToReturn)
+		_ = d.Set("domain", []interface{}{mapToReturn})
 	}
 	return nil
 }

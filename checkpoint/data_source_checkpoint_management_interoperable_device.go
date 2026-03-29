@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
 	"strconv"
@@ -91,7 +91,6 @@ func dataSourceManagementInteroperableDevice() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Internal topology settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ip_address_behind_this_interface": {
@@ -144,7 +143,7 @@ func dataSourceManagementInteroperableDevice() *schema.Resource {
 				},
 			},
 			"vpn_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "VPN domain properties for the Interoperable Device.",
 				Elem: &schema.Resource{
@@ -243,14 +242,14 @@ func dataSourceManagementInteroperableDeviceRead(d *schema.ResourceData, m inter
 
 	showInteroperableDeviceRes, err := client.ApiCall("show-interoperable-device", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInteroperableDeviceRes.Success {
 		if objectNotFound(showInteroperableDeviceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInteroperableDeviceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInteroperableDeviceRes.ErrorMsg)
 	}
 
 	interoperableDevice := showInteroperableDeviceRes.GetData()
@@ -359,16 +358,19 @@ func dataSourceManagementInteroperableDeviceRead(d *schema.ResourceData, m inter
 		vpnSettingsMap := interoperableDevice["vpn-settings"].(map[string]interface{})
 
 		vpnSettingsMapToReturn := make(map[string]interface{})
-		if v, _ := vpnSettingsMap["vpn-domain"]; v != nil {
+
+		if v := vpnSettingsMap["vpn-domain"]; v != nil {
 			vpnSettingsMapToReturn["vpn_domain"] = v
 		}
 		if v := vpnSettingsMap["vpn-domain-exclude-external-ip-addresses"]; v != nil {
-			vpnSettingsMapToReturn["vpn_domain_exclude_external_ip_addresses"] = strconv.FormatBool(v.(bool))
+			vpnSettingsMapToReturn["vpn_domain_exclude_external_ip_addresses"] = v
 		}
-		if v, _ := vpnSettingsMap["vpn-domain-type"]; v != nil {
-			vpnSettingsMapToReturn["vpn_domain_type"] = v.(string)
+		if v := vpnSettingsMap["vpn-domain-type"]; v != nil {
+			vpnSettingsMapToReturn["vpn_domain_type"] = v
 		}
-		_ = d.Set("vpn_settings", vpnSettingsMapToReturn)
+
+		_ = d.Set("vpn_settings", []interface{}{vpnSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("vpn_settings", nil)
 	}

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -40,7 +40,7 @@ func dataSourceManagementTacacsServer() *schema.Resource {
 				Description: "The priority of the TACACS Server in case it is a member of a TACACS Group.",
 			},
 			"server": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The UID or Name of the host that is the TACACS Server.",
 				Elem: &schema.Resource{
@@ -64,7 +64,7 @@ func dataSourceManagementTacacsServer() *schema.Resource {
 				Description: "Server type, TACACS or TACACS+.",
 			},
 			"service": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Server service, only relevant when \"server-type\" is TACACS.",
 				Elem: &schema.Resource{
@@ -102,10 +102,10 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 
 	showTacacsServerRes, err := client.ApiCall("show-tacacs-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTacacsServerRes.Success {
-		return fmt.Errorf(showTacacsServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showTacacsServerRes.ErrorMsg)
 	}
 
 	tacacsServer := showTacacsServerRes.GetData()
@@ -145,18 +145,20 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 	}
 
 	if tacacsServer["server"] != nil {
+
 		serverMap := tacacsServer["server"].(map[string]interface{})
 
 		serverMapToReturn := make(map[string]interface{})
 
-		if v, _ := serverMap["name"]; v != nil {
+		if v := serverMap["name"]; v != nil {
 			serverMapToReturn["name"] = v
 		}
-		if v, _ := serverMap["uid"]; v != nil {
+		if v := serverMap["uid"]; v != nil {
 			serverMapToReturn["uid"] = v
 		}
 
-		_ = d.Set("server", serverMapToReturn)
+		_ = d.Set("server", []interface{}{serverMapToReturn})
+
 	} else {
 		_ = d.Set("server", nil)
 	}
@@ -166,18 +168,19 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 	}
 
 	if tacacsServer["service"] != nil {
+
 		serviceMap := tacacsServer["service"].(map[string]interface{})
-		log.Println("service detected!!!")
+
 		serviceMapToReturn := make(map[string]interface{})
 
-		if v, _ := serviceMap["name"]; v != nil {
+		if v := serviceMap["name"]; v != nil {
 			serviceMapToReturn["name"] = v
 		}
-		if v, _ := serviceMap["uid"]; v != nil {
+		if v := serviceMap["uid"]; v != nil {
 			serviceMapToReturn["uid"] = v
 		}
 
-		_ = d.Set("service", serviceMapToReturn)
+		_ = d.Set("service", []interface{}{serviceMapToReturn})
 
 	} else {
 		_ = d.Set("service", nil)

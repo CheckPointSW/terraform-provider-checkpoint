@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -48,7 +48,7 @@ func dataSourceManagementLsvProfile() *schema.Resource {
 				},
 			},
 			"vpn_domain": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "peers' VPN Domain properties.",
 				Elem: &schema.Resource{
@@ -96,10 +96,10 @@ func dataSourceManagementLsvProfileRead(d *schema.ResourceData, m interface{}) e
 
 	showLsvProfileRes, err := client.ApiCall("show-lsv-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsvProfileRes.Success {
-		return fmt.Errorf(showLsvProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsvProfileRes.ErrorMsg)
 	}
 
 	lsvProfile := showLsvProfileRes.GetData()
@@ -154,18 +154,20 @@ func dataSourceManagementLsvProfileRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	if lsvProfile["vpn-domain"] != nil {
+
 		vpnDomainMap := lsvProfile["vpn-domain"].(map[string]interface{})
 
 		vpnDomainMapToReturn := make(map[string]interface{})
 
-		if v, _ := vpnDomainMap["limit-peer-domain-size"]; v != nil {
+		if v := vpnDomainMap["limit-peer-domain-size"]; v != nil {
 			vpnDomainMapToReturn["limit_peer_domain_size"] = v
 		}
-		if v, _ := vpnDomainMap["max-allowed-addresses"]; v != nil {
+		if v := vpnDomainMap["max-allowed-addresses"]; v != nil {
 			vpnDomainMapToReturn["max_allowed_addresses"] = v
 		}
 
-		_ = d.Set("vpn_domain", vpnDomainMapToReturn)
+		_ = d.Set("vpn_domain", []interface{}{vpnDomainMapToReturn})
+
 	} else {
 		_ = d.Set("vpn_domain", nil)
 	}

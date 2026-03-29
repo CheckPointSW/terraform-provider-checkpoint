@@ -5,7 +5,7 @@ import (
 	"log"
 
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementLogicalServer() *schema.Resource {
@@ -156,9 +156,9 @@ func createManagementLogicalServer(d *schema.ResourceData, m interface{}) error 
 	addLogicalServerRes, err := client.ApiCall("add-logical-server", logicalServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addLogicalServerRes.Success {
 		if addLogicalServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addLogicalServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addLogicalServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLogicalServerRes.GetData()["uid"].(string))
@@ -176,14 +176,14 @@ func readManagementLogicalServer(d *schema.ResourceData, m interface{}) error {
 
 	showLogicalServerRes, err := client.ApiCall("show-logical-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLogicalServerRes.Success {
 		if objectNotFound(showLogicalServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLogicalServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showLogicalServerRes.ErrorMsg)
 	}
 
 	logicalServer := showLogicalServerRes.GetData()
@@ -203,7 +203,7 @@ func readManagementLogicalServer(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if v := logicalServer["server-group"]; v != nil {
-		_ = d.Set("server_group", v)
+		_ = d.Set("server_group", v.(map[string]interface{})["name"])
 	}
 
 	if v := logicalServer["server-type"]; v != nil {
@@ -342,9 +342,9 @@ func updateManagementLogicalServer(d *schema.ResourceData, m interface{}) error 
 	updateLogicalServerRes, err := client.ApiCall("set-logical-server", logicalServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateLogicalServerRes.Success {
 		if updateLogicalServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLogicalServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLogicalServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLogicalServer(d, m)
@@ -363,9 +363,9 @@ func deleteManagementLogicalServer(d *schema.ResourceData, m interface{}) error 
 	deleteLogicalServerRes, err := client.ApiCall("delete-logical-server", logicalServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteLogicalServerRes.Success {
 		if deleteLogicalServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLogicalServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLogicalServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

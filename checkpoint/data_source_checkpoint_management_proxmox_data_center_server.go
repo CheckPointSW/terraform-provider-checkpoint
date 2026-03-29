@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
 	"strings"
 )
@@ -93,10 +93,10 @@ func dataSourceProxmoxDataCenterServerRead(d *schema.ResourceData, m interface{}
 	}
 	showProxmoxDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProxmoxDataCenterServerRes.Success {
-		return fmt.Errorf(showProxmoxDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showProxmoxDataCenterServerRes.ErrorMsg)
 	}
 	proxmoxDataCenterServer := showProxmoxDataCenterServerRes.GetData()
 

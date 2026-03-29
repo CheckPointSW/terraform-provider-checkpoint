@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -40,7 +40,7 @@ func resourceManagementMobileAccessSection() *schema.Resource {
 				Default:     false,
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -95,7 +95,7 @@ func createManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				mobileAccessSection["position"] = "top" // entire rule-base
 			} else {
@@ -103,15 +103,15 @@ func createManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			mobileAccessSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			mobileAccessSection["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				mobileAccessSection["position"] = "bottom" // entire rule-base
 			} else {
@@ -125,9 +125,9 @@ func createManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 	addMobileAccessSectionRes, err := client.ApiCall("add-mobile-access-section", mobileAccessSection, client.GetSessionID(), true, false)
 	if err != nil || !addMobileAccessSectionRes.Success {
 		if addMobileAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileAccessSectionRes.GetData()["uid"].(string))
@@ -145,14 +145,14 @@ func readManagementMobileAccessSection(d *schema.ResourceData, m interface{}) er
 
 	showMobileAccessSectionRes, err := client.ApiCall("show-mobile-access-section", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessSectionRes.Success {
 		if objectNotFound(showMobileAccessSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessSectionRes.ErrorMsg)
 	}
 
 	mobileAccessSection := showMobileAccessSectionRes.GetData()
@@ -216,7 +216,7 @@ func updateManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					mobileAccessSection["new-position"] = "top" // entire rule-base
 				} else {
@@ -224,15 +224,15 @@ func updateManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				mobileAccessSection["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				mobileAccessSection["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					mobileAccessSection["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -247,9 +247,9 @@ func updateManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 	updateMobileAccessSectionRes, err := client.ApiCall("set-mobile-access-section", mobileAccessSection, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileAccessSectionRes.Success {
 		if updateMobileAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileAccessSection(d, m)
@@ -268,9 +268,9 @@ func deleteManagementMobileAccessSection(d *schema.ResourceData, m interface{}) 
 	deleteMobileAccessSectionRes, err := client.ApiCall("delete-mobile-access-section", mobileAccessSectionPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileAccessSectionRes.Success {
 		if deleteMobileAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -40,7 +40,7 @@ func resourceManagementHttpsSection() *schema.Resource {
 				Default:     false,
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -94,16 +94,16 @@ func createManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if _, ok := d.GetOk("position"); ok {
-		if _, ok := d.GetOk("position.top"); ok {
+		if _, ok := d.GetOk("position.0.top"); ok {
 			httpsSection["position"] = "top"
 		}
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			httpsSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			httpsSection["position"] = map[string]interface{}{"bottom": v.(string)}
 		}
-		if _, ok := d.GetOk("position.bottom"); ok {
+		if _, ok := d.GetOk("position.0.bottom"); ok {
 			httpsSection["position"] = "bottom"
 		}
 	}
@@ -112,9 +112,9 @@ func createManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	addHttpsSectionRes, err := client.ApiCall("add-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsSectionRes.Success {
 		if addHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHttpsSectionRes.GetData()["uid"].(string))
@@ -133,14 +133,14 @@ func readManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 
 	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsSectionRes.Success {
 		if objectNotFound(showHttpsSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHttpsSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsSectionRes.ErrorMsg)
 	}
 
 	httpsSection := showHttpsSectionRes.GetData()
@@ -189,9 +189,9 @@ func updateManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	updateHttpsSectionRes, err := client.ApiCall("set-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsSectionRes.Success {
 		if updateHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementHttpsSection(d, m)
@@ -211,9 +211,9 @@ func deleteManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	deleteHttpsSectionRes, err := client.ApiCall("delete-https-section", httpsSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsSectionRes.Success {
 		if deleteHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

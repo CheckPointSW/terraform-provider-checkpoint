@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -60,10 +60,10 @@ func dataSourceManagementDynamicObjectRead(d *schema.ResourceData, m interface{}
 
 	showDynamicObjectRes, err := client.ApiCall("show-dynamic-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDynamicObjectRes.Success {
-		return fmt.Errorf(showDynamicObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showDynamicObjectRes.ErrorMsg)
 	}
 
 	dynamicObject := showDynamicObjectRes.GetData()

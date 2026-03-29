@@ -552,7 +552,7 @@ func (c *ApiClient) ApiQuery(command string, detailsLevel string, containerKey s
 		if apiRes.Success && includeContainerKey == false && ok {
 
 			m := map[string]interface{}{}
-			for y, x := range apiRes.data[containerKey].([]map[string]interface{}) {
+			for y, x := range apiRes.data[containerKey].([]interface{}) {
 
 				m[fmt.Sprintf("%d", y)] = x
 			}
@@ -584,14 +584,14 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 	const objLimit int = Limit
 	var finished bool = false
 
-	allObjects := map[string][]map[string]interface{}{}
+	allObjects := map[string][]interface{}{}
 
 	if len(containerKeys) == 0 {
 		containerKeys = []string{"objects"}
 	}
 
 	for _, key := range containerKeys {
-		allObjects[key] = []map[string]interface{}{}
+		allObjects[key] = []interface{}{}
 	}
 
 	iterations := 0
@@ -640,7 +640,7 @@ func (c *ApiClient) genApiQuery(command string, detailsLevel string, containerKe
 		for _, containerKey := range containerKeys {
 
 			for _, data := range (apiRes.data[containerKey]).([]interface{}) {
-				allObjects[containerKey] = append(allObjects[containerKey], data.(map[string]interface{}))
+				allObjects[containerKey] = append(allObjects[containerKey], data)
 			}
 			apiRes.data[containerKey] = allObjects[containerKey]
 			i++

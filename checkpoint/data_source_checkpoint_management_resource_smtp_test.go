@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -40,8 +40,8 @@ resource "checkpoint_management_resource_smtp" "test" {
 
   name = "%s"
   mail_delivery_server = "deliverServer"
-  exception_track = "exception log"
-  match = {
+  exception_track = "Exception Log"
+  match {
     sender = "bob"
     recipient = "liza"
   }

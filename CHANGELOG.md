@@ -1,6 +1,28 @@
-## 2.13.0
+## 3.0.0 (March 29, 2026)
+
+ENHANCEMENTS
+* **Terraform Plugin SDK upgrade from v1.17.0 to v2.34.0** — aligning the provider with the current Terraform ecosystem and enabling compatibility with the latest Terraform versions
+* State upgraders added to all resources to ensure seamless migration of existing Terraform state files
+
+BREAKING CHANGES
+* **Schema migration from TypeMap to TypeList (MaxItems: 1)** — structured map fields have been migrated to block-style syntax. The `=` sign must be removed from these fields in existing configurations:
+  ```
+  # Before (v2.x)
+  nat_settings = {
+    auto_rule = true
+    method    = "hide"
+  }
+
+  # After (v3.0.0)
+  nat_settings {
+    auto_rule = true
+    method    = "hide"
+  }
+  ```
+
 BUG FIXES
 * Fix `checkpoint_management_azure_ad` resource when authentication method is set to "service-principal-authentication"
+* General bug fixes across all provider resources and data sources following the SDK v2 migration
 
 ## 2.12.0 (November 10, 2025)
 

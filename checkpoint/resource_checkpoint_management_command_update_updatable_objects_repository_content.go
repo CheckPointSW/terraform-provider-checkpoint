@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementUpdateUpdatableObjectsRepositoryContent() *schema.Resource {
@@ -28,7 +28,7 @@ func createManagementUpdateUpdatableObjectsRepositoryContent(d *schema.ResourceD
 	var payload = map[string]interface{}{}
 	UpdateUpdatableObjectsRepositoryContentRes, _ := client.ApiCall("update-updatable-objects-repository-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UpdateUpdatableObjectsRepositoryContentRes.Success {
-		return fmt.Errorf(UpdateUpdatableObjectsRepositoryContentRes.ErrorMsg)
+		return fmt.Errorf("%s", UpdateUpdatableObjectsRepositoryContentRes.ErrorMsg)
 	}
 
 	d.SetId("update-updatable-objects-repository-content-" + acctest.RandString(10))

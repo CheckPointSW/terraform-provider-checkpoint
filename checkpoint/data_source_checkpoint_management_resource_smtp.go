@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementResourceSmtp() *schema.Resource {
@@ -64,7 +63,7 @@ func dataSourceManagementResourceSmtp() *schema.Resource {
 				Description: "Determines if an action specified in the Action 2 and CVP categories taken as a result of a resource definition is logged.",
 			},
 			"match": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Set the Match properties for the SMTP resource.",
 				Elem: &schema.Resource{
@@ -86,14 +85,12 @@ func dataSourceManagementResourceSmtp() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Use the Rewriting Rules to rewrite Sender and Recipient headers in emails, you can also rewrite other email headers by using the custom header field.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"sender": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Rewrite Sender header.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"original": {
@@ -113,7 +110,6 @@ func dataSourceManagementResourceSmtp() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Rewrite Recipient header.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"original": {
@@ -133,7 +129,6 @@ func dataSourceManagementResourceSmtp() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "The name of the header.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"original": {
@@ -278,14 +273,14 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 	}
 	showResourceSmtpRes, err := client.ApiCall("show-resource-smtp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceSmtpRes.Success {
 		if objectNotFound(showResourceSmtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceSmtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceSmtpRes.ErrorMsg)
 	}
 
 	resourceSmtp := showResourceSmtpRes.GetData()
@@ -330,7 +325,7 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 	}
 
 	if v := resourceSmtp["exception-track"]; v != nil {
-		_ = d.Set("exception_track", v)
+		_ = d.Set("exception_track", v.(map[string]interface{})["name"].(string))
 	}
 
 	if resourceSmtp["match"] != nil {
@@ -339,13 +334,15 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 
 		matchMapToReturn := make(map[string]interface{})
 
-		if v, _ := matchMap["sender"]; v != nil {
+		if v := matchMap["sender"]; v != nil {
 			matchMapToReturn["sender"] = v
 		}
-		if v, _ := matchMap["recipient"]; v != nil {
+		if v := matchMap["recipient"]; v != nil {
 			matchMapToReturn["recipient"] = v
 		}
-		_ = d.Set("match", matchMapToReturn)
+
+		_ = d.Set("match", []interface{}{matchMapToReturn})
+
 	} else {
 		_ = d.Set("match", nil)
 	}
@@ -431,19 +428,19 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 			action2MapToReturn["allowed_characters"] = v
 		}
 		if v, _ := action2Map["strip-script-tags"]; v != nil {
-			action2MapToReturn["strip_script_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_script_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-applet-tags"]; v != nil {
-			action2MapToReturn["strip_applet_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_applet_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-activex-tags"]; v != nil {
-			action2MapToReturn["strip_activex_tags"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_activex_tags"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-ftp-links"]; v != nil {
-			action2MapToReturn["strip_ftp_links"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_ftp_links"] = v.(bool)
 		}
 		if v, _ := action2Map["strip-port-strings"]; v != nil {
-			action2MapToReturn["strip_port_strings"] = strconv.FormatBool(v.(bool))
+			action2MapToReturn["strip_port_strings"] = v.(bool)
 		}
 		_ = d.Set("action_2", []interface{}{action2MapToReturn})
 	} else {

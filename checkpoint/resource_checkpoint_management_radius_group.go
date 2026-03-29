@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -101,9 +101,9 @@ func createManagementRadiusGroup(d *schema.ResourceData, m interface{}) error {
 	addRadiusGroupRes, err := client.ApiCall("add-radius-group", radiusGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addRadiusGroupRes.Success {
 		if addRadiusGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addRadiusGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addRadiusGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addRadiusGroupRes.GetData()["uid"].(string))
@@ -119,7 +119,7 @@ func readManagementRadiusGroup(d *schema.ResourceData, m interface{}) error {
 
 	showRadiusGroupRes, err := client.ApiCall("show-radius-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRadiusGroupRes.Success {
 		// Handle delete resource from other clients
@@ -127,7 +127,7 @@ func readManagementRadiusGroup(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showRadiusGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showRadiusGroupRes.ErrorMsg)
 	}
 
 	radiusGroup := showRadiusGroupRes.GetData()
@@ -223,7 +223,7 @@ func updateManagementRadiusGroup(d *schema.ResourceData, m interface{}) error {
 	log.Println("Update Radius Group - Map = ", radiusGroup)
 	setRadiusGroupRes, _ := client.ApiCall("set-radius-group", radiusGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setRadiusGroupRes.Success {
-		return fmt.Errorf(setRadiusGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", setRadiusGroupRes.ErrorMsg)
 	}
 
 	return readManagementRadiusGroup(d, m)
@@ -237,7 +237,7 @@ func deleteManagementRadiusGroup(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteRadiusGroupRes, _ := client.ApiCall("delete-radius-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteRadiusGroupRes.Success {
-		return fmt.Errorf(deleteRadiusGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteRadiusGroupRes.ErrorMsg)
 	}
 	d.SetId("")
 

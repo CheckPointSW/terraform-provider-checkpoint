@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -59,7 +59,7 @@ func dataSourceManagementGlobalDomain() *schema.Resource {
 							Description: "N/A",
 						},
 						"assignment_up_to_date": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "The time when the assignment was assigned.",
 							Elem: &schema.Resource{
@@ -78,7 +78,7 @@ func dataSourceManagementGlobalDomain() *schema.Resource {
 							},
 						},
 						"dependent_domain": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Dependent domain. Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard level.",
 							Elem: &schema.Resource{
@@ -266,10 +266,10 @@ func dataSourceManagementGlobalDomainRead(d *schema.ResourceData, m interface{})
 
 	showGlobalDomainRes, err := client.ApiCall("show-global-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalDomainRes.Success {
-		return fmt.Errorf(showGlobalDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalDomainRes.ErrorMsg)
 	}
 
 	globalDomain := showGlobalDomainRes.GetData()
@@ -330,7 +330,7 @@ func dataSourceManagementGlobalDomainRead(d *schema.ResourceData, m interface{})
 						assignmentUpToDateMapToReturn["posix"] = v
 					}
 
-					globalDomainAssignmentsMapToAdd["assignment_up_to_date"] = assignmentUpToDateMapToReturn
+					globalDomainAssignmentsMapToAdd["assignment_up_to_date"] = []interface{}{assignmentUpToDateMapToReturn}
 				}
 
 				if globalDomainAssignmentsMap["dependent-domain"] != nil {
@@ -351,7 +351,7 @@ func dataSourceManagementGlobalDomainRead(d *schema.ResourceData, m interface{})
 						dependentDomainMapToReturn["color"] = v
 					}
 
-					globalDomainAssignmentsMapToAdd["dependent_domain"] = dependentDomainMapToReturn
+					globalDomainAssignmentsMapToAdd["dependent_domain"] = []interface{}{dependentDomainMapToReturn}
 				}
 
 				if v, _ := globalDomainAssignmentsMap["global-access-policy"]; v != nil {

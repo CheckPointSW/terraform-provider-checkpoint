@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementAppControlUpdateSchedule_basic(t *test
 			{
 				Config: testAccDataSourceManagementAppControlUpdateScheduleConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "uid"),
 				),
 			},
 		},

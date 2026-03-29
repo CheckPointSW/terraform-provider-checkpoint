@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -387,9 +387,9 @@ func createManagementOpsecTrustedCa(d *schema.ResourceData, m interface{}) error
 	addOpsecTrustedCaRes, err := client.ApiCall("add-opsec-trusted-ca", opsecTrustedCa, client.GetSessionID(), true, false)
 	if err != nil || !addOpsecTrustedCaRes.Success {
 		if addOpsecTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(addOpsecTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", addOpsecTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addOpsecTrustedCaRes.GetData()["uid"].(string))
@@ -407,14 +407,14 @@ func readManagementOpsecTrustedCa(d *schema.ResourceData, m interface{}) error {
 
 	showOpsecTrustedCaRes, err := client.ApiCall("show-opsec-trusted-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpsecTrustedCaRes.Success {
 		if objectNotFound(showOpsecTrustedCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOpsecTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpsecTrustedCaRes.ErrorMsg)
 	}
 
 	opsecTrustedCa := showOpsecTrustedCaRes.GetData()
@@ -824,9 +824,9 @@ func updateManagementOpsecTrustedCa(d *schema.ResourceData, m interface{}) error
 	updateOpsecTrustedCaRes, err := client.ApiCall("set-opsec-trusted-ca", opsecTrustedCa, client.GetSessionID(), true, false)
 	if err != nil || !updateOpsecTrustedCaRes.Success {
 		if updateOpsecTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(updateOpsecTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", updateOpsecTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementOpsecTrustedCa(d, m)
@@ -845,9 +845,9 @@ func deleteManagementOpsecTrustedCa(d *schema.ResourceData, m interface{}) error
 	deleteOpsecTrustedCaRes, err := client.ApiCall("delete-opsec-trusted-ca", opsecTrustedCaPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteOpsecTrustedCaRes.Success {
 		if deleteOpsecTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteOpsecTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteOpsecTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

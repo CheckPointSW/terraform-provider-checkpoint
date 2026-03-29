@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
 )
 
@@ -114,7 +114,7 @@ func createManagementSetThreatProtection(d *schema.ResourceData, m interface{}) 
 
 	SetThreatProtectionRes, _ := client.ApiCall("set-threat-protection", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetThreatProtectionRes.Success {
-		return fmt.Errorf(SetThreatProtectionRes.ErrorMsg)
+		return fmt.Errorf("%s", SetThreatProtectionRes.ErrorMsg)
 	}
 
 	d.SetId("set-threat-protection-" + acctest.RandString(10))

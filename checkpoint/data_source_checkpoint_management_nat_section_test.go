@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -38,7 +38,9 @@ func testAccDataSourceManagementNatSectionConfig(name string, packageName string
 resource "checkpoint_management_nat_section" "test" {
 	name = "%s"
     package = "%s"
-	position = {top = "top"}
+	position {
+        top = "top"
+    }
 }
 
 data "checkpoint_management_nat_section" "test_section" {

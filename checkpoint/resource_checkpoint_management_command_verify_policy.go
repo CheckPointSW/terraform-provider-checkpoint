@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementVerifyPolicy() *schema.Resource {
@@ -38,7 +38,7 @@ func createManagementVerifyPolicy(d *schema.ResourceData, m interface{}) error {
 
 	VerifyPolicyRes, _ := client.ApiCall("verify-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !VerifyPolicyRes.Success {
-		return fmt.Errorf(VerifyPolicyRes.ErrorMsg)
+		return fmt.Errorf("%s", VerifyPolicyRes.ErrorMsg)
 	}
 
 	d.SetId("verify-policy-" + acctest.RandString(10))

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementGetPlatform() *schema.Resource {
@@ -38,7 +38,7 @@ func createManagementGetPlatform(d *schema.ResourceData, m interface{}) error {
 
 	GetPlatformRes, _ := client.ApiCall("get-platform", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !GetPlatformRes.Success {
-		return fmt.Errorf(GetPlatformRes.ErrorMsg)
+		return fmt.Errorf("%s", GetPlatformRes.ErrorMsg)
 	}
 
 	d.SetId("get-platform" + acctest.RandString(10))
@@ -47,7 +47,6 @@ func createManagementGetPlatform(d *schema.ResourceData, m interface{}) error {
 }
 
 func readManagementGetPlatform(d *schema.ResourceData, m interface{}) error {
-
 
 	return nil
 }

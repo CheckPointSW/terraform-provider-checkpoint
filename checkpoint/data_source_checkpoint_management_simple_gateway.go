@@ -3,10 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"math"
-	"strconv"
 )
 
 func dataSourceManagementSimpleGateway() *schema.Resource {
@@ -37,7 +35,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "N/A",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"connection_persistence": {
@@ -49,7 +46,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "SAM.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"forward_to_other_sam_servers": {
@@ -61,7 +57,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Use early versions compatibility mode.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"enabled": {
@@ -81,7 +76,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Purge SAM File.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"enabled": {
@@ -125,14 +119,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "HTTPS inspection.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bypass_on_failure": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to be true in order to bypass all requests (Fail-open) in case of internal system error.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"override_profile": {
@@ -152,7 +144,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to 'background' in order to allowed requests until categorization is complete.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"override_profile": {
@@ -172,7 +163,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to be true in order to drop traffic from servers with untrusted server certificate.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"override_profile": {
@@ -192,7 +182,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to be true in order to drop traffic from servers with revoked server certificate (validate CRL).",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"override_profile": {
@@ -212,7 +201,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to be true in order to drop traffic from servers with expired server certificate.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"override_profile": {
@@ -240,7 +228,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Gateway Identity Awareness settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"browser_based_authentication": {
@@ -252,14 +239,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Browser Based Authentication settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"authentication_settings": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Authentication Settings for Browser Based Authentication.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"authentication_method": {
@@ -284,7 +269,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Users directories.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"external_user_profile": {
@@ -320,14 +304,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Browser Based Authentication portal settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"portal_web_settings": {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Configuration of the portal web settings.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"aliases": {
@@ -350,7 +332,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Configuration of the portal certificate settings.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"base64_certificate": {
@@ -370,7 +351,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Configuration of the portal access settings.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"allow_access_from": {
@@ -382,7 +362,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 																Type:        schema.TypeList,
 																Computed:    true,
 																Description: "Configuration of the additional portal access settings for internal interfaces only.",
-																MaxItems:    1,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"undefined": {
@@ -421,7 +400,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Identity Agent settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"agents_interval_keepalive": {
@@ -438,7 +416,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Authentication Settings for Identity Agent.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"authentication_method": {
@@ -455,7 +432,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Users directories.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"external_user_profile": {
@@ -491,14 +467,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Identity Agent accessibility settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"accessibility": {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Configuration of the portal access settings.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"allow_access_from": {
@@ -510,7 +484,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 																Type:        schema.TypeList,
 																Computed:    true,
 																Description: "Configuration of the additional portal access settings for internal interfaces only.",
-																MaxItems:    1,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"undefined": {
@@ -549,7 +522,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Identity Collector settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"authorized_clients": {
@@ -575,14 +547,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Authentication Settings for Identity Collector.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"users_directories": {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Users directories.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"external_user_profile": {
@@ -618,14 +588,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Identity Collector accessibility settings.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"accessibility": {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Configuration of the portal access settings.",
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"allow_access_from": {
@@ -637,7 +605,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 																Type:        schema.TypeList,
 																Computed:    true,
 																Description: "Configuration of the additional portal access settings for internal interfaces only.",
-																MaxItems:    1,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"undefined": {
@@ -671,7 +638,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Identity sharing settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"share_with_other_gateways": {
@@ -699,7 +665,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Identity-Awareness Proxy settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"detect_using_x_forward_for": {
@@ -729,7 +694,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Description: "Hide internal networks behind the Gateway's external IP.",
 			},
 			"nat_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -771,14 +736,12 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Platform portal settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"portal_web_settings": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal web settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"aliases": {
@@ -801,7 +764,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal certificate settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"base64_certificate": {
@@ -821,7 +783,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal access settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"allow_access_from": {
@@ -833,7 +794,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Configuration of the additional portal access settings for internal interfaces only.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"undefined": {
@@ -861,7 +821,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				},
 			},
 			"proxy_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Proxy Server for Gateway.",
 				Elem: &schema.Resource{
@@ -870,7 +830,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Use custom proxy settings for this network object.",
-							Default:     false,
 						},
 						"proxy_server": {
 							Type:        schema.TypeString,
@@ -881,7 +840,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "N/A",
-							Default:     80,
 						},
 					},
 				},
@@ -895,7 +853,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "UserCheck portal settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -907,7 +864,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal web settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"aliases": {
@@ -930,7 +886,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal certificate settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"base64_certificate": {
@@ -950,7 +905,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Configuration of the portal access settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"allow_access_from": {
@@ -962,7 +916,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Configuration of the additional portal access settings for internal interfaces only.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"undefined": {
@@ -1046,7 +999,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Description: "Anti spoofing.",
 						},
 						"anti_spoofing_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Anti spoofing settings",
 							Elem: &schema.Resource{
@@ -1065,7 +1018,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Description: "Security zone.",
 						},
 						"security_zone_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Security zone settings.",
 							Elem: &schema.Resource{
@@ -1089,7 +1042,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Description: "Topology.",
 						},
 						"topology_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Topology settings.",
 							Elem: &schema.Resource{
@@ -1156,7 +1109,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Description: "Firewall blade enabled.",
 			},
 			"firewall_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Firewall settings",
 				Elem: &schema.Resource{
@@ -1355,7 +1308,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 			},
 			"application_control_and_url_filtering_settings": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Gateway Application Control and URL filtering settings.",
 				Elem: &schema.Resource{
@@ -1366,7 +1318,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Description: "Whether to override global settings or not.",
 						},
 						"override_global_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "override global settings object.",
 							Elem: &schema.Resource{
@@ -1377,7 +1329,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Description: "Fail mode - allow or block all requests.",
 									},
 									"website_categorization": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Website categorization object.",
 										Elem: &schema.Resource{
@@ -1388,7 +1340,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Description: "Website categorization mode.",
 												},
 												"custom_mode": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Custom mode object.",
 													Elem: &schema.Resource{
@@ -1416,7 +1368,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				},
 			},
 			"logs_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Logs settings.",
 				Elem: &schema.Resource{
@@ -1455,7 +1407,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Alert when free disk space below type.",
-							Default:     "popup alert",
 						},
 						"before_delete_keep_logs_from_the_last_days": {
 							Type:        schema.TypeBool,
@@ -1596,13 +1547,13 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Description: "VPN blade enabled.",
 			},
 			"vpn_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Gateway VPN settings.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"authentication": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Authentication.",
 							Elem: &schema.Resource{
@@ -1619,7 +1570,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							},
 						},
 						"link_selection": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Link Selection.",
 							Elem: &schema.Resource{
@@ -1653,7 +1604,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							Description: "Maximum concurrent tunnels",
 						},
 						"office_mode": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Office Mode. Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to the Mobile Access Software Blade clients.",
 							Elem: &schema.Resource{
@@ -1669,7 +1620,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Description: "Group. Identified by name or UID. Must be set when \"office-mode-permissions\" was selected to be \"group\".",
 									},
 									"allocate_ip_address_from": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Allocate IP address Method. Allocate IP address by sequentially trying the given methods until success.",
 										Elem: &schema.Resource{
@@ -1710,7 +1661,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Description: "Calculated MAC address for DHCP allocation. Must be set when \"allocate-method\" was selected to be \"automatic\".",
 												},
 												"optional_parameters": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "This configuration applies to all Office Mode methods except Automatic (using DHCP) and ipassignment.conf entries which contain this data.",
 													Elem: &schema.Resource{
@@ -1810,7 +1761,7 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 							},
 						},
 						"remote_access": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Remote Access.",
 							Elem: &schema.Resource{
@@ -1919,10 +1870,10 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGatewayRes.Success {
-		return fmt.Errorf(showGatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showGatewayRes.ErrorMsg)
 	}
 
 	gateway := showGatewayRes.GetData()
@@ -2230,25 +2181,27 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := natSettingsMap["auto-rule"]; v != nil {
-			natSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
 		}
-		if v, _ := natSettingsMap["ipv4-address"]; v != nil && v != "" {
-			natSettingsMapToReturn["ipv4_address"] = v
-		}
-		if v, _ := natSettingsMap["ipv6-address"]; v != nil && v != "" {
-			natSettingsMapToReturn["ipv6_address"] = v
-		}
-		if v, _ := natSettingsMap["hide-behind"]; v != nil {
+		if v := natSettingsMap["hide-behind"]; v != nil {
 			natSettingsMapToReturn["hide_behind"] = v
 		}
-		if v, _ := natSettingsMap["install-on"]; v != nil {
+		if v := natSettingsMap["install-on"]; v != nil {
 			natSettingsMapToReturn["install_on"] = v
 		}
-		if v, _ := natSettingsMap["method"]; v != nil {
+		if v := natSettingsMap["ipv4-address"]; v != nil {
+			natSettingsMapToReturn["ipv4_address"] = v
+		}
+		if v := natSettingsMap["ipv6-address"]; v != nil {
+			natSettingsMapToReturn["ipv6_address"] = v
+		}
+		if v := natSettingsMap["method"]; v != nil {
 			natSettingsMapToReturn["method"] = v
 		}
-		_ = d.Set("nat_settings", natSettingsMapToReturn)
+
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("nat_settings", nil)
 	}
@@ -2318,16 +2271,18 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 		proxySettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := proxySettingsMap["use-custom-proxy"]; v != nil {
-			proxySettingsMapToReturn["use_custom_proxy"] = strconv.FormatBool(v.(bool))
+		if v := proxySettingsMap["use-custom-proxy"]; v != nil {
+			proxySettingsMapToReturn["use_custom_proxy"] = v
 		}
-		if v, _ := proxySettingsMap["proxy-server"]; v != nil {
+		if v := proxySettingsMap["proxy-server"]; v != nil {
 			proxySettingsMapToReturn["proxy_server"] = v
 		}
-		if v, _ := proxySettingsMap["port"]; v != nil {
+		if v := proxySettingsMap["port"]; v != nil {
 			proxySettingsMapToReturn["port"] = v
 		}
-		_ = d.Set("proxy_settings", proxySettingsMapToReturn)
+
+		_ = d.Set("proxy_settings", []interface{}{proxySettingsMapToReturn})
+
 	} else {
 		_ = d.Set("proxy_settings", nil)
 	}
@@ -2443,7 +2398,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := antiSpoofingSettingsJson["action"]; v != nil {
 						antiSpoofingSettingsState["action"] = v
 					}
-					interfaceState["anti_spoofing_settings"] = antiSpoofingSettingsState
+					interfaceState["anti_spoofing_settings"] = []interface{}{antiSpoofingSettingsState}
 				}
 				if v, _ := interfaceJson["security-zone"]; v != nil {
 					interfaceState["security_zone"] = v
@@ -2457,7 +2412,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := securityZoneSettingsJson["specific-zone"]; v != nil {
 						securityZoneSettingsState["specific_zone"] = v
 					}
-					interfaceState["security_zone_settings"] = securityZoneSettingsState
+					interfaceState["security_zone_settings"] = []interface{}{securityZoneSettingsState}
 				}
 				if v, _ := interfaceJson["topology"]; v != nil {
 					interfaceState["topology"] = v
@@ -2477,7 +2432,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := topologySettingsJson["specific-network"]; v != nil {
 						topologySettingsState["specific_network"] = v
 					}
-					interfaceState["topology_settings"] = topologySettingsState
+					interfaceState["topology_settings"] = []interface{}{topologySettingsState}
 				}
 				if v, _ := interfaceJson["color"]; v != nil {
 					interfaceState["color"] = v
@@ -2542,11 +2497,11 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := customModeMap["url-filtering"]; v != nil {
 						customModeMapToReturn["url_filtering"] = v
 					}
-					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+					websiteCategorizationMapToReturn["custom_mode"] = []interface{}{customModeMapToReturn}
 				}
-				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+				overrideGlobalMapToReturn["website_categorization"] = []interface{}{websiteCategorizationMapToReturn}
 			}
-			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+			applicationControlSettingsMapToReturn["override_global_settings"] = []interface{}{overrideGlobalMapToReturn}
 		}
 
 		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
@@ -2685,135 +2640,145 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("send_logs_to_server", nil)
 	}
 
-	if v := gateway["logs-settings"]; v != nil {
-		logSettingsJson := v.(map[string]interface{})
-		logSettingsState := make(map[string]interface{})
-		if v := logSettingsJson["alert-when-free-disk-space-below"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+	if gateway["logs-settings"] != nil {
+
+		logsSettingsMap := gateway["logs-settings"].(map[string]interface{})
+
+		logsSettingsMapToReturn := make(map[string]interface{})
+
+		if v := logsSettingsMap["alert-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below"] = v
 		}
-		if v := logSettingsJson["alert-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_metrics"] = v.(string)
+		if v := logsSettingsMap["alert-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["free_disk_space_metrics"] = v
 		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above-metrics"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above_metrics"] = v.(string)
+		if v := logsSettingsMap["alert-when-free-disk-space-below-threshold"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below_threshold"] = v
 		}
-		if v := logSettingsJson["delete-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below_metrics"] = v.(string)
+		if v := logsSettingsMap["alert-when-free-disk-space-below-type"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below_type"] = v
 		}
-		if v := logSettingsJson["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below_metrics"] = v.(string)
+		if v := logsSettingsMap["before-delete-keep-logs-from-the-last-days"]; v != nil {
+			logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days"] = v
 		}
-		if v := logSettingsJson["alert-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
+			logsSettingsMapToReturn["before_delete_keep_logs_from_the_last_days_threshold"] = v
 		}
-		if v := logSettingsJson["alert-when-free-disk-space-below-type"]; v != nil {
-			logSettingsState["alert_when_free_disk_space_below_type"] = v.(string)
+		if v := logsSettingsMap["before-delete-run-script"]; v != nil {
+			logsSettingsMapToReturn["before_delete_run_script"] = v
 		}
-		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days"]; v != nil {
-			logSettingsState["before_delete_keep_logs_from_the_last_days"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["before-delete-run-script-command"]; v != nil {
+			logsSettingsMapToReturn["before_delete_run_script_command"] = v
 		}
-		if v := logSettingsJson["before-delete-keep-logs-from-the-last-days-threshold"]; v != nil {
-			logSettingsState["before_delete_keep_logs_from_the_last_days_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["delete-index-files-older-than-days"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_older_than_days"] = v
 		}
-		if v := logSettingsJson["before-delete-run-script"]; v != nil {
-			logSettingsState["before_delete_run_script"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-index-files-older-than-days-threshold"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_older_than_days_threshold"] = v
 		}
-		if v := logSettingsJson["before-delete-run-script-command"]; v != nil {
-			logSettingsState["before_delete_run_script_command"] = v.(string)
+		if v := logsSettingsMap["delete-index-files-when-index-size-above"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_when_index_size_above"] = v
 		}
-		if v := logSettingsJson["delete-index-files-older-than-days"]; v != nil {
-			logSettingsState["delete_index_files_older_than_days"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-index-files-when-index-size-above-metrics"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_when_index_size_above_metrics"] = v
 		}
-		if v := logSettingsJson["delete-index-files-older-than-days-threshold"]; v != nil {
-			logSettingsState["delete_index_files_older_than_days_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["delete-index-files-when-index-size-above-threshold"]; v != nil {
+			logsSettingsMapToReturn["delete_index_files_when_index_size_above_threshold"] = v
 		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below"] = v
 		}
-		if v := logSettingsJson["delete-index-files-when-index-size-above-threshold"]; v != nil {
-			logSettingsState["delete_index_files_when_index_size_above_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["delete-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below_metrics"] = v
 		}
-		if v := logSettingsJson["delete-when-free-disk-space-below"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["delete-when-free-disk-space-below-threshold"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below_threshold"] = v
 		}
-		if v := logSettingsJson["delete-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["delete_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["detect-new-citrix-ica-application-names"]; v != nil {
+			logsSettingsMapToReturn["detect_new_citrix_ica_application_names"] = v
 		}
-		if v := logSettingsJson["detect-new-citrix-ica-application-names"]; v != nil {
-			logSettingsState["detect_new_citrix_ica_application_names"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["forward-logs-to-log-server"]; v != nil {
+			logsSettingsMapToReturn["forward_logs_to_log_server"] = v
 		}
-		if v := logSettingsJson["forward-logs-to-log-server"]; v != nil {
-			logSettingsState["forward_logs_to_log_server"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["forward-logs-to-log-server-name"]; v != nil {
+			logsSettingsMapToReturn["forward_logs_to_log_server_name"] = v
 		}
-		if v := logSettingsJson["forward-logs-to-log-server-name"]; v != nil {
-			logSettingsState["forward_logs_to_log_server_name"] = v.(string)
+		if v := logsSettingsMap["forward-logs-to-log-server-schedule-name"]; v != nil {
+			logsSettingsMapToReturn["forward_logs_to_log_server_schedule_name"] = v
 		}
-		if v := logSettingsJson["forward-logs-to-log-server-schedule-name"]; v != nil {
-			logSettingsState["forward_logs_to_log_server_schedule_name"] = v.(string)
+		if v := logsSettingsMap["perform-log-rotate-before-log-forwarding"]; v != nil {
+			logsSettingsMapToReturn["perform_log_rotate_before_log_forwarding"] = v
 		}
-		if v := logSettingsJson["perform-log-rotate-before-log-forwarding"]; v != nil {
-			logSettingsState["perform_log_rotate_before_log_forwarding"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["reject-connections-when-free-disk-space-below-threshold"]; v != nil {
+			logsSettingsMapToReturn["reject_connections_when_free_disk_space_below_threshold"] = v
 		}
-		if v := logSettingsJson["reject-connections-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["reject_connections_when_free_disk_space_below_threshold"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["reserve-for-packet-capture-metrics"]; v != nil {
+			logsSettingsMapToReturn["reserve_for_packet_capture_metrics"] = v
 		}
-		if v := logSettingsJson["reserve-for-packet-capture-metrics"]; v != nil {
-			logSettingsState["reserve_for_packet_capture_metrics"] = v.(string)
+		if v := logsSettingsMap["reserve-for-packet-capture-threshold"]; v != nil {
+			logsSettingsMapToReturn["reserve_for_packet_capture_threshold"] = v
 		}
-		if v := logSettingsJson["reserve-for-packet-capture-threshold"]; v != nil {
-			logSettingsState["reserve_for_packet_capture_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["rotate-log-by-file-size"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_by_file_size"] = v
 		}
-		if v := logSettingsJson["rotate-log-by-file-size"]; v != nil {
-			logSettingsState["rotate_log_by_file_size"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["rotate-log-file-size-threshold"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_file_size_threshold"] = v
 		}
-		if v := logSettingsJson["rotate-log-file-size-threshold"]; v != nil {
-			logSettingsState["rotate_log_file_size_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["rotate-log-on-schedule"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_on_schedule"] = v
 		}
-		if v := logSettingsJson["rotate-log-on-schedule"]; v != nil {
-			logSettingsState["rotate_log_on_schedule"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["rotate-log-schedule-name"]; v != nil {
+			logsSettingsMapToReturn["rotate_log_schedule_name"] = v
 		}
-		if v := logSettingsJson["rotate-log-schedule-name"]; v != nil {
-			logSettingsState["rotate_log_schedule_name"] = v.(string)
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below"] = v
 		}
-		if v := logSettingsJson["stop-logging-when-free-disk-space-below"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_metrics"] = v
 		}
-		if v := logSettingsJson["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
-			logSettingsState["stop_logging_when_free_disk_space_below_threshold"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below-threshold"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_threshold"] = v
 		}
-		if v := logSettingsJson["turn-on-qos-logging"]; v != nil {
-			logSettingsState["turn_on_qos_logging"] = strconv.FormatBool(v.(bool))
+		if v := logsSettingsMap["turn-on-qos-logging"]; v != nil {
+			logsSettingsMapToReturn["turn_on_qos_logging"] = v
 		}
-		if v := logSettingsJson["update-account-log-every"]; v != nil {
-			logSettingsState["update_account_log_every"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := logsSettingsMap["update-account-log-every"]; v != nil {
+			logsSettingsMapToReturn["update_account_log_every"] = v
 		}
-		_ = d.Set("logs_settings", logSettingsState)
+
+		_ = d.Set("logs_settings", []interface{}{logsSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("logs_settings", nil)
 	}
 
-	if v := gateway["firewall-settings"]; v != nil {
-		firewallSettingsJson := v.(map[string]interface{})
-		firewallSettingsState := make(map[string]interface{})
-		if v := firewallSettingsJson["auto-calculate-connections-hash-table-size-and-memory-pool"]; v != nil {
-			firewallSettingsState["auto_calculate_connections_hash_table_size_and_memory_pool"] = v
+	if gateway["firewall-settings"] != nil {
+
+		firewallSettingsMap := gateway["firewall-settings"].(map[string]interface{})
+
+		firewallSettingsMapToReturn := make(map[string]interface{})
+
+		if v := firewallSettingsMap["auto-calculate-connections-hash-table-size-and-memory-pool"]; v != nil {
+			firewallSettingsMapToReturn["auto_calculate_connections_hash_table_size_and_memory_pool"] = v
 		}
-		if v := firewallSettingsJson["auto-maximum-limit-for-concurrent-connections"]; v != nil {
-			firewallSettingsState["auto_maximum_limit_for_concurrent_connections"] = v
+		if v := firewallSettingsMap["auto-maximum-limit-for-concurrent-connections"]; v != nil {
+			firewallSettingsMapToReturn["auto_maximum_limit_for_concurrent_connections"] = v
 		}
-		if v := firewallSettingsJson["connections-hash-size"]; v != nil {
-			firewallSettingsState["connections_hash_size"] = v
+		if v := firewallSettingsMap["connections-hash-size"]; v != nil {
+			firewallSettingsMapToReturn["connections_hash_size"] = v
 		}
-		if v := firewallSettingsJson["maximum-limit-for-concurrent-connections"]; v != nil {
-			firewallSettingsState["maximum_limit_for_concurrent_connections"] = v
+		if v := firewallSettingsMap["maximum-limit-for-concurrent-connections"]; v != nil {
+			firewallSettingsMapToReturn["maximum_limit_for_concurrent_connections"] = v
 		}
-		if v := firewallSettingsJson["maximum-memory-pool-size"]; v != nil {
-			firewallSettingsState["maximum_memory_pool_size"] = v
+		if v := firewallSettingsMap["maximum-memory-pool-size"]; v != nil {
+			firewallSettingsMapToReturn["maximum_memory_pool_size"] = v
 		}
-		if v := firewallSettingsJson["memory-pool-size"]; v != nil {
-			firewallSettingsState["memory_pool_size"] = v
+		if v := firewallSettingsMap["memory-pool-size"]; v != nil {
+			firewallSettingsMapToReturn["memory_pool_size"] = v
 		}
-		_ = d.Set("firewall_settings", firewallSettingsState)
+
+		_ = d.Set("firewall_settings", []interface{}{firewallSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("firewall_settings", nil)
 	}
@@ -2834,7 +2799,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 				}
 				authenticationState["authentication_clients"] = clientsIds
 			}
-			vpnSettingsState["authentication"] = authenticationState
+			vpnSettingsState["authentication"] = []interface{}{authenticationState}
 		}
 
 		if v := vpnSettingsJson["link-selection"]; v != nil {
@@ -2849,7 +2814,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 			if v := linkSelectionJson["ip-address"]; v != nil {
 				linkSelectionState["ip_address"] = v
 			}
-			vpnSettingsState["link_selection"] = linkSelectionState
+			vpnSettingsState["link_selection"] = []interface{}{linkSelectionState}
 		}
 		if v := vpnSettingsJson["maximum-concurrent-ike-negotiations"]; v != nil {
 			vpnSettingsState["maximum_concurrent_ike_negotiations"] = v
@@ -2896,7 +2861,7 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 			if v := remoteAccessJson["visitor-mode-interface"]; v != nil {
 				remoteAccessState["visitor_mode_interface"] = v
 			}
-			vpnSettingsState["remote_access"] = remoteAccessState
+			vpnSettingsState["remote_access"] = []interface{}{remoteAccessState}
 		}
 
 		if v := vpnSettingsJson["office-mode"]; v != nil {
@@ -2986,15 +2951,15 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v := optionalParametersJson["ip-lease-duration"]; v != nil {
 						optionalParametersState["ip_lease_duration"] = v
 					}
-					allocateIpAddressFromState["optional_parameters"] = optionalParametersState
+					allocateIpAddressFromState["optional_parameters"] = []interface{}{optionalParametersState}
 				}
-				officeModeState["allocate_ip_address_from"] = allocateIpAddressFromState
+				officeModeState["allocate_ip_address_from"] = []interface{}{allocateIpAddressFromState}
 			}
-			vpnSettingsState["office_mode"] = officeModeState
+			vpnSettingsState["office_mode"] = []interface{}{officeModeState}
 		}
-		_ = d.Set("vpn-settings", vpnSettingsState)
+		_ = d.Set("vpn_settings", []interface{}{vpnSettingsState})
 	} else {
-		_ = d.Set("vpn-settings", nil)
+		_ = d.Set("vpn_settings", nil)
 	}
 
 	if v := gateway["tags"]; v != nil {

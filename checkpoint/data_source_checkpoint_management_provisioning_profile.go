@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceManagementProvisioningProfile() *schema.Resource {
@@ -28,7 +27,7 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 				Description: "Object type.",
 			},
 			"configuration_script": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -52,7 +51,7 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 				},
 			},
 			"dns": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "DNS Settings.",
 				Elem: &schema.Resource{
@@ -96,7 +95,7 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 				},
 			},
 			"domain_name": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Domain Name Settings.",
 				Elem: &schema.Resource{
@@ -150,7 +149,6 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 			},
 			"hosts": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Hosts Settings.",
 				Elem: &schema.Resource{
@@ -189,7 +187,6 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 			},
 			"hotspot": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Hotspot Settings. Relevant only for Gaia Embedded (SMB) profile.",
 				Elem: &schema.Resource{
@@ -252,7 +249,6 @@ func dataSourceManagementProvisioningProfile() *schema.Resource {
 			},
 			"radius": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "RADIUS Servers Settings. Relevant only for Gaia Embedded (SMB) profile.",
 				Elem: &schema.Resource{
@@ -331,14 +327,14 @@ func dataSourceManagementProvisioningProfileRead(d *schema.ResourceData, m inter
 
 	showProvisioningProfileRes, err := client.ApiCall("show-provisioning-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProvisioningProfileRes.Success {
 		if objectNotFound(showProvisioningProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showProvisioningProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showProvisioningProfileRes.ErrorMsg)
 	}
 
 	provisioningProfile := showProvisioningProfileRes.GetData()
@@ -364,19 +360,18 @@ func dataSourceManagementProvisioningProfileRead(d *schema.ResourceData, m inter
 
 		configurationScriptMapToReturn := make(map[string]interface{})
 
-		if v, _ := configurationScriptMap["manage-settings"]; v != nil {
+		if v := configurationScriptMap["manage-settings"]; v != nil {
 			configurationScriptMapToReturn["manage_settings"] = v
 		}
-
-		if v, _ := configurationScriptMap["override-settings"]; v != nil {
+		if v := configurationScriptMap["override-settings"]; v != nil {
 			configurationScriptMapToReturn["override_settings"] = v
 		}
-
-		if v, _ := configurationScriptMap["configuration-script-base64"]; v != nil {
+		if v := configurationScriptMap["configuration-script-base64"]; v != nil {
 			configurationScriptMapToReturn["configuration_script_base64"] = v
 		}
 
-		_ = d.Set("configuration_script", configurationScriptMapToReturn)
+		_ = d.Set("configuration_script", []interface{}{configurationScriptMapToReturn})
+
 	} else {
 		_ = d.Set("configuration_script", nil)
 	}
@@ -387,34 +382,30 @@ func dataSourceManagementProvisioningProfileRead(d *schema.ResourceData, m inter
 
 		dnsMapToReturn := make(map[string]interface{})
 
-		if v, _ := dnsMap["manage-settings"]; v != nil {
+		if v := dnsMap["manage-settings"]; v != nil {
 			dnsMapToReturn["manage_settings"] = v
 		}
-
-		if v, _ := dnsMap["override-settings"]; v != nil {
+		if v := dnsMap["override-settings"]; v != nil {
 			dnsMapToReturn["override_settings"] = v
 		}
-
-		if v, _ := dnsMap["dns-proxy"]; v != nil {
-			dnsMapToReturn["dns_proxy"] = strconv.FormatBool(v.(bool))
+		if v := dnsMap["dns-proxy"]; v != nil {
+			dnsMapToReturn["dns_proxy"] = v
 		}
-
-		if v, _ := dnsMap["primary-server"]; v != nil {
+		if v := dnsMap["primary-server"]; v != nil {
 			dnsMapToReturn["primary_server"] = v
 		}
-
-		if v, _ := dnsMap["secondary-server"]; v != nil {
+		if v := dnsMap["secondary-server"]; v != nil {
 			dnsMapToReturn["secondary_server"] = v
 		}
-
-		if v, _ := dnsMap["servers-configuration-mode"]; v != nil {
+		if v := dnsMap["servers-configuration-mode"]; v != nil {
 			dnsMapToReturn["servers_configuration_mode"] = v
 		}
-
-		if v, _ := dnsMap["tertiary-server"]; v != nil {
+		if v := dnsMap["tertiary-server"]; v != nil {
 			dnsMapToReturn["tertiary_server"] = v
 		}
-		_ = d.Set("dns", dnsMapToReturn)
+
+		_ = d.Set("dns", []interface{}{dnsMapToReturn})
+
 	} else {
 		_ = d.Set("dns", nil)
 	}
@@ -425,19 +416,18 @@ func dataSourceManagementProvisioningProfileRead(d *schema.ResourceData, m inter
 
 		domainNameMapToReturn := make(map[string]interface{})
 
-		if v, _ := domainNameMap["manage-settings"]; v != nil {
+		if v := domainNameMap["manage-settings"]; v != nil {
 			domainNameMapToReturn["manage_settings"] = v
 		}
-
-		if v, _ := domainNameMap["override-settings"]; v != nil {
+		if v := domainNameMap["override-settings"]; v != nil {
 			domainNameMapToReturn["override_settings"] = v
 		}
-
-		if v, _ := domainNameMap["name"]; v != nil {
+		if v := domainNameMap["name"]; v != nil {
 			domainNameMapToReturn["name"] = v
 		}
 
-		_ = d.Set("domain_name", domainNameMapToReturn)
+		_ = d.Set("domain_name", []interface{}{domainNameMapToReturn})
+
 	} else {
 		_ = d.Set("domain_name", nil)
 	}

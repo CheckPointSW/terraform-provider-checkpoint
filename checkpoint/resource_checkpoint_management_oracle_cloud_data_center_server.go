@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -145,14 +145,14 @@ func createManagementOracleCloudDataCenterServer(d *schema.ResourceData, m inter
 
 	addOracleCloudDataCenterServerRes, err := client.ApiCall("add-data-center-server", oracleCloudDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addOracleCloudDataCenterServerRes.Success {
 		if addOracleCloudDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addOracleCloudDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addOracleCloudDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addOracleCloudDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": oracleCloudDataCenterServer["name"],
@@ -160,10 +160,10 @@ func createManagementOracleCloudDataCenterServer(d *schema.ResourceData, m inter
 
 	showOracleCloudDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOracleCloudDataCenterServerRes.Success {
-		return fmt.Errorf(showOracleCloudDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOracleCloudDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showOracleCloudDataCenterServerRes.GetData()["uid"].(string))
 
@@ -178,14 +178,14 @@ func readManagementOracleCloudDataCenterServer(d *schema.ResourceData, m interfa
 
 	showOracleCloudDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOracleCloudDataCenterServerRes.Success {
 		if objectNotFound(showOracleCloudDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOracleCloudDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOracleCloudDataCenterServerRes.ErrorMsg)
 	}
 
 	oracleCloudDataCenterServer := showOracleCloudDataCenterServerRes.GetData()
@@ -312,14 +312,14 @@ func updateManagementOracleCloudDataCenterServer(d *schema.ResourceData, m inter
 
 	updateOracleCloudDataCenterServerRes, err := client.ApiCall("set-data-center-server", oracleCloudDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateOracleCloudDataCenterServerRes.Success {
 		if updateOracleCloudDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateOracleCloudDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateOracleCloudDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateOracleCloudDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementOracleCloudDataCenterServer(d, m)
@@ -344,9 +344,9 @@ func deleteManagementOracleCloudDataCenterServer(d *schema.ResourceData, m inter
 	deleteOracleCloudDataCenterServerRes, err := client.ApiCall("delete-data-center-server", oracleCloudDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteOracleCloudDataCenterServerRes.Success {
 		if deleteOracleCloudDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteOracleCloudDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteOracleCloudDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

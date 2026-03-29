@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -103,9 +103,9 @@ func createManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	addTacacsGroupRes, err := client.ApiCall("add-tacacs-group", tacacsGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTacacsGroupRes.Success {
 		if addTacacsGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addTacacsGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addTacacsGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTacacsGroupRes.GetData()["uid"].(string))
@@ -123,14 +123,14 @@ func readManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 
 	showTacacsGroupRes, err := client.ApiCall("show-tacacs-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTacacsGroupRes.Success {
 		if objectNotFound(showTacacsGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTacacsGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showTacacsGroupRes.ErrorMsg)
 	}
 
 	tacacsGroup := showTacacsGroupRes.GetData()
@@ -237,9 +237,9 @@ func updateManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	updateTacacsGroupRes, err := client.ApiCall("set-tacacs-group", tacacsGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTacacsGroupRes.Success {
 		if updateTacacsGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTacacsGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTacacsGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTacacsGroup(d, m)
@@ -259,9 +259,9 @@ func deleteManagementTacacsGroup(d *schema.ResourceData, m interface{}) error {
 	deleteTacacsGroupRes, err := client.ApiCall("delete-tacacs-group", tacacsGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTacacsGroupRes.Success {
 		if deleteTacacsGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTacacsGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTacacsGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

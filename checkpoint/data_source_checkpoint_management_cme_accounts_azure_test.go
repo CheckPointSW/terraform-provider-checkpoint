@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -31,7 +31,6 @@ func TestAccDataSourceCheckpointManagementCMEAccountsAzure_basic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceName, "subscription", resourceName, "subscription"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "application_id", resourceName, "application_id"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "environment", resourceName, "environment"),
-
 				),
 			},
 		},

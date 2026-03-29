@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -108,9 +108,9 @@ func createManagementDataTypeTraditionalGroup(d *schema.ResourceData, m interfac
 	addDataTypeTraditionalGroupRes, err := client.ApiCall("add-data-type-traditional-group", dataTypeTraditionalGroup, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypeTraditionalGroupRes.Success {
 		if addDataTypeTraditionalGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypeTraditionalGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypeTraditionalGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypeTraditionalGroupRes.GetData()["uid"].(string))
@@ -128,14 +128,14 @@ func readManagementDataTypeTraditionalGroup(d *schema.ResourceData, m interface{
 
 	showDataTypeTraditionalGroupRes, err := client.ApiCall("show-data-type-traditional-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeTraditionalGroupRes.Success {
 		if objectNotFound(showDataTypeTraditionalGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeTraditionalGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeTraditionalGroupRes.ErrorMsg)
 	}
 
 	dataTypeTraditionalGroup := showDataTypeTraditionalGroupRes.GetData()
@@ -254,9 +254,9 @@ func updateManagementDataTypeTraditionalGroup(d *schema.ResourceData, m interfac
 	updateDataTypeTraditionalGroupRes, err := client.ApiCall("set-data-type-traditional-group", dataTypeTraditionalGroup, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypeTraditionalGroupRes.Success {
 		if updateDataTypeTraditionalGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypeTraditionalGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypeTraditionalGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypeTraditionalGroup(d, m)
@@ -275,9 +275,9 @@ func deleteManagementDataTypeTraditionalGroup(d *schema.ResourceData, m interfac
 	deleteDataTypeTraditionalGroupRes, err := client.ApiCall("delete-data-type-traditional-group", dataTypeTraditionalGroupPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypeTraditionalGroupRes.Success {
 		if deleteDataTypeTraditionalGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypeTraditionalGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypeTraditionalGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

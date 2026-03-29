@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementInstallDatabase() *schema.Resource {
@@ -44,7 +44,7 @@ func createManagementInstallDatabase(d *schema.ResourceData, m interface{}) erro
 
 	InstallDatabaseRes, _ := client.ApiCall("install-database", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallDatabaseRes.Success {
-		return fmt.Errorf(InstallDatabaseRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallDatabaseRes.ErrorMsg)
 	}
 
 	d.SetId("install-database-" + acctest.RandString(10))

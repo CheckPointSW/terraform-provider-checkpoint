@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -91,13 +91,13 @@ func deleteManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) err
 	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := res.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("")
@@ -119,7 +119,7 @@ func readManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error
 	AzureAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	account := AzureAccountRes.GetData()
 	if checkIfRequestFailed(account) {
@@ -128,7 +128,7 @@ func readManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) error
 			return nil
 		}
 		errMessage := buildErrorMessage(account)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	AzureAccount := account["result"].(map[string]interface{})
@@ -189,13 +189,13 @@ func createManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) err
 	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeAccountsRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 	d.SetId("cme-azure-account-" + d.Get("name").(string) + "-" + acctest.RandString(10))
 
@@ -239,13 +239,13 @@ func updateManagementCMEAccountsAzure(d *schema.ResourceData, m interface{}) err
 	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeAccountsRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	return readManagementCMEAccountsAzure(d, m)

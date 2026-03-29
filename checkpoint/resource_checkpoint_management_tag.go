@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -91,9 +91,9 @@ func createManagementTag(d *schema.ResourceData, m interface{}) error {
 	addTagRes, err := client.ApiCall("add-tag", tag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTagRes.Success {
 		if addTagRes.ErrorMsg != "" {
-			return fmt.Errorf(addTagRes.ErrorMsg)
+			return fmt.Errorf("%s", addTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTagRes.GetData()["uid"].(string))
@@ -111,14 +111,14 @@ func readManagementTag(d *schema.ResourceData, m interface{}) error {
 
 	showTagRes, err := client.ApiCall("show-tag", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTagRes.Success {
 		if objectNotFound(showTagRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTagRes.ErrorMsg)
+		return fmt.Errorf("%s", showTagRes.ErrorMsg)
 	}
 
 	tag := showTagRes.GetData()
@@ -208,9 +208,9 @@ func updateManagementTag(d *schema.ResourceData, m interface{}) error {
 	updateTagRes, err := client.ApiCall("set-tag", tag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTagRes.Success {
 		if updateTagRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTagRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTag(d, m)
@@ -235,9 +235,9 @@ func deleteManagementTag(d *schema.ResourceData, m interface{}) error {
 	deleteTagRes, err := client.ApiCall("delete-tag", tagPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTagRes.Success {
 		if deleteTagRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTagRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

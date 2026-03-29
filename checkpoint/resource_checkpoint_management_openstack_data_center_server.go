@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 	"strings"
@@ -152,24 +152,24 @@ func createManagementOpenStackDataCenterServer(d *schema.ResourceData, m interfa
 
 	addOpenStackDataCenterServerRes, err := client.ApiCall("add-data-center-server", openstackDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addOpenStackDataCenterServerRes.Success {
 		if addOpenStackDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addOpenStackDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addOpenStackDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addOpenStackDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": openstackDataCenterServer["name"],
 	}
 	showOpenStackDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpenStackDataCenterServerRes.Success {
-		return fmt.Errorf(showOpenStackDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpenStackDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showOpenStackDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementOpenStackDataCenterServer(d, m)
@@ -183,14 +183,14 @@ func readManagementOpenStackDataCenterServer(d *schema.ResourceData, m interface
 
 	showOpenStackDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpenStackDataCenterServerRes.Success {
 		if objectNotFound(showOpenStackDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOpenStackDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpenStackDataCenterServerRes.ErrorMsg)
 	}
 	openstackDataCenterServer := showOpenStackDataCenterServerRes.GetData()
 
@@ -321,14 +321,14 @@ func updateManagementOpenStackDataCenterServer(d *schema.ResourceData, m interfa
 
 	updateOpenStackDataCenterServerRes, err := client.ApiCall("set-data-center-server", openstackDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateOpenStackDataCenterServerRes.Success {
 		if updateOpenStackDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateOpenStackDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateOpenStackDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateOpenStackDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementOpenStackDataCenterServer(d, m)
@@ -355,9 +355,9 @@ func deleteManagementOpenStackDataCenterServer(d *schema.ResourceData, m interfa
 	deleteOpenStackDataCenterServerRes, err := client.ApiCall("delete-data-center-server", openstackDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteOpenStackDataCenterServerRes.Success {
 		if deleteOpenStackDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteOpenStackDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteOpenStackDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

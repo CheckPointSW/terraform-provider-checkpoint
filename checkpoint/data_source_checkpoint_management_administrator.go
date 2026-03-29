@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -32,7 +32,7 @@ func dataSourceManagementAdministrator() *schema.Resource {
 				Description: "Administrator email.",
 			},
 			"expiration_date": {
-				Type:     schema.TypeMap,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -134,10 +134,10 @@ func dataSourceManagementAdministratorRead(d *schema.ResourceData, m interface{}
 
 	showAdministratorRes, err := client.ApiCall("show-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAdministratorRes.Success {
-		return fmt.Errorf(showAdministratorRes.ErrorMsg)
+		return fmt.Errorf("%s", showAdministratorRes.ErrorMsg)
 	}
 
 	administrator := showAdministratorRes.GetData()
@@ -160,8 +160,23 @@ func dataSourceManagementAdministratorRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("email", v)
 	}
 
-	if v := administrator["expiration-date"]; v != nil {
-		_ = d.Set("expiration_date", v)
+	if administrator["expiration-date"] != nil {
+
+		expirationDateMap := administrator["expiration-date"].(map[string]interface{})
+
+		expirationDateMapToReturn := make(map[string]interface{})
+
+		if v := expirationDateMap["iso-8601"]; v != nil {
+			expirationDateMapToReturn["iso_8601"] = v
+		}
+		if v := expirationDateMap["posix"]; v != nil {
+			expirationDateMapToReturn["posix"] = v
+		}
+
+		_ = d.Set("expiration_date", []interface{}{expirationDateMapToReturn})
+
+	} else {
+		_ = d.Set("expiration_date", nil)
 	}
 
 	if administrator["multi-domain-profile"] != nil {

@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"strings"
 	"testing"
@@ -113,11 +113,11 @@ resource "checkpoint_management_service_gtp" "test" {
         version = "%s"
         reverse_service = %t
         trace_management = %t
- imsi_prefix = {
+  imsi_prefix {
     enable = true
     prefix = "123"
   }
-  interface_profile = {
+  interface_profile {
     profile = "Custom"
     custom_message_types = "32-35"
   }
@@ -125,15 +125,14 @@ resource "checkpoint_management_service_gtp" "test" {
     enable = true
     mode = 1
   }
-   ms_isdn= {
-    enable =  true
+  ms_isdn {
+    enable = true
     ms_isdn = "312"
   }
-  access_point_name ={
-    enable = true
-    apn = "AccP2"
+  access_point_name {
+    enable = false
   }
-  apply_access_policy_on_user_traffic ={
+  apply_access_policy_on_user_traffic {
     enable = true
     add_imsi_field_to_log = true
   }
@@ -143,10 +142,8 @@ resource "checkpoint_management_service_gtp" "test" {
       types = "11-50"
     }
   }
- ldap_group = {
-    enable = true
-    group = "ldap_group_1"
-    according_to = "MS-ISDN"
+  ldap_group {
+    enable = false
   }
 }
 `, name, version, reverseService, traceManagement)

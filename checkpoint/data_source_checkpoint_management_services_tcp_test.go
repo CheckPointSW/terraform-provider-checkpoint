@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	_ "github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	_ "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	_ "strings"
 	"testing"
@@ -13,7 +13,7 @@ import (
 
 func TestAccDataSourceCheckpointManagementShowServicesTcp_basic(t *testing.T) {
 	var showServicesTcpQuery map[string]interface{}
-	dataSourceShowServicesTcp := "data.checkpoint_management_data_services_tcp.my_query"
+	dataSourceShowServicesTcp := "data.checkpoint_management_services_tcp.my_query"
 	serviceTcpName := "serviceTcp_test"
 	serviceTcpPort := "5683"
 
@@ -29,7 +29,7 @@ func TestAccDataSourceCheckpointManagementShowServicesTcp_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementShowServicesTcpConfig(1, serviceTcpName, serviceTcpPort),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointShowServicesTcp(dataSourceShowServicesTcp, &showServicesTcpQuery),
+					testAccCheckCheckpointShowServicesTcp(dataSourceShowServicesTcp, &showServicesTcpQuery, serviceTcpName),
 					testAccCheckCheckpointShowServicesTcpAttributes(&showServicesTcpQuery, serviceTcpName, serviceTcpPort),
 				),
 			},
@@ -37,7 +37,7 @@ func TestAccDataSourceCheckpointManagementShowServicesTcp_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCheckpointShowServicesTcp(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointShowServicesTcp(resourceTfName string, res *map[string]interface{}, serviceName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		rs, ok := s.RootModule().Resources[resourceTfName]
@@ -50,9 +50,9 @@ func testAccCheckCheckpointShowServicesTcp(resourceTfName string, res *map[strin
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-services-tcp", map[string]interface{}{"filter": "serviceTcp_test", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
+		response, _ := client.ApiCall("show-services-tcp", map[string]interface{}{"filter": serviceName, "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()
@@ -104,13 +104,13 @@ resource "checkpoint_management_service_tcp" "example" {
   port = "%s"
 }
 
-data "checkpoint_management_data_services_tcp" "my_query" {
+data "checkpoint_management_services_tcp" "my_query" {
 	filter = "${checkpoint_management_service_tcp.example.name}"
 	limit = %d
 }
 
 data "checkpoint_management_data_service_tcp" "data_service_tcp" {
-    name = "${data.checkpoint_management_data_services_tcp.my_query.objects[0].name}"
+    name = "${data.checkpoint_management_services_tcp.my_query.objects[0].name}"
 }
 `, objName, objPort, limit)
 }

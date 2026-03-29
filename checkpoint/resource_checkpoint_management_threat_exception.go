@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
 )
@@ -29,6 +30,14 @@ func resourceManagementThreatException() *schema.Resource {
 				return []*schema.ResourceData{d}, nil
 			},
 		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementThreatExceptionV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementThreatExceptionStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -41,7 +50,8 @@ func resourceManagementThreatException() *schema.Resource {
 				Description: "Layer that the rule belongs to identified by the name or UID.",
 			},
 			"position": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -221,7 +231,7 @@ func createManagementThreatException(d *schema.ResourceData, m interface{}) erro
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				threatException["position"] = "top" // entire rule-base
 			} else {
@@ -229,15 +239,15 @@ func createManagementThreatException(d *schema.ResourceData, m interface{}) erro
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			threatException["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			threatException["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				threatException["position"] = "bottom" // entire rule-base
 			} else {
@@ -331,9 +341,9 @@ func createManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	addThreatExceptionRes, err := client.ApiCall("add-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatExceptionRes.Success {
 		if addThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatExceptionRes.GetData()["uid"].(string))
@@ -368,7 +378,7 @@ func readManagementThreatException(d *schema.ResourceData, m interface{}) error 
 
 	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	if !showThreatRuleRes.Success {
@@ -377,7 +387,7 @@ func readManagementThreatException(d *schema.ResourceData, m interface{}) error 
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleRes.ErrorMsg)
 	}
 
 	exceptionRule := showThreatRuleRes.GetData()
@@ -556,7 +566,7 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					threatException["new-position"] = "top" // entire rule-base
 				} else {
@@ -564,15 +574,15 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				threatException["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				threatException["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					threatException["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -685,9 +695,9 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	updateThreatExceptionRes, err := client.ApiCall("set-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatExceptionRes.Success {
 		if updateThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementThreatException(d, m)
 }
@@ -721,9 +731,9 @@ func deleteManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	deleteThreatExceptionRes, err := client.ApiCall("delete-threat-exception", threatExceptionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatExceptionRes.Success {
 		if deleteThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 	return nil

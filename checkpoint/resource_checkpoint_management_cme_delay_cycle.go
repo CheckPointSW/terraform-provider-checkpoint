@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -59,13 +59,13 @@ func createUpdateManagementCMEDelayCycle(d *schema.ResourceData, m interface{}) 
 	cmeDelayCycleRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeDelayCycleRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 	return nil
 }
@@ -79,13 +79,13 @@ func readManagementCMEDelayCycle(d *schema.ResourceData, m interface{}) error {
 	cmeDelayCycleRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeDelayCycleRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	cmeDelayCycleData := data["result"].(map[string]interface{})

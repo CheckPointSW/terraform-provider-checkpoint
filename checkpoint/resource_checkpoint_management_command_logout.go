@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementLogout() *schema.Resource {
@@ -31,7 +31,7 @@ func createManagementLogout(d *schema.ResourceData, m interface{}) error {
 
 	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), client.GetSessionID(), true, client.IsProxyUsed())
 	if !logoutRes.Success {
-		return fmt.Errorf(logoutRes.ErrorMsg)
+		return fmt.Errorf("%s", logoutRes.ErrorMsg)
 	}
 
 	d.SetId("logout-" + acctest.RandString(10))

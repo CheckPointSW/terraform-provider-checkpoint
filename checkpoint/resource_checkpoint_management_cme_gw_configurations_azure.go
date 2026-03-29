@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -60,8 +60,8 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 				Description: "Color of the gateways objects in SmartConsole.",
 			},
 			"communication_with_servers_behind_nat": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:     schema.TypeString,
+				Optional: true,
 				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
 					"(Management, Multi-Domain, Log Servers).",
 			},
@@ -234,7 +234,7 @@ func readManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interface{
 	AzureGWConfigurationRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	gwConfiguration := AzureGWConfigurationRes.GetData()
@@ -244,7 +244,7 @@ func readManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interface{
 			return nil
 		}
 		errMessage := buildErrorMessage(gwConfiguration)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	AzureGWConfiguration := gwConfiguration["result"].(map[string]interface{})
@@ -301,7 +301,7 @@ func readManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interface{
 	} else {
 		_ = d.Set("identity_awareness_settings", nil)
 	}
-	
+
 	if AzureGWConfiguration["repository-gateway-scripts"] != nil {
 		scriptsList := AzureGWConfiguration["repository-gateway-scripts"].([]interface{})
 		if len(scriptsList) > 0 {
@@ -465,13 +465,13 @@ func createManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 	cmeGWConfigurationRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeGWConfigurationRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-azure-gw-configuration-" + d.Get("name").(string) + "-" + acctest.RandString(10))
@@ -605,13 +605,13 @@ func updateManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 	cmeGWConfigurationRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeGWConfigurationRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	return readManagementCMEGWConfigurationsAzure(d, m)
@@ -631,13 +631,13 @@ func deleteManagementCMEGWConfigurationsAzure(d *schema.ResourceData, m interfac
 	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := res.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("")

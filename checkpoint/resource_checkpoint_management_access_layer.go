@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -170,9 +170,9 @@ func createManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 	addAccessLayerRes, err := client.ApiCall("add-access-layer", accessLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessLayerRes.Success {
 		if addAccessLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessLayerRes.GetData()["uid"].(string))
@@ -190,14 +190,14 @@ func readManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	showAccessLayerRes, err := client.ApiCall("show-access-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessLayerRes.Success {
 		if objectNotFound(showAccessLayerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessLayerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessLayerRes.ErrorMsg)
 	}
 
 	accessLayer := showAccessLayerRes.GetData()
@@ -343,9 +343,9 @@ func updateManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 	updateAccessLayerRes, err := client.ApiCall("set-access-layer", accessLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessLayerRes.Success {
 		if updateAccessLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAccessLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAccessLayer(d, m)
@@ -372,9 +372,9 @@ func deleteManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 	deleteAccessLayerRes, err := client.ApiCall("delete-access-layer", accessLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessLayerRes.Success {
 		if deleteAccessLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

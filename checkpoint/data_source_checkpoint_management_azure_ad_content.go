@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 )
@@ -59,8 +59,9 @@ func dataSourceManagementAzureAdContent() *schema.Resource {
 				Description: "Return result matching the unique identifier of the object on the Azure AD Server.",
 			},
 			"filter": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
+				MaxItems:    1,
 				Description: "Return results matching the specified filter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -200,27 +201,33 @@ func dataSourceAzureAdContentRead(d *schema.ResourceData, m interface{}) error {
 		payload["uid-in-azure-ad"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("filter"); ok {
-		res := make(map[string]interface{})
+	if v, ok := d.GetOk("filter"); ok {
 
-		if v, ok := d.GetOk("filter.text"); ok {
-			res["text"] = v.(string)
+		filterList := v.([]interface{})
+
+		if len(filterList) > 0 {
+
+			filterPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("filter.0.text"); ok {
+				filterPayload["text"] = v.(string)
+			}
+			if v, ok := d.GetOk("filter.0.uri"); ok {
+				filterPayload["uri"] = v.(string)
+			}
+			if v, ok := d.GetOk("filter.0.parent_uid_in_data_center"); ok {
+				filterPayload["parent-uid-in-data-center"] = v.(string)
+			}
+			payload["filter"] = filterPayload
 		}
-		if v, ok := d.GetOk("filter.uri"); ok {
-			res["uri"] = v.(string)
-		}
-		if v, ok := d.GetOk("filter.parent_uid_in_data_center"); ok {
-			res["parent-uid-in-data-center"] = v.(string)
-		}
-		payload["filter"] = res
 	}
 
 	showAzureAdContentRes, err := client.ApiCall("show-azure-ad-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureAdContentRes.Success {
-		return fmt.Errorf(showAzureAdContentRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureAdContentRes.ErrorMsg)
 	}
 
 	azureAdContent := showAzureAdContentRes.GetData()

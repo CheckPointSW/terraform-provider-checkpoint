@@ -1,10 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetGlobalDomain() *schema.Resource {
@@ -12,6 +13,14 @@ func resourceManagementSetGlobalDomain() *schema.Resource {
 		Create: createManagementSetGlobalDomain,
 		Read:   readManagementSetGlobalDomain,
 		Delete: deleteManagementSetGlobalDomain,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetGlobalDomainV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetGlobalDomainStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -20,7 +29,8 @@ func resourceManagementSetGlobalDomain() *schema.Resource {
 				Description: "Object name.",
 			},
 			"servers": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Multi Domain Servers. When the field is provided, 'set-global-domain' command is executed asynchronously.",
 				ForceNew:    true,
@@ -90,14 +100,19 @@ func createManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) erro
 		payload["name"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("servers"); ok {
+	if v, ok := d.GetOk("servers"); ok {
 
-		res := make(map[string]interface{})
+		serversList := v.([]interface{})
 
-		if v, ok := d.GetOk("servers.add"); ok {
-			res["add"] = v
+		if len(serversList) > 0 {
+
+			serversPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("servers.0.add"); ok {
+				serversPayload["add"] = v
+			}
+			payload["servers"] = serversPayload
 		}
-		payload["servers"] = res
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -122,7 +137,7 @@ func createManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) erro
 
 	SetGlobalDomainRes, _ := client.ApiCall("set-global-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetGlobalDomainRes.Success {
-		return fmt.Errorf(SetGlobalDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", SetGlobalDomainRes.ErrorMsg)
 	}
 
 	d.SetId("set-global-domain-" + acctest.RandString(10))

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetCpPasswordRequirements() *schema.Resource {
@@ -39,10 +39,10 @@ func createManagementSetCpPasswordRequirements(d *schema.ResourceData, m interfa
 
 	SetCpPasswordRequirementsRes, err := client.ApiCall("set-cp-password-requirements", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetCpPasswordRequirementsRes.Success {
-		return fmt.Errorf(SetCpPasswordRequirementsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetCpPasswordRequirementsRes.ErrorMsg)
 	}
 
 	cpPasswordRequirements := SetCpPasswordRequirementsRes.GetData()

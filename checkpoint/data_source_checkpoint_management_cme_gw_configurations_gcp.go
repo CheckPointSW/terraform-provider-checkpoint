@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -53,14 +53,13 @@ func dataSourceManagementCMEGWConfigurationsGCP() *schema.Resource {
 				Description: "Color of the gateways objects in SmartConsole.",
 			},
 			"communication_with_servers_behind_nat": {
-				Type:        schema.TypeString,
-				Computed:    true,
+				Type:     schema.TypeString,
+				Computed: true,
 				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
 					"(Management, Multi-Domain, Log Servers).",
 			},
 			"blades": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Dictionary of activated/deactivated blades on the GW.",
 				Elem: &schema.Resource{
@@ -130,7 +129,6 @@ func dataSourceManagementCMEGWConfigurationsGCP() *schema.Resource {
 			},
 			"identity_awareness_settings": {
 				Type:     schema.TypeList,
-				MaxItems: 1,
 				Computed: true,
 				Description: "Dictionary of identity awareness settings that can be configured on the gateway: " +
 					"enable_cloudguard_controller (enabling IDA Web API) and receive_identities_from (list of PDP gateway to" +
@@ -222,13 +220,13 @@ func dataSourceManagementCMEGWConfigurationsGCPRead(d *schema.ResourceData, m in
 	GCPGWConfigurationRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	gwConfiguration := GCPGWConfigurationRes.GetData()
 	if checkIfRequestFailed(gwConfiguration) {
 		errMessage := buildErrorMessage(gwConfiguration)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-gcp-gw-configuration-" + name + "-" + acctest.RandString(10))
@@ -289,7 +287,7 @@ func dataSourceManagementCMEGWConfigurationsGCPRead(d *schema.ResourceData, m in
 	} else {
 		_ = d.Set("identity_awareness_settings", nil)
 	}
-	
+
 	if GCPGWConfiguration["repository-gateway-scripts"] != nil {
 		scriptsList := GCPGWConfiguration["repository-gateway-scripts"].([]interface{})
 		if len(scriptsList) > 0 {

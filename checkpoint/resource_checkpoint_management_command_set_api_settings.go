@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetApiSettings() *schema.Resource {
@@ -43,7 +43,7 @@ func createManagementSetApiSettings(d *schema.ResourceData, m interface{}) error
 
 	SetApiSettingsRes, _ := client.ApiCall("set-api-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetApiSettingsRes.Success {
-		return fmt.Errorf(SetApiSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetApiSettingsRes.ErrorMsg)
 	}
 
 	d.SetId("set-api-settings-" + acctest.RandString(10))

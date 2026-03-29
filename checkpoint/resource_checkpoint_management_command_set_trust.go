@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetTrust() *schema.Resource {
@@ -122,10 +122,10 @@ func createManagementSetTrust(d *schema.ResourceData, m interface{}) error {
 
 	SetTrustRes, err := client.ApiCall("set-trust", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetTrustRes.Success {
-		return fmt.Errorf(SetTrustRes.ErrorMsg)
+		return fmt.Errorf("%s", SetTrustRes.ErrorMsg)
 	}
 
 	d.SetId("set-trust-" + acctest.RandString(10))

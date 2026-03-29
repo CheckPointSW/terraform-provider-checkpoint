@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -121,9 +121,9 @@ func createManagementServiceIcmp(d *schema.ResourceData, m interface{}) error {
 	addServiceIcmpRes, err := client.ApiCall("add-service-icmp", serviceIcmp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceIcmpRes.Success {
 		if addServiceIcmpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceIcmpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceIcmpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceIcmpRes.GetData()["uid"].(string))
@@ -141,14 +141,14 @@ func readManagementServiceIcmp(d *schema.ResourceData, m interface{}) error {
 
 	showServiceIcmpRes, err := client.ApiCall("show-service-icmp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceIcmpRes.Success {
 		if objectNotFound(showServiceIcmpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceIcmpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceIcmpRes.ErrorMsg)
 	}
 
 	serviceIcmp := showServiceIcmpRes.GetData()
@@ -262,9 +262,9 @@ func updateManagementServiceIcmp(d *schema.ResourceData, m interface{}) error {
 	updateServiceIcmpRes, err := client.ApiCall("set-service-icmp", serviceIcmp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceIcmpRes.Success {
 		if updateServiceIcmpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceIcmpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceIcmpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceIcmp(d, m)
@@ -289,9 +289,9 @@ func deleteManagementServiceIcmp(d *schema.ResourceData, m interface{}) error {
 	deleteServiceIcmpRes, err := client.ApiCall("delete-service-icmp", serviceIcmpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceIcmpRes.Success {
 		if deleteServiceIcmpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceIcmpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceIcmpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

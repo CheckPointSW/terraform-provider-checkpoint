@@ -2,8 +2,8 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -38,7 +38,9 @@ func testAccDataSourceManagementMobileAccessRuleConfig(name string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_mobile_access_rule" "test" {
   name = "%s"
-  position = {bottom = "bottom"}
+  position {
+        bottom = "bottom"
+    }
 
 }
 

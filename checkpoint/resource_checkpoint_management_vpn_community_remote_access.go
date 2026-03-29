@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"reflect"
 	"strconv"
@@ -152,7 +152,7 @@ func createManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 
 	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetVpnCommunityRemoteAccessRes.Success {
-		return fmt.Errorf(SetVpnCommunityRemoteAccessRes.ErrorMsg)
+		return fmt.Errorf("%s", SetVpnCommunityRemoteAccessRes.ErrorMsg)
 	}
 
 	d.SetId(SetVpnCommunityRemoteAccessRes.GetData()["uid"].(string))
@@ -242,7 +242,7 @@ func updateManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interfac
 
 	SetVpnCommunityRemoteAccessRes, _ := client.ApiCall("set-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetVpnCommunityRemoteAccessRes.Success {
-		return fmt.Errorf(SetVpnCommunityRemoteAccessRes.ErrorMsg)
+		return fmt.Errorf("%s", SetVpnCommunityRemoteAccessRes.ErrorMsg)
 	}
 
 	return readManagementVpnCommunityRemoteAccess(d, m)
@@ -257,14 +257,14 @@ func readManagementVpnCommunityRemoteAccess(d *schema.ResourceData, m interface{
 
 	showVpnCommunityRemoteAccessRes, err := client.ApiCall("show-vpn-community-remote-access", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVpnCommunityRemoteAccessRes.Success {
 		if objectNotFound(showVpnCommunityRemoteAccessRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVpnCommunityRemoteAccessRes.ErrorMsg)
+		return fmt.Errorf("%s", showVpnCommunityRemoteAccessRes.ErrorMsg)
 	}
 
 	vpnCommunityRemoteAccess := showVpnCommunityRemoteAccessRes.GetData()

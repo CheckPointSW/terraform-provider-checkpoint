@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -97,9 +97,9 @@ func createManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 	addServiceCitrixTcpRes, err := client.ApiCall("add-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceCitrixTcpRes.Success {
 		if addServiceCitrixTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceCitrixTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceCitrixTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceCitrixTcpRes.GetData()["uid"].(string))
@@ -117,14 +117,14 @@ func readManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) error
 
 	showServiceCitrixTcpRes, err := client.ApiCall("show-service-citrix-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceCitrixTcpRes.Success {
 		if objectNotFound(showServiceCitrixTcpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceCitrixTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceCitrixTcpRes.ErrorMsg)
 	}
 
 	serviceCitrixTcp := showServiceCitrixTcpRes.GetData()
@@ -213,9 +213,9 @@ func updateManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 	updateServiceCitrixTcpRes, err := client.ApiCall("set-service-citrix-tcp", serviceCitrixTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceCitrixTcpRes.Success {
 		if updateServiceCitrixTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceCitrixTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceCitrixTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceCitrixTcp(d, m)
@@ -241,9 +241,9 @@ func deleteManagementServiceCitrixTcp(d *schema.ResourceData, m interface{}) err
 	deleteServiceCitrixTcpRes, err := client.ApiCall("delete-service-citrix-tcp", serviceCitrixTcpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceCitrixTcpRes.Success {
 		if deleteServiceCitrixTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceCitrixTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceCitrixTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

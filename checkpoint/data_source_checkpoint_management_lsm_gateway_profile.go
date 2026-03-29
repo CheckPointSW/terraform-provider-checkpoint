@@ -3,10 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
-	"strconv"
 )
 
 func dataSourceManagementLsmGatewayProfile() *schema.Resource {
@@ -45,7 +44,6 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 			},
 			"application_control_and_url_filtering_settings": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Gateway Application Control and URL filtering settings.",
 				Elem: &schema.Resource{
@@ -56,7 +54,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							Description: "Whether to override global settings or not.",
 						},
 						"override_global_settings": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "override global settings object.",
 							Elem: &schema.Resource{
@@ -67,7 +65,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 										Description: "Fail mode - allow or block all requests.",
 									},
 									"website_categorization": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Website categorization object.",
 										Elem: &schema.Resource{
@@ -78,7 +76,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 													Description: "Website categorization mode.",
 												},
 												"custom_mode": {
-													Type:        schema.TypeMap,
+													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "Custom mode object.",
 													Elem: &schema.Resource{
@@ -107,7 +105,6 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 			},
 			"advanced_settings": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "N/A",
 				Elem: &schema.Resource{
@@ -119,7 +116,6 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 						},
 						"sam": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "SAM.",
 							Elem: &schema.Resource{
@@ -130,7 +126,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 										Description: "Forward SAM clients' requests to other SAM servers.",
 									},
 									"use_early_versions": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "N/A",
 										Elem: &schema.Resource{
@@ -149,7 +145,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 										},
 									},
 									"purge_sam_file": {
-										Type:        schema.TypeMap,
+										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Purge SAM File.",
 										Elem: &schema.Resource{
@@ -234,13 +230,12 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 			},
 			"https_inspection": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "HTTPS inspection.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bypass_on_failure": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to be true in order to bypass all requests (Fail-open) in case of internal system error.",
 							Elem: &schema.Resource{
@@ -264,7 +259,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							},
 						},
 						"site_categorization_allow_mode": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Set to 'background' in order to allowed requests until categorization is complete.",
 							Elem: &schema.Resource{
@@ -288,7 +283,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							},
 						},
 						"deny_untrusted_server_cert": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Action settings.",
 							Elem: &schema.Resource{
@@ -312,7 +307,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							},
 						},
 						"deny_revoked_server_cert": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Action settings.",
 							Elem: &schema.Resource{
@@ -336,7 +331,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							},
 						},
 						"deny_expired_server_cert": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Action settings.",
 							Elem: &schema.Resource{
@@ -381,7 +376,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 				Description: "Hide internal networks behind the Gateway's external IP.",
 			},
 			"nat_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "NAT settings.",
 				Elem: &schema.Resource{
@@ -425,7 +420,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 				Description: "Gateway platform operating system.",
 			},
 			"proxy_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "N/A",
 				Elem: &schema.Resource{
@@ -561,14 +556,14 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 
 	showLsmGatewayProfileRes, err := client.ApiCall("show-lsm-gateway-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmGatewayProfileRes.Success {
 		if objectNotFound(showLsmGatewayProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmGatewayProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmGatewayProfileRes.ErrorMsg)
 	}
 
 	lsmGatewayProfile := showLsmGatewayProfileRes.GetData()
@@ -737,26 +732,26 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 				useEarlyVersionMapToReturn := make(map[string]interface{})
 
 				if v, _ := useEarlyVersionMap["enabled"]; v != nil {
-					useEarlyVersionMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+					useEarlyVersionMapToReturn["enabled"] = v.(bool)
 				}
 
 				if v, _ := useEarlyVersionMap["compatibility-mode"]; v != nil {
 					useEarlyVersionMapToReturn["compatibility_mode"] = v
 				}
-				samMapToReturn["use_early_versions"] = useEarlyVersionMapToReturn
+				samMapToReturn["use_early_versions"] = []interface{}{useEarlyVersionMapToReturn}
 			}
 			if purgeSamFile, _ := samSettingsMap["purge-sam-file"]; purgeSamFile != nil {
 				purgeSamFileMap := purgeSamFile.(map[string]interface{})
 				purgeSamFileMapToReturn := make(map[string]interface{})
 
 				if v, _ := purgeSamFileMap["enabled"]; v != nil {
-					purgeSamFileMapToReturn["enabled"] = strconv.FormatBool(v.(bool))
+					purgeSamFileMapToReturn["enabled"] = v.(bool)
 				}
 
 				if v, _ := purgeSamFileMap["purge-when-size-reaches-to"]; v != nil {
-					purgeSamFileMapToReturn["purge_when_size_reaches_to"] = strconv.Itoa(int(math.Round(v.(float64))))
+					purgeSamFileMapToReturn["purge_when_size_reaches_to"] = int(math.Round(v.(float64)))
 				}
-				samMapToReturn["purge_sam_file"] = purgeSamFileMapToReturn
+				samMapToReturn["purge_sam_file"] = []interface{}{purgeSamFileMapToReturn}
 			}
 			advancedSettingsMapToReturn["sam"] = []interface{}{samMapToReturn}
 		}
@@ -801,11 +796,11 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 					if v, _ := customModeMap["url-filtering"]; v != nil {
 						customModeMapToReturn["url_filtering"] = v
 					}
-					websiteCategorizationMapToReturn["custom_mode"] = customModeMapToReturn
+					websiteCategorizationMapToReturn["custom_mode"] = []interface{}{customModeMapToReturn}
 				}
-				overrideGlobalMapToReturn["website_categorization"] = websiteCategorizationMapToReturn
+				overrideGlobalMapToReturn["website_categorization"] = []interface{}{websiteCategorizationMapToReturn}
 			}
-			applicationControlSettingsMapToReturn["override_global_settings"] = overrideGlobalMapToReturn
+			applicationControlSettingsMapToReturn["override_global_settings"] = []interface{}{overrideGlobalMapToReturn}
 		}
 
 		_ = d.Set("application_control_and_url_filtering_settings", []interface{}{applicationControlSettingsMapToReturn})
@@ -823,24 +818,24 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 			httpsSettingsMap := actionSettingsMap["bypass-on-failure"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["bypass_on_failure"] = httpsMapToReturn
+			actionSettingsMapToReturn["bypass_on_failure"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["site-categorization-allow-mode"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["site-categorization-allow-mode"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
@@ -850,58 +845,58 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 			if v, _ := httpsSettingsMap["value"]; v != nil {
 				httpsMapToReturn["value"] = v
 			}
-			actionSettingsMapToReturn["site_categorization_allow_mode"] = httpsMapToReturn
+			actionSettingsMapToReturn["site_categorization_allow_mode"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-untrusted-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-untrusted-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_untrusted_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_untrusted_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-revoked-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-revoked-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_revoked_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_revoked_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 
 		if v, _ := actionSettingsMap["deny-expired-server-cert"]; v != nil {
 			httpsSettingsMap := actionSettingsMap["deny-expired-server-cert"].(map[string]interface{})
 			httpsMapToReturn := make(map[string]interface{})
 			if v, _ := httpsSettingsMap["override-profile"]; v != nil {
-				httpsMapToReturn["override_profile"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["override_profile"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["profile-value"]; v != nil {
-				httpsMapToReturn["profile_value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["profile_value"] = v.(bool)
 			}
 
 			if v, _ := httpsSettingsMap["value"]; v != nil {
-				httpsMapToReturn["value"] = strconv.FormatBool(v.(bool))
+				httpsMapToReturn["value"] = v.(bool)
 			}
-			actionSettingsMapToReturn["deny_expired_server_cert"] = httpsMapToReturn
+			actionSettingsMapToReturn["deny_expired_server_cert"] = []interface{}{httpsMapToReturn}
 		}
 		err = d.Set("https_inspection", []interface{}{actionSettingsMapToReturn})
 	} else {
@@ -910,58 +905,53 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 
 	if lsmGatewayProfile["nat-settings"] != nil {
 
-		actionSettingsMap := lsmGatewayProfile["nat-settings"].(map[string]interface{})
+		natSettingsMap := lsmGatewayProfile["nat-settings"].(map[string]interface{})
 
-		actionSettingsMapToReturn := make(map[string]interface{})
+		natSettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := actionSettingsMap["auto-rule"]; v != nil {
-			actionSettingsMapToReturn["auto_rule"] = strconv.FormatBool(v.(bool))
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
+		}
+		if v := natSettingsMap["hide-behind"]; v != nil {
+			natSettingsMapToReturn["hide_behind"] = v
+		}
+		if v := natSettingsMap["install-on"]; v != nil {
+			natSettingsMapToReturn["install_on"] = v
+		}
+		if v := natSettingsMap["ipv4-address"]; v != nil {
+			natSettingsMapToReturn["ipv4_address"] = v
+		}
+		if v := natSettingsMap["ipv6-address"]; v != nil {
+			natSettingsMapToReturn["ipv6_address"] = v
+		}
+		if v := natSettingsMap["method"]; v != nil {
+			natSettingsMapToReturn["method"] = v
 		}
 
-		if v, _ := actionSettingsMap["hide-behind"]; v != nil {
-			actionSettingsMapToReturn["hide_behind"] = v
-		}
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
-		if v, _ := actionSettingsMap["install-on"]; v != nil {
-			actionSettingsMapToReturn["install_on"] = v
-		}
-
-		if v, _ := actionSettingsMap["ipv4-address"]; v != nil {
-			actionSettingsMapToReturn["ipv4_address"] = v
-		}
-
-		if v, _ := actionSettingsMap["ipv6-address"]; v != nil {
-			actionSettingsMapToReturn["ipv6_address"] = v
-		}
-
-		if v, _ := actionSettingsMap["method"]; v != nil {
-			actionSettingsMapToReturn["method"] = v
-		}
-
-		_ = d.Set("nat_settings", actionSettingsMapToReturn)
 	} else {
 		_ = d.Set("nat_settings", nil)
 	}
 
 	if lsmGatewayProfile["proxy-settings"] != nil {
 
-		actionSettingsMap := lsmGatewayProfile["proxy-settings"].(map[string]interface{})
+		proxySettingsMap := lsmGatewayProfile["proxy-settings"].(map[string]interface{})
 
-		actionSettingsMapToReturn := make(map[string]interface{})
+		proxySettingsMapToReturn := make(map[string]interface{})
 
-		if v, _ := actionSettingsMap["use-custom-proxy"]; v != nil {
-			actionSettingsMapToReturn["use_custom_proxy"] = strconv.FormatBool(v.(bool))
+		if v := proxySettingsMap["use-custom-proxy"]; v != nil {
+			proxySettingsMapToReturn["use_custom_proxy"] = v
+		}
+		if v := proxySettingsMap["proxy-server"]; v != nil {
+			proxySettingsMapToReturn["proxy_server"] = v
+		}
+		if v := proxySettingsMap["port"]; v != nil {
+			proxySettingsMapToReturn["port"] = v
 		}
 
-		if v, _ := actionSettingsMap["proxy-server"]; v != nil {
-			actionSettingsMapToReturn["proxy_server"] = v
-		}
+		_ = d.Set("proxy_settings", []interface{}{proxySettingsMapToReturn})
 
-		if v, _ := actionSettingsMap["port"]; v != nil {
-			actionSettingsMapToReturn["port"] = strconv.Itoa(int(math.Round(v.(float64))))
-		}
-
-		_ = d.Set("proxy_settings", actionSettingsMapToReturn)
 	} else {
 		_ = d.Set("proxy_settings", nil)
 	}

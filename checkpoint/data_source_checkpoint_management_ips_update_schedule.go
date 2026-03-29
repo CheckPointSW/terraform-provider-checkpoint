@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -25,7 +25,6 @@ func dataSourceManagementIpsUpdateSchedule() *schema.Resource {
 			"recurrence": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Days recurrence.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -69,10 +68,10 @@ func dataSourceManagementIpsUpdateScheduleRead(d *schema.ResourceData, m interfa
 
 	showIpsUpdateScheduleRes, err := client.ApiCall("show-ips-update-schedule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIpsUpdateScheduleRes.Success {
-		return fmt.Errorf(showIpsUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", showIpsUpdateScheduleRes.ErrorMsg)
 	}
 
 	ipsUpdateSchedule := showIpsUpdateScheduleRes.GetData()

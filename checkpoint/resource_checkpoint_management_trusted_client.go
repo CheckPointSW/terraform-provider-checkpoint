@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -204,9 +204,9 @@ func createManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	addTrustedClientRes, err := client.ApiCall("add-trusted-client", trustedClient, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTrustedClientRes.Success {
 		if addTrustedClientRes.ErrorMsg != "" {
-			return fmt.Errorf(addTrustedClientRes.ErrorMsg)
+			return fmt.Errorf("%s", addTrustedClientRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTrustedClientRes.GetData()["uid"].(string))
@@ -224,14 +224,14 @@ func readManagementTrustedClient(d *schema.ResourceData, m interface{}) error {
 
 	showTrustedClientRes, err := client.ApiCall("show-trusted-client", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTrustedClientRes.Success {
 		if objectNotFound(showTrustedClientRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTrustedClientRes.ErrorMsg)
+		return fmt.Errorf("%s", showTrustedClientRes.ErrorMsg)
 	}
 
 	trustedClient := showTrustedClientRes.GetData()
@@ -434,9 +434,9 @@ func updateManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	updateTrustedClientRes, err := client.ApiCall("set-trusted-client", trustedClient, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTrustedClientRes.Success {
 		if updateTrustedClientRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTrustedClientRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTrustedClientRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTrustedClient(d, m)
@@ -461,9 +461,9 @@ func deleteManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	deleteTrustedClientRes, err := client.ApiCall("delete-trusted-client", trustedClientPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTrustedClientRes.Success {
 		if deleteTrustedClientRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTrustedClientRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTrustedClientRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

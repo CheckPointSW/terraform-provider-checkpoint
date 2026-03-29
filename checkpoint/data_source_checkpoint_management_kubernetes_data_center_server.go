@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
 	"strings"
 )
@@ -83,10 +83,10 @@ func dataSourceKubernetesDataCenterServerRead(d *schema.ResourceData, m interfac
 	}
 	showKubernetesDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showKubernetesDataCenterServerRes.Success {
-		return fmt.Errorf(showKubernetesDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showKubernetesDataCenterServerRes.ErrorMsg)
 	}
 	kubernetesDataCenterServer := showKubernetesDataCenterServerRes.GetData()
 

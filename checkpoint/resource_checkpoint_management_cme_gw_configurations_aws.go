@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 	"strings"
@@ -61,8 +61,8 @@ func resourceManagementCMEGWConfigurationsAWS() *schema.Resource {
 				Description: "Color of the gateways objects in SmartConsole.",
 			},
 			"communication_with_servers_behind_nat": {
-				Type:        schema.TypeString,
-				Optional:    true,
+				Type:     schema.TypeString,
+				Optional: true,
 				Description: "Gateway behind NAT communications settings with the Check Point Servers" +
 					"(Management, Multi-Domain, Log Servers).",
 			},
@@ -265,7 +265,7 @@ func readManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{})
 	AWSGWConfigurationRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	gwConfiguration := AWSGWConfigurationRes.GetData()
 	if checkIfRequestFailed(gwConfiguration) {
@@ -274,7 +274,7 @@ func readManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{})
 			return nil
 		}
 		errMessage := buildErrorMessage(gwConfiguration)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	AWSGWConfiguration := gwConfiguration["result"].(map[string]interface{})
@@ -518,13 +518,13 @@ func createManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 	cmeGWConfigurationRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeGWConfigurationRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-aws-gw-configuration-" + d.Get("name").(string) + "-" + acctest.RandString(10))
@@ -670,13 +670,13 @@ func updateManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 	cmeGWConfigurationRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeGWConfigurationRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	return readManagementCMEGWConfigurationsAWS(d, m)
@@ -696,13 +696,13 @@ func deleteManagementCMEGWConfigurationsAWS(d *schema.ResourceData, m interface{
 	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := res.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("")

@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -13,6 +14,14 @@ func resourceManagementNatSection() *schema.Resource {
 		Read:   readManagementNatSection,
 		Update: updateManagementNatSection,
 		Delete: deleteManagementNatSection,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementNatSectionV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementNatSectionStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -25,7 +34,8 @@ func resourceManagementNatSection() *schema.Resource {
 				Description: "Name of the package.",
 			},
 			"position": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -84,7 +94,7 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				natSection["position"] = "top" // entire rule-base
 			} else {
@@ -92,15 +102,15 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			natSection["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			natSection["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				natSection["position"] = "bottom" // entire rule-base
 			} else {
@@ -122,9 +132,9 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	addNatSectionRes, err := client.ApiCall("add-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatSectionRes.Success {
 		if addNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNatSectionRes.GetData()["uid"].(string))
@@ -143,14 +153,14 @@ func readManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	showNatSectionRes, err := client.ApiCall("show-nat-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNatSectionRes.Success {
 		if objectNotFound(showNatSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNatSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showNatSectionRes.ErrorMsg)
 	}
 
 	natSection := showNatSectionRes.GetData()
@@ -189,9 +199,9 @@ func updateManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	updateNatSectionRes, err := client.ApiCall("set-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatSectionRes.Success {
 		if updateNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementNatSection(d, m)
@@ -211,9 +221,9 @@ func deleteManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteNatSectionRes.Success {
 		if deleteNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

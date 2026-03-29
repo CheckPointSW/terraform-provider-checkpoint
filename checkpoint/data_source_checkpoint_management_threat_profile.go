@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 )
 
 func dataSourceManagementThreatProfile() *schema.Resource {
@@ -67,7 +66,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 				},
 			},
 			"ips_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "IPS blade settings.",
 				Elem: &schema.Resource{
@@ -101,7 +100,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 				},
 			},
 			"malicious_mail_policy_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Malicious Mail Policy for MTA Gateways.",
 				Elem: &schema.Resource{
@@ -199,7 +198,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 							Description: "Tracking method for protection.",
 						},
 						"default": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Default settings.",
 							Elem: &schema.Resource{
@@ -223,7 +222,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 							},
 						},
 						"final": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Final settings.",
 							Elem: &schema.Resource{
@@ -263,7 +262,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 				},
 			},
 			"scan_malicious_links": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Scans malicious links (URLs) inside email messages.",
 				Elem: &schema.Resource{
@@ -446,10 +445,10 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 
 	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatProfileRes.Success {
-		return fmt.Errorf(showThreatProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatProfileRes.ErrorMsg)
 	}
 
 	threatProfile := showThreatProfileRes.GetData()
@@ -504,98 +503,79 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("indicator_overrides", nil)
 	}
 
-	if v := threatProfile["ips-settings"]; v != nil {
-		ipsSettingsJson := threatProfile["ips-settings"].(map[string]interface{})
-		ipsSettingsState := make(map[string]interface{})
-		if v := ipsSettingsJson["exclude-protection-with-performance-impact"]; v != nil {
-			ipsSettingsState["exclude_protection_with_performance_impact"] = v
+	if threatProfile["ips-settings"] != nil {
+
+		ipsSettingsMap := threatProfile["ips-settings"].(map[string]interface{})
+
+		ipsSettingsMapToReturn := make(map[string]interface{})
+
+		if v := ipsSettingsMap["exclude-protection-with-performance-impact"]; v != nil {
+			ipsSettingsMapToReturn["exclude_protection_with_performance_impact"] = v
 		}
-		if v := ipsSettingsJson["exclude-protection-with-performance-impact-mode"]; v != nil {
-			ipsSettingsState["exclude_protection_with_performance_impact_mode"] = v
+		if v := ipsSettingsMap["exclude-protection-with-performance-impact-mode"]; v != nil {
+			ipsSettingsMapToReturn["exclude_protection_with_performance_impact_mode"] = v
 		}
-		if v := ipsSettingsJson["exclude-protection-with-severity"]; v != nil {
-			ipsSettingsState["exclude_protection_with_severity"] = v
+		if v := ipsSettingsMap["exclude-protection-with-severity"]; v != nil {
+			ipsSettingsMapToReturn["exclude_protection_with_severity"] = v
 		}
-		if v := ipsSettingsJson["exclude-protection-with-severity-mode"]; v != nil {
-			ipsSettingsState["exclude_protection_with_severity_mode"] = v
+		if v := ipsSettingsMap["exclude-protection-with-severity-mode"]; v != nil {
+			ipsSettingsMapToReturn["exclude_protection_with_severity_mode"] = v
 		}
-		if v := ipsSettingsJson["newly-updated-protections"]; v != nil {
-			ipsSettingsState["newly_updated_protections"] = v
+		if v := ipsSettingsMap["newly-updated-protections"]; v != nil {
+			ipsSettingsMapToReturn["newly_updated_protections"] = v
 		}
-		_, ipsSettingsInConf := d.GetOk("ips_settings")
-		defaultIpsSettings := map[string]interface{}{
-			"newly_updated_protections":                  "active",
-			"exclude_protection_with_performance_impact": false,
-			"exclude_protection_with_severity":           false,
-		}
-		if reflect.DeepEqual(defaultIpsSettings, ipsSettingsState) && !ipsSettingsInConf {
-			_ = d.Set("ips_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("ips_settings", ipsSettingsState)
-		}
+
+		_ = d.Set("ips_settings", []interface{}{ipsSettingsMapToReturn})
+
 	} else {
 		_ = d.Set("ips_settings", nil)
 	}
 
-	if v := threatProfile["malicious-mail-policy-settings"]; v != nil {
-		maliciousMailPolicySettingsJson := threatProfile["malicious-mail-policy-settings"].(map[string]interface{})
-		maliciousMailPolicySettingsState := make(map[string]interface{})
-		if v := maliciousMailPolicySettingsJson["add-customized-text-to-email-body"]; v != nil {
-			maliciousMailPolicySettingsState["add_customized_text_to_email_body"] = v
+	if threatProfile["malicious-mail-policy-settings"] != nil {
+
+		maliciousMailPolicySettingsMap := threatProfile["malicious-mail-policy-settings"].(map[string]interface{})
+
+		maliciousMailPolicySettingsMapToReturn := make(map[string]interface{})
+
+		if v := maliciousMailPolicySettingsMap["add-customized-text-to-email-body"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["add_customized_text_to_email_body"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["add-email-subject-prefix"]; v != nil {
-			maliciousMailPolicySettingsState["add_email_subject_prefix"] = v
+		if v := maliciousMailPolicySettingsMap["add-email-subject-prefix"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["add_email_subject_prefix"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["add-x-header-to-email"]; v != nil {
-			maliciousMailPolicySettingsState["add_x_header_to_email"] = v
+		if v := maliciousMailPolicySettingsMap["add-x-header-to-email"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["add_x_header_to_email"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["email-action"]; v != nil {
-			maliciousMailPolicySettingsState["email_action"] = v
+		if v := maliciousMailPolicySettingsMap["email-action"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["email_action"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["email-body-customized-text"]; v != nil {
-			maliciousMailPolicySettingsState["email_body_customized_text"] = v
+		if v := maliciousMailPolicySettingsMap["email-body-customized-text"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["email_body_customized_text"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["email-subject-prefix-text"]; v != nil {
-			maliciousMailPolicySettingsState["email_subject_prefix_text"] = v
+		if v := maliciousMailPolicySettingsMap["email-subject-prefix-text"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["email_subject_prefix_text"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["failed-to-scan-attachments-text"]; v != nil {
-			maliciousMailPolicySettingsState["failed_to_scan_attachments_text"] = v
+		if v := maliciousMailPolicySettingsMap["failed-to-scan-attachments-text"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["failed_to_scan_attachments_text"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["malicious-attachments-text"]; v != nil {
-			maliciousMailPolicySettingsState["malicious_attachments_text"] = v
+		if v := maliciousMailPolicySettingsMap["malicious-attachments-text"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["malicious_attachments_text"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["malicious-links-text"]; v != nil {
-			maliciousMailPolicySettingsState["malicious_links_text"] = v
+		if v := maliciousMailPolicySettingsMap["malicious-links-text"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["malicious_links_text"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["remove-attachments-and-links"]; v != nil {
-			maliciousMailPolicySettingsState["remove_attachments_and_links"] = v
+		if v := maliciousMailPolicySettingsMap["remove-attachments-and-links"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["remove_attachments_and_links"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["send-copy"]; v != nil {
-			maliciousMailPolicySettingsState["send_copy"] = v
+		if v := maliciousMailPolicySettingsMap["send-copy"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["send_copy"] = v
 		}
-		if v := maliciousMailPolicySettingsJson["send-copy-list"]; v != nil {
-			maliciousMailPolicySettingsState["send_copy_list"] = v
+		if v := maliciousMailPolicySettingsMap["send-copy-list"]; v != nil {
+			maliciousMailPolicySettingsMapToReturn["send_copy_list"] = v
 		}
 
-		_, maliciousMailPolicySettingsInConf := d.GetOk("malicious_mail_policy_settings")
-		defaultMaliciousMailPolicySettings := map[string]interface{}{
-			"email_action":                      "allow",
-			"remove_attachments_and_links":      true,
-			"malicious_attachments_text":        "Malicious email attachment '$filename$' removed by Check Point.",
-			"failed_to_scan_attachments_text":   "Email attachment '$filename$' failed to be scanned and removed by Check Point.",
-			"malicious_links_text":              "[Check Point] Malicious link: $neutralized_url$ [Check Point]",
-			"add_x_header_to_email":             false,
-			"add_email_subject_prefix":          false,
-			"email_subject_prefix_text":         "Attachment was found malicious. It is recommended not to open this mail.",
-			"add_customized_text_to_email_body": false,
-			"email_body_customized_text":        "[Check Point]<BR>The following verdicts were determined by Check Point:<BR>$verdicts$<BR>[Check Point]",
-			"send_copy":                         false,
-		}
-		if reflect.DeepEqual(defaultMaliciousMailPolicySettings, maliciousMailPolicySettingsState) && !maliciousMailPolicySettingsInConf {
-			_ = d.Set("malicious_mail_policy_settings", map[string]interface{}{})
-		} else {
-			_ = d.Set("malicious_mail_policy_settings", maliciousMailPolicySettingsState)
-		}
+		_ = d.Set("malicious_mail_policy_settings", []interface{}{maliciousMailPolicySettingsMapToReturn})
+
 	} else {
 		_ = d.Set("malicious_mail_policy_settings", nil)
 	}
@@ -641,7 +621,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 					if v, _ = defaultJson["track"]; v != nil {
 						defaultState["track"] = v
 					}
-					overrideState["default"] = defaultState
+					overrideState["default"] = []interface{}{defaultState}
 				}
 
 				if v, _ := overridesJson["final"]; v != nil {
@@ -656,7 +636,7 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 					if v, _ = finalJson["track"]; v != nil {
 						finalState["track"] = v
 					}
-					overrideState["final"] = finalState
+					overrideState["final"] = []interface{}{finalState}
 				}
 				overridesListState = append(overridesListState, overrideState)
 			}
@@ -668,16 +648,21 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("overrides", nil)
 	}
 
-	if v := threatProfile["scan-malicious-links"]; v != nil {
-		scanMaliciousLinksJson := threatProfile["scan-malicious-links"].(map[string]interface{})
-		scanMaliciousLinksState := make(map[string]interface{})
-		if v := scanMaliciousLinksJson["max-bytes"]; v != nil {
-			scanMaliciousLinksState["max_bytes"] = v
+	if threatProfile["scan-malicious-links"] != nil {
+
+		scanMaliciousLinksMap := threatProfile["scan-malicious-links"].(map[string]interface{})
+
+		scanMaliciousLinksMapToReturn := make(map[string]interface{})
+
+		if v := scanMaliciousLinksMap["max-bytes"]; v != nil {
+			scanMaliciousLinksMapToReturn["max_bytes"] = v
 		}
-		if v := scanMaliciousLinksJson["max-links"]; v != nil {
-			scanMaliciousLinksState["max_links"] = v
+		if v := scanMaliciousLinksMap["max-links"]; v != nil {
+			scanMaliciousLinksMapToReturn["max_links"] = v
 		}
-		_ = d.Set("scan_malicious_links", scanMaliciousLinksState)
+
+		_ = d.Set("scan_malicious_links", []interface{}{scanMaliciousLinksMapToReturn})
+
 	} else {
 		_ = d.Set("scan_malicious_links", nil)
 	}

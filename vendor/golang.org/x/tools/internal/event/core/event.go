@@ -12,7 +12,7 @@ import (
 	"golang.org/x/tools/internal/event/label"
 )
 
-// Event holds the information about an event of note that ocurred.
+// Event holds the information about an event of note that occurred.
 type Event struct {
 	at time.Time
 
@@ -26,11 +26,6 @@ type Event struct {
 
 	static  [3]label.Label // inline storage for the first few labels
 	dynamic []label.Label  // dynamically sized storage for remaining labels
-}
-
-// eventLabelMap implements label.Map for a the labels of an Event.
-type eventLabelMap struct {
-	event Event
 }
 
 func (ev Event) At() time.Time { return ev.at }

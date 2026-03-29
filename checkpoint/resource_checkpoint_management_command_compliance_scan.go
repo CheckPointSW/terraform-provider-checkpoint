@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementComplianceScan() *schema.Resource {
@@ -29,10 +29,10 @@ func createManagementComplianceScan(d *schema.ResourceData, m interface{}) error
 	var payload = map[string]interface{}{}
 	ComplianceScanRes, err := client.ApiCall("compliance-scan", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ComplianceScanRes.Success {
-		return fmt.Errorf(ComplianceScanRes.ErrorMsg)
+		return fmt.Errorf("%s", ComplianceScanRes.ErrorMsg)
 	}
 
 	d.SetId("compliance-scan-" + acctest.RandString(10))

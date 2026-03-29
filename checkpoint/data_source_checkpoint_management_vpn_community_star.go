@@ -3,9 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"reflect"
 	"strconv"
 )
 
@@ -45,7 +44,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Encrypted traffic settings.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -80,7 +78,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				},
 			},
 			"ike_phase_1": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Ike Phase 1 settings. Only applicable when the encryption-suite is set to [custom].",
 				Elem: &schema.Resource{
@@ -109,7 +107,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				},
 			},
 			"ike_phase_2": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Ike Phase 2 settings. Only applicable when the encryption-suite is set to [custom].",
 				Elem: &schema.Resource{
@@ -160,7 +158,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 						},
 						"interfaces": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Computed:    true,
 							Description: "Enhanced Link Selection Interfaces.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -199,7 +197,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Multiple Entry Point properties.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -226,7 +223,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Priority rule for all satellite gateways. Relevant only if 'entry-point-selection-mechanism' is set to 'manual'.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"first_priority_center_gateways": {
@@ -384,7 +380,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 							Description: "The encryption suite to be used.",
 						},
 						"ike_phase_1": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Ike Phase 1 settings. Only applicable when the encryption-suite is set to [custom].",
 							Elem: &schema.Resource{
@@ -413,7 +409,7 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 							},
 						},
 						"ike_phase_2": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Ike Phase 2 settings. Only applicable when the encryption-suite is set to [custom].",
 							Elem: &schema.Resource{
@@ -453,7 +449,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Permanent tunnels properties.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"set_permanent_tunnels": {
@@ -528,7 +523,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Route Injection Mechanism settings.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
@@ -576,7 +570,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "VPN Community Wire mode properties.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"allow_uninspected_encrypted_traffic": {
@@ -601,7 +594,6 @@ func dataSourceManagementVpnCommunityStar() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Advanced properties.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"support_ip_compression": {
@@ -660,10 +652,10 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 
 	showVpnCommunityStarRes, err := client.ApiCall("show-vpn-community-star", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVpnCommunityStarRes.Success {
-		return fmt.Errorf(showVpnCommunityStarRes.ErrorMsg)
+		return fmt.Errorf("%s", showVpnCommunityStarRes.ErrorMsg)
 	}
 
 	vpnCommunityStar := showVpnCommunityStarRes.GetData()
@@ -763,13 +755,8 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 		if v := ikePhase1Map["ike-p1-rekey-time"]; v != nil {
 			ikePhase1MapToReturn["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 		}
-		_, ikePhase1InConf := d.GetOk("ike_phase_1")
-		defaultIkePhase1 := map[string]interface{}{"encryption_algorithm": "aes-256", "diffie_hellman_group": "group-2", "data_integrity": "sha1"}
-		if reflect.DeepEqual(defaultIkePhase1, ikePhase1MapToReturn) && !ikePhase1InConf {
-			_ = d.Set("ike_phase_1", map[string]interface{}{})
-		} else {
-			_ = d.Set("ike_phase_1", ikePhase1MapToReturn)
-		}
+
+		_ = d.Set("ike_phase_1", []interface{}{ikePhase1MapToReturn})
 
 	} else {
 		_ = d.Set("ike_phase_1", nil)
@@ -796,13 +783,8 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 		if v := ikePhase2Map["ike-p2-rekey-time"]; v != nil {
 			ikePhase2MapToReturn["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 		}
-		_, ikePhase2InConf := d.GetOk("ike_phase_2")
-		defaultIkePhase2 := map[string]interface{}{"encryption_algorithm": "aes-128", "data_integrity": "sha1"}
-		if reflect.DeepEqual(defaultIkePhase2, ikePhase2MapToReturn) && !ikePhase2InConf {
-			_ = d.Set("ike_phase_2", map[string]interface{}{})
-		} else {
-			_ = d.Set("ike_phase_2", ikePhase2MapToReturn)
-		}
+
+		_ = d.Set("ike_phase_2", []interface{}{ikePhase2MapToReturn})
 
 	} else {
 		_ = d.Set("ike_phase_2", nil)
@@ -1082,7 +1064,7 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
 							ikePhase1State["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_1"] = ikePhase1State
+						granularEncryptionState["ike_phase_1"] = []interface{}{ikePhase1State}
 					}
 
 					if v := granularEncryptionShow["ike-phase-2"]; v != nil {
@@ -1103,7 +1085,7 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
 							ikePhase2State["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
 						}
-						granularEncryptionState["ike_phase_2"] = ikePhase2State
+						granularEncryptionState["ike_phase_2"] = []interface{}{ikePhase2State}
 					}
 					granularEncryptionsState = append(granularEncryptionsState, granularEncryptionState)
 				}

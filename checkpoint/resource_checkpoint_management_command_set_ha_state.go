@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetHaState() *schema.Resource {
@@ -39,7 +39,7 @@ func createManagementSetHaState(d *schema.ResourceData, m interface{}) error {
 
 	SetHaStateRes, _ := client.ApiCall("set-ha-state", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetHaStateRes.Success {
-		return fmt.Errorf(SetHaStateRes.ErrorMsg)
+		return fmt.Errorf("%s", SetHaStateRes.ErrorMsg)
 	}
 
 	d.SetId("set-ha-state" + acctest.RandString(10))

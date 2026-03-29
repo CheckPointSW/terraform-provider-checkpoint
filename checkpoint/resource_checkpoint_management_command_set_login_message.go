@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetLoginMessage() *schema.Resource {
@@ -63,7 +63,7 @@ func createManagementSetLoginMessage(d *schema.ResourceData, m interface{}) erro
 
 	SetLoginMessageRes, _ := client.ApiCall("set-login-message", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetLoginMessageRes.Success {
-		return fmt.Errorf(SetLoginMessageRes.ErrorMsg)
+		return fmt.Errorf("%s", SetLoginMessageRes.ErrorMsg)
 	}
 
 	d.SetId("set-login-message-" + acctest.RandString(10))

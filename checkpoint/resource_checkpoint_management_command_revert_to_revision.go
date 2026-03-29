@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementRevertToRevision() *schema.Resource {
@@ -38,7 +38,7 @@ func createManagementRevertToRevision(d *schema.ResourceData, m interface{}) err
 
 	RevertToRevisionRes, _ := client.ApiCall("revert-to-revision", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RevertToRevisionRes.Success {
-		return fmt.Errorf(RevertToRevisionRes.ErrorMsg)
+		return fmt.Errorf("%s", RevertToRevisionRes.ErrorMsg)
 	}
 
 	d.SetId("revert-to-revision-" + acctest.RandString(10))

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementHaFullSync() *schema.Resource {
@@ -49,7 +49,7 @@ func createManagementHaFullSync(d *schema.ResourceData, m interface{}) error {
 
 	HaFullSyncRes, _ := client.ApiCall("ha-full-sync", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !HaFullSyncRes.Success {
-		return fmt.Errorf(HaFullSyncRes.ErrorMsg)
+		return fmt.Errorf("%s", HaFullSyncRes.ErrorMsg)
 	}
 
 	d.SetId("ha-full-sync" + acctest.RandString(10))

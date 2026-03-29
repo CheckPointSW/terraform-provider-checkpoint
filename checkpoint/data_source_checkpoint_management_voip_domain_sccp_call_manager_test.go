@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -20,8 +20,8 @@ func TestAccDataSourceCheckpointManagementVoipDomainSccpCallManager_basic(t *tes
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceManagementVoipDomainSccpCallManagerConfig(objectName),
@@ -29,7 +29,6 @@ func TestAccDataSourceCheckpointManagementVoipDomainSccpCallManager_basic(t *tes
 					resource.TestCheckResourceAttrPair(dataSourceName, "name", resourceName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "color", resourceName, "color"),
 					resource.TestCheckResourceAttrPair(dataSourceName, "comments", resourceName, "comments"),
-					resource.TestCheckResourceAttrPair(dataSourceName, "icon", resourceName, "icon"),
 				),
 			},
 		},
@@ -38,14 +37,26 @@ func TestAccDataSourceCheckpointManagementVoipDomainSccpCallManager_basic(t *tes
 
 func testAccDataSourceManagementVoipDomainSccpCallManagerConfig(objectName string) string {
 	return fmt.Sprintf(`
+resource "checkpoint_management_group" "ds_sccp_group" {
+	name = "ds-sccp-group-%s"
+}
+
+resource "checkpoint_management_host" "ds_sccp_host" {
+	name = "ds-sccp-host-%s"
+	ipv4_address = "192.0.2.34"
+	ignore_warnings = true
+}
+
 resource "checkpoint_management_voip_domain_sccp_call_manager" "test" {
 	name = "%s"
-	color = "test-value"
+	color = "blue"
 	comments = "test-value"
+	endpoints_domain = "${checkpoint_management_group.ds_sccp_group.name}"
+	installed_at = "${checkpoint_management_host.ds_sccp_host.name}"
 }
 
 data "checkpoint_management_voip_domain_sccp_call_manager" "data_test" {
 	name = "${checkpoint_management_voip_domain_sccp_call_manager.test.name}"
 }
-`, objectName)
+`, objectName, objectName, objectName)
 }

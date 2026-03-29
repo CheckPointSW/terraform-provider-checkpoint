@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAccDataSourceCheckpointManagementLoginMessage_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementLoginMessageConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceName, "name", dataSourceName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceName, "show_message"),
 				),
 			},
 		},
@@ -38,4 +38,3 @@ data "checkpoint_management_login_message" "login" {
 }
 `)
 }
-

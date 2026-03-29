@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"strings"
 	"testing"
@@ -104,7 +104,7 @@ func testAccManagementSimpleGatewayConfig(name string, ipv4 string) string {
 resource "checkpoint_management_checkpoint_host" "checkpoint_host" {
 	name = "mycheckpointhost"
 	ipv4_address = "5.6.9.8"
-	management_blades = {
+	management_blades {
 		network_policy_management = true
 		logging_and_status = true
 	}

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -98,9 +98,9 @@ func createManagementGroup(d *schema.ResourceData, m interface{}) error {
 	addGroupRes, err := client.ApiCall("add-group", group, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGroupRes.Success {
 		if addGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGroupRes.GetData()["uid"].(string))
@@ -118,7 +118,7 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	showGroupRes, err := client.ApiCall("show-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGroupRes.Success {
 		// Handle delete resource from other clients
@@ -126,7 +126,7 @@ func readManagementGroup(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showGroupRes.ErrorMsg)
 	}
 
 	group := showGroupRes.GetData()
@@ -223,7 +223,7 @@ func updateManagementGroup(d *schema.ResourceData, m interface{}) error {
 	log.Println("Update Group - Map = ", group)
 	setGroupRes, _ := client.ApiCall("set-group", group, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setGroupRes.Success {
-		return fmt.Errorf(setGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", setGroupRes.ErrorMsg)
 	}
 
 	return readManagementGroup(d, m)
@@ -244,7 +244,7 @@ func deleteManagementGroup(d *schema.ResourceData, m interface{}) error {
 
 	deleteGroupRes, _ := client.ApiCall("delete-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteGroupRes.Success {
-		return fmt.Errorf(deleteGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteGroupRes.ErrorMsg)
 	}
 	d.SetId("")
 

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strconv"
 	"strings"
@@ -162,24 +162,24 @@ func createManagementNuageDataCenterServer(d *schema.ResourceData, m interface{}
 
 	addNuageDataCenterServerRes, err := client.ApiCall("add-data-center-server", nuageDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addNuageDataCenterServerRes.Success {
 		if addNuageDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addNuageDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addNuageDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addNuageDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": nuageDataCenterServer["name"],
 	}
 	showNuageDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNuageDataCenterServerRes.Success {
-		return fmt.Errorf(showNuageDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showNuageDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showNuageDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementNuageDataCenterServer(d, m)
@@ -193,14 +193,14 @@ func readManagementNuageDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	showNuageDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNuageDataCenterServerRes.Success {
 		if objectNotFound(showNuageDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNuageDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showNuageDataCenterServerRes.ErrorMsg)
 	}
 	nuageDataCenterServer := showNuageDataCenterServerRes.GetData()
 
@@ -335,14 +335,14 @@ func updateManagementNuageDataCenterServer(d *schema.ResourceData, m interface{}
 
 	updateNuageDataCenterServerRes, err := client.ApiCall("set-data-center-server", nuageDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateNuageDataCenterServerRes.Success {
 		if updateNuageDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNuageDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNuageDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateNuageDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementNuageDataCenterServer(d, m)
@@ -369,9 +369,9 @@ func deleteManagementNuageDataCenterServer(d *schema.ResourceData, m interface{}
 
 	if err != nil || !deleteNuageDataCenterServerRes.Success {
 		if deleteNuageDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNuageDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNuageDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

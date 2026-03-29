@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -80,10 +80,10 @@ func dataSourceManagementSyslogServerRead(d *schema.ResourceData, m interface{})
 
 	showSyslogServerRes, err := client.ApiCallSimple("show-syslog-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSyslogServerRes.Success {
-		return fmt.Errorf(showSyslogServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSyslogServerRes.ErrorMsg)
 	}
 
 	syslogServer := showSyslogServerRes.GetData()

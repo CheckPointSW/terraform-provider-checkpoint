@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAddCustomTrustedCaCertificate() *schema.Resource {
@@ -55,7 +55,6 @@ func resourceManagementAddCustomTrustedCaCertificate() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Trusted CA certificate valid from date.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"iso_8601": {
@@ -75,7 +74,6 @@ func resourceManagementAddCustomTrustedCaCertificate() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Trusted CA certificate valid to date.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"iso_8601": {
@@ -106,7 +104,7 @@ func createManagementAddCustomTrustedCaCertificate(d *schema.ResourceData, m int
 
 	AddCustomTrustedCaCertificateRes, _ := client.ApiCall("add-custom-trusted-ca-certificate", payload, client.GetSessionID(), true, false)
 	if !AddCustomTrustedCaCertificateRes.Success {
-		return fmt.Errorf(AddCustomTrustedCaCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", AddCustomTrustedCaCertificateRes.ErrorMsg)
 	}
 
 	customTrustedCaCertificateObj := AddCustomTrustedCaCertificateRes.GetData()

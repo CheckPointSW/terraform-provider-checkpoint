@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
 	"strconv"
@@ -63,7 +63,7 @@ func dataSourceManagementDataCenterContent() *schema.Resource {
 				Description: "Return result matching the unique identifier of the object on the Data Center Server.",
 			},
 			"filter": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Return results matching the specified filter.",
 				Elem: &schema.Resource{
@@ -108,7 +108,7 @@ func dataSourceManagementDataCenterContent() *schema.Resource {
 							Description: "Unique identifier of the object in the Data Center.",
 						},
 						"data_center_object": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "The imported management object (if exists). Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard level.",
 							Elem: &schema.Resource{
@@ -142,7 +142,7 @@ func dataSourceManagementDataCenterContent() *schema.Resource {
 							Description: "Object type in Data Center.",
 						},
 						"additional_properties": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Additional properties on the object.\nRemote objects views.",
 							Elem: &schema.Resource{
@@ -227,26 +227,32 @@ func dataSourceManagementDataCenterContentRead(d *schema.ResourceData, m interfa
 		payload["uid-in-data-center"] = v.(string)
 	}
 	if v, ok := d.GetOk("filter"); ok {
-		dataCenterContentFilter := v.(map[string]interface{})
-		dataCenterContentFilterMap := make(map[string]interface{})
-		if v, ok := dataCenterContentFilter["text"]; ok {
-			dataCenterContentFilterMap["text"] = v.(string)
+
+		filterList := v.([]interface{})
+
+		if len(filterList) > 0 {
+
+			filterPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("filter.0.text"); ok {
+				filterPayload["text"] = v.(string)
+			}
+			if v, ok := d.GetOk("filter.0.uri"); ok {
+				filterPayload["uri"] = v.(string)
+			}
+			if v, ok := d.GetOk("filter.0.parent_uid_in_data_center"); ok {
+				filterPayload["parent-uid-in-data-center"] = v.(string)
+			}
+			payload["filter"] = filterPayload
 		}
-		if v, ok := dataCenterContentFilter["uri"]; ok {
-			dataCenterContentFilterMap["uri"] = v.(string)
-		}
-		if v, ok := dataCenterContentFilter["parent_uid_in_data_center"]; ok {
-			dataCenterContentFilterMap["parent-uid-in-data-center"] = v.(string)
-		}
-		payload["filter"] = dataCenterContentFilterMap
 	}
 	showDataCenterContentRes, err := client.ApiCall("show-data-center-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterContentRes.Success {
-		return fmt.Errorf(showDataCenterContentRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterContentRes.ErrorMsg)
 	}
 	DataCenterContent := showDataCenterContentRes.GetData()
 
@@ -274,8 +280,19 @@ func dataSourceManagementDataCenterContentRead(d *schema.ResourceData, m interfa
 			if v, ok := dataCenterContentObject["uid-in-data-center"]; ok {
 				dataCenterContentObjectsMap["uid_in_data_center"] = v.(string)
 			}
-			if v, ok := dataCenterContentObject["data-center-object"]; ok {
-				dataCenterContentObjectsMap["data_center_object"] = v
+			if dataCenterContentObject["data-center-object"] != nil {
+				dataCenterContentDataCenterObjectMap := dataCenterContentObject["data-center-object"].(map[string]interface{})
+				dataCenterContentObjectMapToReturn := make(map[string]interface{})
+				if v := dataCenterContentDataCenterObjectMap["name"]; v != nil {
+					dataCenterContentObjectMapToReturn["name"] = v
+				}
+				if v := dataCenterContentDataCenterObjectMap["uid"]; v != nil {
+					dataCenterContentObjectMapToReturn["uid"] = v
+				}
+				if v := dataCenterContentDataCenterObjectMap["type"]; v != nil {
+					dataCenterContentObjectMapToReturn["type"] = v
+				}
+				dataCenterContentObjectsMap["data_center_object"] = []interface{}{dataCenterContentObjectMapToReturn}
 			}
 			if v, ok := dataCenterContentObject["name"]; ok {
 				dataCenterContentObjectsMap["name"] = v.(string)
@@ -300,7 +317,7 @@ func dataSourceManagementDataCenterContentRead(d *schema.ResourceData, m interfa
 						propsMapToReturn[propName] = propValue
 					}
 				}
-				dataCenterContentObjectsMap["additional_properties"] = propsMapToReturn
+				dataCenterContentObjectsMap["additional_properties"] = []interface{}{propsMapToReturn}
 			}
 			dataCenterContentObjectToReturn = append(dataCenterContentObjectToReturn, dataCenterContentObjectsMap)
 		}

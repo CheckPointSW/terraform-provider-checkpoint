@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -12,6 +13,14 @@ func resourceManagementLoginToDomain() *schema.Resource {
 		Create: createManagementLoginToDomain,
 		Read:   readManagementLoginToDomain,
 		Delete: deleteManagementLoginToDomain,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandLoginToDomainV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandLoginToDomainStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Type:        schema.TypeString,
@@ -49,7 +58,7 @@ func resourceManagementLoginToDomain() *schema.Resource {
 				Description: "Information about the available disk space on the management server.",
 			},
 			"last_login_was_at": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Timestamp when administrator last accessed the management server.",
 				Elem: &schema.Resource{
@@ -68,7 +77,7 @@ func resourceManagementLoginToDomain() *schema.Resource {
 				},
 			},
 			"login_message": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Login message.",
 				Elem: &schema.Resource{
@@ -128,10 +137,10 @@ func createManagementLoginToDomain(d *schema.ResourceData, m interface{}) error 
 
 	LoginToDomainRes, err := client.ApiCall("login-to-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !LoginToDomainRes.Success {
-		return fmt.Errorf(LoginToDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", LoginToDomainRes.ErrorMsg)
 	}
 
 	loginToDomain := LoginToDomainRes.GetData()
@@ -162,7 +171,7 @@ func createManagementLoginToDomain(d *schema.ResourceData, m interface{}) error 
 			lastLoginWasAtMapToReturn["posix"] = v
 		}
 
-		_ = d.Set("last_login_was_at", lastLoginWasAtMapToReturn)
+		_ = d.Set("last_login_was_at", []interface{}{lastLoginWasAtMapToReturn})
 	} else {
 		_ = d.Set("last_login_was_at", nil)
 	}
@@ -179,7 +188,7 @@ func createManagementLoginToDomain(d *schema.ResourceData, m interface{}) error 
 			loginMessageMapToReturn["message"] = v
 		}
 
-		_ = d.Set("login_message", loginMessageMapToReturn)
+		_ = d.Set("login_message", []interface{}{loginMessageMapToReturn})
 	} else {
 		_ = d.Set("login_message", nil)
 	}

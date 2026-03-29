@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -36,10 +36,10 @@ func dataSourceManagementRepositoryPackageRead(d *schema.ResourceData, m interfa
 
 	showRepositoryPackageRes, err := client.ApiCall("show-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRepositoryPackageRes.Success {
-		return fmt.Errorf(showRepositoryPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", showRepositoryPackageRes.ErrorMsg)
 	}
 
 	RepositoryPackage := showRepositoryPackageRes.GetData()

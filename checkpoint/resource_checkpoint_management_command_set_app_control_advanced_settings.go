@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementSetAppControlAdvancedSettings() *schema.Resource {
@@ -11,6 +12,14 @@ func resourceManagementSetAppControlAdvancedSettings() *schema.Resource {
 		Create: createManagementSetAppControlAdvancedSettings,
 		Read:   readManagementSetAppControlAdvancedSettings,
 		Delete: deleteManagementSetAppControlAdvancedSettings,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandSetAppControlAdvancedSettingsV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandSetAppControlAdvancedSettingsStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"uid": {
 				Type:        schema.TypeString,
@@ -24,7 +33,8 @@ func resourceManagementSetAppControlAdvancedSettings() *schema.Resource {
 				Description: "In case of internal system error, allow or block all connections.<br>This property is not available in the Global domain of an MDS machine.",
 			},
 			"url_filtering_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "In this section user can enable  URL Filtering features.<br>This property is not available in the Global domain of an MDS machine.",
 				ForceNew:    true,
@@ -88,7 +98,8 @@ func resourceManagementSetAppControlAdvancedSettings() *schema.Resource {
 				Description: "Hold - Requests are blocked until categorization is complete.<br>Background - Requests are allowed until categorization is complete.<br>Custom - configure different settings depending on the service -Lets you set different modes for URL Filtering and Social Networking Widgets.<br>This property is not available in the Global domain of an MDS machine.",
 			},
 			"custom_categorization_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Website categorization mode - select the mode that is used for website categorization.<br>This property is not available in the Global domain of an MDS machine.",
 				ForceNew:    true,
@@ -132,20 +143,25 @@ func createManagementSetAppControlAdvancedSettings(d *schema.ResourceData, m int
 		payload["internal-error-fail-mode"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("url_filtering_settings"); ok {
+	if v, ok := d.GetOk("url_filtering_settings"); ok {
 
-		res := make(map[string]interface{})
+		urlFilteringSettingsList := v.([]interface{})
 
-		if v, ok := d.GetOk("url_filtering_settings.categorize_https_websites"); ok {
-			res["categorize-https-websites"] = v
+		if len(urlFilteringSettingsList) > 0 {
+
+			urlFilteringSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("url_filtering_settings.0.categorize_https_websites"); ok {
+				urlFilteringSettingsPayload["categorize-https-websites"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("url_filtering_settings.0.enforce_safe_search"); ok {
+				urlFilteringSettingsPayload["enforce-safe-search"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("url_filtering_settings.0.categorize_cached_and_translated_pages"); ok {
+				urlFilteringSettingsPayload["categorize-cached-and-translated-pages"] = v.(bool)
+			}
+			payload["url-filtering-settings"] = urlFilteringSettingsPayload
 		}
-		if v, ok := d.GetOk("url_filtering_settings.enforce_safe_search"); ok {
-			res["enforce-safe-search"] = v
-		}
-		if v, ok := d.GetOk("url_filtering_settings.categorize_cached_and_translated_pages"); ok {
-			res["categorize-cached-and-translated-pages"] = v
-		}
-		payload["url-filtering-settings"] = res
 	}
 
 	if v, ok := d.GetOk("web_browsing_services"); ok {
@@ -172,17 +188,22 @@ func createManagementSetAppControlAdvancedSettings(d *schema.ResourceData, m int
 		payload["website-categorization-mode"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("custom_categorization_settings"); ok {
+	if v, ok := d.GetOk("custom_categorization_settings"); ok {
 
-		res := make(map[string]interface{})
+		customCategorizationSettingsList := v.([]interface{})
 
-		if v, ok := d.GetOk("custom_categorization_settings.url_filtering_mode"); ok {
-			res["url-filtering-mode"] = v.(string)
+		if len(customCategorizationSettingsList) > 0 {
+
+			customCategorizationSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("custom_categorization_settings.0.url_filtering_mode"); ok {
+				customCategorizationSettingsPayload["url-filtering-mode"] = v.(string)
+			}
+			if v, ok := d.GetOk("custom_categorization_settings.0.social_network_widgets_mode"); ok {
+				customCategorizationSettingsPayload["social-network-widgets-mode"] = v.(string)
+			}
+			payload["custom-categorization-settings"] = customCategorizationSettingsPayload
 		}
-		if v, ok := d.GetOk("custom_categorization_settings.social_network_widgets_mode"); ok {
-			res["social-network-widgets-mode"] = v.(string)
-		}
-		payload["custom-categorization-settings"] = res
 	}
 
 	if v, ok := d.GetOkExists("categorize_social_network_widgets"); ok {
@@ -195,7 +216,7 @@ func createManagementSetAppControlAdvancedSettings(d *schema.ResourceData, m int
 
 	SetAppControlAdvancedSettingsRes, _ := client.ApiCall("set-app-control-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !SetAppControlAdvancedSettingsRes.Success {
-		return fmt.Errorf(SetAppControlAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetAppControlAdvancedSettingsRes.ErrorMsg)
 	}
 
 	res := SetAppControlAdvancedSettingsRes.GetData()

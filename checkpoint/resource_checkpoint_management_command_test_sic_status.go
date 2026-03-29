@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -59,7 +59,7 @@ func readManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
 
 	TestSicStatusRes, _ := client.ApiCall("test-sic-status", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !TestSicStatusRes.Success {
-		return fmt.Errorf(TestSicStatusRes.ErrorMsg)
+		return fmt.Errorf("%s", TestSicStatusRes.ErrorMsg)
 	}
 
 	d.SetId("test-sic-status" + acctest.RandString(10))

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -20,7 +20,6 @@ func TestAccCheckpointManagementCMEGWConfigurationsGCP_basic(t *testing.T) {
 	gwConfigurationColor := "blue"
 	gwConfigurationXForwardedFor := true
 	gwConfigurationCommunicationWithServersBehindNAT := "translated-ip-only"
-
 
 	context := os.Getenv("CHECKPOINT_CONTEXT")
 	if context == "" {
@@ -71,7 +70,7 @@ func testAccCheckpointManagementCMEGWConfigurationsGCPDestroy(s *terraform.State
 }
 
 func testAccManagementCMEGWConfigurationsGCPConfig(accountName string, gwConfigurationName string, gwConfigurationVersion string,
-	gwConfigurationBase64SIC string, gwConfigurationPolicy string,  gwConfigurationXForwardedFor bool,
+	gwConfigurationBase64SIC string, gwConfigurationPolicy string, gwConfigurationXForwardedFor bool,
 	gwConfigurationColor string, gwConfigurationCommunicationWithServersBehindNAT string) string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_cme_accounts_gcp" "account_test" {
@@ -107,8 +106,8 @@ resource "checkpoint_management_cme_gw_configurations_gcp" "gw_configuration_tes
     enable_cloudguard_controller = true
   }
 }
-`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy,  gwConfigurationXForwardedFor,
-   gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
+`, accountName, gwConfigurationName, gwConfigurationVersion, gwConfigurationBase64SIC, gwConfigurationPolicy, gwConfigurationXForwardedFor,
+		gwConfigurationColor, gwConfigurationCommunicationWithServersBehindNAT)
 }
 
 func testAccCheckCheckpointManagementCMEGWConfigurationsGCPExists(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
@@ -132,7 +131,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsGCPExists(resourceTfName
 		*res = response.GetData()
 		if checkIfRequestFailed(*res) {
 			errMessage := buildErrorMessage(*res)
-			return fmt.Errorf(errMessage)
+			return fmt.Errorf("%s", errMessage)
 		}
 		return nil
 	}
@@ -141,7 +140,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsGCPExists(resourceTfName
 func testAccCheckCheckpointManagementCMEGWConfigurationsGCPAttributes(gcpGWConfiguration *map[string]interface{}, gwConfigurationName string,
 	accountName string, gwConfigurationVersion string, gwConfigurationPolicyName string, contentAwarenessFlag bool,
 	identityAwarenessFlag bool, gwConfigurationXForwardedFor bool, gwConfigurationColor string,
-    gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
+	gwConfigurationCommunicationWithServersBehindNAT string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		gwConfiguration := (*gcpGWConfiguration)["result"].(map[string]interface{})
 		if gwConfiguration["name"] != gwConfigurationName {
@@ -167,7 +166,7 @@ func testAccCheckCheckpointManagementCMEGWConfigurationsGCPAttributes(gcpGWConfi
 		}
 		IDASettings := gwConfiguration["identity-awareness-settings"].(map[string]interface{})
 		enableCgController := IDASettings["enable-cloudguard-controller"]
-		if enableCgController != identityAwarenessFlag{
+		if enableCgController != identityAwarenessFlag {
 			return fmt.Errorf("enable-cloudguard-controller identity source is %t, expected %t", enableCgController, identityAwarenessFlag)
 		}
 		if gwConfiguration["x_forwarded_for"] != gwConfigurationXForwardedFor {

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 
 	"strconv"
@@ -38,7 +38,7 @@ func resourceManagementDataCenterQuery() *schema.Resource {
 						"key_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The type of the \"key\" parameter.<br>Use \"predefined\" for these keys: type-in-data-center, name-in-data-center, and ip-address.<br>Use \"tag\" to query the Data Center tag�s property.",
+							Description: "The type of the \"key\" parameter.<br>Use \"predefined\" for these keys: type-in-data-center, name-in-data-center, and ip-address.<br>Use \"tag\" to query the Data Center tagï¿½s property.",
 						},
 						"key": {
 							Type:        schema.TypeString,
@@ -161,9 +161,9 @@ func createManagementDataCenterQuery(d *schema.ResourceData, m interface{}) erro
 	addDataCenterQueryRes, err := client.ApiCall("add-data-center-query", dataCenterQuery, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDataCenterQueryRes.Success {
 		if addDataCenterQueryRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataCenterQueryRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataCenterQueryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataCenterQueryRes.GetData()["uid"].(string))
@@ -181,14 +181,14 @@ func readManagementDataCenterQuery(d *schema.ResourceData, m interface{}) error 
 
 	showDataCenterQueryRes, err := client.ApiCall("show-data-center-query", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterQueryRes.Success {
 		if objectNotFound(showDataCenterQueryRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataCenterQueryRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterQueryRes.ErrorMsg)
 	}
 
 	dataCenterQuery := showDataCenterQueryRes.GetData()
@@ -371,9 +371,9 @@ func updateManagementDataCenterQuery(d *schema.ResourceData, m interface{}) erro
 	updateDataCenterQueryRes, err := client.ApiCall("set-data-center-query", dataCenterQuery, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDataCenterQueryRes.Success {
 		if updateDataCenterQueryRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataCenterQueryRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataCenterQueryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataCenterQuery(d, m)
@@ -400,9 +400,9 @@ func deleteManagementDataCenterQuery(d *schema.ResourceData, m interface{}) erro
 	deleteDataCenterQueryRes, err := client.ApiCall("delete-data-center-query", dataCenterQueryPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDataCenterQueryRes.Success {
 		if deleteDataCenterQueryRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataCenterQueryRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataCenterQueryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

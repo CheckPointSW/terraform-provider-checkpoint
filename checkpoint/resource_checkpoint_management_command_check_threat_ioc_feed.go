@@ -1,10 +1,13 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
+	"strconv"
+
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementCheckThreatIocFeed() *schema.Resource {
@@ -12,9 +15,18 @@ func resourceManagementCheckThreatIocFeed() *schema.Resource {
 		Create: createManagementCheckThreatIocFeed,
 		Read:   readManagementCheckThreatIocFeed,
 		Delete: deleteManagementCheckThreatIocFeed,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementCommandCheckThreatIocFeedV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementCommandCheckThreatIocFeedStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"ioc_feed": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
 				Description: "threat ioc feed parameters.",
 				ForceNew:    true,
@@ -168,74 +180,111 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 	client := m.(*checkpoint.ApiClient)
 
 	var payload = map[string]interface{}{}
-	if _, ok := d.GetOk("ioc_feed"); ok {
+	if v, ok := d.GetOk("ioc_feed"); ok {
 
-		res := make(map[string]interface{})
+		iocFeedList := v.([]interface{})
 
-		if v, ok := d.GetOk("ioc_feed.name"); ok {
-			res["name"] = v.(string)
+		if len(iocFeedList) > 0 {
+
+			iocFeedPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("ioc_feed.0.name"); ok {
+				iocFeedPayload["name"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.feed_url"); ok {
+				iocFeedPayload["feed-url"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.action"); ok {
+				iocFeedPayload["action"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.certificate_id"); ok {
+				iocFeedPayload["certificate-id"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.confidence"); ok {
+				iocFeedPayload["confidence"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_comment"); ok {
+				iocFeedPayload["custom-comment"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_confidence"); ok {
+				iocFeedPayload["custom-confidence"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_header"); ok {
+
+				customHeaderList := v.([]interface{})
+
+				if len(customHeaderList) > 0 {
+
+					var customHeaderPayload []map[string]interface{}
+
+					for j := range customHeaderList {
+
+						customHeaderMapToAdd := make(map[string]interface{})
+
+						if v, ok := d.GetOk("ioc_feed.0.custom_header." + strconv.Itoa(j) + ".header_name"); ok {
+							customHeaderMapToAdd["header-name"] = v.(string)
+						}
+						if v, ok := d.GetOk("ioc_feed.0.custom_header." + strconv.Itoa(j) + ".header_value"); ok {
+							customHeaderMapToAdd["header-value"] = v.(string)
+						}
+						customHeaderPayload = append(customHeaderPayload, customHeaderMapToAdd)
+					}
+					iocFeedPayload["custom-header"] = customHeaderPayload
+				}
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_name"); ok {
+				iocFeedPayload["custom-name"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_severity"); ok {
+				iocFeedPayload["custom-severity"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_type"); ok {
+				iocFeedPayload["custom-type"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.custom_value"); ok {
+				iocFeedPayload["custom-value"] = v.(int)
+			}
+			if v, ok := d.GetOkExists("ioc_feed.0.enabled"); ok {
+				iocFeedPayload["enabled"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.feed_type"); ok {
+				iocFeedPayload["feed-type"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.password"); ok {
+				iocFeedPayload["password"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.performance_impact"); ok {
+				iocFeedPayload["performance-impact"] = v.(int)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.severity"); ok {
+				iocFeedPayload["severity"] = v.(int)
+			}
+			if v, ok := d.GetOkExists("ioc_feed.0.use_custom_feed_settings"); ok {
+				iocFeedPayload["use-custom-feed-settings"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.use_snort_format"); ok {
+				iocFeedPayload["use-snort-format"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.username"); ok {
+				iocFeedPayload["username"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.fields_delimiter"); ok {
+				iocFeedPayload["fields-delimiter"] = v.(string)
+			}
+			if v, ok := d.GetOk("ioc_feed.0.ignore_lines_that_start_with"); ok {
+				iocFeedPayload["ignore-lines-that-start-with"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("ioc_feed.0.use_gateway_proxy"); ok {
+				iocFeedPayload["use-gateway-proxy"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("ioc_feed.0.ignore_warnings"); ok {
+				iocFeedPayload["ignore-warnings"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("ioc_feed.0.ignore_errors"); ok {
+				iocFeedPayload["ignore-errors"] = v.(bool)
+			}
+			payload["ioc-feed"] = iocFeedPayload
 		}
-		if v, ok := d.GetOk("ioc_feed.feed_url"); ok {
-			res["feed-url"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.action"); ok {
-			res["action"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.certificate_id"); ok {
-			res["certificate-id"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_comment"); ok {
-			res["custom-comment"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_confidence"); ok {
-			res["custom-confidence"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_header"); ok {
-			res["custom-header"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_name"); ok {
-			res["custom-name"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_severity"); ok {
-			res["custom-severity"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_type"); ok {
-			res["custom-type"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.custom_value"); ok {
-			res["custom-value"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.enabled"); ok {
-			res["enabled"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.feed_type"); ok {
-			res["feed-type"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.password"); ok {
-			res["password"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.use_custom_feed_settings"); ok {
-			res["use-custom-feed-settings"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.username"); ok {
-			res["username"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.fields_delimiter"); ok {
-			res["fields-delimiter"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.ignore_lines_that_start_with"); ok {
-			res["ignore-lines-that-start-with"] = v.(string)
-		}
-		if v, ok := d.GetOk("ioc_feed.use_gateway_proxy"); ok {
-			res["use-gateway-proxy"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.ignore_warnings"); ok {
-			res["ignore-warnings"] = v
-		}
-		if v, ok := d.GetOk("ioc_feed.ignore_errors"); ok {
-			res["ignore-errors"] = v
-		}
-		payload["ioc-feed"] = res
 	}
 
 	if v, ok := d.GetOk("targets"); ok {
@@ -244,7 +293,7 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 
 	CheckThreatIocFeedRes, _ := client.ApiCall("check-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !CheckThreatIocFeedRes.Success {
-		return fmt.Errorf(CheckThreatIocFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", CheckThreatIocFeedRes.ErrorMsg)
 	}
 
 	d.SetId("check-threat-ioc-feed" + acctest.RandString(10))

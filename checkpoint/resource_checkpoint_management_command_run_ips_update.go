@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementRunIpsUpdate() *schema.Resource {
@@ -39,7 +39,7 @@ func createManagementRunIpsUpdate(d *schema.ResourceData, m interface{}) error {
 
 	runIpsUpdateRes, _ := client.ApiCall("run-ips-update", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !runIpsUpdateRes.Success {
-		return fmt.Errorf(runIpsUpdateRes.ErrorMsg)
+		return fmt.Errorf("%s", runIpsUpdateRes.ErrorMsg)
 	}
 
 	d.SetId("run-ips-update-" + acctest.RandString(10))

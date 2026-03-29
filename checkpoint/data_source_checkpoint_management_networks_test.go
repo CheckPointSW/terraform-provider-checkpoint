@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	_ "github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	_ "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	_ "strings"
 	"testing"
@@ -30,7 +30,7 @@ func TestAccDataSourceCheckpointManagementShowNetworks_basic(t *testing.T) {
 			{
 				Config: testAccDataSourceManagementShowNetworksConfig(1, networkName, networkSubnet, networkMask),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCheckpointShowNetworks(dataSourceShowNetworks, &showNetworksQuery),
+					testAccCheckCheckpointShowNetworks(dataSourceShowNetworks, &showNetworksQuery, networkName),
 					testAccCheckCheckpointShowNetworksAttributes(&showNetworksQuery, networkName, networkSubnet, networkMask),
 				),
 			},
@@ -38,7 +38,7 @@ func TestAccDataSourceCheckpointManagementShowNetworks_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCheckpointShowNetworks(resourceTfName string, res *map[string]interface{}) resource.TestCheckFunc {
+func testAccCheckCheckpointShowNetworks(resourceTfName string, res *map[string]interface{}, networkName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		rs, ok := s.RootModule().Resources[resourceTfName]
@@ -51,9 +51,9 @@ func testAccCheckCheckpointShowNetworks(resourceTfName string, res *map[string]i
 		}
 
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
-		response, _ := client.ApiCall("show-networks", map[string]interface{}{"filter": "network_test1", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
+		response, _ := client.ApiCall("show-networks", map[string]interface{}{"filter": networkName, "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

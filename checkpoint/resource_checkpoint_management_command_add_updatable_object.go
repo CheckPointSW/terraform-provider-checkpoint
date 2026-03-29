@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementAddUpdatableObject() *schema.Resource {
@@ -95,7 +95,7 @@ func createManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) e
 
 	AddUpdatableObjectRes, _ := client.ApiCall("add-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddUpdatableObjectRes.Success {
-		return fmt.Errorf(AddUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", AddUpdatableObjectRes.ErrorMsg)
 	}
 
 	d.SetId(AddUpdatableObjectRes.GetData()["uid"].(string))

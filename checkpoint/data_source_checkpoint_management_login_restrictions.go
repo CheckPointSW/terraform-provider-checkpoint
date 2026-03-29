@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementLoginRestrictions() *schema.Resource {
@@ -52,10 +52,10 @@ func dataSourceManagementLoginRestrictionsRead(d *schema.ResourceData, m interfa
 
 	loginRestrictionsRes, err := client.ApiCallSimple("show-login-restrictions", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !loginRestrictionsRes.Success {
-		return fmt.Errorf(loginRestrictionsRes.ErrorMsg)
+		return fmt.Errorf("%s", loginRestrictionsRes.ErrorMsg)
 	}
 	loginRestrictionsData := loginRestrictionsRes.GetData()
 

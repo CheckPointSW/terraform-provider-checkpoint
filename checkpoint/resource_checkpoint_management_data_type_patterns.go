@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -119,9 +119,9 @@ func createManagementDataTypePatterns(d *schema.ResourceData, m interface{}) err
 	addDataTypePatternsRes, err := client.ApiCall("add-data-type-patterns", dataTypePatterns, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypePatternsRes.Success {
 		if addDataTypePatternsRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypePatternsRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypePatternsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypePatternsRes.GetData()["uid"].(string))
@@ -139,14 +139,14 @@ func readManagementDataTypePatterns(d *schema.ResourceData, m interface{}) error
 
 	showDataTypePatternsRes, err := client.ApiCall("show-data-type-patterns", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypePatternsRes.Success {
 		if objectNotFound(showDataTypePatternsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypePatternsRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypePatternsRes.ErrorMsg)
 	}
 
 	dataTypePatterns := showDataTypePatternsRes.GetData()
@@ -267,9 +267,9 @@ func updateManagementDataTypePatterns(d *schema.ResourceData, m interface{}) err
 	updateDataTypePatternsRes, err := client.ApiCall("set-data-type-patterns", dataTypePatterns, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypePatternsRes.Success {
 		if updateDataTypePatternsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypePatternsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypePatternsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypePatterns(d, m)
@@ -288,9 +288,9 @@ func deleteManagementDataTypePatterns(d *schema.ResourceData, m interface{}) err
 	deleteDataTypePatternsRes, err := client.ApiCall("delete-data-type-patterns", dataTypePatternsPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypePatternsRes.Success {
 		if deleteDataTypePatternsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypePatternsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypePatternsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

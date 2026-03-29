@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceManagementNutanixDataCenterServer() *schema.Resource {
@@ -89,10 +89,10 @@ func dataSourceNutanixDataCenterServerRead(d *schema.ResourceData, m interface{}
 
 	showNutanixDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNutanixDataCenterServerRes.Success {
-		return fmt.Errorf(showNutanixDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showNutanixDataCenterServerRes.ErrorMsg)
 	}
 
 	nutanixDataCenterServer := showNutanixDataCenterServerRes.GetData()

@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementPutFile() *schema.Resource {
@@ -84,7 +84,7 @@ func createManagementPutFile(d *schema.ResourceData, m interface{}) error {
 
 	PutFileRes, _ := client.ApiCall("put-file", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !PutFileRes.Success {
-		return fmt.Errorf(PutFileRes.ErrorMsg)
+		return fmt.Errorf("%s", PutFileRes.ErrorMsg)
 	}
 
 	d.SetId("put-file-" + acctest.RandString(10))

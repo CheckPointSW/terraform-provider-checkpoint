@@ -3,9 +3,9 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
 	"testing"
 )
@@ -33,10 +33,10 @@ func TestAccCheckpointManagementNetwork_basic(t *testing.T) {
 		CheckDestroy: testAccCheckpointNetworkDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccManagementNetworkConfig(objName, "10.20.0.0", 24),
+				Config: testAccManagementNetworkConfig(objName, "10.21.0.0", 24),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCheckpointNetworkExists(resourceName, &network),
-					testAccCheckCheckpointNetworkAttributes(&network, objName, "10.20.0.0", 24),
+					testAccCheckCheckpointNetworkAttributes(&network, objName, "10.21.0.0", 24),
 				),
 			},
 		},
@@ -79,7 +79,7 @@ func testAccCheckCheckpointNetworkExists(resourceTfName string, res *map[string]
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-network", map[string]interface{}{"uid": rs.Primary.ID}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 		// init res with response data for next step (CheckAttributes)
 		*res = response.GetData()

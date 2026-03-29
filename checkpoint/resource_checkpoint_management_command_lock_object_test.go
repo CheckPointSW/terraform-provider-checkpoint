@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAccCommandCheckpointManagementLockObject_basic(t *testing.T) {
 			{
 				Config: testAccCommandCheckpointManagementLockObjectConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "name", commandName, "name"),
+					resource.TestCheckResourceAttr(commandName, "name", "MyIntranet"),
 				),
 			},
 		},
@@ -35,7 +35,6 @@ func testAccCommandCheckpointManagementLockObjectConfig() string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_command_lock_object" "lock" {
     name = "MyIntranet"
-	uid = "324bf311-8cb6-4f45-a966-c50304dd2445"
 	type = "vpn-community-meshed"
 }
 `)

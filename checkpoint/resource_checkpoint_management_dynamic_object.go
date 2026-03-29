@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -91,9 +91,9 @@ func createManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 	addDynamicObjectRes, err := client.ApiCall("add-dynamic-object", dynamicObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDynamicObjectRes.Success {
 		if addDynamicObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(addDynamicObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", addDynamicObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDynamicObjectRes.GetData()["uid"].(string))
@@ -111,14 +111,14 @@ func readManagementDynamicObject(d *schema.ResourceData, m interface{}) error {
 
 	showDynamicObjectRes, err := client.ApiCall("show-dynamic-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDynamicObjectRes.Success {
 		if objectNotFound(showDynamicObjectRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDynamicObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showDynamicObjectRes.ErrorMsg)
 	}
 
 	dynamicObject := showDynamicObjectRes.GetData()
@@ -208,9 +208,9 @@ func updateManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 	updateDynamicObjectRes, err := client.ApiCall("set-dynamic-object", dynamicObject, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDynamicObjectRes.Success {
 		if updateDynamicObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDynamicObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDynamicObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDynamicObject(d, m)
@@ -235,9 +235,9 @@ func deleteManagementDynamicObject(d *schema.ResourceData, m interface{}) error 
 	deleteDynamicObjectRes, err := client.ApiCall("delete-dynamic-object", dynamicObjectPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDynamicObjectRes.Success {
 		if deleteDynamicObjectRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDynamicObjectRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDynamicObjectRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

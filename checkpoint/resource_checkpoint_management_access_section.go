@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
 )
@@ -49,7 +49,7 @@ func resourceManagementAccessSection() *schema.Resource {
 				Default:     false,
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -104,7 +104,7 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				accessSection["position"] = "top"
 			} else {
@@ -112,15 +112,15 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			accessSection["position"] = map[string]interface{}{"above": v.(string)} // section or rule
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			accessSection["position"] = map[string]interface{}{"below": v.(string)} // section or rule
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				accessSection["position"] = "bottom"
 			} else {
@@ -134,9 +134,9 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	addAccessSectionRes, err := client.ApiCall("add-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessSectionRes.Success {
 		if addAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessSectionRes.GetData()["uid"].(string))
@@ -155,14 +155,14 @@ func readManagementAccessSection(d *schema.ResourceData, m interface{}) error {
 
 	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessSectionRes.Success {
 		if objectNotFound(showAccessSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessSectionRes.ErrorMsg)
 	}
 
 	accessSection := showAccessSectionRes.GetData()
@@ -219,9 +219,9 @@ func updateManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	updateAccessSectionRes, err := client.ApiCall("set-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessSectionRes.Success {
 		if updateAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAccessSection(d, m)
@@ -249,9 +249,9 @@ func deleteManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	deleteAccessSectionRes, err := client.ApiCall("delete-access-section", accessSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessSectionRes.Success {
 		if deleteAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

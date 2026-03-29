@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -25,14 +25,12 @@ func dataSourceManagementSmartTask() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The action to be run when the trigger is fired.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"send_web_request": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "When the trigger is fired, sends an HTTPS POST web request to the configured URL.<br>The trigger data will be passed along with the SmartTask's custom data in the request's payload.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"url": {
@@ -72,7 +70,6 @@ func dataSourceManagementSmartTask() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "When the trigger is fired, runs the configured Repository Script on the defined targets.<br>The trigger data is then passed to the script as the first parameter. The parameter is JSON encoded in Base64 format.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"repository_script": {
@@ -100,14 +97,12 @@ func dataSourceManagementSmartTask() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "When the trigger is fired, sends the configured email to the defined recipients.",
-							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"mail_settings": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "The required settings to send the mail by.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"recipients": {
@@ -152,7 +147,6 @@ func dataSourceManagementSmartTask() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "The UID or the name a preconfigured SMTP server object.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {
@@ -268,10 +262,10 @@ func dataSourceManagementSmartTaskRead(d *schema.ResourceData, m interface{}) er
 
 	showSmartTaskRes, err := client.ApiCall("show-smart-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmartTaskRes.Success {
-		return fmt.Errorf(showSmartTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmartTaskRes.ErrorMsg)
 	}
 
 	smartTask := showSmartTaskRes.GetData()
@@ -413,7 +407,7 @@ func dataSourceManagementSmartTaskRead(d *schema.ResourceData, m interface{}) er
 
 			err = d.Set("action", []interface{}{actionMapToReturn})
 			if err != nil {
-				return fmt.Errorf(err.Error())
+				return fmt.Errorf("%s", err.Error())
 			}
 		}
 	} else {

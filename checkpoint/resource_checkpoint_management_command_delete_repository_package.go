@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementDeleteRepositoryPackage() *schema.Resource {
@@ -39,7 +39,7 @@ func createManagementDeleteRepositoryPackage(d *schema.ResourceData, m interface
 
 	DeleteRepositoryPackageRes, _ := client.ApiCall("delete-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteRepositoryPackageRes.Success {
-		return fmt.Errorf(DeleteRepositoryPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteRepositoryPackageRes.ErrorMsg)
 	}
 
 	d.SetId("delete-repository-package" + acctest.RandString(10))

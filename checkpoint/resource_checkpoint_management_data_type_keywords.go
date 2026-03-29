@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -129,9 +129,9 @@ func createManagementDataTypeKeywords(d *schema.ResourceData, m interface{}) err
 	addDataTypeKeywordsRes, err := client.ApiCall("add-data-type-keywords", dataTypeKeywords, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypeKeywordsRes.Success {
 		if addDataTypeKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypeKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypeKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypeKeywordsRes.GetData()["uid"].(string))
@@ -149,14 +149,14 @@ func readManagementDataTypeKeywords(d *schema.ResourceData, m interface{}) error
 
 	showDataTypeKeywordsRes, err := client.ApiCall("show-data-type-keywords", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeKeywordsRes.Success {
 		if objectNotFound(showDataTypeKeywordsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeKeywordsRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeKeywordsRes.ErrorMsg)
 	}
 
 	dataTypeKeywords := showDataTypeKeywordsRes.GetData()
@@ -285,9 +285,9 @@ func updateManagementDataTypeKeywords(d *schema.ResourceData, m interface{}) err
 	updateDataTypeKeywordsRes, err := client.ApiCall("set-data-type-keywords", dataTypeKeywords, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypeKeywordsRes.Success {
 		if updateDataTypeKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypeKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypeKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypeKeywords(d, m)
@@ -306,9 +306,9 @@ func deleteManagementDataTypeKeywords(d *schema.ResourceData, m interface{}) err
 	deleteDataTypeKeywordsRes, err := client.ApiCall("delete-data-type-keywords", dataTypeKeywordsPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypeKeywordsRes.Success {
 		if deleteDataTypeKeywordsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypeKeywordsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypeKeywordsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

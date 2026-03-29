@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -65,7 +65,7 @@ func resourceManagementMobileAccessProfileRule() *schema.Resource {
 				Default:     false,
 			},
 			"position": &schema.Schema{
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Required:    true,
 				Description: "Position in the rulebase.",
 				Elem: &schema.Resource{
@@ -136,7 +136,7 @@ func createManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 
 	if _, ok := d.GetOk("position"); ok {
 
-		if v, ok := d.GetOk("position.top"); ok {
+		if v, ok := d.GetOk("position.0.top"); ok {
 			if v.(string) == "top" {
 				mobileAccessProfileRule["position"] = "top" // entire rule-base
 			} else {
@@ -144,15 +144,15 @@ func createManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 			}
 		}
 
-		if v, ok := d.GetOk("position.above"); ok {
+		if v, ok := d.GetOk("position.0.above"); ok {
 			mobileAccessProfileRule["position"] = map[string]interface{}{"above": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.below"); ok {
+		if v, ok := d.GetOk("position.0.below"); ok {
 			mobileAccessProfileRule["position"] = map[string]interface{}{"below": v.(string)}
 		}
 
-		if v, ok := d.GetOk("position.bottom"); ok {
+		if v, ok := d.GetOk("position.0.bottom"); ok {
 			if v.(string) == "bottom" {
 				mobileAccessProfileRule["position"] = "bottom" // entire rule-base
 			} else {
@@ -166,9 +166,9 @@ func createManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	addMobileAccessProfileRuleRes, err := client.ApiCall("add-mobile-access-profile-rule", mobileAccessProfileRule, client.GetSessionID(), true, false)
 	if err != nil || !addMobileAccessProfileRuleRes.Success {
 		if addMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileAccessProfileRuleRes.GetData()["uid"].(string))
@@ -186,14 +186,14 @@ func readManagementMobileAccessProfileRule(d *schema.ResourceData, m interface{}
 
 	showMobileAccessProfileRuleRes, err := client.ApiCall("show-mobile-access-profile-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessProfileRuleRes.Success {
 		if objectNotFound(showMobileAccessProfileRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessProfileRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessProfileRuleRes.ErrorMsg)
 	}
 
 	mobileAccessProfileRule := showMobileAccessProfileRuleRes.GetData()
@@ -318,7 +318,7 @@ func updateManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	if d.HasChange("position") {
 		if _, ok := d.GetOk("position"); ok {
 
-			if v, ok := d.GetOk("position.top"); ok {
+			if v, ok := d.GetOk("position.0.top"); ok {
 				if v.(string) == "top" {
 					mobileAccessProfileRule["new-position"] = "top" // entire rule-base
 				} else {
@@ -326,15 +326,15 @@ func updateManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 				}
 			}
 
-			if v, ok := d.GetOk("position.above"); ok {
+			if v, ok := d.GetOk("position.0.above"); ok {
 				mobileAccessProfileRule["new-position"] = map[string]interface{}{"above": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.below"); ok {
+			if v, ok := d.GetOk("position.0.below"); ok {
 				mobileAccessProfileRule["new-position"] = map[string]interface{}{"below": v.(string)}
 			}
 
-			if v, ok := d.GetOk("position.bottom"); ok {
+			if v, ok := d.GetOk("position.0.bottom"); ok {
 				if v.(string) == "bottom" {
 					mobileAccessProfileRule["new-position"] = "bottom" // entire rule-base
 				} else {
@@ -349,9 +349,9 @@ func updateManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	updateMobileAccessProfileRuleRes, err := client.ApiCall("set-mobile-access-profile-rule", mobileAccessProfileRule, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileAccessProfileRuleRes.Success {
 		if updateMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileAccessProfileRule(d, m)
@@ -370,9 +370,9 @@ func deleteManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	deleteMobileAccessProfileRuleRes, err := client.ApiCall("delete-mobile-access-profile-rule", mobileAccessProfileRulePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileAccessProfileRuleRes.Success {
 		if deleteMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

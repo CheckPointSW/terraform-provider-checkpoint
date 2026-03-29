@@ -2,7 +2,7 @@ package checkpoint
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"os"
 	"testing"
 )
@@ -23,7 +23,7 @@ func TestAccCheckpointManagementSetGlobalProperties_basic(t *testing.T) {
 			{
 				Config: testAccManagementSetGlobalPropertiesConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(commandName, "hit_count", commandName, "hit_count"),
+					resource.TestCheckResourceAttrSet(commandName, "id"),
 				),
 			},
 		},
@@ -34,11 +34,11 @@ func TestAccCheckpointManagementSetGlobalProperties_basic(t *testing.T) {
 func testAccManagementSetGlobalPropertiesConfig() string {
 	return fmt.Sprintf(`
 resource "checkpoint_management_command_set_global_properties" "set_global" {
-  hit_count = {
-    enable_hit_count = false
+  hit_count {
+    enable_hit_count = true
   }
-  data_access_control = {
-    auto_download_important_data = false
+  data_access_control {
+    auto_download_important_data = true
   }
 }
 `)

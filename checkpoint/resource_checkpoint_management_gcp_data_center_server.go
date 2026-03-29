@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"strings"
 )
@@ -112,24 +112,24 @@ func createManagementGcpDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	addGcpDataCenterServerRes, err := client.ApiCall("add-data-center-server", gcpDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addGcpDataCenterServerRes.Success {
 		if addGcpDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addGcpDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addGcpDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addGcpDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": gcpDataCenterServer["name"],
 	}
 	showGcpDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGcpDataCenterServerRes.Success {
-		return fmt.Errorf(showGcpDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showGcpDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showGcpDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementGcpDataCenterServer(d, m)
@@ -143,14 +143,14 @@ func readManagementGcpDataCenterServer(d *schema.ResourceData, m interface{}) er
 
 	showGcpDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGcpDataCenterServerRes.Success {
 		if objectNotFound(showGcpDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGcpDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showGcpDataCenterServerRes.ErrorMsg)
 	}
 	gcpDataCenterServer := showGcpDataCenterServerRes.GetData()
 
@@ -259,14 +259,14 @@ func updateManagementGcpDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	updateGcpDataCenterServerRes, err := client.ApiCall("set-data-center-server", gcpDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateGcpDataCenterServerRes.Success {
 		if updateGcpDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGcpDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGcpDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateGcpDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementGcpDataCenterServer(d, m)
@@ -291,9 +291,9 @@ func deleteManagementGcpDataCenterServer(d *schema.ResourceData, m interface{}) 
 	deleteGcpDataCenterServerRes, err := client.ApiCall("delete-data-center-server", gcpDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGcpDataCenterServerRes.Success {
 		if deleteGcpDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGcpDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGcpDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

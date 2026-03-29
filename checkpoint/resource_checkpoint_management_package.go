@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -152,9 +152,9 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 	addPackageRes, err := client.ApiCall("add-package", _package, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addPackageRes.Success {
 		if addPackageRes.ErrorMsg != "" {
-			return fmt.Errorf(addPackageRes.ErrorMsg)
+			return fmt.Errorf("%s", addPackageRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addPackageRes.GetData()["uid"].(string))
@@ -172,7 +172,7 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 
 	showPackageRes, err := client.ApiCall("show-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showPackageRes.Success {
 		// Handle delete resource from other clients
@@ -180,7 +180,7 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", showPackageRes.ErrorMsg)
 	}
 
 	_package := showPackageRes.GetData()
@@ -339,9 +339,9 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 	updatePackageRes, err := client.ApiCall("set-package", _package, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updatePackageRes.Success {
 		if updatePackageRes.ErrorMsg != "" {
-			return fmt.Errorf(updatePackageRes.ErrorMsg)
+			return fmt.Errorf("%s", updatePackageRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementPackage(d, m)
@@ -365,9 +365,9 @@ func deleteManagementPackage(d *schema.ResourceData, m interface{}) error {
 	deletePackageRes, err := client.ApiCall("delete-package", packagePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deletePackageRes.Success {
 		if deletePackageRes.ErrorMsg != "" {
-			return fmt.Errorf(deletePackageRes.ErrorMsg)
+			return fmt.Errorf("%s", deletePackageRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

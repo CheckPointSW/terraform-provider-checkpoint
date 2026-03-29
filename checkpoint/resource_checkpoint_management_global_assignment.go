@@ -1,9 +1,10 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -13,6 +14,14 @@ func resourceManagementGlobalAssignment() *schema.Resource {
 		Read:   readManagementGlobalAssignment,
 		Update: updateManagementGlobalAssignment,
 		Delete: deleteManagementGlobalAssignment,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementGlobalAssignmentV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementGlobalAssignmentStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"dependent_domain": {
 				Type:        schema.TypeString,
@@ -54,7 +63,7 @@ func resourceManagementGlobalAssignment() *schema.Resource {
 				Computed: true,
 			},
 			"assignment_up_to_date": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The time when the assignment was assigned.",
 				Elem: &schema.Resource{
@@ -114,9 +123,9 @@ func createManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	addGlobalAssignmentRes, err := client.ApiCall("add-global-assignment", globalAssignment, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGlobalAssignmentRes.Success {
 		if addGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(addGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", addGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGlobalAssignmentRes.GetData()["uid"].(string))
@@ -134,14 +143,14 @@ func readManagementGlobalAssignment(d *schema.ResourceData, m interface{}) error
 
 	showGlobalAssignmentRes, err := client.ApiCall("show-global-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalAssignmentRes.Success {
 		if objectNotFound(showGlobalAssignmentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGlobalAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalAssignmentRes.ErrorMsg)
 	}
 
 	globalAssignment := showGlobalAssignmentRes.GetData()
@@ -183,7 +192,7 @@ func readManagementGlobalAssignment(d *schema.ResourceData, m interface{}) error
 			assignmentUpToDateMapToReturn["posix"] = v
 		}
 
-		_ = d.Set("assignment_up_to_date", assignmentUpToDateMapToReturn)
+		_ = d.Set("assignment_up_to_date", []interface{}{assignmentUpToDateMapToReturn})
 	} else {
 		_ = d.Set("assignment_up_to_date", nil)
 	}
@@ -230,9 +239,9 @@ func updateManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	updateGlobalAssignmentRes, err := client.ApiCall("set-global-assignment", globalAssignment, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGlobalAssignmentRes.Success {
 		if updateGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementGlobalAssignment(d, m)
@@ -251,9 +260,9 @@ func deleteManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	deleteGlobalAssignmentRes, err := client.ApiCall("delete-global-assignment", globalAssignmentPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGlobalAssignmentRes.Success {
 		if deleteGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

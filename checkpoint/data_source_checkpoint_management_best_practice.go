@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -95,7 +95,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The applicable objects of the Best Practice.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"access_rules_info": {
@@ -227,7 +226,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The definitions of the user-defined Firewall Best Practice. Relevant only for Firewall Best Practices created by the user.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_range_percentage": {
@@ -265,7 +263,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined actions.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -304,7 +301,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined comment.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"condition_type": {
@@ -324,7 +320,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined destination objects.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -363,7 +358,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined hit count value.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -402,7 +396,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined \"Install On\" objects.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -441,7 +434,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined name.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"condition_type": {
@@ -461,7 +453,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined service and application objects.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -500,7 +491,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined source objects.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -539,7 +529,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined time.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -578,7 +567,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined track actions.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -617,7 +605,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "User-defined VPN objects.",
-										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"negate": {
@@ -667,7 +654,6 @@ func dataSourceManagementBestPractice() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The definitions of the user-defined Gaia OS Best Practice. Relevant only for Gaia OS Best Practices created by the user.",
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"expected_output_base64": {
@@ -714,10 +700,10 @@ func dataSourceManagementBestPracticeRead(d *schema.ResourceData, m interface{})
 
 	showBestPracticeRes, err := client.ApiCall("show-best-practice", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showBestPracticeRes.Success {
-		return fmt.Errorf(showBestPracticeRes.ErrorMsg)
+		return fmt.Errorf("%s", showBestPracticeRes.ErrorMsg)
 	}
 
 	bestPractice := showBestPracticeRes.GetData()

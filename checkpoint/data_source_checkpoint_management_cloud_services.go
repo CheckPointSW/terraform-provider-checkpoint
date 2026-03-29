@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -18,7 +18,7 @@ func dataSourceManagementCloudServices() *schema.Resource {
 				Description: "Status of the connection to the Infinity Portal.",
 			},
 			"connected_at": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "The time of the connection between the Management Server and the Infinity Portal.",
 				Elem: &schema.Resource{
@@ -48,7 +48,6 @@ func dataSourceManagementCloudServices() *schema.Resource {
 			},
 			"gateways_onboarding_settings": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Gateways on-boarding to Infinity Portal settings.",
 				Elem: &schema.Resource{
@@ -83,10 +82,10 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 
 	showCloudServices, err := client.ApiCall("show-cloud-services", make(map[string]interface{}), client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showCloudServices.Success {
-		return fmt.Errorf(showCloudServices.ErrorMsg)
+		return fmt.Errorf("%s", showCloudServices.ErrorMsg)
 	}
 
 	showCloudServicesRes := showCloudServices.GetData()
@@ -108,7 +107,7 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 			if v := connectedAtShow["posix"]; v != nil {
 				connectedAtState["posix"] = v
 			}
-			_ = d.Set("connected_at", connectedAtState)
+			_ = d.Set("connected_at", []interface{}{connectedAtState})
 		}
 	} else {
 		_ = d.Set("connected_at", nil)

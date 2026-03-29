@@ -1,11 +1,11 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
-	"strconv"
 )
 
 func resourceManagementResourceUri() *schema.Resource {
@@ -14,6 +14,14 @@ func resourceManagementResourceUri() *schema.Resource {
 		Read:   readManagementResourceUri,
 		Update: updateManagementResourceUri,
 		Delete: deleteManagementResourceUri,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementResourceUriV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementResourceUriStateUpgradeV0,
+				Version: 0,
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -27,7 +35,8 @@ func resourceManagementResourceUri() *schema.Resource {
 				Default:     "enforce_uri_capabilities",
 			},
 			"connection_methods": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Connection methods.",
 				Elem: &schema.Resource{
@@ -316,7 +325,8 @@ func resourceManagementResourceUri() *schema.Resource {
 				},
 			},
 			"soap": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "SOAP settings.",
 				Elem: &schema.Resource{
@@ -389,20 +399,25 @@ func createManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 		resourceUri["use-this-resource-to"] = v.(string)
 	}
 
-	if _, ok := d.GetOk("connection_methods"); ok {
+	if v, ok := d.GetOk("connection_methods"); ok {
 
-		res := make(map[string]interface{})
+		connectionMethodsList := v.([]interface{})
 
-		if v, ok := d.GetOk("connection_methods.transparent"); ok {
-			res["transparent"] = v
+		if len(connectionMethodsList) > 0 {
+
+			connectionMethodsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("connection_methods.0.transparent"); ok {
+				connectionMethodsPayload["transparent"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("connection_methods.0.proxy"); ok {
+				connectionMethodsPayload["proxy"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("connection_methods.0.tunneling"); ok {
+				connectionMethodsPayload["tunneling"] = v.(bool)
+			}
+			resourceUri["connection-methods"] = connectionMethodsPayload
 		}
-		if v, ok := d.GetOk("connection_methods.proxy"); ok {
-			res["proxy"] = v
-		}
-		if v, ok := d.GetOk("connection_methods.tunneling"); ok {
-			res["tunneling"] = v
-		}
-		resourceUri["connection-methods"] = res
 	}
 
 	if v, ok := d.GetOk("uri_match_specification_type"); ok {
@@ -559,21 +574,25 @@ func createManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 		resourceUri["cvp"] = res
 	}
 
-	if _, ok := d.GetOk("soap"); ok {
+	if v, ok := d.GetOk("soap"); ok {
 
-		res := make(map[string]interface{})
+		soapList := v.([]interface{})
 
-		if v, ok := d.GetOk("soap.inspection"); ok {
-			res["inspection"] = v
-		}
-		if v, ok := d.GetOk("soap.file_id"); ok {
-			res["file-id"] = v
-		}
-		if v, ok := d.GetOk("soap.track_connections"); ok {
-			res["track-connections"] = v
-		}
+		if len(soapList) > 0 {
 
-		resourceUri["soap"] = res
+			soapPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("soap.0.inspection"); ok {
+				soapPayload["inspection"] = v.(string)
+			}
+			if v, ok := d.GetOk("soap.0.file_id"); ok {
+				soapPayload["file-id"] = v.(string)
+			}
+			if v, ok := d.GetOk("soap.0.track_connections"); ok {
+				soapPayload["track-connections"] = v.(string)
+			}
+			resourceUri["soap"] = soapPayload
+		}
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -601,9 +620,9 @@ func createManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	addResourceUriRes, err := client.ApiCall("add-resource-uri", resourceUri, client.GetSessionID(), true, false)
 	if err != nil || !addResourceUriRes.Success {
 		if addResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceUriRes.GetData()["uid"].(string))
@@ -621,14 +640,14 @@ func readManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 	showResourceUriRes, err := client.ApiCall("show-resource-uri", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriRes.Success {
 		if objectNotFound(showResourceUriRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceUriRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriRes.ErrorMsg)
 	}
 
 	resourceUri := showResourceUriRes.GetData()
@@ -649,16 +668,17 @@ func readManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 		connectionMethodsMapToReturn := make(map[string]interface{})
 
-		if v, _ := connectionMethodsMap["transparent"]; v != nil {
-			connectionMethodsMapToReturn["transparent"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["transparent"]; v != nil {
+			connectionMethodsMapToReturn["transparent"] = v
 		}
-		if v, _ := connectionMethodsMap["proxy"]; v != nil {
-			connectionMethodsMapToReturn["proxy"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["proxy"]; v != nil {
+			connectionMethodsMapToReturn["proxy"] = v
 		}
-		if v, _ := connectionMethodsMap["tunneling"]; v != nil {
-			connectionMethodsMapToReturn["tunneling"] = strconv.FormatBool(v.(bool))
+		if v := connectionMethodsMap["tunneling"]; v != nil {
+			connectionMethodsMapToReturn["tunneling"] = v
 		}
-		_ = d.Set("connection_methods", connectionMethodsMapToReturn)
+		_ = d.Set("connection_methods", []interface{}{connectionMethodsMapToReturn})
+
 	} else {
 		_ = d.Set("connection_methods", nil)
 	}
@@ -847,16 +867,17 @@ func readManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 		soapMapToReturn := make(map[string]interface{})
 
-		if v, _ := soapMap["inspection"]; v != nil {
+		if v := soapMap["inspection"]; v != nil {
 			soapMapToReturn["inspection"] = v
 		}
-		if v, _ := soapMap["file-id"]; v != nil {
+		if v := soapMap["file-id"]; v != nil {
 			soapMapToReturn["file_id"] = v
 		}
-		if v, _ := soapMap["track-connections"]; v != nil {
+		if v := soapMap["track-connections"]; v != nil {
 			soapMapToReturn["track_connections"] = v
 		}
-		_ = d.Set("soap", soapMapToReturn)
+		_ = d.Set("soap", []interface{}{soapMapToReturn})
+
 	} else {
 		_ = d.Set("soap", nil)
 	}
@@ -916,20 +937,25 @@ func updateManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("connection_methods") {
 
-		if _, ok := d.GetOk("connection_methods"); ok {
+		if v, ok := d.GetOk("connection_methods"); ok {
 
-			res := make(map[string]interface{})
+			connectionMethodsList := v.([]interface{})
 
-			if d.HasChange("connection_methods.transparent") {
-				res["transparent"] = d.Get("connection_methods.transparent")
+			if len(connectionMethodsList) > 0 {
+
+				connectionMethodsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("connection_methods.0.transparent"); ok {
+					connectionMethodsPayload["transparent"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("connection_methods.0.proxy"); ok {
+					connectionMethodsPayload["proxy"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("connection_methods.0.tunneling"); ok {
+					connectionMethodsPayload["tunneling"] = v.(bool)
+				}
+				resourceUri["connection-methods"] = connectionMethodsPayload
 			}
-			if d.HasChange("connection_methods.proxy") {
-				res["proxy"] = d.Get("connection_methods.proxy")
-			}
-			if d.HasChange("connection_methods.tunneling") {
-				res["tunneling"] = d.Get("connection_methods.tunneling")
-			}
-			resourceUri["connection-methods"] = res
 		}
 	}
 
@@ -1104,20 +1130,25 @@ func updateManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("soap") {
 
-		if _, ok := d.GetOk("soap"); ok {
+		if v, ok := d.GetOk("soap"); ok {
 
-			res := make(map[string]interface{})
+			soapList := v.([]interface{})
 
-			if d.HasChange("soap.inspection") {
-				res["inspection"] = d.Get("soap.inspection")
+			if len(soapList) > 0 {
+
+				soapPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("soap.0.inspection"); ok {
+					soapPayload["inspection"] = v.(string)
+				}
+				if v, ok := d.GetOk("soap.0.file_id"); ok {
+					soapPayload["file-id"] = v.(string)
+				}
+				if v, ok := d.GetOk("soap.0.track_connections"); ok {
+					soapPayload["track-connections"] = v.(string)
+				}
+				resourceUri["soap"] = soapPayload
 			}
-			if d.HasChange("soap.file_id") {
-				res["file-id"] = d.Get("soap.file_id")
-			}
-			if d.HasChange("soap.track_connections") {
-				res["track-connections"] = d.Get("soap.track_connections")
-			}
-			resourceUri["soap"] = res
 		}
 	}
 
@@ -1151,9 +1182,9 @@ func updateManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	updateResourceUriRes, err := client.ApiCall("set-resource-uri", resourceUri, client.GetSessionID(), true, false)
 	if err != nil || !updateResourceUriRes.Success {
 		if updateResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceUri(d, m)
@@ -1172,9 +1203,9 @@ func deleteManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	deleteResourceUriRes, err := client.ApiCall("delete-resource-uri", resourceUriPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteResourceUriRes.Success {
 		if deleteResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

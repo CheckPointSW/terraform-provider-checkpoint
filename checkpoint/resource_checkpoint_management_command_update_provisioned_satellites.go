@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementUpdateProvisionedSatellites() *schema.Resource {
@@ -42,7 +42,7 @@ func createManagementUpdateProvisionedSatellites(d *schema.ResourceData, m inter
 
 	UpdateProvisionedSatellitesRes, _ := client.ApiCall("update-provisioned-satellites", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UpdateProvisionedSatellitesRes.Success {
-		return fmt.Errorf(UpdateProvisionedSatellitesRes.ErrorMsg)
+		return fmt.Errorf("%s", UpdateProvisionedSatellitesRes.ErrorMsg)
 	}
 
 	d.SetId("update-provisioned-satellites" + acctest.RandString(10))

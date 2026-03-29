@@ -2,12 +2,10 @@ package checkpoint
 
 import (
 	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
-	"strconv"
-
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceManagementTime() *schema.Resource {
@@ -25,7 +23,7 @@ func dataSourceManagementTime() *schema.Resource {
 				Description: "Object unique identifier.",
 			},
 			"end": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "End time. Note: Each gateway may interpret this time differently according to its time zone.",
 				Elem: &schema.Resource{
@@ -58,7 +56,7 @@ func dataSourceManagementTime() *schema.Resource {
 				Computed:    true,
 				Description: "End never.",
 			},
-			"hour_ranges": {
+			"hours_ranges": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Hours recurrence. Note: Each gateway may interpret this time differently according to its time zone.",
@@ -88,7 +86,7 @@ func dataSourceManagementTime() *schema.Resource {
 				},
 			},
 			"start": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Starting time. Note: Each gateway may interpret this time differently according to its time zone.",
 				Elem: &schema.Resource{
@@ -123,7 +121,6 @@ func dataSourceManagementTime() *schema.Resource {
 			},
 			"recurrence": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "Days recurrence.",
 				Elem: &schema.Resource{
@@ -196,10 +193,10 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 
 	showTimeRes, err := client.ApiCall("show-time", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTimeRes.Success {
-		return fmt.Errorf(showTimeRes.ErrorMsg)
+		return fmt.Errorf("%s", showTimeRes.ErrorMsg)
 	}
 
 	time := showTimeRes.GetData()
@@ -221,20 +218,23 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 
 		endMapToReturn := make(map[string]interface{})
 
-		if v, _ := endMap["date"]; v != nil {
+		if v := endMap["date"]; v != nil {
 			endMapToReturn["date"] = v
 		}
-		if v, _ := endMap["iso-8601"]; v != nil {
+		if v := endMap["iso-8601"]; v != nil {
 			endMapToReturn["iso_8601"] = v
 		}
-		if v, _ := endMap["posix"]; v != nil {
-			endMapToReturn["posix"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := endMap["posix"]; v != nil {
+			endMapToReturn["posix"] = v
 		}
-		if v, _ := endMap["time"]; v != nil {
+		if v := endMap["time"]; v != nil {
 			endMapToReturn["time"] = v
 		}
 
-		_ = d.Set("end", endMapToReturn)
+		_ = d.Set("end", []interface{}{endMapToReturn})
+
+	} else {
+		_ = d.Set("end", nil)
 	}
 
 	if v := time["end-never"]; v != nil {
@@ -264,7 +264,7 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 						hoursRangesMapToAdd["from"] = v
 					}
 					if v, _ := hoursRangesMap["index"]; v != nil {
-						hoursRangesMapToAdd["index"] = strconv.Itoa(int(math.Round(v.(float64))))
+						hoursRangesMapToAdd["index"] = int(math.Round(v.(float64)))
 					}
 					if v, _ := hoursRangesMap["to"]; v != nil {
 						hoursRangesMapToAdd["to"] = v
@@ -279,24 +279,27 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 
 	if time["start"] != nil {
 
-		endMap := time["start"].(map[string]interface{})
+		startMap := time["start"].(map[string]interface{})
 
-		endMapToReturn := make(map[string]interface{})
+		startMapToReturn := make(map[string]interface{})
 
-		if v, _ := endMap["date"]; v != nil {
-			endMapToReturn["date"] = v
+		if v := startMap["date"]; v != nil {
+			startMapToReturn["date"] = v
 		}
-		if v, _ := endMap["iso-8601"]; v != nil {
-			endMapToReturn["iso_8601"] = v
+		if v := startMap["iso-8601"]; v != nil {
+			startMapToReturn["iso_8601"] = v
 		}
-		if v, _ := endMap["posix"]; v != nil {
-			endMapToReturn["posix"] = strconv.Itoa(int(math.Round(v.(float64))))
+		if v := startMap["posix"]; v != nil {
+			startMapToReturn["posix"] = v
 		}
-		if v, _ := endMap["time"]; v != nil {
-			endMapToReturn["time"] = v
+		if v := startMap["time"]; v != nil {
+			startMapToReturn["time"] = v
 		}
 
-		_ = d.Set("start", endMapToReturn)
+		_ = d.Set("start", []interface{}{startMapToReturn})
+
+	} else {
+		_ = d.Set("start", nil)
 	}
 
 	if v := time["start-now"]; v != nil {

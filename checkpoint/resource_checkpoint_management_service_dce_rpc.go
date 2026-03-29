@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -109,9 +109,9 @@ func createManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 	addServiceDceRpcRes, err := client.ApiCall("add-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceDceRpcRes.Success {
 		if addServiceDceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceDceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceDceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceDceRpcRes.GetData()["uid"].(string))
@@ -129,14 +129,14 @@ func readManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error {
 
 	showServiceDceRpcRes, err := client.ApiCall("show-service-dce-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceDceRpcRes.Success {
 		if objectNotFound(showServiceDceRpcRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceDceRpcRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceDceRpcRes.ErrorMsg)
 	}
 
 	serviceDceRpc := showServiceDceRpcRes.GetData()
@@ -242,9 +242,9 @@ func updateManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 	updateServiceDceRpcRes, err := client.ApiCall("set-service-dce-rpc", serviceDceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceDceRpcRes.Success {
 		if updateServiceDceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceDceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceDceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceDceRpc(d, m)
@@ -269,9 +269,9 @@ func deleteManagementServiceDceRpc(d *schema.ResourceData, m interface{}) error 
 	deleteServiceDceRpcRes, err := client.ApiCall("delete-service-dce-rpc", serviceDceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceDceRpcRes.Success {
 		if deleteServiceDceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceDceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceDceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

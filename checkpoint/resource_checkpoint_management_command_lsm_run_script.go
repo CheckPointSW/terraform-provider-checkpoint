@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementLsmRunScript() *schema.Resource {
@@ -62,7 +62,7 @@ func createManagementLsmRunScript(d *schema.ResourceData, m interface{}) error {
 
 	LsmRunScriptRes, _ := client.ApiCall("lsm-run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !LsmRunScriptRes.Success {
-		return fmt.Errorf(LsmRunScriptRes.ErrorMsg)
+		return fmt.Errorf("%s", LsmRunScriptRes.ErrorMsg)
 	}
 
 	d.SetId("lsm-run-script" + acctest.RandString(10))

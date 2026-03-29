@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -27,7 +27,7 @@ func dataSourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 				Description: "Whether all requests should be bypassed or blocked-in case of server errors (for example validation error during GW-Server authentication)<br><ul style=\"list-style-type:square\"><li>true - Fail-open (bypass all requests).</li><li>false - Fail-close (block all requests.</li></ul><br>The default value is true.",
 			},
 			"bypass_under_load": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Bypass the HTTPS Inspection temporarily to improve connectivity during a heavy load on the Security Gateway. The HTTPS Inspection would resume as soon as the load decreases.",
 				Elem: &schema.Resource{
@@ -134,10 +134,10 @@ func dataSourceManagementSetHttpsAdvancedSettingsRead(d *schema.ResourceData, m 
 
 	showHttpsAdvancedSettingsRes, err := client.ApiCall("show-https-advanced-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsAdvancedSettingsRes.Success {
-		return fmt.Errorf(showHttpsAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsAdvancedSettingsRes.ErrorMsg)
 	}
 
 	httpsAdvancedSettings := showHttpsAdvancedSettingsRes.GetData()
@@ -155,14 +155,20 @@ func dataSourceManagementSetHttpsAdvancedSettingsRead(d *schema.ResourceData, m 
 	if v := httpsAdvancedSettings["bypass-on-failure"]; v != nil {
 		d.Set("bypass_on_failure", v)
 	}
-	if v := httpsAdvancedSettings["bypass-under-load"]; v != nil {
-		mapToReturn := make(map[string]interface{})
-		v := v.(map[string]interface{})
-		if k := v["track"]; k != nil {
-			mapToReturn["track"] = k
+	if httpsAdvancedSettings["bypass-under-load"] != nil {
+
+		bypassUnderLoadMap := httpsAdvancedSettings["bypass-under-load"].(map[string]interface{})
+
+		bypassUnderLoadMapToReturn := make(map[string]interface{})
+
+		if v := bypassUnderLoadMap["track"]; v != nil {
+			bypassUnderLoadMapToReturn["track"] = v
 		}
 
-		d.Set("bypass_under_load", mapToReturn)
+		_ = d.Set("bypass_under_load", []interface{}{bypassUnderLoadMapToReturn})
+
+	} else {
+		_ = d.Set("bypass_under_load", nil)
 	}
 
 	if v := httpsAdvancedSettings["site-categorization-allow-mode"]; v != nil {

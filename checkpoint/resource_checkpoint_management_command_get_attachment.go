@@ -3,8 +3,8 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementGetAttachment() *schema.Resource {
@@ -49,7 +49,7 @@ func createManagementGetAttachment(d *schema.ResourceData, m interface{}) error 
 
 	GetAttachmentRes, _ := client.ApiCall("get-attachment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !GetAttachmentRes.Success {
-		return fmt.Errorf(GetAttachmentRes.ErrorMsg)
+		return fmt.Errorf("%s", GetAttachmentRes.ErrorMsg)
 	}
 
 	d.SetId("get-attachment" + acctest.RandString(10))

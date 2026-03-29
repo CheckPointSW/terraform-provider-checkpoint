@@ -1,12 +1,13 @@
 package checkpoint
 
 import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/upgraders"
 	"fmt"
-	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-	"reflect"
 	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceManagementVpnCommunityStar() *schema.Resource {
@@ -17,6 +18,14 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 		Delete: deleteManagementVpnCommunityStar,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementVpnCommunityStarV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementVpnCommunityStarStateUpgradeV0,
+				Version: 0,
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -81,7 +90,8 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 				},
 			},
 			"ike_phase_1": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Ike Phase 1 settings. Only applicable when the encryption-suite is set to [custom].",
 				Elem: &schema.Resource{
@@ -105,16 +115,37 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "aes-256",
 						},
 						"ike_p1_rekey_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 							Default:     1440,
+						},
+						"use_standard_proposal": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"use_multiple_key_exchanges": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"multiple_key_exchanges": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+						"ike_p1_rekey_time_unit": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
 						},
 					},
 				},
 			},
 			"ike_phase_2": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Ike Phase 2 settings. Only applicable when the encryption-suite is set to [custom].",
 				Elem: &schema.Resource{
@@ -132,7 +163,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "aes-128",
 						},
 						"ike_p2_use_pfs": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.",
 							Default:     false,
@@ -144,10 +175,30 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Default:     "group-2",
 						},
 						"ike_p2_rekey_time": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 							Default:     1440,
+						},
+						"use_standard_proposal": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"use_multiple_key_exchanges": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Computed: true,
+						},
+						"multiple_key_exchanges": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+						"ike_p2_rekey_time_unit": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -395,7 +446,8 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							Description: "The encryption suite to be used.",
 						},
 						"ike_phase_1": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
+							MaxItems:    1,
 							Optional:    true,
 							Description: "Ike Phase 1 settings. Only applicable when the encryption-suite is set to [custom].",
 							Elem: &schema.Resource{
@@ -419,7 +471,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 										Default:     "aes-256",
 									},
 									"ike_p1_rekey_time": {
-										Type:        schema.TypeString,
+										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 										Default:     1440,
@@ -428,7 +480,8 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 							},
 						},
 						"ike_phase_2": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
+							MaxItems:    1,
 							Optional:    true,
 							Description: "Ike Phase 2 settings. Only applicable when the encryption-suite is set to [custom].",
 							Elem: &schema.Resource{
@@ -458,7 +511,7 @@ func resourceManagementVpnCommunityStar() *schema.Resource {
 										Default:     "group-2",
 									},
 									"ike_p2_rekey_time": {
-										Type:        schema.TypeString,
+										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 										Default:     1440,
@@ -729,45 +782,76 @@ func createManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 		vpnCommunityStar["excluded-services"] = v.(*schema.Set).List()
 	}
 
-	if _, ok := d.GetOk("ike_phase_1"); ok {
+	if v, ok := d.GetOk("ike_phase_1"); ok {
 
-		res := make(map[string]interface{})
+		ikePhase1List := v.([]interface{})
 
-		if v, ok := d.GetOk("ike_phase_1.data_integrity"); ok {
-			res["data-integrity"] = v.(string)
+		if len(ikePhase1List) > 0 {
+
+			ikePhase1Payload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("ike_phase_1.0.encryption_algorithm"); ok {
+				ikePhase1Payload["encryption-algorithm"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.data_integrity"); ok {
+				ikePhase1Payload["data-integrity"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.diffie_hellman_group"); ok {
+				ikePhase1Payload["diffie-hellman-group"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.use_standard_proposal"); ok {
+				ikePhase1Payload["use-standard-proposal"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.multiple_key_exchanges"); ok {
+				ikePhase1Payload["multiple-key-exchanges"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.ike_p1_rekey_time"); ok {
+				ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
+			}
+			if v, ok := d.GetOk("ike_phase_1.0.ike_p1_rekey_time_unit"); ok {
+				ikePhase1Payload["ike-p1-rekey-time-unit"] = v.(string)
+			}
+			vpnCommunityStar["ike-phase-1"] = ikePhase1Payload
 		}
-		if v, ok := d.GetOk("ike_phase_1.diffie_hellman_group"); ok {
-			res["diffie-hellman-group"] = v.(string)
-		}
-		if v, ok := d.GetOk("ike_phase_1.encryption_algorithm"); ok {
-			res["encryption-algorithm"] = v.(string)
-		}
-		if v, ok := d.GetOk("ike_phase_1.ike_p1_rekey_time"); ok {
-			res["ike-p1-rekey-time"] = v.(string)
-		}
-		vpnCommunityStar["ike-phase-1"] = res
 	}
 
-	if _, ok := d.GetOk("ike_phase_2"); ok {
+	if v, ok := d.GetOk("ike_phase_2"); ok {
 
-		res := make(map[string]interface{})
+		ikePhase2List := v.([]interface{})
 
-		if v, ok := d.GetOk("ike_phase_2.data_integrity"); ok {
-			res["data-integrity"] = v.(string)
+		if len(ikePhase2List) > 0 {
+
+			ikePhase2Payload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("ike_phase_2.0.encryption_algorithm"); ok {
+				ikePhase2Payload["encryption-algorithm"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.data_integrity"); ok {
+				ikePhase2Payload["data-integrity"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("ike_phase_2.0.ike_p2_use_pfs"); ok {
+				ikePhase2Payload["ike-p2-use-pfs"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
+				ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.use_standard_proposal"); ok {
+				ikePhase2Payload["use-standard-proposal"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.use_multiple_key_exchanges"); ok {
+				ikePhase2Payload["use-multiple-key-exchanges"] = v.(bool)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.multiple_key_exchanges"); ok {
+				ikePhase2Payload["multiple-key-exchanges"] = v.(string)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.ike_p2_rekey_time"); ok {
+				ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
+			}
+			if v, ok := d.GetOk("ike_phase_2.0.ike_p2_rekey_time_unit"); ok {
+				ikePhase2Payload["ike-p2-rekey-time-unit"] = v.(string)
+			}
+			vpnCommunityStar["ike-phase-2"] = ikePhase2Payload
 		}
-		if v, ok := d.GetOk("ike_phase_2.encryption_algorithm"); ok {
-			res["encryption-algorithm"] = v.(string)
-		}
-		if v, ok := d.GetOk("ike_phase_2.ike_p2_use_pfs"); ok {
-			res["ike-p2-use-pfs"] = v.(string)
-		}
-		if v, ok := d.GetOk("ike_phase_2.ike_p2_pfs_dh_grp"); ok {
-			res["ike-p2-pfs-dh-grp"] = v.(string)
-		}
-		if v, ok := d.GetOk("ike_phase_2.ike_p2_rekey_time"); ok {
-			res["ike-p2-rekey-time"] = v.(string)
-		}
-		vpnCommunityStar["ike-phase-2"] = res
 	}
 
 	if v, ok := d.GetOk("link_selection_mode"); ok {
@@ -966,36 +1050,36 @@ func createManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 					ikePhase1Payload := make(map[string]interface{})
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.encryption_algorithm"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 						ikePhase1Payload["encryption-algorithm"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.data_integrity"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.data_integrity"); ok {
 						ikePhase1Payload["data-integrity"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.diffie_hellman_group"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.diffie_hellman_group"); ok {
 						ikePhase1Payload["diffie-hellman-group"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
-						ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
+						ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
 					}
 					payload["ike-phase-1"] = ikePhase1Payload
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 					ikePhase2Payload := make(map[string]interface{})
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.encryption_algorithm"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 						ikePhase2Payload["encryption-algorithm"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.data_integrity"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.data_integrity"); ok {
 						ikePhase2Payload["data-integrity"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_use_pfs"); ok {
 						ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
 						ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 					}
-					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
-						ikePhase2Payload["ike-p2-rekey-time"] = v.(string)
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
+						ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
 					}
 					payload["ike-phase-2"] = ikePhase2Payload
 				}
@@ -1155,9 +1239,9 @@ func createManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 	addVpnCommunityStarRes, err := client.ApiCall("add-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVpnCommunityStarRes.Success {
 		if addVpnCommunityStarRes.ErrorMsg != "" {
-			return fmt.Errorf(addVpnCommunityStarRes.ErrorMsg)
+			return fmt.Errorf("%s", addVpnCommunityStarRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVpnCommunityStarRes.GetData()["uid"].(string))
@@ -1175,14 +1259,14 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 
 	showVpnCommunityStarRes, err := client.ApiCall("show-vpn-community-star", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVpnCommunityStarRes.Success {
 		if objectNotFound(showVpnCommunityStarRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVpnCommunityStarRes.ErrorMsg)
+		return fmt.Errorf("%s", showVpnCommunityStarRes.ErrorMsg)
 	}
 
 	vpnCommunityStar := showVpnCommunityStarRes.GetData()
@@ -1265,25 +1349,33 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 
 		ikePhase1MapToReturn := make(map[string]interface{})
 
-		if v, _ := ikePhase1Map["data-integrity"]; v != nil {
-			ikePhase1MapToReturn["data_integrity"] = v
-		}
-		if v, _ := ikePhase1Map["diffie-hellman-group"]; v != nil {
-			ikePhase1MapToReturn["diffie_hellman_group"] = v
-		}
-		if v, _ := ikePhase1Map["encryption-algorithm"]; v != nil {
+		if v := ikePhase1Map["encryption-algorithm"]; v != nil {
 			ikePhase1MapToReturn["encryption_algorithm"] = v
 		}
+		if v := ikePhase1Map["data-integrity"]; v != nil {
+			ikePhase1MapToReturn["data_integrity"] = v
+		}
+		if v := ikePhase1Map["diffie-hellman-group"]; v != nil {
+			ikePhase1MapToReturn["diffie_hellman_group"] = v
+		}
+		if v := ikePhase1Map["use-standard-proposal"]; v != nil {
+			ikePhase1MapToReturn["use_standard_proposal"] = v
+		}
+		if v := ikePhase1Map["use-multiple-key-exchanges"]; v != nil {
+			ikePhase1MapToReturn["use_multiple_key_exchanges"] = v
+		}
+		if v := ikePhase1Map["multiple-key-exchanges"]; v != nil {
+			ikePhase1MapToReturn["multiple_key_exchanges"] = v.(map[string]interface{})["name"].(string)
+		}
 		if v := ikePhase1Map["ike-p1-rekey-time"]; v != nil {
-			ikePhase1MapToReturn["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
+			ikePhase1MapToReturn["ike_p1_rekey_time"] = v
 		}
-		_, ikePhase1InConf := d.GetOk("ike_phase_1")
-		defaultIkePhase1 := map[string]interface{}{"encryption_algorithm": "aes-256", "diffie_hellman_group": "group-2", "data_integrity": "sha1"}
-		if reflect.DeepEqual(defaultIkePhase1, ikePhase1MapToReturn) && !ikePhase1InConf {
-			_ = d.Set("ike_phase_1", map[string]interface{}{})
-		} else {
-			_ = d.Set("ike_phase_1", ikePhase1MapToReturn)
+		if v := ikePhase1Map["ike-p1-rekey-time-unit"]; v != nil {
+			ikePhase1MapToReturn["ike_p1_rekey_time_unit"] = v
 		}
+
+		_ = d.Set("ike_phase_1", []interface{}{ikePhase1MapToReturn})
+
 	} else {
 		_ = d.Set("ike_phase_1", nil)
 	}
@@ -1294,28 +1386,35 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 
 		ikePhase2MapToReturn := make(map[string]interface{})
 
-		if v, _ := ikePhase2Map["data-integrity"]; v != nil {
-			ikePhase2MapToReturn["data_integrity"] = v
-		}
-		if v, _ := ikePhase2Map["encryption-algorithm"]; v != nil {
+		if v := ikePhase2Map["encryption-algorithm"]; v != nil {
 			ikePhase2MapToReturn["encryption_algorithm"] = v
 		}
+		if v := ikePhase2Map["data-integrity"]; v != nil {
+			ikePhase2MapToReturn["data_integrity"] = v
+		}
 		if v := ikePhase2Map["ike-p2-use-pfs"]; v != nil {
-			ikePhase2MapToReturn["ike_p2_use_pfs"] = strconv.FormatBool(v.(bool))
+			ikePhase2MapToReturn["ike_p2_use_pfs"] = v
 		}
 		if v := ikePhase2Map["ike-p2-pfs-dh-grp"]; v != nil {
 			ikePhase2MapToReturn["ike_p2_pfs_dh_grp"] = v
 		}
+		if v := ikePhase2Map["use-standard-proposal"]; v != nil {
+			ikePhase2MapToReturn["use_standard_proposal"] = v
+		}
+		if v := ikePhase2Map["use-multiple-key-exchanges"]; v != nil {
+			ikePhase2MapToReturn["use_multiple_key_exchanges"] = v
+		}
+		if v := ikePhase2Map["multiple-key-exchanges"]; v != nil {
+			ikePhase2MapToReturn["multiple_key_exchanges"] = v.(map[string]interface{})["name"].(string)
+		}
 		if v := ikePhase2Map["ike-p2-rekey-time"]; v != nil {
-			ikePhase2MapToReturn["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
+			ikePhase2MapToReturn["ike_p2_rekey_time"] = v
 		}
-		_, ikePhase2InConf := d.GetOk("ike_phase_2")
-		defaultIkePhase2 := map[string]interface{}{"encryption_algorithm": "aes-128", "data_integrity": "sha1"}
-		if reflect.DeepEqual(defaultIkePhase2, ikePhase2MapToReturn) && !ikePhase2InConf {
-			_ = d.Set("ike_phase_2", map[string]interface{}{})
-		} else {
-			_ = d.Set("ike_phase_2", ikePhase2MapToReturn)
+		if v := ikePhase2Map["ike-p2-rekey-time-unit"]; v != nil {
+			ikePhase2MapToReturn["ike_p2_rekey_time_unit"] = v
 		}
+
+		_ = d.Set("ike_phase_2", []interface{}{ikePhase2MapToReturn})
 
 	} else {
 		_ = d.Set("ike_phase_2", nil)
@@ -1593,9 +1692,9 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 							ikePhase1State["diffie_hellman_group"] = v
 						}
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
-							ikePhase1State["ike_p1_rekey_time"] = strconv.Itoa(int(v.(float64)))
+							ikePhase1State["ike_p1_rekey_time"] = int(v.(float64))
 						}
-						granularEncryptionState["ike_phase_1"] = ikePhase1State
+						granularEncryptionState["ike_phase_1"] = []interface{}{ikePhase1State}
 					}
 
 					if v := granularEncryptionShow["ike-phase-2"]; v != nil {
@@ -1614,9 +1713,9 @@ func readManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) error
 							ikePhase2State["ike_p2_pfs_dh_grp"] = v
 						}
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
-							ikePhase2State["ike_p2_rekey_time"] = strconv.Itoa(int(v.(float64)))
+							ikePhase2State["ike_p2_rekey_time"] = int(v.(float64))
 						}
-						granularEncryptionState["ike_phase_2"] = ikePhase2State
+						granularEncryptionState["ike_phase_2"] = []interface{}{ikePhase2State}
 					}
 					granularEncryptionsState = append(granularEncryptionsState, granularEncryptionState)
 				}
@@ -1906,52 +2005,82 @@ func updateManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 
 	if d.HasChange("ike_phase_1") {
 
-		if _, ok := d.GetOk("ike_phase_1"); ok {
+		if v, ok := d.GetOk("ike_phase_1"); ok {
 
-			res := make(map[string]interface{})
+			ikePhase1List := v.([]interface{})
 
-			if d.HasChange("ike_phase_1.data_integrity") {
-				res["data-integrity"] = d.Get("ike_phase_1.data_integrity")
+			if len(ikePhase1List) > 0 {
+
+				ikePhase1Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("ike_phase_1.0.encryption_algorithm"); ok {
+					ikePhase1Payload["encryption-algorithm"] = v.(string)
+				}
+				if v, ok := d.GetOk("ike_phase_1.0.data_integrity"); ok {
+					ikePhase1Payload["data-integrity"] = v.(string)
+				}
+				if v, ok := d.GetOk("ike_phase_1.0.diffie_hellman_group"); ok {
+					ikePhase1Payload["diffie-hellman-group"] = v.(string)
+				}
+				if v, ok := d.GetOkExists("ike_phase_1.0.use_standard_proposal"); ok {
+					ikePhase1Payload["use-standard-proposal"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("ike_phase_1.0.use_multiple_key_exchanges"); ok {
+					ikePhase1Payload["use-multiple-key-exchanges"] = v.(bool)
+				}
+				if v, ok := d.GetOk("ike_phase_1.0.multiple_key_exchanges"); ok {
+					ikePhase1Payload["multiple-key-exchanges"] = v.(string)
+				}
+				if v, ok := d.GetOk("ike_phase_1.0.ike_p1_rekey_time"); ok {
+					ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
+				}
+				if v, ok := d.GetOk("ike_phase_1.0.ike_p1_rekey_time_unit"); ok {
+					ikePhase1Payload["ike-p1-rekey-time-unit"] = v.(string)
+				}
+				vpnCommunityStar["ike-phase-1"] = ikePhase1Payload
 			}
-			if d.HasChange("ike_phase_1.diffie_hellman_group") {
-				res["diffie-hellman-group"] = d.Get("ike_phase_1.diffie_hellman_group")
-			}
-			if d.HasChange("ike_phase_1.encryption_algorithm") {
-				res["encryption-algorithm"] = d.Get("ike_phase_1.encryption_algorithm")
-			}
-			if d.HasChange("ike_phase_1.ike_p1_rekey_time") {
-				res["ike-p1-rekey-time"] = d.Get("ike_phase_1.ike_p1_rekey_time")
-			}
-			vpnCommunityStar["ike-phase-1"] = res
-		} else {
-			vpnCommunityStar["ike-phase-1"] = map[string]interface{}{"encryption-algorithm": "aes-256", "diffie-hellman-group": "group-2", "data-integrity": "sha1"}
 		}
 	}
 
 	if d.HasChange("ike_phase_2") {
 
-		if _, ok := d.GetOk("ike_phase_2"); ok {
+		if v, ok := d.GetOk("ike_phase_2"); ok {
 
-			res := make(map[string]interface{})
+			ikePhase2List := v.([]interface{})
 
-			if d.HasChange("ike_phase_2.data_integrity") {
-				res["data-integrity"] = d.Get("ike_phase_2.data_integrity")
+			if len(ikePhase2List) > 0 {
+
+				ikePhase2Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("ike_phase_2.0.encryption_algorithm"); ok {
+					ikePhase2Payload["encryption-algorithm"] = v.(string)
+				}
+				if v, ok := d.GetOk("ike_phase_2.0.data_integrity"); ok {
+					ikePhase2Payload["data-integrity"] = v.(string)
+				}
+				if v, ok := d.GetOkExists("ike_phase_2.0.ike_p2_use_pfs"); ok {
+					ikePhase2Payload["ike-p2-use-pfs"] = v.(bool)
+				}
+				if v, ok := d.GetOk("ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
+					ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
+				}
+				if v, ok := d.GetOkExists("ike_phase_2.0.use_standard_proposal"); ok {
+					ikePhase2Payload["use-standard-proposal"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("ike_phase_2.0.use_multiple_key_exchanges"); ok {
+					ikePhase2Payload["use-multiple-key-exchanges"] = v.(bool)
+				}
+				if v, ok := d.GetOk("ike_phase_2.0.multiple_key_exchanges"); ok {
+					ikePhase2Payload["multiple-key-exchanges"] = v.(string)
+				}
+				if v, ok := d.GetOk("ike_phase_2.0.ike_p2_rekey_time"); ok {
+					ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
+				}
+				if v, ok := d.GetOk("ike_phase_2.0.ike_p2_rekey_time_unit"); ok {
+					ikePhase2Payload["ike-p2-rekey-time-unit"] = v.(string)
+				}
+				vpnCommunityStar["ike-phase-2"] = ikePhase2Payload
 			}
-			if d.HasChange("ike_phase_2.encryption_algorithm") {
-				res["encryption-algorithm"] = d.Get("ike_phase_2.encryption_algorithm")
-			}
-			if d.HasChange("ike_phase_2.ike_p2_use_pfs") {
-				res["ike-p2-use-pfs"] = d.Get("ike_phase_2.ike_p2_use_pfs")
-			}
-			if d.HasChange("ike_phase_2.ike_p2_pfs_dh_grp") {
-				res["ike-p2-pfs-dh-grp"] = d.Get("ike_phase_2.ike_p2_pfs_dh_grp")
-			}
-			if d.HasChange("ike_phase_2.ike_p2_rekey_time") {
-				res["ike-p2-rekey-time"] = d.Get("ike_phase_2.ike_p2_rekey_time")
-			}
-			vpnCommunityStar["ike-phase-2"] = res
-		} else {
-			vpnCommunityStar["ike-phase-2"] = map[string]interface{}{"encryption-algorithm": "aes-128", "data-integrity": "sha1"}
 		}
 	}
 
@@ -2172,36 +2301,36 @@ func updateManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 						ikePhase1Payload := make(map[string]interface{})
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.encryption_algorithm"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 							ikePhase1Payload["encryption-algorithm"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.data_integrity"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.data_integrity"); ok {
 							ikePhase1Payload["data-integrity"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.diffie_hellman_group"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.diffie_hellman_group"); ok {
 							ikePhase1Payload["diffie-hellman-group"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.ike_p1_rekey_time"); ok {
-							ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
+							ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
 						}
 						payload["ike-phase-1"] = ikePhase1Payload
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 						ikePhase2Payload := make(map[string]interface{})
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.encryption_algorithm"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 							ikePhase2Payload["encryption-algorithm"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.data_integrity"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.data_integrity"); ok {
 							ikePhase2Payload["data-integrity"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_use_pfs"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_use_pfs"); ok {
 							ikePhase2Payload["ike-p2-use-pfs"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_pfs_dh_grp"); ok {
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_pfs_dh_grp"); ok {
 							ikePhase2Payload["ike-p2-pfs-dh-grp"] = v.(string)
 						}
-						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.ike_p2_rekey_time"); ok {
-							ikePhase2Payload["ike-p2-rekey-time"] = v.(string)
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
+							ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
 						}
 						payload["ike-phase-2"] = ikePhase2Payload
 					}
@@ -2387,9 +2516,9 @@ func updateManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 	updateVpnCommunityStarRes, err := client.ApiCall("set-vpn-community-star", vpnCommunityStar, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVpnCommunityStarRes.Success {
 		if updateVpnCommunityStarRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVpnCommunityStarRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVpnCommunityStarRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVpnCommunityStar(d, m)
@@ -2415,9 +2544,9 @@ func deleteManagementVpnCommunityStar(d *schema.ResourceData, m interface{}) err
 	deleteVpnCommunityStarRes, err := client.ApiCall("delete-vpn-community-star", vpnCommunityStarPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVpnCommunityStarRes.Success {
 		if deleteVpnCommunityStarRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVpnCommunityStarRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVpnCommunityStarRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

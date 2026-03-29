@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -70,10 +70,10 @@ func dataSourceManagementSecuridServerRead(d *schema.ResourceData, m interface{}
 
 	showSecuridServerRes, err := client.ApiCallSimple("show-securid-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecuridServerRes.Success {
-		return fmt.Errorf(showSecuridServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecuridServerRes.ErrorMsg)
 	}
 
 	securidServer := showSecuridServerRes.GetData()

@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 )
 
@@ -98,9 +98,9 @@ func createManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	addServiceGroupRes, err := client.ApiCall("add-service-group", serviceGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceGroupRes.Success {
 		if addServiceGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceGroupRes.GetData()["uid"].(string))
@@ -118,7 +118,7 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 
 	showServiceGroupRes, err := client.ApiCall("show-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceGroupRes.Success {
 		// Handle delete resource from other clients
@@ -126,7 +126,7 @@ func readManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceGroupRes.ErrorMsg)
 	}
 
 	serviceGroup := showServiceGroupRes.GetData()
@@ -223,7 +223,7 @@ func updateManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	log.Println("Update Service Group - Map = ", serviceGroup)
 	setserviceGroupRes, _ := client.ApiCall("set-service-group", serviceGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setserviceGroupRes.Success {
-		return fmt.Errorf(setserviceGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", setserviceGroupRes.ErrorMsg)
 	}
 
 	return readManagementServiceGroup(d, m)
@@ -242,7 +242,7 @@ func deleteManagementServiceGroup(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteServiceGroupRes, _ := client.ApiCall("delete-service-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceGroupRes.Success {
-		return fmt.Errorf(deleteServiceGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteServiceGroupRes.ErrorMsg)
 	}
 	d.SetId("")
 

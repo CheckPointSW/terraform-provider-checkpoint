@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"fmt"
 	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
 	"math"
 )
@@ -29,7 +29,8 @@ func dataSourceManagementNatRuleBase() *schema.Resource {
 				Description: "Search expression to filter the rulebase. The provided text should be exactly the same as it would be given in Smart Console. The logical operators in the expression ('AND', 'OR') should be provided in capital letters. If an operator is not used, the default OR operator applies.",
 			},
 			"filter_settings": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Optional:    true,
 				Description: "Sets filter preferences.",
 				Elem: &schema.Resource{
@@ -162,7 +163,6 @@ func dataSourceManagementNatRuleBase() *schema.Resource {
 						},
 						"rulebase": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "N/A",
 							Elem: &schema.Resource{
@@ -347,50 +347,46 @@ func dataSourceManagementNatRuleBaseRead(d *schema.ResourceData, m interface{}) 
 		payload["filter"] = v.(string)
 	}
 	if v, ok := d.GetOk("filter_settings"); ok {
-		filters, ok := v.(map[string]interface{})
-		if ok {
+		fsList := v.([]interface{})
+		if len(fsList) > 0 {
+			fsPayload := make(map[string]interface{})
 
-			filtersMapToReturn := make(map[string]interface{})
-			packetSearchMap := make(map[string]interface{})
-
-			if val, ok := filters["search_mode"]; ok {
-				filtersMapToReturn["search-mode"] = val
-			} else {
-				filtersMapToReturn["search-mode"] = "general"
+			if v, ok := d.GetOk("filter_settings.0.search_mode"); ok {
+				fsPayload["search-mode"] = v.(string)
 			}
 
-			if val, ok := filters["expand_group_members"]; ok {
-				packetSearchMap["expand-group-members"] = val
-			} else {
-				packetSearchMap["expand-group-members"] = false
+			if v, ok := d.GetOk("filter_settings.0.packet_search_settings"); ok {
+				pssList := v.([]interface{})
+				if len(pssList) > 0 {
+					pssPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.expand_group_members"); ok {
+						pssPayload["expand-group-members"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.expand_group_with_exclusion_members"); ok {
+						pssPayload["expand-group-with-exclusion-members"] = v.(bool)
+					}
+					if v, ok := d.GetOk("filter_settings.0.packet_search_settings.0.intersection_mode_dst"); ok {
+						pssPayload["intersection-mode-dst"] = v.(string)
+					}
+					if v, ok := d.GetOk("filter_settings.0.packet_search_settings.0.intersection_mode_src"); ok {
+						pssPayload["intersection-mode-src"] = v.(string)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_any"); ok {
+						pssPayload["match-on-any"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_group_with_exclusion"); ok {
+						pssPayload["match-on-group-with-exclusion"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("filter_settings.0.packet_search_settings.0.match_on_negate"); ok {
+						pssPayload["match-on-negate"] = v.(bool)
+					}
+
+					fsPayload["packet-search-settings"] = pssPayload
+				}
 			}
 
-			if val, ok := filters["expand_group_with_exclusion_members"]; ok {
-				packetSearchMap["expand-group-with-exclusion-members"] = val
-			} else {
-				packetSearchMap["expand-group-with-exclusion-members"] = false
-			}
-
-			if val, ok := filters["match_on_any"]; ok {
-				packetSearchMap["match-on-any"] = val
-			} else {
-				packetSearchMap["match-on-any"] = true
-			}
-
-			if val, ok := filters["match_on_group_with_exclusion"]; ok {
-				packetSearchMap["match-on-group-with-exclusion"] = val
-			} else {
-				packetSearchMap["match-on-group-with-exclusion"] = true
-			}
-
-			if val, ok := filters["match_on_negate"]; ok {
-				packetSearchMap["match-on-negate"] = val
-			} else {
-				packetSearchMap["match-on-negate"] = true
-			}
-
-			filtersMapToReturn["packet-search-settings"] = packetSearchMap
-			payload["filter-settings"] = filtersMapToReturn
+			payload["filter-settings"] = fsPayload
 		}
 	}
 	if v, ok := d.GetOk("limit"); ok {
@@ -437,10 +433,10 @@ func dataSourceManagementNatRuleBaseRead(d *schema.ResourceData, m interface{}) 
 
 	showRuleBaseRes, err := client.ApiCall("show-nat-rulebase", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRuleBaseRes.Success {
-		return fmt.Errorf(showRuleBaseRes.ErrorMsg)
+		return fmt.Errorf("%s", showRuleBaseRes.ErrorMsg)
 	}
 	ruleBaseJson := showRuleBaseRes.GetData()
 
