@@ -91,9 +91,9 @@ func createManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 	addSecurityZoneRes, err := client.ApiCall("add-security-zone", securityZone, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addSecurityZoneRes.Success {
 		if addSecurityZoneRes.ErrorMsg != "" {
-			return fmt.Errorf(addSecurityZoneRes.ErrorMsg)
+			return fmt.Errorf("%s", addSecurityZoneRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSecurityZoneRes.GetData()["uid"].(string))
@@ -111,14 +111,14 @@ func readManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 
 	showSecurityZoneRes, err := client.ApiCall("show-security-zone", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecurityZoneRes.Success {
 		if objectNotFound(showSecurityZoneRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSecurityZoneRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecurityZoneRes.ErrorMsg)
 	}
 
 	securityZone := showSecurityZoneRes.GetData()
@@ -208,9 +208,9 @@ func updateManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 	updateSecurityZoneRes, err := client.ApiCall("set-security-zone", securityZone, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateSecurityZoneRes.Success {
 		if updateSecurityZoneRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSecurityZoneRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSecurityZoneRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSecurityZone(d, m)
@@ -235,9 +235,9 @@ func deleteManagementSecurityZone(d *schema.ResourceData, m interface{}) error {
 	deleteSecurityZoneRes, err := client.ApiCall("delete-security-zone", securityZonePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteSecurityZoneRes.Success {
 		if deleteSecurityZoneRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSecurityZoneRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSecurityZoneRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -44,7 +44,7 @@ func createManagementInstallDatabase(d *schema.ResourceData, m interface{}) erro
 
 	InstallDatabaseRes, _ := client.ApiCall("install-database", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallDatabaseRes.Success {
-		return fmt.Errorf(InstallDatabaseRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallDatabaseRes.ErrorMsg)
 	}
 
 	d.SetId("install-database-" + acctest.RandString(10))

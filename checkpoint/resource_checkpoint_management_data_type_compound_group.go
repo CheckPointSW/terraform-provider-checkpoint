@@ -121,9 +121,9 @@ func createManagementDataTypeCompoundGroup(d *schema.ResourceData, m interface{}
 	addDataTypeCompoundGroupRes, err := client.ApiCall("add-data-type-compound-group", dataTypeCompoundGroup, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypeCompoundGroupRes.Success {
 		if addDataTypeCompoundGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypeCompoundGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypeCompoundGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypeCompoundGroupRes.GetData()["uid"].(string))
@@ -141,14 +141,14 @@ func readManagementDataTypeCompoundGroup(d *schema.ResourceData, m interface{}) 
 
 	showDataTypeCompoundGroupRes, err := client.ApiCall("show-data-type-compound-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeCompoundGroupRes.Success {
 		if objectNotFound(showDataTypeCompoundGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeCompoundGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeCompoundGroupRes.ErrorMsg)
 	}
 
 	dataTypeCompoundGroup := showDataTypeCompoundGroupRes.GetData()
@@ -296,9 +296,9 @@ func updateManagementDataTypeCompoundGroup(d *schema.ResourceData, m interface{}
 	updateDataTypeCompoundGroupRes, err := client.ApiCall("set-data-type-compound-group", dataTypeCompoundGroup, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypeCompoundGroupRes.Success {
 		if updateDataTypeCompoundGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypeCompoundGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypeCompoundGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypeCompoundGroup(d, m)
@@ -317,9 +317,9 @@ func deleteManagementDataTypeCompoundGroup(d *schema.ResourceData, m interface{}
 	deleteDataTypeCompoundGroupRes, err := client.ApiCall("delete-data-type-compound-group", dataTypeCompoundGroupPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypeCompoundGroupRes.Success {
 		if deleteDataTypeCompoundGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypeCompoundGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypeCompoundGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

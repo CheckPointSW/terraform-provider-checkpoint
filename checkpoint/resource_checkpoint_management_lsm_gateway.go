@@ -430,9 +430,9 @@ func createManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 	addLsmGatewayRes, err := client.ApiCall("add-lsm-gateway", lsmGateway, client.GetSessionID(), true, false)
 	if err != nil || !addLsmGatewayRes.Success {
 		if addLsmGatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(addLsmGatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", addLsmGatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLsmGatewayRes.GetData()["uid"].(string))
@@ -450,14 +450,14 @@ func readManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 
 	showLsmGatewayRes, err := client.ApiCall("show-lsm-gateway", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmGatewayRes.Success {
 		if objectNotFound(showLsmGatewayRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmGatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmGatewayRes.ErrorMsg)
 	}
 
 	lsmGateway := showLsmGatewayRes.GetData()
@@ -918,9 +918,9 @@ func updateManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 	updateLsmGatewayRes, err := client.ApiCall("set-lsm-gateway", lsmGateway, client.GetSessionID(), true, false)
 	if err != nil || !updateLsmGatewayRes.Success {
 		if updateLsmGatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLsmGatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLsmGatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLsmGateway(d, m)
@@ -939,9 +939,9 @@ func deleteManagementLsmGateway(d *schema.ResourceData, m interface{}) error {
 	deleteLsmGatewayRes, err := client.ApiCall("delete-lsm-gateway", lsmGatewayPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteLsmGatewayRes.Success {
 		if deleteLsmGatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLsmGatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLsmGatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -123,9 +123,9 @@ func createManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	addGlobalAssignmentRes, err := client.ApiCall("add-global-assignment", globalAssignment, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGlobalAssignmentRes.Success {
 		if addGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(addGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", addGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGlobalAssignmentRes.GetData()["uid"].(string))
@@ -143,14 +143,14 @@ func readManagementGlobalAssignment(d *schema.ResourceData, m interface{}) error
 
 	showGlobalAssignmentRes, err := client.ApiCall("show-global-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalAssignmentRes.Success {
 		if objectNotFound(showGlobalAssignmentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGlobalAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalAssignmentRes.ErrorMsg)
 	}
 
 	globalAssignment := showGlobalAssignmentRes.GetData()
@@ -239,9 +239,9 @@ func updateManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	updateGlobalAssignmentRes, err := client.ApiCall("set-global-assignment", globalAssignment, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateGlobalAssignmentRes.Success {
 		if updateGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementGlobalAssignment(d, m)
@@ -260,9 +260,9 @@ func deleteManagementGlobalAssignment(d *schema.ResourceData, m interface{}) err
 	deleteGlobalAssignmentRes, err := client.ApiCall("delete-global-assignment", globalAssignmentPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGlobalAssignmentRes.Success {
 		if deleteGlobalAssignmentRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGlobalAssignmentRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGlobalAssignmentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

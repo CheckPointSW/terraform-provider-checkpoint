@@ -148,9 +148,9 @@ func createManagementLimit(d *schema.ResourceData, m interface{}) error {
 	addLimitRes, err := client.ApiCall("add-limit", limit, client.GetSessionID(), true, false)
 	if err != nil || !addLimitRes.Success {
 		if addLimitRes.ErrorMsg != "" {
-			return fmt.Errorf(addLimitRes.ErrorMsg)
+			return fmt.Errorf("%s", addLimitRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLimitRes.GetData()["uid"].(string))
@@ -168,14 +168,14 @@ func readManagementLimit(d *schema.ResourceData, m interface{}) error {
 
 	showLimitRes, err := client.ApiCall("show-limit", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLimitRes.Success {
 		if objectNotFound(showLimitRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLimitRes.ErrorMsg)
+		return fmt.Errorf("%s", showLimitRes.ErrorMsg)
 	}
 
 	limit := showLimitRes.GetData()
@@ -313,9 +313,9 @@ func updateManagementLimit(d *schema.ResourceData, m interface{}) error {
 	updateLimitRes, err := client.ApiCall("set-limit", limit, client.GetSessionID(), true, false)
 	if err != nil || !updateLimitRes.Success {
 		if updateLimitRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLimitRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLimitRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLimit(d, m)
@@ -334,9 +334,9 @@ func deleteManagementLimit(d *schema.ResourceData, m interface{}) error {
 	deleteLimitRes, err := client.ApiCall("delete-limit", limitPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteLimitRes.Success {
 		if deleteLimitRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLimitRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLimitRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -270,10 +270,10 @@ func dataSourceManagementNetworksRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworksRes.Success {
-		return fmt.Errorf(showNetworksRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworksRes.ErrorMsg)
 	}
 
 	networks := showNetworksRes.GetData()

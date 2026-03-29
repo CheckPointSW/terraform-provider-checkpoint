@@ -358,14 +358,14 @@ func dataSourceManagementInterfaceRead(d *schema.ResourceData, m interface{}) er
 	}
 	showInterfaceRes, err := client.ApiCall("show-interface", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInterfaceRes.Success {
 		if objectNotFound(showInterfaceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInterfaceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInterfaceRes.ErrorMsg)
 	}
 
 	interfaceMap := showInterfaceRes.GetData()

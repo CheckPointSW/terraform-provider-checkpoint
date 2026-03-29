@@ -225,13 +225,13 @@ func dataSourceManagementCMEGWConfigurationsAzureRead(d *schema.ResourceData, m 
 	AzureGWConfigurationRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	gwConfiguration := AzureGWConfigurationRes.GetData()
 	if checkIfRequestFailed(gwConfiguration) {
 		errMessage := buildErrorMessage(gwConfiguration)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-azure-gw-configuration-" + name + "-" + acctest.RandString(10))

@@ -97,9 +97,9 @@ func createManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 	addIdentityTagRes, err := client.ApiCall("add-identity-tag", identityTag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addIdentityTagRes.Success {
 		if addIdentityTagRes.ErrorMsg != "" {
-			return fmt.Errorf(addIdentityTagRes.ErrorMsg)
+			return fmt.Errorf("%s", addIdentityTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addIdentityTagRes.GetData()["uid"].(string))
@@ -117,14 +117,14 @@ func readManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 
 	showIdentityTagRes, err := client.ApiCall("show-identity-tag", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdentityTagRes.Success {
 		if objectNotFound(showIdentityTagRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdentityTagRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdentityTagRes.ErrorMsg)
 	}
 
 	identityTag := showIdentityTagRes.GetData()
@@ -213,9 +213,9 @@ func updateManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 	updateIdentityTagRes, err := client.ApiCall("set-identity-tag", identityTag, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateIdentityTagRes.Success {
 		if updateIdentityTagRes.ErrorMsg != "" {
-			return fmt.Errorf(updateIdentityTagRes.ErrorMsg)
+			return fmt.Errorf("%s", updateIdentityTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementIdentityTag(d, m)
@@ -242,9 +242,9 @@ func deleteManagementIdentityTag(d *schema.ResourceData, m interface{}) error {
 	deleteIdentityTagRes, err := client.ApiCall("delete-identity-tag", identityTagPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteIdentityTagRes.Success {
 		if deleteIdentityTagRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteIdentityTagRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteIdentityTagRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

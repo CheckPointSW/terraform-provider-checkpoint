@@ -115,9 +115,9 @@ func createManagementSyslogServer(d *schema.ResourceData, m interface{}) error {
 	addSyslogServerRes, err := client.ApiCallSimple("add-syslog-server", syslogServer)
 	if err != nil || !addSyslogServerRes.Success {
 		if addSyslogServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addSyslogServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addSyslogServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSyslogServerRes.GetData()["uid"].(string))
@@ -135,14 +135,14 @@ func readManagementSyslogServer(d *schema.ResourceData, m interface{}) error {
 
 	showSyslogServerRes, err := client.ApiCallSimple("show-syslog-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSyslogServerRes.Success {
 		if objectNotFound(showSyslogServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSyslogServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSyslogServerRes.ErrorMsg)
 	}
 
 	syslogServer := showSyslogServerRes.GetData()
@@ -253,9 +253,9 @@ func updateManagementSyslogServer(d *schema.ResourceData, m interface{}) error {
 	updateSyslogServerRes, err := client.ApiCallSimple("set-syslog-server", syslogServer)
 	if err != nil || !updateSyslogServerRes.Success {
 		if updateSyslogServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSyslogServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSyslogServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSyslogServer(d, m)
@@ -281,9 +281,9 @@ func deleteManagementSyslogServer(d *schema.ResourceData, m interface{}) error {
 	deleteSyslogServerRes, err := client.ApiCallSimple("delete-syslog-server", syslogServerPayload)
 	if err != nil || !deleteSyslogServerRes.Success {
 		if deleteSyslogServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSyslogServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSyslogServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

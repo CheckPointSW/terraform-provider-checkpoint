@@ -236,9 +236,9 @@ func createManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	addAccessRoleRes, err := client.ApiCall("add-access-role", accessRole, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRoleRes.Success {
 		if addAccessRoleRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessRoleRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessRoleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessRoleRes.GetData()["uid"].(string))
@@ -255,14 +255,14 @@ func readManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 
 	showAccessRoleRes, err := client.ApiCall("show-access-role", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessRoleRes.Success {
 		if objectNotFound(showAccessRoleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessRoleRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessRoleRes.ErrorMsg)
 	}
 
 	accessRole := showAccessRoleRes.GetData()
@@ -552,9 +552,9 @@ func updateManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	updateAccessRoleRes, err := client.ApiCall("set-access-role", accessRole, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessRoleRes.Success {
 		if updateAccessRoleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessRoleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAccessRoleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAccessRole(d, m)
@@ -581,9 +581,9 @@ func deleteManagementAccessRole(d *schema.ResourceData, m interface{}) error {
 	deleteAccessRoleRes, err := client.ApiCall("delete-access-role", accessRolePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRoleRes.Success {
 		if deleteAccessRoleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessRoleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessRoleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

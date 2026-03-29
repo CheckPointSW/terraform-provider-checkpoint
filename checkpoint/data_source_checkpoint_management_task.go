@@ -82,10 +82,10 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 
 	showTaskRes, err := client.ApiCall("show-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTaskRes.Success {
-		return fmt.Errorf(showTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", showTaskRes.ErrorMsg)
 	}
 
 	task := showTaskRes.GetData()
@@ -134,7 +134,7 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 
 	jsonResponse, err := json.Marshal(task)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if jsonResponse != nil {
 		_ = d.Set("response", string(jsonResponse))

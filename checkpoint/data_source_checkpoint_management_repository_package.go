@@ -36,10 +36,10 @@ func dataSourceManagementRepositoryPackageRead(d *schema.ResourceData, m interfa
 
 	showRepositoryPackageRes, err := client.ApiCall("show-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRepositoryPackageRes.Success {
-		return fmt.Errorf(showRepositoryPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", showRepositoryPackageRes.ErrorMsg)
 	}
 
 	RepositoryPackage := showRepositoryPackageRes.GetData()

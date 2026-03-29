@@ -145,10 +145,10 @@ func createManagementExportManagement(d *schema.ResourceData, m interface{}) err
 
 	ExportManagementRes, err := client.ApiCall("export-management", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ExportManagementRes.Success {
-		return fmt.Errorf(ExportManagementRes.ErrorMsg)
+		return fmt.Errorf("%s", ExportManagementRes.ErrorMsg)
 	}
 
 	d.SetId("export-management-" + acctest.RandString(10))

@@ -114,10 +114,10 @@ func createManagementSetDefaultAdministratorSettings(d *schema.ResourceData, m i
 
 	SetDefaultAdministratorSettingsRes, err := client.ApiCall("set-default-administrator-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetDefaultAdministratorSettingsRes.Success {
-		return fmt.Errorf(SetDefaultAdministratorSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetDefaultAdministratorSettingsRes.ErrorMsg)
 	}
 
 	d.SetId("set-default-administrator-settings-" + acctest.RandString(10))

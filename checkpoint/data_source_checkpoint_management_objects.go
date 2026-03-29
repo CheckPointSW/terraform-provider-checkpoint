@@ -203,10 +203,10 @@ func dataSourceManagementObjectsRead(d *schema.ResourceData, m interface{}) erro
 	showObjectsRes, err := client.ApiCall("show-objects", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showObjectsRes.Success {
-		return fmt.Errorf(showObjectsRes.ErrorMsg)
+		return fmt.Errorf("%s", showObjectsRes.ErrorMsg)
 	}
 
 	objects := showObjectsRes.GetData()

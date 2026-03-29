@@ -122,7 +122,7 @@ func dataSourceManagementCpTrustedCaCertificateRead(d *schema.ResourceData, m in
 	cpTrustedCaCertificateObjRes, err := client.ApiCall("show-cp-trusted-ca-certificate", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !cpTrustedCaCertificateObjRes.Success {
 		// Handle delete resource from other clients
@@ -130,7 +130,7 @@ func dataSourceManagementCpTrustedCaCertificateRead(d *schema.ResourceData, m in
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(cpTrustedCaCertificateObjRes.ErrorMsg)
+		return fmt.Errorf("%s", cpTrustedCaCertificateObjRes.ErrorMsg)
 	}
 
 	cpTrustedCaCertificateObj := cpTrustedCaCertificateObjRes.GetData()

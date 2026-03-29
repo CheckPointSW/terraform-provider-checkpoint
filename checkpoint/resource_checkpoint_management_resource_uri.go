@@ -620,9 +620,9 @@ func createManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	addResourceUriRes, err := client.ApiCall("add-resource-uri", resourceUri, client.GetSessionID(), true, false)
 	if err != nil || !addResourceUriRes.Success {
 		if addResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceUriRes.GetData()["uid"].(string))
@@ -640,14 +640,14 @@ func readManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 
 	showResourceUriRes, err := client.ApiCall("show-resource-uri", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriRes.Success {
 		if objectNotFound(showResourceUriRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceUriRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriRes.ErrorMsg)
 	}
 
 	resourceUri := showResourceUriRes.GetData()
@@ -1182,9 +1182,9 @@ func updateManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	updateResourceUriRes, err := client.ApiCall("set-resource-uri", resourceUri, client.GetSessionID(), true, false)
 	if err != nil || !updateResourceUriRes.Success {
 		if updateResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceUri(d, m)
@@ -1203,9 +1203,9 @@ func deleteManagementResourceUri(d *schema.ResourceData, m interface{}) error {
 	deleteResourceUriRes, err := client.ApiCall("delete-resource-uri", resourceUriPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteResourceUriRes.Success {
 		if deleteResourceUriRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceUriRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceUriRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

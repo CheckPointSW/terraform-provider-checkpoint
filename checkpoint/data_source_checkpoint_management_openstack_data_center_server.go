@@ -83,10 +83,10 @@ func dataSourceOpenStackDataCenterServerRead(d *schema.ResourceData, m interface
 	}
 	showOpenStackDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpenStackDataCenterServerRes.Success {
-		return fmt.Errorf(showOpenStackDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpenStackDataCenterServerRes.ErrorMsg)
 	}
 	openstackDataCenterServer := showOpenStackDataCenterServerRes.GetData()
 

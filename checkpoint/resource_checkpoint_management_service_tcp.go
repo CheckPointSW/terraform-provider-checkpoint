@@ -236,9 +236,9 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceTcpRes.Success {
 		if addServiceTcpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceTcpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceTcpRes.GetData()["uid"].(string))
@@ -256,7 +256,7 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceTcpRes.Success {
 		// Handle delete resource from other clients
@@ -264,7 +264,7 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceTcpRes.ErrorMsg)
 	}
 
 	serviceTcp := showServiceTcpRes.GetData()
@@ -501,10 +501,10 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	if len(serviceTcp) != 3 {
 		setServiceTcpRes, err := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
-			fmt.Errorf(err.Error())
+			fmt.Errorf("%s", err.Error())
 		}
 		if !setServiceTcpRes.Success {
-			return fmt.Errorf(setServiceTcpRes.ErrorMsg)
+			return fmt.Errorf("%s", setServiceTcpRes.ErrorMsg)
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -528,7 +528,7 @@ func deleteManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteServiceTcpRes, _ := client.ApiCall("delete-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceTcpRes.Success {
-		return fmt.Errorf(deleteServiceTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteServiceTcpRes.ErrorMsg)
 	}
 	d.SetId("")
 

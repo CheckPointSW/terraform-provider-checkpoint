@@ -213,9 +213,9 @@ func createManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	addNetworkRes, err := client.ApiCall("add-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNetworkRes.Success {
 		if addNetworkRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkRes.ErrorMsg)
+			return fmt.Errorf("%s", addNetworkRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNetworkRes.GetData()["uid"].(string))
@@ -233,7 +233,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 
 	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkRes.Success {
 		// Handle delete resource from other clients
@@ -241,7 +241,7 @@ func readManagementNetwork(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkRes.ErrorMsg)
 	}
 
 	network := showNetworkRes.GetData()
@@ -437,10 +437,10 @@ func updateManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	if len(network) != 3 {
 		setNetworkRes, err := client.ApiCall("set-network", network, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 		if !setNetworkRes.Success {
-			return fmt.Errorf(setNetworkRes.ErrorMsg)
+			return fmt.Errorf("%s", setNetworkRes.ErrorMsg)
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -464,7 +464,7 @@ func deleteManagementNetwork(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteNetworkRes, _ := client.ApiCall("delete-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteNetworkRes.Success {
-		return fmt.Errorf(deleteNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteNetworkRes.ErrorMsg)
 	}
 	d.SetId("")
 

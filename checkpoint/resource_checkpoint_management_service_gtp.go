@@ -575,9 +575,9 @@ func createManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 	addServiceGtpRes, err := client.ApiCall("add-service-gtp", serviceGtp, client.GetSessionID(), true, false)
 	if err != nil || !addServiceGtpRes.Success {
 		if addServiceGtpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceGtpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceGtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceGtpRes.GetData()["uid"].(string))
@@ -595,14 +595,14 @@ func readManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 
 	showServiceGtpRes, err := client.ApiCall("show-service-gtp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceGtpRes.Success {
 		if objectNotFound(showServiceGtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceGtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceGtpRes.ErrorMsg)
 	}
 
 	serviceGtp := showServiceGtpRes.GetData()
@@ -1114,9 +1114,9 @@ func updateManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 	updateServiceGtpRes, err := client.ApiCall("set-service-gtp", serviceGtp, client.GetSessionID(), true, false)
 	if err != nil || !updateServiceGtpRes.Success {
 		if updateServiceGtpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceGtpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceGtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceGtp(d, m)
@@ -1141,9 +1141,9 @@ func deleteManagementServiceGtp(d *schema.ResourceData, m interface{}) error {
 	deleteServiceGtpRes, err := client.ApiCall("delete-service-gtp", serviceGtpPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteServiceGtpRes.Success {
 		if deleteServiceGtpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceGtpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceGtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -61,10 +61,10 @@ func dataSourceManagementServerCertificateRead(d *schema.ResourceData, m interfa
 	}
 	showServerCertificateRes, err := client.ApiCall("show-server-certificate", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServerCertificateRes.Success {
-		fmt.Errorf(showServerCertificateRes.ErrorMsg)
+		fmt.Errorf("%s", showServerCertificateRes.ErrorMsg)
 	}
 
 	serverCertificate := showServerCertificateRes.GetData()

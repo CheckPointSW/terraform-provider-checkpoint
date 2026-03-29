@@ -53,7 +53,7 @@ func testAccCheckCheckpointShowNetworks(resourceTfName string, res *map[string]i
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-networks", map[string]interface{}{"filter": networkName, "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

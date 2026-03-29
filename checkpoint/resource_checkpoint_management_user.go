@@ -310,9 +310,9 @@ func createManagementUser(d *schema.ResourceData, m interface{}) error {
 	addUserRes, err := client.ApiCall("add-user", user, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addUserRes.Success {
 		if addUserRes.ErrorMsg != "" {
-			return fmt.Errorf(addUserRes.ErrorMsg)
+			return fmt.Errorf("%s", addUserRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addUserRes.GetData()["uid"].(string))
@@ -330,14 +330,14 @@ func readManagementUser(d *schema.ResourceData, m interface{}) error {
 
 	showUserRes, err := client.ApiCall("show-user", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUserRes.Success {
 		if objectNotFound(showUserRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showUserRes.ErrorMsg)
+		return fmt.Errorf("%s", showUserRes.ErrorMsg)
 	}
 
 	user := showUserRes.GetData()
@@ -602,9 +602,9 @@ func updateManagementUser(d *schema.ResourceData, m interface{}) error {
 	updateUserRes, err := client.ApiCall("set-user", user, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateUserRes.Success {
 		if updateUserRes.ErrorMsg != "" {
-			return fmt.Errorf(updateUserRes.ErrorMsg)
+			return fmt.Errorf("%s", updateUserRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementUser(d, m)
@@ -629,9 +629,9 @@ func deleteManagementUser(d *schema.ResourceData, m interface{}) error {
 	deleteUserRes, err := client.ApiCall("delete-user", userPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteUserRes.Success {
 		if deleteUserRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteUserRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteUserRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

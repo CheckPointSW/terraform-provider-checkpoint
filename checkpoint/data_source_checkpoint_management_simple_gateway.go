@@ -1870,10 +1870,10 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGatewayRes.Success {
-		return fmt.Errorf(showGatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showGatewayRes.ErrorMsg)
 	}
 
 	gateway := showGatewayRes.GetData()

@@ -65,14 +65,14 @@ func dataSourceManagementIdpToDomainAssignmentRead(d *schema.ResourceData, m int
 
 	showIdpToDomainAssignmentRes, err := client.ApiCall("show-idp-to-domain-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdpToDomainAssignmentRes.Success {
 		if objectNotFound(showIdpToDomainAssignmentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdpToDomainAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdpToDomainAssignmentRes.ErrorMsg)
 	}
 
 	idpToDomainAssignment := showIdpToDomainAssignmentRes.GetData()

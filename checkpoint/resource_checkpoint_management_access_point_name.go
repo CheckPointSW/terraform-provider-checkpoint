@@ -136,9 +136,9 @@ func createManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 	addAccessPointNameRes, err := client.ApiCall("add-access-point-name", accessPointName, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessPointNameRes.Success {
 		if addAccessPointNameRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessPointNameRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessPointNameRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessPointNameRes.GetData()["uid"].(string))
@@ -156,14 +156,14 @@ func readManagementAccessPointName(d *schema.ResourceData, m interface{}) error 
 
 	showAccessPointNameRes, err := client.ApiCall("show-access-point-name", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessPointNameRes.Success {
 		if objectNotFound(showAccessPointNameRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessPointNameRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessPointNameRes.ErrorMsg)
 	}
 
 	accessPointName := showAccessPointNameRes.GetData()
@@ -284,9 +284,9 @@ func updateManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 	updateAccessPointNameRes, err := client.ApiCall("set-access-point-name", accessPointName, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessPointNameRes.Success {
 		if updateAccessPointNameRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessPointNameRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAccessPointNameRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAccessPointName(d, m)
@@ -311,9 +311,9 @@ func deleteManagementAccessPointName(d *schema.ResourceData, m interface{}) erro
 	deleteAccessPointNameRes, err := client.ApiCall("delete-access-point-name", accessPointNamePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessPointNameRes.Success {
 		if deleteAccessPointNameRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessPointNameRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessPointNameRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

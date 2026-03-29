@@ -100,7 +100,7 @@ func createManagementExport(d *schema.ResourceData, m interface{}) error {
 
 	ExportRes, _ := client.ApiCall("export", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !ExportRes.Success {
-		return fmt.Errorf(ExportRes.ErrorMsg)
+		return fmt.Errorf("%s", ExportRes.ErrorMsg)
 	}
 
 	d.SetId("export-" + acctest.RandString(10))

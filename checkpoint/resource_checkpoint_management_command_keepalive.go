@@ -22,7 +22,7 @@ func createManagementKeepalive(d *schema.ResourceData, m interface{}) error {
 	var payload = map[string]interface{}{}
 	KeepaliveRes, _ := client.ApiCall("keepalive", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !KeepaliveRes.Success {
-		return fmt.Errorf(KeepaliveRes.ErrorMsg)
+		return fmt.Errorf("%s", KeepaliveRes.ErrorMsg)
 	}
 
 	d.SetId("keepalive-" + acctest.RandString(10))

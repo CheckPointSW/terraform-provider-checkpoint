@@ -125,10 +125,10 @@ func dataSourceManagementMdsRead(d *schema.ResourceData, m interface{}) error {
 
 	showMdsRes, err := client.ApiCall("show-mds", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMdsRes.Success {
-		return fmt.Errorf(showMdsRes.ErrorMsg)
+		return fmt.Errorf("%s", showMdsRes.ErrorMsg)
 	}
 
 	mds := showMdsRes.GetData()

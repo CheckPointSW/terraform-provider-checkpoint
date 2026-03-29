@@ -119,7 +119,7 @@ func dataSourceManagementAppControlAdvancedSettingsRead(d *schema.ResourceData, 
 
 	appControlAdvancedSettingsRes, _ := client.ApiCall("show-app-control-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !appControlAdvancedSettingsRes.Success {
-		return fmt.Errorf(appControlAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", appControlAdvancedSettingsRes.ErrorMsg)
 	}
 	appControlAdvancedSettingsData := appControlAdvancedSettingsRes.GetData()
 

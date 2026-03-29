@@ -72,7 +72,7 @@ func dataSourceManagementSetGatewayGlobalUseRead(d *schema.ResourceData, m inter
 
 	ShowGatewayGlobalUseRes, _ := client.ApiCall("show-gateway-global-use", payload, client.GetSessionID(), true, false)
 	if !ShowGatewayGlobalUseRes.Success {
-		return fmt.Errorf(ShowGatewayGlobalUseRes.ErrorMsg)
+		return fmt.Errorf("%s", ShowGatewayGlobalUseRes.ErrorMsg)
 	}
 
 	showGatewatGlobalUseData := ShowGatewayGlobalUseRes.GetData()

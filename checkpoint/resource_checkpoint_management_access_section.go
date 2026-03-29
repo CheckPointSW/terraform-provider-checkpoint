@@ -134,9 +134,9 @@ func createManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	addAccessSectionRes, err := client.ApiCall("add-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessSectionRes.Success {
 		if addAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessSectionRes.GetData()["uid"].(string))
@@ -155,14 +155,14 @@ func readManagementAccessSection(d *schema.ResourceData, m interface{}) error {
 
 	showAccessSectionRes, err := client.ApiCall("show-access-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessSectionRes.Success {
 		if objectNotFound(showAccessSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessSectionRes.ErrorMsg)
 	}
 
 	accessSection := showAccessSectionRes.GetData()
@@ -219,9 +219,9 @@ func updateManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	updateAccessSectionRes, err := client.ApiCall("set-access-section", accessSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessSectionRes.Success {
 		if updateAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAccessSection(d, m)
@@ -249,9 +249,9 @@ func deleteManagementAccessSection(d *schema.ResourceData, m interface{}) error 
 	deleteAccessSectionRes, err := client.ApiCall("delete-access-section", accessSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessSectionRes.Success {
 		if deleteAccessSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

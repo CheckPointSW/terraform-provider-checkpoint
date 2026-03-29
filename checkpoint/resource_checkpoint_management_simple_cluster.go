@@ -2982,23 +2982,23 @@ func createManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 
 	addClusterRes, err := client.ApiCall("add-simple-cluster", cluster, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addClusterRes.Success {
 		if addClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(addClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", addClusterRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-simple-cluster", addClusterRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	// add-simple-cluster returns task-id. Call show-simple-cluster for object uid.
 	showClusterRes, err := client.ApiCall("show-simple-cluster", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showClusterRes.Success {
-		return fmt.Errorf(showClusterRes.ErrorMsg)
+		return fmt.Errorf("%s", showClusterRes.ErrorMsg)
 	}
 
 	d.SetId(showClusterRes.GetData()["uid"].(string))
@@ -3015,14 +3015,14 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 
 	showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showClusterRes.Success {
 		if objectNotFound(showClusterRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showClusterRes.ErrorMsg)
+		return fmt.Errorf("%s", showClusterRes.ErrorMsg)
 	}
 
 	cluster := showClusterRes.GetData()
@@ -3035,10 +3035,10 @@ func readManagementSimpleCluster(d *schema.ResourceData, m interface{}) error {
 				payload["limit-interfaces"] = totalInterfaces
 				showClusterRes, err := client.ApiCall("show-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil {
-					return fmt.Errorf(err.Error())
+					return fmt.Errorf("%s", err.Error())
 				}
 				if !showClusterRes.Success {
-					return fmt.Errorf(showClusterRes.ErrorMsg)
+					return fmt.Errorf("%s", showClusterRes.ErrorMsg)
 				}
 				cluster = showClusterRes.GetData()
 			}
@@ -5318,14 +5318,14 @@ func updateManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	if len(cluster) != 3 {
 		updateSimpleClusterRes, err := client.ApiCall("set-simple-cluster", cluster, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 		if !updateSimpleClusterRes.Success {
 			if updateSimpleClusterRes.ErrorMsg != "" {
-				return fmt.Errorf(updateSimpleClusterRes.ErrorMsg)
+				return fmt.Errorf("%s", updateSimpleClusterRes.ErrorMsg)
 			}
 			msg := createTaskFailMessage("set-simple-cluster", updateSimpleClusterRes.GetData())
-			return fmt.Errorf(msg)
+			return fmt.Errorf("%s", msg)
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -5353,9 +5353,9 @@ func deleteManagementSimpleCluster(d *schema.ResourceData, m interface{}) error 
 	deleteClusterRes, err := client.ApiCall("delete-simple-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteClusterRes.Success {
 		if deleteClusterRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteClusterRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteClusterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

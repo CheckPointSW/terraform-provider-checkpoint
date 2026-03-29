@@ -72,14 +72,14 @@ func dataSourceManagementMobileAccessProfileRuleRead(d *schema.ResourceData, m i
 
 	showMobileAccessProfileRuleRes, err := client.ApiCall("show-mobile-access-profile-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessProfileRuleRes.Success {
 		if objectNotFound(showMobileAccessProfileRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessProfileRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessProfileRuleRes.ErrorMsg)
 	}
 
 	mobileAccessProfileRule := showMobileAccessProfileRuleRes.GetData()

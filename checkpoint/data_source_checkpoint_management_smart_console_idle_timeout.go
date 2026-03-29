@@ -37,10 +37,10 @@ func dataSourceManagementSmartConsoleIdleTimeoutRead(d *schema.ResourceData, m i
 
 	smartConsoleIdleTimeoutRes, err := client.ApiCallSimple("show-smart-console-idle-timeout", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !smartConsoleIdleTimeoutRes.Success {
-		return fmt.Errorf(smartConsoleIdleTimeoutRes.ErrorMsg)
+		return fmt.Errorf("%s", smartConsoleIdleTimeoutRes.ErrorMsg)
 	}
 	smartConsoleIdleTimeoutData := smartConsoleIdleTimeoutRes.GetData()
 

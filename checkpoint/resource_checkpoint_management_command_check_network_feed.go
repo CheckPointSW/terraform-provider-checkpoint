@@ -254,7 +254,7 @@ func createManagementCheckNetworkFeed(d *schema.ResourceData, m interface{}) err
 
 	CheckNetworkFeedRes, _ := client.ApiCall("check-network-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !CheckNetworkFeedRes.Success {
-		return fmt.Errorf(CheckNetworkFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", CheckNetworkFeedRes.ErrorMsg)
 	}
 
 	d.SetId("check-network-feed" + acctest.RandString(10))

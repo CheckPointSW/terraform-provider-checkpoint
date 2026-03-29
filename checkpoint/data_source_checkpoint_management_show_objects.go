@@ -227,10 +227,10 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 
 	showObjectsRes, err := client.ApiCall("show-objects", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showObjectsRes.Success {
-		return fmt.Errorf(showObjectsRes.ErrorMsg)
+		return fmt.Errorf("%s", showObjectsRes.ErrorMsg)
 	}
 
 	objectsData := showObjectsRes.GetData()
@@ -300,7 +300,7 @@ func dataSourceManagementShowObjectsRead(d *schema.ResourceData, m interface{}) 
 
 	jsonResponse, err := json.Marshal(objectsData)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if jsonResponse != nil {
 		_ = d.Set("response", string(jsonResponse))

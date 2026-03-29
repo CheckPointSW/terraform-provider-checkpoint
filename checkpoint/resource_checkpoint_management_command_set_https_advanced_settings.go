@@ -280,7 +280,7 @@ func createManagementSetHttpsAdvancedSettings(d *schema.ResourceData, m interfac
 
 	SetHttpsAdvancedSettingsRes, _ := client.ApiCall("set-https-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !SetHttpsAdvancedSettingsRes.Success {
-		return fmt.Errorf(SetHttpsAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetHttpsAdvancedSettingsRes.ErrorMsg)
 	}
 
 	setHttpsAdvancedSettingsResData := SetHttpsAdvancedSettingsRes.GetData()

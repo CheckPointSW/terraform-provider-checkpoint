@@ -143,14 +143,14 @@ func dataSourceManagementNetworkFeedRead(d *schema.ResourceData, m interface{}) 
 
 	showNetworkFeedRes, err := client.ApiCall("show-network-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkFeedRes.Success {
 		if objectNotFound(showNetworkFeedRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkFeedRes.ErrorMsg)
 	}
 
 	networkFeed := showNetworkFeedRes.GetData()

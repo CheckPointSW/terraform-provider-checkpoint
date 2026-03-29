@@ -171,9 +171,9 @@ func createManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	addLsvProfileRes, err := client.ApiCall("add-lsv-profile", lsvProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addLsvProfileRes.Success {
 		if addLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLsvProfileRes.GetData()["uid"].(string))
@@ -190,7 +190,7 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 
 	showLsvProfileRes, err := client.ApiCall("show-lsv-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsvProfileRes.Success {
 		// Handle delete resource from other clients
@@ -198,7 +198,7 @@ func readManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsvProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsvProfileRes.ErrorMsg)
 	}
 
 	lsvProfile := showLsvProfileRes.GetData()
@@ -357,9 +357,9 @@ func updateManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	updateLsvProfileRes, err := client.ApiCall("set-lsv-profile", lsvProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateLsvProfileRes.Success {
 		if updateLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLsvProfile(d, m)
@@ -380,9 +380,9 @@ func deleteManagementLsvProfile(d *schema.ResourceData, m interface{}) error {
 	deleteLsvProfileRes, err := client.ApiCall("delete-lsv-profile", lsvProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteLsvProfileRes.Success {
 		if deleteLsvProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLsvProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLsvProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId("")

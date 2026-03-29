@@ -147,9 +147,9 @@ func createManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 	addTacacsServerRes, err := client.ApiCall("add-tacacs-server", tacacsServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTacacsServerRes.Success {
 		if addTacacsServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addTacacsServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addTacacsServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTacacsServerRes.GetData()["uid"].(string))
@@ -167,14 +167,14 @@ func readManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 
 	showTacacsServerRes, err := client.ApiCall("show-tacacs-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTacacsServerRes.Success {
 		if objectNotFound(showTacacsServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTacacsServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showTacacsServerRes.ErrorMsg)
 	}
 
 	tacacsServer := showTacacsServerRes.GetData()
@@ -300,9 +300,9 @@ func updateManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 	updateTacacsServerRes, err := client.ApiCall("set-tacacs-server", tacacsServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTacacsServerRes.Success {
 		if updateTacacsServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTacacsServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTacacsServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTacacsServer(d, m)
@@ -322,9 +322,9 @@ func deleteManagementTacacsServer(d *schema.ResourceData, m interface{}) error {
 	deleteTacacsServerRes, err := client.ApiCall("delete-tacacs-server", tacacsServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTacacsServerRes.Success {
 		if deleteTacacsServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTacacsServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTacacsServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

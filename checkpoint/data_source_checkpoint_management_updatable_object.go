@@ -130,10 +130,10 @@ func dataSourceManagementShowUpdatableObjectRead(d *schema.ResourceData, m inter
 	}
 	showUpdatableObjectRes, err := client.ApiCall("show-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUpdatableObjectRes.Success {
-		return fmt.Errorf(showUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showUpdatableObjectRes.ErrorMsg)
 	}
 
 	updatableObjectJson := showUpdatableObjectRes.GetData()

@@ -401,9 +401,9 @@ func createManagementHost(d *schema.ResourceData, m interface{}) error {
 	addHostRes, err := client.ApiCall("add-host", host, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHostRes.Success {
 		if addHostRes.ErrorMsg != "" {
-			return fmt.Errorf(addHostRes.ErrorMsg)
+			return fmt.Errorf("%s", addHostRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHostRes.GetData()["uid"].(string))
@@ -421,7 +421,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 
 	showHostRes, err := client.ApiCall("show-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHostRes.Success {
 		// Handle delete resource from other clients
@@ -429,7 +429,7 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHostRes.ErrorMsg)
+		return fmt.Errorf("%s", showHostRes.ErrorMsg)
 	}
 
 	host := showHostRes.GetData()
@@ -579,9 +579,9 @@ func readManagementHost(d *schema.ResourceData, m interface{}) error {
 				showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 				if err != nil || !showProtectedByRes.Success {
 					if showProtectedByRes.ErrorMsg != "" {
-						return fmt.Errorf(showProtectedByRes.ErrorMsg)
+						return fmt.Errorf("%s", showProtectedByRes.ErrorMsg)
 					}
-					return fmt.Errorf(err.Error())
+					return fmt.Errorf("%s", err.Error())
 				}
 
 				webServerConfigMapToReturn["protected_by"] = showProtectedByRes.GetData()["object"].(map[string]interface{})["name"]
@@ -813,9 +813,9 @@ func updateManagementHost(d *schema.ResourceData, m interface{}) error {
 		updateHostRes, err := client.ApiCall("set-host", host, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil || !updateHostRes.Success {
 			if updateHostRes.ErrorMsg != "" {
-				return fmt.Errorf(updateHostRes.ErrorMsg)
+				return fmt.Errorf("%s", updateHostRes.ErrorMsg)
 			}
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -842,9 +842,9 @@ func deleteManagementHost(d *schema.ResourceData, m interface{}) error {
 	deleteHostRes, err := client.ApiCall("delete-host", hostPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHostRes.Success {
 		if deleteHostRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHostRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHostRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -101,9 +101,9 @@ func createManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 	addHttpsLayerRes, err := client.ApiCall("add-https-layer", httpsLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsLayerRes.Success {
 		if addHttpsLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(addHttpsLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", addHttpsLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHttpsLayerRes.GetData()["uid"].(string))
@@ -121,14 +121,14 @@ func readManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	showHttpsLayerRes, err := client.ApiCall("show-https-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsLayerRes.Success {
 		if objectNotFound(showHttpsLayerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHttpsLayerRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsLayerRes.ErrorMsg)
 	}
 
 	httpsLayer := showHttpsLayerRes.GetData()
@@ -226,9 +226,9 @@ func updateManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 	updateHttpsLayerRes, err := client.ApiCall("set-https-layer", httpsLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsLayerRes.Success {
 		if updateHttpsLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHttpsLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateHttpsLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementHttpsLayer(d, m)
@@ -253,9 +253,9 @@ func deleteManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 	deleteHttpsLayerRes, err := client.ApiCall("delete-https-layer", httpsLayerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsLayerRes.Success {
 		if deleteHttpsLayerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHttpsLayerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHttpsLayerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

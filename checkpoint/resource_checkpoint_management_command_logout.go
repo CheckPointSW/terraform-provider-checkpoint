@@ -31,7 +31,7 @@ func createManagementLogout(d *schema.ResourceData, m interface{}) error {
 
 	logoutRes, _ := client.ApiCall("logout", make(map[string]interface{}), client.GetSessionID(), true, client.IsProxyUsed())
 	if !logoutRes.Success {
-		return fmt.Errorf(logoutRes.ErrorMsg)
+		return fmt.Errorf("%s", logoutRes.ErrorMsg)
 	}
 
 	d.SetId("logout-" + acctest.RandString(10))

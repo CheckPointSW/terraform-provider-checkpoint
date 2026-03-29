@@ -46,14 +46,14 @@ func dataSourceManagementIdpDefaultAssignmentRead(d *schema.ResourceData, m inte
 
 	showIdpDefaultAssignmentRes, err := client.ApiCall("show-idp-default-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdpDefaultAssignmentRes.Success {
 		if objectNotFound(showIdpDefaultAssignmentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdpDefaultAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdpDefaultAssignmentRes.ErrorMsg)
 	}
 
 	idpDefaultAssignment := showIdpDefaultAssignmentRes.GetData()

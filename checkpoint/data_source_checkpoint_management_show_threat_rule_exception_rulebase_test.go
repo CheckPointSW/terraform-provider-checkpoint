@@ -70,7 +70,7 @@ func testAccCheckCheckpointThreatRuleExceptionRulebase(resourceTfName string, re
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-threat-rule-exception-rulebase", map[string]interface{}{"name": "Standard Threat Prevention", "rule-name": "rule1", "use-object-dictionary": "false"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

@@ -74,14 +74,14 @@ func dataSourceManagementVoipDomainSccpCallManagerRead(d *schema.ResourceData, m
 
 	showVoipDomainSccpCallManagerRes, err := client.ApiCall("show-voip-domain-sccp-call-manager", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainSccpCallManagerRes.Success {
 		if objectNotFound(showVoipDomainSccpCallManagerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainSccpCallManagerRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainSccpCallManagerRes.ErrorMsg)
 	}
 
 	voipDomainSccpCallManager := showVoipDomainSccpCallManagerRes.GetData()

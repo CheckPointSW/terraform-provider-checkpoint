@@ -249,10 +249,10 @@ func dataSourceManagementDataCenterContentRead(d *schema.ResourceData, m interfa
 	showDataCenterContentRes, err := client.ApiCall("show-data-center-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterContentRes.Success {
-		return fmt.Errorf(showDataCenterContentRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterContentRes.ErrorMsg)
 	}
 	DataCenterContent := showDataCenterContentRes.GetData()
 

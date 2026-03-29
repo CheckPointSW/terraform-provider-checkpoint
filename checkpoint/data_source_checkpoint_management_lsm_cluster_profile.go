@@ -672,14 +672,14 @@ func dataSourceManagementLsmClusterProfileRead(d *schema.ResourceData, m interfa
 
 	showLsmClusterProfileRes, err := client.ApiCall("show-lsm-cluster-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmClusterProfileRes.Success {
 		if objectNotFound(showLsmClusterProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmClusterProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmClusterProfileRes.ErrorMsg)
 	}
 
 	lsmClusterProfile := showLsmClusterProfileRes.GetData()

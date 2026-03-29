@@ -73,7 +73,7 @@ func createManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 
 	WhereUsedRes, _ := client.ApiCall("where-used", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !WhereUsedRes.Success {
-		return fmt.Errorf(WhereUsedRes.ErrorMsg)
+		return fmt.Errorf("%s", WhereUsedRes.ErrorMsg)
 	}
 
 	d.SetId("where-used-" + acctest.RandString(10))

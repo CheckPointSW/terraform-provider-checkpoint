@@ -273,14 +273,14 @@ func dataSourceManagementResourceSmtpRead(d *schema.ResourceData, m interface{})
 	}
 	showResourceSmtpRes, err := client.ApiCall("show-resource-smtp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceSmtpRes.Success {
 		if objectNotFound(showResourceSmtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceSmtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceSmtpRes.ErrorMsg)
 	}
 
 	resourceSmtp := showResourceSmtpRes.GetData()

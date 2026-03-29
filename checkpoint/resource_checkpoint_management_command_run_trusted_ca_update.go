@@ -38,7 +38,7 @@ func createManagementRunTrustedCaUpdate(d *schema.ResourceData, m interface{}) e
 
 	RunTrustedCaUpdateRes, _ := client.ApiCall("run-trusted-ca-update", payload, client.GetSessionID(), true, false)
 	if !RunTrustedCaUpdateRes.Success {
-		return fmt.Errorf(RunTrustedCaUpdateRes.ErrorMsg)
+		return fmt.Errorf("%s", RunTrustedCaUpdateRes.ErrorMsg)
 	}
 
 	d.SetId("run-trusted-ca-update-" + acctest.RandString(10))

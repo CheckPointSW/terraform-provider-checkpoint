@@ -69,10 +69,10 @@ func dataSourceManagementThreatLayerRead(d *schema.ResourceData, m interface{}) 
 
 	showThreatLayerRes, err := client.ApiCall("show-threat-layer", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatLayerRes.Success {
-		return fmt.Errorf(showThreatLayerRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatLayerRes.ErrorMsg)
 	}
 
 	threatLayer := showThreatLayerRes.GetData()

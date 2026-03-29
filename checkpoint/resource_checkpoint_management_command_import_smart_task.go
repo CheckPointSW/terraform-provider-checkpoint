@@ -38,10 +38,10 @@ func createManagementImportSmartTask(d *schema.ResourceData, m interface{}) erro
 
 	ImportSmartTaskRes, err := client.ApiCall("import-smart-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ImportSmartTaskRes.Success {
-		return fmt.Errorf(ImportSmartTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", ImportSmartTaskRes.ErrorMsg)
 	}
 
 	importSmartTask := ImportSmartTaskRes.GetData()

@@ -33,7 +33,7 @@ func createManagementUnlockAdministrator(d *schema.ResourceData, m interface{}) 
 
 	UnlockAdministratorRes, _ := client.ApiCall("unlock-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UnlockAdministratorRes.Success {
-		return fmt.Errorf(UnlockAdministratorRes.ErrorMsg)
+		return fmt.Errorf("%s", UnlockAdministratorRes.ErrorMsg)
 	}
 
 	d.SetId("unlock-administrator-" + acctest.RandString(10))

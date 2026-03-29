@@ -70,10 +70,10 @@ func dataSourceManagementExceptionGroupRead(d *schema.ResourceData, m interface{
 
 	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showExceptionGroupRes.Success {
-		return fmt.Errorf(showExceptionGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showExceptionGroupRes.ErrorMsg)
 	}
 
 	exceptionGroup := showExceptionGroupRes.GetData()

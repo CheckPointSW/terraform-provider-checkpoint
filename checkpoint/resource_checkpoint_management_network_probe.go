@@ -207,9 +207,9 @@ func createManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	addNetworkProbeRes, err := client.ApiCall("add-network-probe", networkProbe, client.GetSessionID(), true, false)
 	if err != nil || !addNetworkProbeRes.Success {
 		if addNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", addNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNetworkProbeRes.GetData()["uid"].(string))
@@ -227,14 +227,14 @@ func readManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 
 	showNetworkProbeRes, err := client.ApiCall("show-network-probe", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkProbeRes.Success {
 		if objectNotFound(showNetworkProbeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkProbeRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkProbeRes.ErrorMsg)
 	}
 
 	networkProbe := showNetworkProbeRes.GetData()
@@ -445,9 +445,9 @@ func updateManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	updateNetworkProbeRes, err := client.ApiCall("set-network-probe", networkProbe, client.GetSessionID(), true, false)
 	if err != nil || !updateNetworkProbeRes.Success {
 		if updateNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementNetworkProbe(d, m)
@@ -466,9 +466,9 @@ func deleteManagementNetworkProbe(d *schema.ResourceData, m interface{}) error {
 	deleteNetworkProbeRes, err := client.ApiCall("delete-network-probe", networkProbePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteNetworkProbeRes.Success {
 		if deleteNetworkProbeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNetworkProbeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNetworkProbeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

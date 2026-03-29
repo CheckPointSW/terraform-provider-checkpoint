@@ -93,14 +93,14 @@ func dataSourceManagementResourceCifsRead(d *schema.ResourceData, m interface{})
 
 	showResourceCifsRes, err := client.ApiCall("show-resource-cifs", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceCifsRes.Success {
 		if objectNotFound(showResourceCifsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceCifsRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceCifsRes.ErrorMsg)
 	}
 
 	resourceCifs := showResourceCifsRes.GetData()

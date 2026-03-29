@@ -222,9 +222,9 @@ func createManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 	addServiceSctpRes, err := client.ApiCall("add-service-sctp", serviceSctp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceSctpRes.Success {
 		if addServiceSctpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceSctpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceSctpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceSctpRes.GetData()["uid"].(string))
@@ -242,14 +242,14 @@ func readManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 
 	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceSctpRes.Success {
 		if objectNotFound(showServiceSctpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceSctpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceSctpRes.ErrorMsg)
 	}
 
 	serviceSctp := showServiceSctpRes.GetData()
@@ -447,9 +447,9 @@ func updateManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 	updateServiceSctpRes, err := client.ApiCall("set-service-sctp", serviceSctp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceSctpRes.Success {
 		if updateServiceSctpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceSctpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceSctpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceSctp(d, m)
@@ -474,9 +474,9 @@ func deleteManagementServiceSctp(d *schema.ResourceData, m interface{}) error {
 	deleteServiceSctpRes, err := client.ApiCall("delete-service-sctp", serviceSctpPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceSctpRes.Success {
 		if deleteServiceSctpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceSctpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceSctpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

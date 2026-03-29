@@ -43,10 +43,10 @@ func dataSourceManagementLoginMessageRead(d *schema.ResourceData, m interface{})
 
 	showLoginMessageRes, err := client.ApiCall("show-login-message", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLoginMessageRes.Success {
-		return fmt.Errorf(showLoginMessageRes.ErrorMsg)
+		return fmt.Errorf("%s", showLoginMessageRes.ErrorMsg)
 	}
 
 	loginMessage := showLoginMessageRes.GetData()

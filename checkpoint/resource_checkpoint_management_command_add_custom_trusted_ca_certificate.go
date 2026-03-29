@@ -104,7 +104,7 @@ func createManagementAddCustomTrustedCaCertificate(d *schema.ResourceData, m int
 
 	AddCustomTrustedCaCertificateRes, _ := client.ApiCall("add-custom-trusted-ca-certificate", payload, client.GetSessionID(), true, false)
 	if !AddCustomTrustedCaCertificateRes.Success {
-		return fmt.Errorf(AddCustomTrustedCaCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", AddCustomTrustedCaCertificateRes.ErrorMsg)
 	}
 
 	customTrustedCaCertificateObj := AddCustomTrustedCaCertificateRes.GetData()

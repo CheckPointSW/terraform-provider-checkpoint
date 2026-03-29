@@ -96,9 +96,9 @@ func createManagementResourceUriForQos(d *schema.ResourceData, m interface{}) er
 	addResourceUriForQosRes, err := client.ApiCallSimple("add-resource-uri-for-qos", resourceUriForQos)
 	if err != nil || !addResourceUriForQosRes.Success {
 		if addResourceUriForQosRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceUriForQosRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceUriForQosRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceUriForQosRes.GetData()["uid"].(string))
@@ -116,14 +116,14 @@ func readManagementResourceUriForQos(d *schema.ResourceData, m interface{}) erro
 
 	showResourceUriForQosRes, err := client.ApiCallSimple("show-resource-uri-for-qos", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriForQosRes.Success {
 		if objectNotFound(showResourceUriForQosRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceUriForQosRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriForQosRes.ErrorMsg)
 	}
 
 	resourceUriForQos := showResourceUriForQosRes.GetData()
@@ -218,9 +218,9 @@ func updateManagementResourceUriForQos(d *schema.ResourceData, m interface{}) er
 	updateResourceUriForQosRes, err := client.ApiCallSimple("set-resource-uri-for-qos", resourceUriForQos)
 	if err != nil || !updateResourceUriForQosRes.Success {
 		if updateResourceUriForQosRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceUriForQosRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceUriForQosRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceUriForQos(d, m)
@@ -239,9 +239,9 @@ func deleteManagementResourceUriForQos(d *schema.ResourceData, m interface{}) er
 	deleteResourceUriForQosRes, err := client.ApiCallSimple("delete-resource-uri-for-qos", resourceUriForQosPayload)
 	if err != nil || !deleteResourceUriForQosRes.Success {
 		if deleteResourceUriForQosRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceUriForQosRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceUriForQosRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

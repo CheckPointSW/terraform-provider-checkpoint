@@ -224,10 +224,10 @@ func dataSourceAzureAdContentRead(d *schema.ResourceData, m interface{}) error {
 
 	showAzureAdContentRes, err := client.ApiCall("show-azure-ad-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureAdContentRes.Success {
-		return fmt.Errorf(showAzureAdContentRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureAdContentRes.ErrorMsg)
 	}
 
 	azureAdContent := showAzureAdContentRes.GetData()

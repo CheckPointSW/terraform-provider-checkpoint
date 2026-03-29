@@ -108,10 +108,10 @@ func dataSourceManagementGlobalAssignmentRead(d *schema.ResourceData, m interfac
 
 	showGlobalAssignmentRes, err := client.ApiCall("show-global-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalAssignmentRes.Success {
-		return fmt.Errorf(showGlobalAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalAssignmentRes.ErrorMsg)
 	}
 
 	globalAssignment := showGlobalAssignmentRes.GetData()

@@ -134,10 +134,10 @@ func dataSourceManagementSetHttpsAdvancedSettingsRead(d *schema.ResourceData, m 
 
 	showHttpsAdvancedSettingsRes, err := client.ApiCall("show-https-advanced-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsAdvancedSettingsRes.Success {
-		return fmt.Errorf(showHttpsAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsAdvancedSettingsRes.ErrorMsg)
 	}
 
 	httpsAdvancedSettings := showHttpsAdvancedSettingsRes.GetData()

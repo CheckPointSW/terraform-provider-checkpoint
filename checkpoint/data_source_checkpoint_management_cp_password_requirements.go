@@ -32,10 +32,10 @@ func dataSourceManagementCpPasswordRequirementsRead(d *schema.ResourceData, m in
 
 	cpPasswordRequirementsRes, err := client.ApiCallSimple("show-cp-password-requirements", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !cpPasswordRequirementsRes.Success {
-		return fmt.Errorf(cpPasswordRequirementsRes.ErrorMsg)
+		return fmt.Errorf("%s", cpPasswordRequirementsRes.ErrorMsg)
 	}
 	cpPasswordRequirementsData := cpPasswordRequirementsRes.GetData()
 

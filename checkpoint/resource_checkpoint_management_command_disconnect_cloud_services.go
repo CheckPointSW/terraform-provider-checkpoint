@@ -34,10 +34,10 @@ func createManagementDisconnectCloudServices(d *schema.ResourceData, m interface
 
 	disconnectCloudServicesRes, err := client.ApiCall("disconnect-cloud-services", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !disconnectCloudServicesRes.Success {
-		return fmt.Errorf(disconnectCloudServicesRes.ErrorMsg)
+		return fmt.Errorf("%s", disconnectCloudServicesRes.ErrorMsg)
 	}
 
 	d.SetId("disconnect-cloud-services" + acctest.RandString(5))

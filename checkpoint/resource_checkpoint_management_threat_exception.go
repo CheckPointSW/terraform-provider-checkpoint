@@ -341,9 +341,9 @@ func createManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	addThreatExceptionRes, err := client.ApiCall("add-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatExceptionRes.Success {
 		if addThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatExceptionRes.GetData()["uid"].(string))
@@ -378,7 +378,7 @@ func readManagementThreatException(d *schema.ResourceData, m interface{}) error 
 
 	showThreatRuleRes, err := client.ApiCall("show-threat-exception", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	if !showThreatRuleRes.Success {
@@ -387,7 +387,7 @@ func readManagementThreatException(d *schema.ResourceData, m interface{}) error 
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleRes.ErrorMsg)
 	}
 
 	exceptionRule := showThreatRuleRes.GetData()
@@ -695,9 +695,9 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	updateThreatExceptionRes, err := client.ApiCall("set-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatExceptionRes.Success {
 		if updateThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementThreatException(d, m)
 }
@@ -731,9 +731,9 @@ func deleteManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	deleteThreatExceptionRes, err := client.ApiCall("delete-threat-exception", threatExceptionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatExceptionRes.Success {
 		if deleteThreatExceptionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatExceptionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatExceptionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 	return nil

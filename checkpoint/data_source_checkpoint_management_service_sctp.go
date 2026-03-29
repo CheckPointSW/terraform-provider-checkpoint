@@ -132,10 +132,10 @@ func dataSourceManagementServiceSctpRead(d *schema.ResourceData, m interface{}) 
 
 	showServiceSctpRes, err := client.ApiCall("show-service-sctp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceSctpRes.Success {
-		return fmt.Errorf(showServiceSctpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceSctpRes.ErrorMsg)
 	}
 
 	serviceSctp := showServiceSctpRes.GetData()

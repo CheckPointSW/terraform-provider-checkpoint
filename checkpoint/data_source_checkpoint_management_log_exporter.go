@@ -123,10 +123,10 @@ func dataSourceManagementLogExporterRead(d *schema.ResourceData, m interface{}) 
 
 	showLogExporterRes, err := client.ApiCallSimple("show-log-exporter", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLogExporterRes.Success {
-		return fmt.Errorf(showLogExporterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLogExporterRes.ErrorMsg)
 	}
 
 	logExporter := showLogExporterRes.GetData()

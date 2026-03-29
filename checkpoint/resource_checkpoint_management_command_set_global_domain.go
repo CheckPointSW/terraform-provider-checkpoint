@@ -137,7 +137,7 @@ func createManagementSetGlobalDomain(d *schema.ResourceData, m interface{}) erro
 
 	SetGlobalDomainRes, _ := client.ApiCall("set-global-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetGlobalDomainRes.Success {
-		return fmt.Errorf(SetGlobalDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", SetGlobalDomainRes.ErrorMsg)
 	}
 
 	d.SetId("set-global-domain-" + acctest.RandString(10))

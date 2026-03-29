@@ -399,9 +399,9 @@ func createManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 	addInteroperableDeviceRes, err := client.ApiCall("add-interoperable-device", interoperableDevice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addInteroperableDeviceRes.Success {
 		if addInteroperableDeviceRes.ErrorMsg != "" {
-			return fmt.Errorf(addInteroperableDeviceRes.ErrorMsg)
+			return fmt.Errorf("%s", addInteroperableDeviceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addInteroperableDeviceRes.GetData()["uid"].(string))
@@ -419,14 +419,14 @@ func readManagementInteroperableDevice(d *schema.ResourceData, m interface{}) er
 
 	showInteroperableDeviceRes, err := client.ApiCall("show-interoperable-device", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInteroperableDeviceRes.Success {
 		if objectNotFound(showInteroperableDeviceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInteroperableDeviceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInteroperableDeviceRes.ErrorMsg)
 	}
 
 	interoperableDevice := showInteroperableDeviceRes.GetData()
@@ -809,9 +809,9 @@ func updateManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 	updateInteroperableDeviceRes, err := client.ApiCall("set-interoperable-device", interoperableDevice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateInteroperableDeviceRes.Success {
 		if updateInteroperableDeviceRes.ErrorMsg != "" {
-			return fmt.Errorf(updateInteroperableDeviceRes.ErrorMsg)
+			return fmt.Errorf("%s", updateInteroperableDeviceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementInteroperableDevice(d, m)
@@ -837,9 +837,9 @@ func deleteManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 	deleteInteroperableDeviceRes, err := client.ApiCall("delete-interoperable-device", interoperableDevicePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteInteroperableDeviceRes.Success {
 		if deleteInteroperableDeviceRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteInteroperableDeviceRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteInteroperableDeviceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

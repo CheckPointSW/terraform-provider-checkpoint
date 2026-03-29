@@ -100,14 +100,14 @@ func dataSourceReadManagementDataTypeWeightedKeywords(d *schema.ResourceData, m 
 
 	showDataTypeWeightedKeywordsRes, err := client.ApiCall("show-data-type-weighted-keywords", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeWeightedKeywordsRes.Success {
 		if objectNotFound(showDataTypeWeightedKeywordsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeWeightedKeywordsRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeWeightedKeywordsRes.ErrorMsg)
 	}
 
 	dataTypeWeightedKeywords := showDataTypeWeightedKeywordsRes.GetData()

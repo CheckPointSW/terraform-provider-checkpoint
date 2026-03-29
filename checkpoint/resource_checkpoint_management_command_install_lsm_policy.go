@@ -42,7 +42,7 @@ func createManagementInstallLsmPolicy(d *schema.ResourceData, m interface{}) err
 
 	InstallLsmPolicyRes, _ := client.ApiCall("install-lsm-policy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallLsmPolicyRes.Success {
-		return fmt.Errorf(InstallLsmPolicyRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallLsmPolicyRes.ErrorMsg)
 	}
 
 	d.SetId("install-lsm-policy" + acctest.RandString(10))

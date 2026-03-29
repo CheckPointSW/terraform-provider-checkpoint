@@ -32,10 +32,10 @@ func dataSourceManagementSyncWIthUserCenterRead(d *schema.ResourceData, m interf
 
 	syncWIthUserCenterRes, err := client.ApiCallSimple("show-sync-with-user-center", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !syncWIthUserCenterRes.Success {
-		return fmt.Errorf(syncWIthUserCenterRes.ErrorMsg)
+		return fmt.Errorf("%s", syncWIthUserCenterRes.ErrorMsg)
 	}
 	syncWIthUserCenterData := syncWIthUserCenterRes.GetData()
 

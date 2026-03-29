@@ -124,9 +124,9 @@ func createManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 	addMobileAccessProfileSectionRes, err := client.ApiCall("add-mobile-access-profile-section", mobileAccessProfileSection, client.GetSessionID(), true, false)
 	if err != nil || !addMobileAccessProfileSectionRes.Success {
 		if addMobileAccessProfileSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileAccessProfileSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileAccessProfileSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileAccessProfileSectionRes.GetData()["uid"].(string))
@@ -144,14 +144,14 @@ func readManagementMobileAccessProfileSection(d *schema.ResourceData, m interfac
 
 	showMobileAccessProfileSectionRes, err := client.ApiCall("show-mobile-access-profile-section", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessProfileSectionRes.Success {
 		if objectNotFound(showMobileAccessProfileSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessProfileSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessProfileSectionRes.ErrorMsg)
 	}
 
 	mobileAccessProfileSection := showMobileAccessProfileSectionRes.GetData()
@@ -246,9 +246,9 @@ func updateManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 	updateMobileAccessProfileSectionRes, err := client.ApiCall("set-mobile-access-profile-section", mobileAccessProfileSection, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileAccessProfileSectionRes.Success {
 		if updateMobileAccessProfileSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileAccessProfileSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileAccessProfileSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileAccessProfileSection(d, m)
@@ -267,9 +267,9 @@ func deleteManagementMobileAccessProfileSection(d *schema.ResourceData, m interf
 	deleteMobileAccessProfileSectionRes, err := client.ApiCall("delete-mobile-access-profile-section", mobileAccessProfileSectionPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileAccessProfileSectionRes.Success {
 		if deleteMobileAccessProfileSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileAccessProfileSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileAccessProfileSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

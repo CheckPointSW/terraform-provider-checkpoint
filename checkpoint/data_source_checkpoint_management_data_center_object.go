@@ -188,7 +188,7 @@ func dataSourceManagementDataCenterObjectRead(d *schema.ResourceData, m interfac
 	showDataCenterObjRes, err := client.ApiCall("show-data-center-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataCenterObjRes.Success {
 		// Handle delete resource from other clients
@@ -196,7 +196,7 @@ func dataSourceManagementDataCenterObjectRead(d *schema.ResourceData, m interfac
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataCenterObjRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataCenterObjRes.ErrorMsg)
 	}
 
 	dataCenterObj := showDataCenterObjRes.GetData()

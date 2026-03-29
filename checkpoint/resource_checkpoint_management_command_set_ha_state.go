@@ -39,7 +39,7 @@ func createManagementSetHaState(d *schema.ResourceData, m interface{}) error {
 
 	SetHaStateRes, _ := client.ApiCall("set-ha-state", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetHaStateRes.Success {
-		return fmt.Errorf(SetHaStateRes.ErrorMsg)
+		return fmt.Errorf("%s", SetHaStateRes.ErrorMsg)
 	}
 
 	d.SetId("set-ha-state" + acctest.RandString(10))

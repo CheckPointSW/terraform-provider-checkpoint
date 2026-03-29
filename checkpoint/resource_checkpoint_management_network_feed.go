@@ -262,9 +262,9 @@ func createManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 	addNetworkFeedRes, err := client.ApiCall("add-network-feed", networkFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNetworkFeedRes.Success {
 		if addNetworkFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(addNetworkFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", addNetworkFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNetworkFeedRes.GetData()["uid"].(string))
@@ -282,14 +282,14 @@ func readManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 
 	showNetworkFeedRes, err := client.ApiCall("show-network-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkFeedRes.Success {
 		if objectNotFound(showNetworkFeedRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkFeedRes.ErrorMsg)
 	}
 
 	networkFeed := showNetworkFeedRes.GetData()
@@ -559,9 +559,9 @@ func updateManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 	updateNetworkFeedRes, err := client.ApiCall("set-network-feed", networkFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNetworkFeedRes.Success {
 		if updateNetworkFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNetworkFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNetworkFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementNetworkFeed(d, m)
@@ -586,9 +586,9 @@ func deleteManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 	deleteNetworkFeedRes, err := client.ApiCall("delete-network-feed", networkFeedPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteNetworkFeedRes.Success {
 		if deleteNetworkFeedRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNetworkFeedRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNetworkFeedRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

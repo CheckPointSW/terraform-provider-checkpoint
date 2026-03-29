@@ -89,14 +89,14 @@ func dataSourceManagementIdpAdministratorGroupRead(d *schema.ResourceData, m int
 
 	showIdpAdministratorGroupRes, err := client.ApiCall("show-idp-administrator-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdpAdministratorGroupRes.Success {
 		if objectNotFound(showIdpAdministratorGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIdpAdministratorGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdpAdministratorGroupRes.ErrorMsg)
 	}
 
 	idpAdministratorGroup := showIdpAdministratorGroupRes.GetData()

@@ -718,22 +718,22 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	threatProfileRes, err := client.ApiCall("add-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !threatProfileRes.Success {
 		if threatProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(threatProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", threatProfileRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-threat-profile", threatProfileRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	showThreatProfileRes, err := client.ApiCall("show-threat-profile", map[string]interface{}{"name": d.Get("name")}, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatProfileRes.Success {
-		return fmt.Errorf(showThreatProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatProfileRes.ErrorMsg)
 	}
 
 	d.SetId(showThreatProfileRes.GetData()["uid"].(string))
@@ -751,7 +751,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 
 	showThreatProfileRes, err := client.ApiCall("show-threat-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatProfileRes.Success {
 		// Handle delete resource from other clients
@@ -759,7 +759,7 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatProfileRes.ErrorMsg)
 	}
 
 	threatProfile := showThreatProfileRes.GetData()
@@ -1373,15 +1373,15 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 
 	threatProfileRes, err := client.ApiCall("set-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	if !threatProfileRes.Success {
 		if threatProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(threatProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", threatProfileRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-threat-profile", threatProfileRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementThreatProfile(d, m)
@@ -1404,15 +1404,15 @@ func deleteManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	deleteThreatProfileRes, err := client.ApiCall("delete-threat-profile", threatProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	if !deleteThreatProfileRes.Success {
 		if deleteThreatProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatProfileRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("delete-threat-profile", deleteThreatProfileRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	d.SetId("")

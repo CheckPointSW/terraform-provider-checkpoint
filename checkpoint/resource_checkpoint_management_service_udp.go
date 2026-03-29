@@ -245,9 +245,9 @@ func createManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	addServiceUdpRes, err := client.ApiCall("add-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceUdpRes.Success {
 		if addServiceUdpRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceUdpRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceUdpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceUdpRes.GetData()["uid"].(string))
@@ -265,7 +265,7 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 
 	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceUdpRes.Success {
 		// Handle delete resource from other clients
@@ -273,7 +273,7 @@ func readManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceUdpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceUdpRes.ErrorMsg)
 	}
 
 	serviceUdp := showServiceUdpRes.GetData()
@@ -524,10 +524,10 @@ func updateManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	if len(serviceUdp) != 3 {
 		setServiceUdpRes, err := client.ApiCall("set-service-udp", serviceUdp, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
-			fmt.Errorf(err.Error())
+			fmt.Errorf("%s", err.Error())
 		}
 		if !setServiceUdpRes.Success {
-			return fmt.Errorf(setServiceUdpRes.ErrorMsg)
+			return fmt.Errorf("%s", setServiceUdpRes.ErrorMsg)
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -551,7 +551,7 @@ func deleteManagementServiceUdp(d *schema.ResourceData, m interface{}) error {
 	}
 	deleteServiceUdpRes, _ := client.ApiCall("delete-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !deleteServiceUdpRes.Success {
-		return fmt.Errorf(deleteServiceUdpRes.ErrorMsg)
+		return fmt.Errorf("%s", deleteServiceUdpRes.ErrorMsg)
 	}
 	d.SetId("")
 

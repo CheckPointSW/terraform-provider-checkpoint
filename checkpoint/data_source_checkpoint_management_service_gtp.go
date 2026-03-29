@@ -315,10 +315,10 @@ func dataSourceManagementServiceGtpRead(d *schema.ResourceData, m interface{}) e
 	showServiceGtpRes, err := client.ApiCall("show-service-gtp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceGtpRes.Success {
-		return fmt.Errorf(showServiceGtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceGtpRes.ErrorMsg)
 	}
 
 	serviceGtp := showServiceGtpRes.GetData()

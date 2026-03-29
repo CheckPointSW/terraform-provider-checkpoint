@@ -216,7 +216,7 @@ func createManagementSetAppControlAdvancedSettings(d *schema.ResourceData, m int
 
 	SetAppControlAdvancedSettingsRes, _ := client.ApiCall("set-app-control-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !SetAppControlAdvancedSettingsRes.Success {
-		return fmt.Errorf(SetAppControlAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetAppControlAdvancedSettingsRes.ErrorMsg)
 	}
 
 	res := SetAppControlAdvancedSettingsRes.GetData()

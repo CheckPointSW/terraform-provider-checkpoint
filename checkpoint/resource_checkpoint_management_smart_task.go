@@ -401,9 +401,9 @@ func createManagementSmartTask(d *schema.ResourceData, m interface{}) error {
 	addSmartTaskRes, err := client.ApiCall("add-smart-task", smartTask, client.GetSessionID(), true, false)
 	if err != nil || !addSmartTaskRes.Success {
 		if addSmartTaskRes.ErrorMsg != "" {
-			return fmt.Errorf(addSmartTaskRes.ErrorMsg)
+			return fmt.Errorf("%s", addSmartTaskRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSmartTaskRes.GetData()["uid"].(string))
@@ -421,14 +421,14 @@ func readManagementSmartTask(d *schema.ResourceData, m interface{}) error {
 
 	showSmartTaskRes, err := client.ApiCall("show-smart-task", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmartTaskRes.Success {
 		if objectNotFound(showSmartTaskRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSmartTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmartTaskRes.ErrorMsg)
 	}
 
 	smartTask := showSmartTaskRes.GetData()
@@ -787,9 +787,9 @@ func updateManagementSmartTask(d *schema.ResourceData, m interface{}) error {
 	updateSmartTaskRes, err := client.ApiCall("set-smart-task", smartTask, client.GetSessionID(), true, false)
 	if err != nil || !updateSmartTaskRes.Success {
 		if updateSmartTaskRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSmartTaskRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSmartTaskRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSmartTask(d, m)
@@ -814,9 +814,9 @@ func deleteManagementSmartTask(d *schema.ResourceData, m interface{}) error {
 	deleteSmartTaskRes, err := client.ApiCall("delete-smart-task", smartTaskPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteSmartTaskRes.Success {
 		if deleteSmartTaskRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSmartTaskRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSmartTaskRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

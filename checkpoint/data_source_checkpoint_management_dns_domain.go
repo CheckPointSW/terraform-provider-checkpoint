@@ -64,10 +64,10 @@ func dataSourceManagementDnsDomainRead(d *schema.ResourceData, m interface{}) er
 
 	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDnsDomainRes.Success {
-		return fmt.Errorf(showDnsDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showDnsDomainRes.ErrorMsg)
 	}
 
 	dnsDomain := showDnsDomainRes.GetData()

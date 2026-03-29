@@ -66,10 +66,10 @@ func dataSourceManagementRadiusGroupRead(d *schema.ResourceData, m interface{}) 
 
 	showRadiusGroupRes, err := client.ApiCall("show-radius-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRadiusGroupRes.Success {
-		return fmt.Errorf(showRadiusGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showRadiusGroupRes.ErrorMsg)
 	}
 
 	radiusGroup := showRadiusGroupRes.GetData()

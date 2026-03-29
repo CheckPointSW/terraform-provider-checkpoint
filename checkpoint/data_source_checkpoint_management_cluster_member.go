@@ -171,14 +171,14 @@ func dataSourceManagementClusterMemberRead(d *schema.ResourceData, m interface{}
 
 	showClusterMemberRes, err := client.ApiCall("show-cluster-member", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showClusterMemberRes.Success {
 		if objectNotFound(showClusterMemberRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showClusterMemberRes.ErrorMsg)
+		return fmt.Errorf("%s", showClusterMemberRes.ErrorMsg)
 	}
 
 	clusterMember := showClusterMemberRes.GetData()

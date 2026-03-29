@@ -277,10 +277,10 @@ func dataSourceManagementSetGatewayCapabilitiesRead(d *schema.ResourceData, m in
 
 	showGatewayCapabilitiesRes, err := client.ApiCall("show-gateway-capabilities", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGatewayCapabilitiesRes.Success {
-		return fmt.Errorf(showGatewayCapabilitiesRes.ErrorMsg)
+		return fmt.Errorf("%s", showGatewayCapabilitiesRes.ErrorMsg)
 	}
 
 	gatewayCapabilities := showGatewayCapabilitiesRes.GetData()

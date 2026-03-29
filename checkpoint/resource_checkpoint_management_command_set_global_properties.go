@@ -3248,7 +3248,7 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 	SetGlobalPropertiesRes, _ := client.ApiCall("set-global-properties", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetGlobalPropertiesRes.Success {
-		return fmt.Errorf(SetGlobalPropertiesRes.ErrorMsg)
+		return fmt.Errorf("%s", SetGlobalPropertiesRes.ErrorMsg)
 	}
 
 	d.SetId("set-global-properties-" + acctest.RandString(10))

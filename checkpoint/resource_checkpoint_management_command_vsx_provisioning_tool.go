@@ -1516,11 +1516,11 @@ func createManagementVsxProvisioningTool(d *schema.ResourceData, m interface{}) 
 	log.Println("vsx-provisioning-tool result is ", vsxProvisioningToolRes)
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	if !vsxProvisioningToolRes.Success {
-		return fmt.Errorf(vsxProvisioningToolRes.ErrorMsg)
+		return fmt.Errorf("%s", vsxProvisioningToolRes.ErrorMsg)
 	}
 
 	d.SetId("vsx-provisioning-tool-" + acctest.RandString(10))

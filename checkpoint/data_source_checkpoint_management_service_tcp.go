@@ -146,10 +146,10 @@ func dataSourceManagementServiceTcpRead(d *schema.ResourceData, m interface{}) e
 
 	showServiceTcpRes, err := client.ApiCall("show-service-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceTcpRes.Success {
-		return fmt.Errorf(showServiceTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceTcpRes.ErrorMsg)
 	}
 
 	serviceTcp := showServiceTcpRes.GetData()

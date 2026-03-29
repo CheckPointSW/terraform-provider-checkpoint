@@ -45,7 +45,7 @@ func createManagementResetSic(d *schema.ResourceData, m interface{}) error {
 
 	ResetSicRes, _ := client.ApiCall("reset-sic", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !ResetSicRes.Success {
-		return fmt.Errorf(ResetSicRes.ErrorMsg)
+		return fmt.Errorf("%s", ResetSicRes.ErrorMsg)
 	}
 
 	d.SetId("reset-sic" + acctest.RandString(10))

@@ -262,10 +262,10 @@ func dataSourceManagementSmartTaskRead(d *schema.ResourceData, m interface{}) er
 
 	showSmartTaskRes, err := client.ApiCall("show-smart-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmartTaskRes.Success {
-		return fmt.Errorf(showSmartTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmartTaskRes.ErrorMsg)
 	}
 
 	smartTask := showSmartTaskRes.GetData()
@@ -407,7 +407,7 @@ func dataSourceManagementSmartTaskRead(d *schema.ResourceData, m interface{}) er
 
 			err = d.Set("action", []interface{}{actionMapToReturn})
 			if err != nil {
-				return fmt.Errorf(err.Error())
+				return fmt.Errorf("%s", err.Error())
 			}
 		}
 	} else {

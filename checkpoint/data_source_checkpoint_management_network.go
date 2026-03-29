@@ -131,10 +131,10 @@ func dataSourceManagementNetworkRead(d *schema.ResourceData, m interface{}) erro
 
 	showNetworkRes, err := client.ApiCall("show-network", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkRes.Success {
-		return fmt.Errorf(showNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkRes.ErrorMsg)
 	}
 
 	network := showNetworkRes.GetData()

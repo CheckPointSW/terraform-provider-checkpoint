@@ -38,7 +38,7 @@ func createManagementRevertToRevision(d *schema.ResourceData, m interface{}) err
 
 	RevertToRevisionRes, _ := client.ApiCall("revert-to-revision", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RevertToRevisionRes.Success {
-		return fmt.Errorf(RevertToRevisionRes.ErrorMsg)
+		return fmt.Errorf("%s", RevertToRevisionRes.ErrorMsg)
 	}
 
 	d.SetId("revert-to-revision-" + acctest.RandString(10))

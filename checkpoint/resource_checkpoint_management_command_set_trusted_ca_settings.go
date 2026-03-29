@@ -34,7 +34,7 @@ func createManagementSetTrustedCaSettings(d *schema.ResourceData, m interface{})
 
 	SetTrustedCaSettingsRes, _ := client.ApiCall("set-trusted-ca-settings", payload, client.GetSessionID(), true, false)
 	if !SetTrustedCaSettingsRes.Success {
-		return fmt.Errorf(SetTrustedCaSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetTrustedCaSettingsRes.ErrorMsg)
 	}
 	d.SetId("set-trusted-ca-settings" + acctest.RandString(10))
 	return readManagementSetTrustedCaSettings(d, m)

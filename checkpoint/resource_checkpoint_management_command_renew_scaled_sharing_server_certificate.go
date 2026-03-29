@@ -50,10 +50,10 @@ func createManagementRenewScaledSharingServerCertificate(d *schema.ResourceData,
 
 	RenewScaledSharingServerCertificateRes, err := client.ApiCall("renew-scaled-sharing-server-certificate", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !RenewScaledSharingServerCertificateRes.Success {
-		return fmt.Errorf(RenewScaledSharingServerCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", RenewScaledSharingServerCertificateRes.ErrorMsg)
 	}
 
 	resetSicStatusProfile := RenewScaledSharingServerCertificateRes.GetData()

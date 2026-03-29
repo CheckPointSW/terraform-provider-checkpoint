@@ -133,24 +133,24 @@ func createManagementKubernetesDataCenterServer(d *schema.ResourceData, m interf
 
 	addKubernetesDataCenterServerRes, err := client.ApiCall("add-data-center-server", kubernetesDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addKubernetesDataCenterServerRes.Success {
 		if addKubernetesDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addKubernetesDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addKubernetesDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addKubernetesDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": kubernetesDataCenterServer["name"],
 	}
 	showKubernetesDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showKubernetesDataCenterServerRes.Success {
-		return fmt.Errorf(showKubernetesDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showKubernetesDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showKubernetesDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementKubernetesDataCenterServer(d, m)
@@ -164,14 +164,14 @@ func readManagementKubernetesDataCenterServer(d *schema.ResourceData, m interfac
 
 	showKubernetesDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showKubernetesDataCenterServerRes.Success {
 		if objectNotFound(showKubernetesDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showKubernetesDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showKubernetesDataCenterServerRes.ErrorMsg)
 	}
 	kubernetesDataCenterServer := showKubernetesDataCenterServerRes.GetData()
 
@@ -290,14 +290,14 @@ func updateManagementKubernetesDataCenterServer(d *schema.ResourceData, m interf
 
 	updateKubernetesDataCenterServerRes, err := client.ApiCall("set-data-center-server", kubernetesDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateKubernetesDataCenterServerRes.Success {
 		if updateKubernetesDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateKubernetesDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateKubernetesDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateKubernetesDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementKubernetesDataCenterServer(d, m)
@@ -324,9 +324,9 @@ func deleteManagementKubernetesDataCenterServer(d *schema.ResourceData, m interf
 	deleteKubernetesDataCenterServerRes, err := client.ApiCall("delete-data-center-server", kubernetesDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteKubernetesDataCenterServerRes.Success {
 		if deleteKubernetesDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteKubernetesDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteKubernetesDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

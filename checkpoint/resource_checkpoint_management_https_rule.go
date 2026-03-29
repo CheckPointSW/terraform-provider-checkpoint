@@ -269,9 +269,9 @@ func createManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	addHttpsRuleRes, err := client.ApiCall("add-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsRuleRes.Success {
 		if addHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHttpsRuleRes.GetData()["uid"].(string))
@@ -290,14 +290,14 @@ func readManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 
 	showHttpsRuleRes, err := client.ApiCall("show-https-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsRuleRes.Success {
 		if objectNotFound(showHttpsRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHttpsRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsRuleRes.ErrorMsg)
 	}
 
 	httpsRule := showHttpsRuleRes.GetData()
@@ -592,9 +592,9 @@ func updateManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	updateHttpsRuleRes, err := client.ApiCall("set-https-rule", httpsRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsRuleRes.Success {
 		if updateHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementHttpsRule(d, m)
@@ -612,9 +612,9 @@ func deleteManagementHttpsRule(d *schema.ResourceData, m interface{}) error {
 	deleteHttpsRuleRes, err := client.ApiCall("delete-https-rule", httpsRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsRuleRes.Success {
 		if deleteHttpsRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHttpsRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHttpsRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

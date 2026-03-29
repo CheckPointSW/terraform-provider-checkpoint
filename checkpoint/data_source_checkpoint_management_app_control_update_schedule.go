@@ -158,10 +158,10 @@ func dataSourceManagementAppControlUpdateScheduleRead(d *schema.ResourceData, m 
 
 	appControlUpdateScheduleRes, err := client.ApiCallSimple("show-app-control-update-schedule", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !appControlUpdateScheduleRes.Success {
-		return fmt.Errorf(appControlUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", appControlUpdateScheduleRes.ErrorMsg)
 	}
 	appControlUpdateScheduleData := appControlUpdateScheduleRes.GetData()
 

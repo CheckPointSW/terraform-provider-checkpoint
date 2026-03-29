@@ -355,7 +355,7 @@ func createManagementVsxRunOperation(d *schema.ResourceData, m interface{}) erro
 
 	VsxRunOperationRes, _ := client.ApiCall("vsx-run-operation", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !VsxRunOperationRes.Success {
-		return fmt.Errorf(VsxRunOperationRes.ErrorMsg)
+		return fmt.Errorf("%s", VsxRunOperationRes.ErrorMsg)
 	}
 
 	d.SetId("vsx-run-operation-" + acctest.RandString(10))

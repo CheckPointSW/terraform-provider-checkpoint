@@ -111,7 +111,7 @@ func createManagementUninstallSoftwarePackage(d *schema.ResourceData, m interfac
 
 	UninstallSoftwarePackageRes, _ := client.ApiCall("uninstall-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UninstallSoftwarePackageRes.Success {
-		return fmt.Errorf(UninstallSoftwarePackageRes.ErrorMsg)
+		return fmt.Errorf("%s", UninstallSoftwarePackageRes.ErrorMsg)
 	}
 
 	d.SetId("uninstall-software-package-" + acctest.RandString(10))

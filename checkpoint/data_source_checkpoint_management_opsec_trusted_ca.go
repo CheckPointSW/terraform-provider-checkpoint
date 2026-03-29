@@ -217,14 +217,14 @@ func dataSourceManagementOpsecTrustedCaRead(d *schema.ResourceData, m interface{
 
 	showOpsecTrustedCaRes, err := client.ApiCall("show-opsec-trusted-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOpsecTrustedCaRes.Success {
 		if objectNotFound(showOpsecTrustedCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOpsecTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showOpsecTrustedCaRes.ErrorMsg)
 	}
 
 	opsecTrustedCa := showOpsecTrustedCaRes.GetData()

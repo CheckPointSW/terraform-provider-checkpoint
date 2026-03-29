@@ -48,10 +48,10 @@ func createManagementAbortGetInterfaces(d *schema.ResourceData, m interface{}) e
 
 	AbortGetInterfacesRes, err := client.ApiCall("abort-get-interfaces", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !AbortGetInterfacesRes.Success {
-		return fmt.Errorf(AbortGetInterfacesRes.ErrorMsg)
+		return fmt.Errorf("%s", AbortGetInterfacesRes.ErrorMsg)
 	}
 
 	abortGetInterfaces := AbortGetInterfacesRes.GetData()

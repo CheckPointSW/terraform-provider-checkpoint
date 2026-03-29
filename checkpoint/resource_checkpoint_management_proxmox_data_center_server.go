@@ -155,24 +155,24 @@ func createManagementProxmoxDataCenterServer(d *schema.ResourceData, m interface
 
 	addProxmoxDataCenterServerRes, err := client.ApiCall("add-data-center-server", proxmoxDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addProxmoxDataCenterServerRes.Success {
 		if addProxmoxDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addProxmoxDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addProxmoxDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addProxmoxDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": proxmoxDataCenterServer["name"],
 	}
 	showProxmoxDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProxmoxDataCenterServerRes.Success {
-		return fmt.Errorf(showProxmoxDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showProxmoxDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showProxmoxDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementProxmoxDataCenterServer(d, m)
@@ -186,14 +186,14 @@ func readManagementProxmoxDataCenterServer(d *schema.ResourceData, m interface{}
 
 	showProxmoxDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProxmoxDataCenterServerRes.Success {
 		if objectNotFound(showProxmoxDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showProxmoxDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showProxmoxDataCenterServerRes.ErrorMsg)
 	}
 	proxmoxDataCenterServer := showProxmoxDataCenterServerRes.GetData()
 
@@ -326,14 +326,14 @@ func updateManagementProxmoxDataCenterServer(d *schema.ResourceData, m interface
 
 	updateProxmoxDataCenterServerRes, err := client.ApiCall("set-data-center-server", proxmoxDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateProxmoxDataCenterServerRes.Success {
 		if updateProxmoxDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateProxmoxDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateProxmoxDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateProxmoxDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementProxmoxDataCenterServer(d, m)
@@ -358,9 +358,9 @@ func deleteManagementProxmoxDataCenterServer(d *schema.ResourceData, m interface
 	deleteProxmoxDataCenterServerRes, err := client.ApiCall("delete-data-center-server", proxmoxDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteProxmoxDataCenterServerRes.Success {
 		if deleteProxmoxDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteProxmoxDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteProxmoxDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

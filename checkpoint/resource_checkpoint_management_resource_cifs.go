@@ -163,9 +163,9 @@ func createManagementResourceCifs(d *schema.ResourceData, m interface{}) error {
 	addResourceCifsRes, err := client.ApiCall("add-resource-cifs", resourceCifs, client.GetSessionID(), true, false)
 	if err != nil || !addResourceCifsRes.Success {
 		if addResourceCifsRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceCifsRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceCifsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceCifsRes.GetData()["uid"].(string))
@@ -183,14 +183,14 @@ func readManagementResourceCifs(d *schema.ResourceData, m interface{}) error {
 
 	showResourceCifsRes, err := client.ApiCall("show-resource-cifs", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceCifsRes.Success {
 		if objectNotFound(showResourceCifsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceCifsRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceCifsRes.ErrorMsg)
 	}
 
 	resourceCifs := showResourceCifsRes.GetData()
@@ -367,9 +367,9 @@ func updateManagementResourceCifs(d *schema.ResourceData, m interface{}) error {
 	updateResourceCifsRes, err := client.ApiCall("set-resource-cifs", resourceCifs, client.GetSessionID(), true, false)
 	if err != nil || !updateResourceCifsRes.Success {
 		if updateResourceCifsRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceCifsRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceCifsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceCifs(d, m)
@@ -388,9 +388,9 @@ func deleteManagementResourceCifs(d *schema.ResourceData, m interface{}) error {
 	deleteResourceCifsRes, err := client.ApiCall("delete-resource-cifs", resourceCifsPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteResourceCifsRes.Success {
 		if deleteResourceCifsRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceCifsRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceCifsRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

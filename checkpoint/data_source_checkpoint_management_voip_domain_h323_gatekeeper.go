@@ -98,14 +98,14 @@ func dataSourceManagementVoipDomainH323GatekeeperRead(d *schema.ResourceData, m 
 
 	showVoipDomainH323GatekeeperRes, err := client.ApiCall("show-voip-domain-h323-gatekeeper", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainH323GatekeeperRes.Success {
 		if objectNotFound(showVoipDomainH323GatekeeperRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainH323GatekeeperRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainH323GatekeeperRes.ErrorMsg)
 	}
 
 	voipDomainH323Gatekeeper := showVoipDomainH323GatekeeperRes.GetData()

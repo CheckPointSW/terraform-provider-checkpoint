@@ -117,14 +117,14 @@ func dataSourceManagementNetworkProbeRead(d *schema.ResourceData, m interface{})
 
 	showNetworkProbeRes, err := client.ApiCall("show-network-probe", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNetworkProbeRes.Success {
 		if objectNotFound(showNetworkProbeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNetworkProbeRes.ErrorMsg)
+		return fmt.Errorf("%s", showNetworkProbeRes.ErrorMsg)
 	}
 
 	networkProbe := showNetworkProbeRes.GetData()

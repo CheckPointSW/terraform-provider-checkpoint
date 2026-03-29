@@ -502,9 +502,9 @@ func createManagementResourceSmtp(d *schema.ResourceData, m interface{}) error {
 	addResourceSmtpRes, err := client.ApiCall("add-resource-smtp", resourceSmtp, client.GetSessionID(), true, false)
 	if err != nil || !addResourceSmtpRes.Success {
 		if addResourceSmtpRes.ErrorMsg != "" {
-			return fmt.Errorf(addResourceSmtpRes.ErrorMsg)
+			return fmt.Errorf("%s", addResourceSmtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addResourceSmtpRes.GetData()["uid"].(string))
@@ -522,14 +522,14 @@ func readManagementResourceSmtp(d *schema.ResourceData, m interface{}) error {
 
 	showResourceSmtpRes, err := client.ApiCall("show-resource-smtp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceSmtpRes.Success {
 		if objectNotFound(showResourceSmtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceSmtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceSmtpRes.ErrorMsg)
 	}
 
 	resourceSmtp := showResourceSmtpRes.GetData()
@@ -982,9 +982,9 @@ func updateManagementResourceSmtp(d *schema.ResourceData, m interface{}) error {
 	updateResourceSmtpRes, err := client.ApiCall("set-resource-smtp", resourceSmtp, client.GetSessionID(), true, false)
 	if err != nil || !updateResourceSmtpRes.Success {
 		if updateResourceSmtpRes.ErrorMsg != "" {
-			return fmt.Errorf(updateResourceSmtpRes.ErrorMsg)
+			return fmt.Errorf("%s", updateResourceSmtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementResourceSmtp(d, m)
@@ -1003,9 +1003,9 @@ func deleteManagementResourceSmtp(d *schema.ResourceData, m interface{}) error {
 	deleteResourceSmtpRes, err := client.ApiCall("delete-resource-smtp", resourceSmtpPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteResourceSmtpRes.Success {
 		if deleteResourceSmtpRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteResourceSmtpRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteResourceSmtpRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

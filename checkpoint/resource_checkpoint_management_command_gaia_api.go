@@ -49,7 +49,7 @@ func createManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("other_parameter"); ok {
 		err := json.Unmarshal([]byte(v.(string)), &payload)
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	}
 
@@ -61,10 +61,10 @@ func createManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
 
 	GaiaApiRes, err := client.ApiCall(commandName, payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !GaiaApiRes.Success {
-		return fmt.Errorf(GaiaApiRes.ErrorMsg)
+		return fmt.Errorf("%s", GaiaApiRes.ErrorMsg)
 	}
 
 	gaiaApiResponse := GaiaApiRes.GetData()
@@ -72,7 +72,7 @@ func createManagementGaiaApi(d *schema.ResourceData, m interface{}) error {
 	if v := gaiaApiResponse["response-message"]; v != nil {
 		valToReturn, err := json.Marshal(v)
 		if err != nil {
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 		_ = d.Set("response_message", string(valToReturn))
 	}

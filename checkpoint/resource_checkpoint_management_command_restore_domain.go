@@ -78,7 +78,7 @@ func createManagementRestoreDomain(d *schema.ResourceData, m interface{}) error 
 
 	RestoreDomainRes, _ := client.ApiCall("restore-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !RestoreDomainRes.Success {
-		return fmt.Errorf(RestoreDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", RestoreDomainRes.ErrorMsg)
 	}
 
 	d.SetId("restore-domain-" + acctest.RandString(10))

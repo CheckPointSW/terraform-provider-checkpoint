@@ -98,14 +98,14 @@ func dataSourceManagementSmtpServerRead(d *schema.ResourceData, m interface{}) e
 
 	showSmtpServerRes, err := client.ApiCall("show-smtp-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmtpServerRes.Success {
 		if objectNotFound(showSmtpServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSmtpServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmtpServerRes.ErrorMsg)
 	}
 
 	smtpServer := showSmtpServerRes.GetData()

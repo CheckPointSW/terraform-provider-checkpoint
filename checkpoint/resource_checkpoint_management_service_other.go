@@ -251,9 +251,9 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	addServiceOtherRes, err := client.ApiCall("add-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceOtherRes.Success {
 		if addServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceOtherRes.GetData()["uid"].(string))
@@ -271,14 +271,14 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	showServiceOtherRes, err := client.ApiCall("show-service-other", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceOtherRes.Success {
 		if objectNotFound(showServiceOtherRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceOtherRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceOtherRes.ErrorMsg)
 	}
 
 	serviceOther := showServiceOtherRes.GetData()
@@ -500,9 +500,9 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	updateServiceOtherRes, err := client.ApiCall("set-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceOtherRes.Success {
 		if updateServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceOther(d, m)
@@ -528,9 +528,9 @@ func deleteManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 	deleteServiceOtherRes, err := client.ApiCall("delete-service-other", serviceOtherPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceOtherRes.Success {
 		if deleteServiceOtherRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceOtherRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceOtherRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -250,9 +250,9 @@ func createManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	addNatRuleRes, err := client.ApiCall("add-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatRuleRes.Success {
 		if addNatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addNatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addNatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNatRuleRes.GetData()["uid"].(string))
@@ -271,7 +271,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 
 	showNatRuleRes, err := client.ApiCall("show-nat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNatRuleRes.Success {
 		// Handle delete resource from other clients
@@ -279,7 +279,7 @@ func readManagementNatRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showNatRuleRes.ErrorMsg)
 	}
 
 	natRule := showNatRuleRes.GetData()
@@ -448,9 +448,9 @@ func updateManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	updateNatRuleRes, err := client.ApiCall("set-nat-rule", natRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatRuleRes.Success {
 		if updateNatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementNatRule(d, m)
 }
@@ -467,9 +467,9 @@ func deleteManagementNatRule(d *schema.ResourceData, m interface{}) error {
 	deleteAccessRuleRes, err := client.ApiCall("delete-nat-rule", natRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId("")

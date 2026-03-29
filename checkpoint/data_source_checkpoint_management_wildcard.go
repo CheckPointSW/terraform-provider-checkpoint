@@ -88,10 +88,10 @@ func dataSourceManagementWildcardRead(d *schema.ResourceData, m interface{}) err
 
 	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showWildcardRes.Success {
-		return fmt.Errorf(showWildcardRes.ErrorMsg)
+		return fmt.Errorf("%s", showWildcardRes.ErrorMsg)
 	}
 
 	wildcard := showWildcardRes.GetData()

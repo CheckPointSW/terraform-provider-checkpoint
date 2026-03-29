@@ -52,10 +52,10 @@ func dataSourceManagementSmartTaskTriggerRead(d *schema.ResourceData, m interfac
 
 	showSmartTaskTriggerRes, err := client.ApiCall("show-smart-task-trigger", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmartTaskTriggerRes.Success {
-		return fmt.Errorf(showSmartTaskTriggerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmartTaskTriggerRes.ErrorMsg)
 	}
 
 	smartTaskTrigger := showSmartTaskTriggerRes.GetData()

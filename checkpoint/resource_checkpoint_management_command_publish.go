@@ -54,7 +54,7 @@ func createManagementPublish(d *schema.ResourceData, m interface{}) error {
 
 	publishRes, _ := client.ApiCall("publish", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !publishRes.Success {
-		return fmt.Errorf(publishRes.ErrorMsg)
+		return fmt.Errorf("%s", publishRes.ErrorMsg)
 	}
 
 	d.SetId("publish-" + acctest.RandString(10))

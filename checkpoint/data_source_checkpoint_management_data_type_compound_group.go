@@ -82,14 +82,14 @@ func dataSourceManagementDataTypeCompoundGroupRead(d *schema.ResourceData, m int
 
 	showDataTypeCompoundGroupRes, err := client.ApiCall("show-data-type-compound-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeCompoundGroupRes.Success {
 		if objectNotFound(showDataTypeCompoundGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeCompoundGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeCompoundGroupRes.ErrorMsg)
 	}
 
 	dataTypeCompoundGroup := showDataTypeCompoundGroupRes.GetData()

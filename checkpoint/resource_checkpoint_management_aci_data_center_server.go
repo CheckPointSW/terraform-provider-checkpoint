@@ -155,24 +155,24 @@ func createManagementAciDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	addAciDataCenterServerRes, err := client.ApiCall("add-data-center-server", aciDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addAciDataCenterServerRes.Success {
 		if addAciDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addAciDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addAciDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addAciDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": aciDataCenterServer["name"],
 	}
 	showAciDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAciDataCenterServerRes.Success {
-		return fmt.Errorf(showAciDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAciDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showAciDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementAciDataCenterServer(d, m)
@@ -186,14 +186,14 @@ func readManagementAciDataCenterServer(d *schema.ResourceData, m interface{}) er
 
 	showAciDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAciDataCenterServerRes.Success {
 		if objectNotFound(showAciDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAciDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAciDataCenterServerRes.ErrorMsg)
 	}
 	aciDataCenterServer := showAciDataCenterServerRes.GetData()
 
@@ -327,14 +327,14 @@ func updateManagementAciDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	updateAciDataCenterServerRes, err := client.ApiCall("set-data-center-server", aciDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateAciDataCenterServerRes.Success {
 		if updateAciDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAciDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAciDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateAciDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementAciDataCenterServer(d, m)
@@ -361,9 +361,9 @@ func deleteManagementAciDataCenterServer(d *schema.ResourceData, m interface{}) 
 	deleteAciDataCenterServerRes, err := client.ApiCall("delete-data-center-server", aciDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAciDataCenterServerRes.Success {
 		if deleteAciDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAciDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAciDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

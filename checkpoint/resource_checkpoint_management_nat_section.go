@@ -132,9 +132,9 @@ func createManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	addNatSectionRes, err := client.ApiCall("add-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addNatSectionRes.Success {
 		if addNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addNatSectionRes.GetData()["uid"].(string))
@@ -153,14 +153,14 @@ func readManagementNatSection(d *schema.ResourceData, m interface{}) error {
 
 	showNatSectionRes, err := client.ApiCall("show-nat-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNatSectionRes.Success {
 		if objectNotFound(showNatSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showNatSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showNatSectionRes.ErrorMsg)
 	}
 
 	natSection := showNatSectionRes.GetData()
@@ -199,9 +199,9 @@ func updateManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	updateNatSectionRes, err := client.ApiCall("set-nat-section", natSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateNatSectionRes.Success {
 		if updateNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementNatSection(d, m)
@@ -221,9 +221,9 @@ func deleteManagementNatSection(d *schema.ResourceData, m interface{}) error {
 	deleteNatSectionRes, err := client.ApiCall("delete-nat-section", natSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteNatSectionRes.Success {
 		if deleteNatSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteNatSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteNatSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

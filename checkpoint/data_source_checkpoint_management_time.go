@@ -193,10 +193,10 @@ func dataSourceManagementTimeRead(d *schema.ResourceData, m interface{}) error {
 
 	showTimeRes, err := client.ApiCall("show-time", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTimeRes.Success {
-		return fmt.Errorf(showTimeRes.ErrorMsg)
+		return fmt.Errorf("%s", showTimeRes.ErrorMsg)
 	}
 
 	time := showTimeRes.GetData()

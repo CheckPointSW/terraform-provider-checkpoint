@@ -220,13 +220,13 @@ func dataSourceManagementCMEGWConfigurationsGCPRead(d *schema.ResourceData, m in
 	GCPGWConfigurationRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	gwConfiguration := GCPGWConfigurationRes.GetData()
 	if checkIfRequestFailed(gwConfiguration) {
 		errMessage := buildErrorMessage(gwConfiguration)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-gcp-gw-configuration-" + name + "-" + acctest.RandString(10))

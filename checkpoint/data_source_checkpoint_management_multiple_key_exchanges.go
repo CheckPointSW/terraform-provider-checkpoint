@@ -124,14 +124,14 @@ func dataSourceManagementMultipleKeyExchangesRead(d *schema.ResourceData, m inte
 
 	showMultipleKeyExchangesRes, err := client.ApiCall("show-multiple-key-exchanges", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMultipleKeyExchangesRes.Success {
 		if objectNotFound(showMultipleKeyExchangesRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMultipleKeyExchangesRes.ErrorMsg)
+		return fmt.Errorf("%s", showMultipleKeyExchangesRes.ErrorMsg)
 	}
 
 	multipleKeyExchanges := showMultipleKeyExchangesRes.GetData()

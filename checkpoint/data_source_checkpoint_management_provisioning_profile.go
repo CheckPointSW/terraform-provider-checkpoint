@@ -327,14 +327,14 @@ func dataSourceManagementProvisioningProfileRead(d *schema.ResourceData, m inter
 
 	showProvisioningProfileRes, err := client.ApiCall("show-provisioning-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProvisioningProfileRes.Success {
 		if objectNotFound(showProvisioningProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showProvisioningProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showProvisioningProfileRes.ErrorMsg)
 	}
 
 	provisioningProfile := showProvisioningProfileRes.GetData()

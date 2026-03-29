@@ -109,9 +109,9 @@ func createManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 	addUserGroupRes, err := client.ApiCall("add-user-group", userGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addUserGroupRes.Success {
 		if addUserGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addUserGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addUserGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addUserGroupRes.GetData()["uid"].(string))
@@ -129,14 +129,14 @@ func readManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 
 	showUserGroupRes, err := client.ApiCall("show-user-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUserGroupRes.Success {
 		if objectNotFound(showUserGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showUserGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showUserGroupRes.ErrorMsg)
 	}
 
 	userGroup := showUserGroupRes.GetData()
@@ -250,9 +250,9 @@ func updateManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 	updateUserGroupRes, err := client.ApiCall("set-user-group", userGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateUserGroupRes.Success {
 		if updateUserGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateUserGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateUserGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementUserGroup(d, m)
@@ -277,9 +277,9 @@ func deleteManagementUserGroup(d *schema.ResourceData, m interface{}) error {
 	deleteUserGroupRes, err := client.ApiCall("delete-user-group", userGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteUserGroupRes.Success {
 		if deleteUserGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteUserGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteUserGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -100,9 +100,9 @@ func createManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 	addDnsDomainRes, err := client.ApiCall("add-dns-domain", dnsDomain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDnsDomainRes.Success {
 		if addDnsDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(addDnsDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", addDnsDomainRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDnsDomainRes.GetData()["uid"].(string))
@@ -120,14 +120,14 @@ func readManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 
 	showDnsDomainRes, err := client.ApiCall("show-dns-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDnsDomainRes.Success {
 		if objectNotFound(showDnsDomainRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDnsDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showDnsDomainRes.ErrorMsg)
 	}
 
 	dnsDomain := showDnsDomainRes.GetData()
@@ -225,9 +225,9 @@ func updateManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 	updateDnsDomainRes, err := client.ApiCall("set-dns-domain", dnsDomain, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDnsDomainRes.Success {
 		if updateDnsDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDnsDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDnsDomainRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDnsDomain(d, m)
@@ -254,9 +254,9 @@ func deleteManagementDnsDomain(d *schema.ResourceData, m interface{}) error {
 	deleteDnsDomainRes, err := client.ApiCall("delete-dns-domain", dnsDomainPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDnsDomainRes.Success {
 		if deleteDnsDomainRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDnsDomainRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDnsDomainRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

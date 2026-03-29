@@ -95,14 +95,14 @@ func dataSourceManagementExternalTrustedCaRead(d *schema.ResourceData, m interfa
 
 	showExternalTrustedCaRes, err := client.ApiCall("show-external-trusted-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showExternalTrustedCaRes.Success {
 		if objectNotFound(showExternalTrustedCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showExternalTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showExternalTrustedCaRes.ErrorMsg)
 	}
 
 	externalTrustedCa := showExternalTrustedCaRes.GetData()

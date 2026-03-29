@@ -223,9 +223,9 @@ func createManagementIfMapServer(d *schema.ResourceData, m interface{}) error {
 	addIfMapServerRes, err := client.ApiCallSimple("add-if-map-server", ifMapServer)
 	if err != nil || !addIfMapServerRes.Success {
 		if addIfMapServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addIfMapServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addIfMapServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addIfMapServerRes.GetData()["uid"].(string))
@@ -243,14 +243,14 @@ func readManagementIfMapServer(d *schema.ResourceData, m interface{}) error {
 
 	showIfMapServerRes, err := client.ApiCallSimple("show-if-map-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIfMapServerRes.Success {
 		if objectNotFound(showIfMapServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIfMapServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showIfMapServerRes.ErrorMsg)
 	}
 
 	ifMapServer := showIfMapServerRes.GetData()
@@ -478,9 +478,9 @@ func updateManagementIfMapServer(d *schema.ResourceData, m interface{}) error {
 	updateIfMapServerRes, err := client.ApiCallSimple("set-if-map-server", ifMapServer)
 	if err != nil || !updateIfMapServerRes.Success {
 		if updateIfMapServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateIfMapServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateIfMapServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementIfMapServer(d, m)
@@ -499,9 +499,9 @@ func deleteManagementIfMapServer(d *schema.ResourceData, m interface{}) error {
 	deleteIfMapServerRes, err := client.ApiCallSimple("delete-if-map-server", ifMapServerPayload)
 	if err != nil || !deleteIfMapServerRes.Success {
 		if deleteIfMapServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteIfMapServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteIfMapServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

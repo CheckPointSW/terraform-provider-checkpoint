@@ -121,9 +121,9 @@ func createManagementDataTypeGroup(d *schema.ResourceData, m interface{}) error 
 	addDataTypeGroupRes, err := client.ApiCall("add-data-type-group", dataTypeGroup, client.GetSessionID(), true, false)
 	if err != nil || !addDataTypeGroupRes.Success {
 		if addDataTypeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addDataTypeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addDataTypeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDataTypeGroupRes.GetData()["uid"].(string))
@@ -141,14 +141,14 @@ func readManagementDataTypeGroup(d *schema.ResourceData, m interface{}) error {
 
 	showDataTypeGroupRes, err := client.ApiCall("show-data-type-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeGroupRes.Success {
 		if objectNotFound(showDataTypeGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeGroupRes.ErrorMsg)
 	}
 
 	dataTypeGroup := showDataTypeGroupRes.GetData()
@@ -296,9 +296,9 @@ func updateManagementDataTypeGroup(d *schema.ResourceData, m interface{}) error 
 	updateDataTypeGroupRes, err := client.ApiCall("set-data-type-group", dataTypeGroup, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypeGroupRes.Success {
 		if updateDataTypeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDataTypeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDataTypeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDataTypeGroup(d, m)
@@ -317,9 +317,9 @@ func deleteManagementDataTypeGroup(d *schema.ResourceData, m interface{}) error 
 	deleteDataTypeGroupRes, err := client.ApiCall("delete-data-type-group", dataTypeGroupPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteDataTypeGroupRes.Success {
 		if deleteDataTypeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDataTypeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDataTypeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

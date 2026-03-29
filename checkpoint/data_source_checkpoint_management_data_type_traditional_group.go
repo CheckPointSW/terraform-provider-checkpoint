@@ -72,14 +72,14 @@ func dataSourceManagementDataTypeTraditionalGroupRead(d *schema.ResourceData, m 
 
 	showDataTypeTraditionalGroupRes, err := client.ApiCall("show-data-type-traditional-group", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypeTraditionalGroupRes.Success {
 		if objectNotFound(showDataTypeTraditionalGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypeTraditionalGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypeTraditionalGroupRes.ErrorMsg)
 	}
 
 	dataTypeTraditionalGroup := showDataTypeTraditionalGroupRes.GetData()

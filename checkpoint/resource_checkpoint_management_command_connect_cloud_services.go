@@ -73,10 +73,10 @@ func createManagementConnectCloudServices(d *schema.ResourceData, m interface{})
 
 	ConnectCloudServicesRes, err := client.ApiCall("connect-cloud-services", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ConnectCloudServicesRes.Success {
-		return fmt.Errorf(ConnectCloudServicesRes.ErrorMsg)
+		return fmt.Errorf("%s", ConnectCloudServicesRes.ErrorMsg)
 	}
 
 	connectCloudServicesRes := ConnectCloudServicesRes.GetData()

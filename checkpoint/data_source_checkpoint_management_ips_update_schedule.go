@@ -68,10 +68,10 @@ func dataSourceManagementIpsUpdateScheduleRead(d *schema.ResourceData, m interfa
 
 	showIpsUpdateScheduleRes, err := client.ApiCall("show-ips-update-schedule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIpsUpdateScheduleRes.Success {
-		return fmt.Errorf(showIpsUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", showIpsUpdateScheduleRes.ErrorMsg)
 	}
 
 	ipsUpdateSchedule := showIpsUpdateScheduleRes.GetData()

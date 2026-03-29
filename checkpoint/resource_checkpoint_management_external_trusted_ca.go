@@ -149,9 +149,9 @@ func createManagementExternalTrustedCa(d *schema.ResourceData, m interface{}) er
 	addExternalTrustedCaRes, err := client.ApiCall("add-external-trusted-ca", externalTrustedCa, client.GetSessionID(), true, false)
 	if err != nil || !addExternalTrustedCaRes.Success {
 		if addExternalTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(addExternalTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", addExternalTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addExternalTrustedCaRes.GetData()["uid"].(string))
@@ -169,14 +169,14 @@ func readManagementExternalTrustedCa(d *schema.ResourceData, m interface{}) erro
 
 	showExternalTrustedCaRes, err := client.ApiCall("show-external-trusted-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showExternalTrustedCaRes.Success {
 		if objectNotFound(showExternalTrustedCaRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showExternalTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showExternalTrustedCaRes.ErrorMsg)
 	}
 
 	externalTrustedCa := showExternalTrustedCaRes.GetData()
@@ -331,9 +331,9 @@ func updateManagementExternalTrustedCa(d *schema.ResourceData, m interface{}) er
 	updateExternalTrustedCaRes, err := client.ApiCall("set-external-trusted-ca", externalTrustedCa, client.GetSessionID(), true, false)
 	if err != nil || !updateExternalTrustedCaRes.Success {
 		if updateExternalTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(updateExternalTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", updateExternalTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementExternalTrustedCa(d, m)
@@ -352,9 +352,9 @@ func deleteManagementExternalTrustedCa(d *schema.ResourceData, m interface{}) er
 	deleteExternalTrustedCaRes, err := client.ApiCall("delete-external-trusted-ca", externalTrustedCaPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteExternalTrustedCaRes.Success {
 		if deleteExternalTrustedCaRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteExternalTrustedCaRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteExternalTrustedCaRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

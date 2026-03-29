@@ -22,7 +22,7 @@ func createManagementDiscard(d *schema.ResourceData, m interface{}) error {
 	var payload = map[string]interface{}{}
 	DiscardRes, _ := client.ApiCall("discard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DiscardRes.Success {
-		return fmt.Errorf(DiscardRes.ErrorMsg)
+		return fmt.Errorf("%s", DiscardRes.ErrorMsg)
 	}
 
 	d.SetId("discard-" + acctest.RandString(10))

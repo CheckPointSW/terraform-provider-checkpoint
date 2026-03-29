@@ -54,7 +54,7 @@ func createManagementSetCpTrustedCaCertificate(d *schema.ResourceData, m interfa
 
 	SetCpTrustedCaCertificateRes, _ := client.ApiCall("set-cp-trusted-ca-certificate", payload, client.GetSessionID(), true, false)
 	if !SetCpTrustedCaCertificateRes.Success {
-		return fmt.Errorf(SetCpTrustedCaCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", SetCpTrustedCaCertificateRes.ErrorMsg)
 	}
 
 	cpTrustedCaCertificateObj := SetCpTrustedCaCertificateRes.GetData()

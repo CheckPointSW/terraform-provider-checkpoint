@@ -74,12 +74,12 @@ func dataSourceManagementCMEAccountsGCPRead(d *schema.ResourceData, m interface{
 	GCPAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	account := GCPAccountRes.GetData()
 	if checkIfRequestFailed(account) {
 		errMessage := buildErrorMessage(account)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 	d.SetId("cme-gcp-account-" + name + "-" + acctest.RandString(10))
 

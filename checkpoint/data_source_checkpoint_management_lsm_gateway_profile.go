@@ -556,14 +556,14 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 
 	showLsmGatewayProfileRes, err := client.ApiCall("show-lsm-gateway-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmGatewayProfileRes.Success {
 		if objectNotFound(showLsmGatewayProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmGatewayProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmGatewayProfileRes.ErrorMsg)
 	}
 
 	lsmGatewayProfile := showLsmGatewayProfileRes.GetData()

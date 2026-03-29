@@ -150,10 +150,10 @@ func createManagementImportManagement(d *schema.ResourceData, m interface{}) err
 
 	ImportManagementRes, err := client.ApiCall("import-management", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ImportManagementRes.Success {
-		return fmt.Errorf(ImportManagementRes.ErrorMsg)
+		return fmt.Errorf("%s", ImportManagementRes.ErrorMsg)
 	}
 
 	importManagement := ImportManagementRes.GetData()

@@ -184,9 +184,9 @@ func createManagementMultipleKeyExchanges(d *schema.ResourceData, m interface{})
 	addMultipleKeyExchangesRes, err := client.ApiCall("add-multiple-key-exchanges", multipleKeyExchanges, client.GetSessionID(), true, false)
 	if err != nil || !addMultipleKeyExchangesRes.Success {
 		if addMultipleKeyExchangesRes.ErrorMsg != "" {
-			return fmt.Errorf(addMultipleKeyExchangesRes.ErrorMsg)
+			return fmt.Errorf("%s", addMultipleKeyExchangesRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMultipleKeyExchangesRes.GetData()["uid"].(string))
@@ -204,14 +204,14 @@ func readManagementMultipleKeyExchanges(d *schema.ResourceData, m interface{}) e
 
 	showMultipleKeyExchangesRes, err := client.ApiCall("show-multiple-key-exchanges", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMultipleKeyExchangesRes.Success {
 		if objectNotFound(showMultipleKeyExchangesRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMultipleKeyExchangesRes.ErrorMsg)
+		return fmt.Errorf("%s", showMultipleKeyExchangesRes.ErrorMsg)
 	}
 
 	multipleKeyExchanges := showMultipleKeyExchangesRes.GetData()
@@ -424,9 +424,9 @@ func updateManagementMultipleKeyExchanges(d *schema.ResourceData, m interface{})
 	updateMultipleKeyExchangesRes, err := client.ApiCall("set-multiple-key-exchanges", multipleKeyExchanges, client.GetSessionID(), true, false)
 	if err != nil || !updateMultipleKeyExchangesRes.Success {
 		if updateMultipleKeyExchangesRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMultipleKeyExchangesRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMultipleKeyExchangesRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMultipleKeyExchanges(d, m)
@@ -445,9 +445,9 @@ func deleteManagementMultipleKeyExchanges(d *schema.ResourceData, m interface{})
 	deleteMultipleKeyExchangesRes, err := client.ApiCall("delete-multiple-key-exchanges", multipleKeyExchangesPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMultipleKeyExchangesRes.Success {
 		if deleteMultipleKeyExchangesRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMultipleKeyExchangesRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMultipleKeyExchangesRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -571,9 +571,9 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAccessRuleRes.GetData()["uid"].(string))
@@ -592,7 +592,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessRuleRes.Success {
 		// Handle delete resource from other clients
@@ -600,7 +600,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessRuleRes.ErrorMsg)
 	}
 
 	accessRule := showAccessRuleRes.GetData()
@@ -828,7 +828,7 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				_ = d.Set("vpn_communities", nil)
 				_ = d.Set("vpn", nil)
 			} else {
-				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+				return fmt.Errorf("Cannot read invalid VPN type [%s]", vpnType)
 			}
 		}
 	}
@@ -1140,9 +1140,9 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil || !updateAccessRuleRes.Success {
 			if updateAccessRuleRes.ErrorMsg != "" {
-				return fmt.Errorf(updateAccessRuleRes.ErrorMsg)
+				return fmt.Errorf("%s", updateAccessRuleRes.ErrorMsg)
 			}
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	} else {
 		// Payload contain only required fields: uid, layer, ignore-warnings, ignore-errors
@@ -1165,9 +1165,9 @@ func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	deleteAccessRuleRes, err := client.ApiCall("delete-access-rule", accessRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAccessRuleRes.Success {
 		if deleteAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

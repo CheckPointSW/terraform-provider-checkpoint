@@ -44,10 +44,10 @@ func createManagementSetSmartConsoleIdleTimeout(d *schema.ResourceData, m interf
 
 	SetSmartConsoleIdleTimeoutRes, err := client.ApiCall("set-smart-console-idle-timeout", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetSmartConsoleIdleTimeoutRes.Success {
-		return fmt.Errorf(SetSmartConsoleIdleTimeoutRes.ErrorMsg)
+		return fmt.Errorf("%s", SetSmartConsoleIdleTimeoutRes.ErrorMsg)
 	}
 
 	d.SetId("set-smart-console-idle-timeout-" + acctest.RandString(10))

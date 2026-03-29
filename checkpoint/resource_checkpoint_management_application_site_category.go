@@ -100,9 +100,9 @@ func createManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 	addApplicationSiteCategoryRes, err := client.ApiCall("add-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteCategoryRes.Success {
 		if addApplicationSiteCategoryRes.ErrorMsg != "" {
-			return fmt.Errorf(addApplicationSiteCategoryRes.ErrorMsg)
+			return fmt.Errorf("%s", addApplicationSiteCategoryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addApplicationSiteCategoryRes.GetData()["uid"].(string))
@@ -120,14 +120,14 @@ func readManagementApplicationSiteCategory(d *schema.ResourceData, m interface{}
 
 	showApplicationSiteCategoryRes, err := client.ApiCall("show-application-site-category", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showApplicationSiteCategoryRes.Success {
 		if objectNotFound(showApplicationSiteCategoryRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showApplicationSiteCategoryRes.ErrorMsg)
+		return fmt.Errorf("%s", showApplicationSiteCategoryRes.ErrorMsg)
 	}
 
 	applicationSiteCategory := showApplicationSiteCategoryRes.GetData()
@@ -225,9 +225,9 @@ func updateManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 	updateApplicationSiteCategoryRes, err := client.ApiCall("set-application-site-category", applicationSiteCategory, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteCategoryRes.Success {
 		if updateApplicationSiteCategoryRes.ErrorMsg != "" {
-			return fmt.Errorf(updateApplicationSiteCategoryRes.ErrorMsg)
+			return fmt.Errorf("%s", updateApplicationSiteCategoryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementApplicationSiteCategory(d, m)
@@ -254,9 +254,9 @@ func deleteManagementApplicationSiteCategory(d *schema.ResourceData, m interface
 	deleteApplicationSiteCategoryRes, err := client.ApiCall("delete-application-site-category", applicationSiteCategoryPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteCategoryRes.Success {
 		if deleteApplicationSiteCategoryRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteApplicationSiteCategoryRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteApplicationSiteCategoryRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

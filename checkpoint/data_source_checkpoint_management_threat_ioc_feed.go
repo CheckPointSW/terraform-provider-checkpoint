@@ -164,14 +164,14 @@ func dataSourceManagementThreatIocFeedRead(d *schema.ResourceData, m interface{}
 
 	showThreatIocFeedRes, err := client.ApiCall("show-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatIocFeedRes.Success {
 		if objectNotFound(showThreatIocFeedRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatIocFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatIocFeedRes.ErrorMsg)
 	}
 
 	threatIocFeed := showThreatIocFeedRes.GetData()

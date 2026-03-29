@@ -51,14 +51,14 @@ func dataSourceManagementMobileAccessProfileSectionRead(d *schema.ResourceData, 
 
 	showMobileAccessProfileSectionRes, err := client.ApiCall("show-mobile-access-profile-section", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessProfileSectionRes.Success {
 		if objectNotFound(showMobileAccessProfileSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessProfileSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessProfileSectionRes.ErrorMsg)
 	}
 
 	mobileAccessProfileSection := showMobileAccessProfileSectionRes.GetData()

@@ -224,13 +224,13 @@ func dataSourceManagementCMEGWConfigurationsRead(d *schema.ResourceData, m inter
 	cmeGWConfigurationsRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	gwConfigurations := cmeGWConfigurationsRes.GetData()
 	if checkIfRequestFailed(gwConfigurations) {
 		errMessage := buildErrorMessage(gwConfigurations)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-gw-configurations-" + acctest.RandString(10))

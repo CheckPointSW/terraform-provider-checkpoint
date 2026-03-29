@@ -50,7 +50,7 @@ func testAccCheckCheckpointAccessRulebase(resourceTfName string, res *map[string
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-access-rulebase", map[string]interface{}{"name": "Network", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

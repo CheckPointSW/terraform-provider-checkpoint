@@ -700,10 +700,10 @@ func dataSourceManagementBestPracticeRead(d *schema.ResourceData, m interface{})
 
 	showBestPracticeRes, err := client.ApiCall("show-best-practice", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showBestPracticeRes.Success {
-		return fmt.Errorf(showBestPracticeRes.ErrorMsg)
+		return fmt.Errorf("%s", showBestPracticeRes.ErrorMsg)
 	}
 
 	bestPractice := showBestPracticeRes.GetData()

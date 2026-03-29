@@ -134,10 +134,10 @@ func dataSourceManagementAdministratorRead(d *schema.ResourceData, m interface{}
 
 	showAdministratorRes, err := client.ApiCall("show-administrator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAdministratorRes.Success {
-		return fmt.Errorf(showAdministratorRes.ErrorMsg)
+		return fmt.Errorf("%s", showAdministratorRes.ErrorMsg)
 	}
 
 	administrator := showAdministratorRes.GetData()

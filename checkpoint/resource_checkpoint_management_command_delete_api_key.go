@@ -54,7 +54,7 @@ func createManagementDeleteApiKey(d *schema.ResourceData, m interface{}) error {
 
 	DeleteApiKeyRes, _ := client.ApiCall("delete-api-key", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteApiKeyRes.Success {
-		return fmt.Errorf(DeleteApiKeyRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteApiKeyRes.ErrorMsg)
 	}
 
 	d.SetId("delete-api-key-" + acctest.RandString(10))

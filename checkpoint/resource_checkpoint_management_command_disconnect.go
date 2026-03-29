@@ -33,7 +33,7 @@ func createManagementDisconnect(d *schema.ResourceData, m interface{}) error {
 
 	DisconnectRes, _ := client.ApiCall("disconnect", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DisconnectRes.Success {
-		return fmt.Errorf(DisconnectRes.ErrorMsg)
+		return fmt.Errorf("%s", DisconnectRes.ErrorMsg)
 	}
 
 	d.SetId("discard-" + acctest.RandString(10))

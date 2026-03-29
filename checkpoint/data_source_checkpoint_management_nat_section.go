@@ -49,10 +49,10 @@ func dataSourceManagementNatSectionRead(d *schema.ResourceData, m interface{}) e
 
 	showNatSectionRes, err := client.ApiCall("show-nat-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showNatSectionRes.Success {
-		return fmt.Errorf(showNatSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showNatSectionRes.ErrorMsg)
 	}
 
 	natSection := showNatSectionRes.GetData()

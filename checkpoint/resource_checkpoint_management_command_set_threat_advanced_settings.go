@@ -168,7 +168,7 @@ func createManagementSetThreatAdvancedSettings(d *schema.ResourceData, m interfa
 
 	SetThreatAdvancedSettingsRes, _ := client.ApiCall("set-threat-advanced-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetThreatAdvancedSettingsRes.Success {
-		return fmt.Errorf(SetThreatAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetThreatAdvancedSettingsRes.ErrorMsg)
 	}
 
 	d.SetId("set-threat-advanced-settings-" + acctest.RandString(10))

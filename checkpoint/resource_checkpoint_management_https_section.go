@@ -112,9 +112,9 @@ func createManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	addHttpsSectionRes, err := client.ApiCall("add-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addHttpsSectionRes.Success {
 		if addHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(addHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", addHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addHttpsSectionRes.GetData()["uid"].(string))
@@ -133,14 +133,14 @@ func readManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 
 	showHttpsSectionRes, err := client.ApiCall("show-https-section", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHttpsSectionRes.Success {
 		if objectNotFound(showHttpsSectionRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showHttpsSectionRes.ErrorMsg)
+		return fmt.Errorf("%s", showHttpsSectionRes.ErrorMsg)
 	}
 
 	httpsSection := showHttpsSectionRes.GetData()
@@ -189,9 +189,9 @@ func updateManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	updateHttpsSectionRes, err := client.ApiCall("set-https-section", httpsSection, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateHttpsSectionRes.Success {
 		if updateHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(updateHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", updateHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementHttpsSection(d, m)
@@ -211,9 +211,9 @@ func deleteManagementHttpsSection(d *schema.ResourceData, m interface{}) error {
 	deleteHttpsSectionRes, err := client.ApiCall("delete-https-section", httpsSectionPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteHttpsSectionRes.Success {
 		if deleteHttpsSectionRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteHttpsSectionRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteHttpsSectionRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

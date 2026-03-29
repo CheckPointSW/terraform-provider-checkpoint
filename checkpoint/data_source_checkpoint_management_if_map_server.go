@@ -128,10 +128,10 @@ func dataSourceManagementIfMapServerRead(d *schema.ResourceData, m interface{}) 
 	}
 	showIfMapServerRes, err := client.ApiCallSimple("show-if-map-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIfMapServerRes.Success {
-		return fmt.Errorf(showIfMapServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showIfMapServerRes.ErrorMsg)
 	}
 
 	ifMapServer := showIfMapServerRes.GetData()

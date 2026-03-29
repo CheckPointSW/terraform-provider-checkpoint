@@ -343,14 +343,14 @@ func dataSourceManagementResourceUriRead(d *schema.ResourceData, m interface{}) 
 
 	showResourceUriRes, err := client.ApiCall("show-resource-uri", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceUriRes.Success {
 		if objectNotFound(showResourceUriRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceUriRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceUriRes.ErrorMsg)
 	}
 
 	resourceUri := showResourceUriRes.GetData()

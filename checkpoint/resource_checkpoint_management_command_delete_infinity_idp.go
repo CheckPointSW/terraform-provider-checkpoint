@@ -64,7 +64,7 @@ func createManagementDeleteInfinityIdp(d *schema.ResourceData, m interface{}) er
 
 	DeleteInfinityIdpRes, _ := client.ApiCall("delete-infinity-idp", payload, client.GetSessionID(), true, false)
 	if !DeleteInfinityIdpRes.Success {
-		return fmt.Errorf(DeleteInfinityIdpRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteInfinityIdpRes.ErrorMsg)
 	}
 
 	d.SetId("delete-infinity-idp-" + acctest.RandString(10))

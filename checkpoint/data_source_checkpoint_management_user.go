@@ -163,10 +163,10 @@ func dataSourceManagementUserRead(d *schema.ResourceData, m interface{}) error {
 
 	showUserRes, err := client.ApiCall("show-user", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUserRes.Success {
-		return fmt.Errorf(showUserRes.ErrorMsg)
+		return fmt.Errorf("%s", showUserRes.ErrorMsg)
 	}
 
 	user := showUserRes.GetData()

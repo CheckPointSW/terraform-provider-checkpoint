@@ -88,10 +88,10 @@ func dataSourceVMwareDataCenterServerRead(d *schema.ResourceData, m interface{})
 	}
 	showVMwareDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVMwareDataCenterServerRes.Success {
-		return fmt.Errorf(showVMwareDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showVMwareDataCenterServerRes.ErrorMsg)
 	}
 	vmwareDataCenterServer := showVMwareDataCenterServerRes.GetData()
 

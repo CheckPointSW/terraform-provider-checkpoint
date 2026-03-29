@@ -137,10 +137,10 @@ func createManagementLoginToDomain(d *schema.ResourceData, m interface{}) error 
 
 	LoginToDomainRes, err := client.ApiCall("login-to-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !LoginToDomainRes.Success {
-		return fmt.Errorf(LoginToDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", LoginToDomainRes.ErrorMsg)
 	}
 
 	loginToDomain := LoginToDomainRes.GetData()

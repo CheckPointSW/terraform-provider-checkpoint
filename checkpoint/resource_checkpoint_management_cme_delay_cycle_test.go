@@ -73,7 +73,7 @@ func testAccCheckCheckpointManagementCMEDelayCycleExists(resourceTfName string, 
 		*res = response.GetData()
 		if checkIfRequestFailed(*res) {
 			errMessage := buildErrorMessage(*res)
-			return fmt.Errorf(errMessage)
+			return fmt.Errorf("%s", errMessage)
 		}
 		return nil
 	}

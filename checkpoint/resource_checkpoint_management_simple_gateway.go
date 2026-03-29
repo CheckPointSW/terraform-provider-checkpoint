@@ -3212,9 +3212,9 @@ func createManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	addGatewayRes, err := client.ApiCall("add-simple-gateway", gateway, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addGatewayRes.Success {
 		if addGatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(addGatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", addGatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addGatewayRes.GetData()["uid"].(string))
@@ -3231,14 +3231,14 @@ func readManagementSimpleGateway(d *schema.ResourceData, m interface{}) error {
 
 	showGatewayRes, err := client.ApiCall("show-simple-gateway", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGatewayRes.Success {
 		if objectNotFound(showGatewayRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showGatewayRes.ErrorMsg)
 	}
 
 	gateway := showGatewayRes.GetData()
@@ -5636,9 +5636,9 @@ func updateManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 		updateSimpleGatewayRes, err := client.ApiCall("set-simple-gateway", gateway, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil || !updateSimpleGatewayRes.Success {
 			if updateSimpleGatewayRes.ErrorMsg != "" {
-				return fmt.Errorf(updateSimpleGatewayRes.ErrorMsg)
+				return fmt.Errorf("%s", updateSimpleGatewayRes.ErrorMsg)
 			}
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings
@@ -5666,9 +5666,9 @@ func deleteManagementSimpleGateway(d *schema.ResourceData, m interface{}) error 
 	deleteGatewayRes, err := client.ApiCall("delete-simple-gateway", gatewayPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGatewayRes.Success {
 		if deleteGatewayRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGatewayRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGatewayRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

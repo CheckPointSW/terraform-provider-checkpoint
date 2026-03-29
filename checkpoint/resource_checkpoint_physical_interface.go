@@ -282,7 +282,7 @@ func createPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
 	setPIRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setPIRes.Success {
-		return fmt.Errorf(setPIRes.ErrorMsg)
+		return fmt.Errorf("%s", setPIRes.ErrorMsg)
 	}
 
 	// Set Schema UID = Object key
@@ -303,7 +303,7 @@ func readPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 			d.SetId("") // Destroy resource
 			return nil
 		}
-		return fmt.Errorf(showPIRes.ErrorMsg)
+		return fmt.Errorf("%s", showPIRes.ErrorMsg)
 	}
 	PIJson := showPIRes.GetData()
 
@@ -355,7 +355,7 @@ func updatePhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
 	setNetworkRes, _ := client.ApiCall("set-physical-interface", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !setNetworkRes.Success {
-		return fmt.Errorf(setNetworkRes.ErrorMsg)
+		return fmt.Errorf("%s", setNetworkRes.ErrorMsg)
 	}
 	return readPhysicalInterface(d, m)
 }

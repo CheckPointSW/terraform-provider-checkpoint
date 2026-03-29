@@ -29,10 +29,10 @@ func createManagementRunAppControlUpdate(d *schema.ResourceData, m interface{}) 
 
 	RunAppControlUpdateRes, err := client.ApiCallSimple("run-app-control-update", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !RunAppControlUpdateRes.Success {
-		return fmt.Errorf(RunAppControlUpdateRes.ErrorMsg)
+		return fmt.Errorf("%s", RunAppControlUpdateRes.ErrorMsg)
 	}
 
 	d.SetId("app-control-update-" + acctest.RandString(10))

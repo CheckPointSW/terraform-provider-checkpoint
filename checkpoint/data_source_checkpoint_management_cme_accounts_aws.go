@@ -164,12 +164,12 @@ func dataSourceManagementCMEAccountsAWSRead(d *schema.ResourceData, m interface{
 	AWSAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	account := AWSAccountRes.GetData()
 	if checkIfRequestFailed(account) {
 		errMessage := buildErrorMessage(account)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-aws-account-" + name + "-" + acctest.RandString(10))

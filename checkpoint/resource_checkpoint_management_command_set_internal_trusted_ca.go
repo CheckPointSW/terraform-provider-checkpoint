@@ -157,7 +157,7 @@ func createManagementSetInternalTrustedCa(d *schema.ResourceData, m interface{})
 
 	SetInternalTrustedCaRes, _ := client.ApiCall("set-internal-trusted-ca", payload, client.GetSessionID(), true, false)
 	if !SetInternalTrustedCaRes.Success {
-		return fmt.Errorf(SetInternalTrustedCaRes.ErrorMsg)
+		return fmt.Errorf("%s", SetInternalTrustedCaRes.ErrorMsg)
 	}
 
 	res := SetInternalTrustedCaRes.GetData()

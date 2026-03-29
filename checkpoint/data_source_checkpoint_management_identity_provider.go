@@ -113,10 +113,10 @@ func dataSourceManagementIdentityProviderRead(d *schema.ResourceData, m interfac
 	}
 	showIdentityProviderRes, err := client.ApiCallSimple("show-identity-provider", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIdentityProviderRes.Success {
-		return fmt.Errorf(showIdentityProviderRes.ErrorMsg)
+		return fmt.Errorf("%s", showIdentityProviderRes.ErrorMsg)
 	}
 
 	identityProvider := showIdentityProviderRes.GetData()

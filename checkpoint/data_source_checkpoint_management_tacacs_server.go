@@ -102,10 +102,10 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 
 	showTacacsServerRes, err := client.ApiCall("show-tacacs-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTacacsServerRes.Success {
-		return fmt.Errorf(showTacacsServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showTacacsServerRes.ErrorMsg)
 	}
 
 	tacacsServer := showTacacsServerRes.GetData()

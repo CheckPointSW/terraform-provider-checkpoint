@@ -140,9 +140,9 @@ func createManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) 
 	addSecuremoteDnsServerRes, err := client.ApiCallSimple("add-securemote-dns-server", securemoteDnsServer)
 	if err != nil || !addSecuremoteDnsServerRes.Success {
 		if addSecuremoteDnsServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addSecuremoteDnsServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addSecuremoteDnsServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSecuremoteDnsServerRes.GetData()["uid"].(string))
@@ -160,7 +160,7 @@ func readManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) er
 
 	showSecuremoteDnsServerRes, err := client.ApiCallSimple("show-securemote-dns-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecuremoteDnsServerRes.Success {
 		// Handle delete resource from other clients
@@ -168,7 +168,7 @@ func readManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) er
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSecuremoteDnsServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecuremoteDnsServerRes.ErrorMsg)
 	}
 
 	securemoteDnsServer := showSecuremoteDnsServerRes.GetData()
@@ -319,9 +319,9 @@ func updateManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) 
 		updateSecuremoteDnsServerRes, err := client.ApiCallSimple("set-securemote-dns-server", securemoteDnsServer)
 		if err != nil || !updateSecuremoteDnsServerRes.Success {
 			if updateSecuremoteDnsServerRes.ErrorMsg != "" {
-				return fmt.Errorf(updateSecuremoteDnsServerRes.ErrorMsg)
+				return fmt.Errorf("%s", updateSecuremoteDnsServerRes.ErrorMsg)
 			}
-			return fmt.Errorf(err.Error())
+			return fmt.Errorf("%s", err.Error())
 		}
 	} else {
 		// Payload contain only required fields: uid, ignore-warnings and ignore-errors
@@ -348,9 +348,9 @@ func deleteManagementSecuremoteDnsServer(d *schema.ResourceData, m interface{}) 
 	deleteSecuremoteDnsServerRes, err := client.ApiCallSimple("delete-securemote-dns-server", securemoteDnsServerPayload)
 	if err != nil || !deleteSecuremoteDnsServerRes.Success {
 		if deleteSecuremoteDnsServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSecuremoteDnsServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSecuremoteDnsServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

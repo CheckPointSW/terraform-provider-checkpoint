@@ -301,10 +301,10 @@ func dataSourceManagementLsmClusterRead(d *schema.ResourceData, m interface{}) e
 	}
 	showLsmClusterRes, err := client.ApiCall("show-lsm-cluster", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmClusterRes.Success {
-		return fmt.Errorf(showLsmClusterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmClusterRes.ErrorMsg)
 	}
 
 	LsmCluster := showLsmClusterRes.GetData()

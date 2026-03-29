@@ -116,7 +116,7 @@ func createManagementLogin(d *schema.ResourceData, m interface{}) error {
 
 	loginRes, _ := client.ApiCall("login", payload, "", true, client.IsProxyUsed())
 	if !loginRes.Success {
-		return fmt.Errorf(loginRes.ErrorMsg)
+		return fmt.Errorf("%s", loginRes.ErrorMsg)
 	}
 
 	d.SetId(loginRes.GetData()["sid"].(string))

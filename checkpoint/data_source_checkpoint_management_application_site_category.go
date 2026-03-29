@@ -73,10 +73,10 @@ func dataSourceManagementApplicationSiteCategoryRead(d *schema.ResourceData, m i
 
 	showApplicationSiteCategoryRes, err := client.ApiCall("show-application-site-category", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showApplicationSiteCategoryRes.Success {
-		return fmt.Errorf(showApplicationSiteCategoryRes.ErrorMsg)
+		return fmt.Errorf("%s", showApplicationSiteCategoryRes.ErrorMsg)
 	}
 
 	applicationSiteCategory := showApplicationSiteCategoryRes.GetData()

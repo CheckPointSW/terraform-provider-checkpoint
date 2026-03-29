@@ -155,9 +155,9 @@ func createManagementVoipDomainH323Gatekeeper(d *schema.ResourceData, m interfac
 	addVoipDomainH323GatekeeperRes, err := client.ApiCall("add-voip-domain-h323-gatekeeper", voipDomainH323Gatekeeper, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVoipDomainH323GatekeeperRes.Success {
 		if addVoipDomainH323GatekeeperRes.ErrorMsg != "" {
-			return fmt.Errorf(addVoipDomainH323GatekeeperRes.ErrorMsg)
+			return fmt.Errorf("%s", addVoipDomainH323GatekeeperRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVoipDomainH323GatekeeperRes.GetData()["uid"].(string))
@@ -175,14 +175,14 @@ func readManagementVoipDomainH323Gatekeeper(d *schema.ResourceData, m interface{
 
 	showVoipDomainH323GatekeeperRes, err := client.ApiCall("show-voip-domain-h323-gatekeeper", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainH323GatekeeperRes.Success {
 		if objectNotFound(showVoipDomainH323GatekeeperRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainH323GatekeeperRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainH323GatekeeperRes.ErrorMsg)
 	}
 
 	voipDomainH323Gatekeeper := showVoipDomainH323GatekeeperRes.GetData()
@@ -338,9 +338,9 @@ func updateManagementVoipDomainH323Gatekeeper(d *schema.ResourceData, m interfac
 	updateVoipDomainH323GatekeeperRes, err := client.ApiCall("set-voip-domain-h323-gatekeeper", voipDomainH323Gatekeeper, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVoipDomainH323GatekeeperRes.Success {
 		if updateVoipDomainH323GatekeeperRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVoipDomainH323GatekeeperRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVoipDomainH323GatekeeperRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVoipDomainH323Gatekeeper(d, m)
@@ -359,9 +359,9 @@ func deleteManagementVoipDomainH323Gatekeeper(d *schema.ResourceData, m interfac
 	deleteVoipDomainH323GatekeeperRes, err := client.ApiCall("delete-voip-domain-h323-gatekeeper", voipDomainH323GatekeeperPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVoipDomainH323GatekeeperRes.Success {
 		if deleteVoipDomainH323GatekeeperRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVoipDomainH323GatekeeperRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVoipDomainH323GatekeeperRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

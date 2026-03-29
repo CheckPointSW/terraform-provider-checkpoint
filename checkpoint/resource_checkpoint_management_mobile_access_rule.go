@@ -178,9 +178,9 @@ func createManagementMobileAccessRule(d *schema.ResourceData, m interface{}) err
 	addMobileAccessRuleRes, err := client.ApiCall("add-mobile-access-rule", mobileAccessRule, client.GetSessionID(), true, false)
 	if err != nil || !addMobileAccessRuleRes.Success {
 		if addMobileAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileAccessRuleRes.GetData()["uid"].(string))
@@ -198,14 +198,14 @@ func readManagementMobileAccessRule(d *schema.ResourceData, m interface{}) error
 
 	showMobileAccessRuleRes, err := client.ApiCall("show-mobile-access-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessRuleRes.Success {
 		if objectNotFound(showMobileAccessRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessRuleRes.ErrorMsg)
 	}
 
 	mobileAccessRule := showMobileAccessRuleRes.GetData()
@@ -390,9 +390,9 @@ func updateManagementMobileAccessRule(d *schema.ResourceData, m interface{}) err
 	updateMobileAccessRuleRes, err := client.ApiCall("set-mobile-access-rule", mobileAccessRule, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileAccessRuleRes.Success {
 		if updateMobileAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileAccessRule(d, m)
@@ -411,9 +411,9 @@ func deleteManagementMobileAccessRule(d *schema.ResourceData, m interface{}) err
 	deleteMobileAccessRuleRes, err := client.ApiCall("delete-mobile-access-rule", mobileAccessRulePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileAccessRuleRes.Success {
 		if deleteMobileAccessRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileAccessRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileAccessRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -59,10 +59,10 @@ func dataSourceManagementDynamicGlobalNetworkObjectRead(d *schema.ResourceData, 
 
 	showDynamicGlobalNetworkObjectRes, err := client.ApiCall("show-dynamic-global-network-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDynamicGlobalNetworkObjectRes.Success {
-		return fmt.Errorf(showDynamicGlobalNetworkObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showDynamicGlobalNetworkObjectRes.ErrorMsg)
 	}
 
 	dynamicGlobalNetworkObject := showDynamicGlobalNetworkObjectRes.GetData()

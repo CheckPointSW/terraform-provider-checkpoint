@@ -58,7 +58,7 @@ func createManagementAddRepositoryPackage(d *schema.ResourceData, m interface{})
 
 	AddRepositoryPackageRes, _ := client.ApiCall("add-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddRepositoryPackageRes.Success {
-		return fmt.Errorf(AddRepositoryPackageRes.ErrorMsg)
+		return fmt.Errorf("%s", AddRepositoryPackageRes.ErrorMsg)
 	}
 
 	d.SetId("add-repository-package" + acctest.RandString(10))

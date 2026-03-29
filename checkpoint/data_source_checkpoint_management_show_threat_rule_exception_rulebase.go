@@ -413,10 +413,10 @@ func dataSourceManagementShowThreatRuleExceptionRuleBaseRead(d *schema.ResourceD
 
 	showThreatRuleExceptionRuleBaseRes, err := client.ApiCall("show-threat-rule-exception-rulebase", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatRuleExceptionRuleBaseRes.Success {
-		return fmt.Errorf(showThreatRuleExceptionRuleBaseRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleExceptionRuleBaseRes.ErrorMsg)
 	}
 	threatRuleExceptionRuleBase := showThreatRuleExceptionRuleBaseRes.GetData()
 

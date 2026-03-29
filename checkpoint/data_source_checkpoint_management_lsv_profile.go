@@ -96,10 +96,10 @@ func dataSourceManagementLsvProfileRead(d *schema.ResourceData, m interface{}) e
 
 	showLsvProfileRes, err := client.ApiCall("show-lsv-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsvProfileRes.Success {
-		return fmt.Errorf(showLsvProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsvProfileRes.ErrorMsg)
 	}
 
 	lsvProfile := showLsvProfileRes.GetData()

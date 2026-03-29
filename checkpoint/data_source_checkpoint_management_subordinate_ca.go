@@ -181,10 +181,10 @@ func dataSourceManagementSubordinateCaRead(d *schema.ResourceData, m interface{}
 
 	showSubordinateCaRes, err := client.ApiCall("show-subordinate-ca", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSubordinateCaRes.Success {
-		return fmt.Errorf(showSubordinateCaRes.ErrorMsg)
+		return fmt.Errorf("%s", showSubordinateCaRes.ErrorMsg)
 	}
 
 	subordinateCa := showSubordinateCaRes.GetData()

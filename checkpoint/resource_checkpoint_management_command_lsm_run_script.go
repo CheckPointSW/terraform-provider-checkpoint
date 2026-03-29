@@ -62,7 +62,7 @@ func createManagementLsmRunScript(d *schema.ResourceData, m interface{}) error {
 
 	LsmRunScriptRes, _ := client.ApiCall("lsm-run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !LsmRunScriptRes.Success {
-		return fmt.Errorf(LsmRunScriptRes.ErrorMsg)
+		return fmt.Errorf("%s", LsmRunScriptRes.ErrorMsg)
 	}
 
 	d.SetId("lsm-run-script" + acctest.RandString(10))

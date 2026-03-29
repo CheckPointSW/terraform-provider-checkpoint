@@ -433,10 +433,10 @@ func dataSourceManagementNatRuleBaseRead(d *schema.ResourceData, m interface{}) 
 
 	showRuleBaseRes, err := client.ApiCall("show-nat-rulebase", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRuleBaseRes.Success {
-		return fmt.Errorf(showRuleBaseRes.ErrorMsg)
+		return fmt.Errorf("%s", showRuleBaseRes.ErrorMsg)
 	}
 	ruleBaseJson := showRuleBaseRes.GetData()
 

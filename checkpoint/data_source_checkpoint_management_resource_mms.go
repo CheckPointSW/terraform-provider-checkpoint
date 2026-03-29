@@ -70,10 +70,10 @@ func dataSourceManagementResourceMmsRead(d *schema.ResourceData, m interface{}) 
 	}
 	showResourceMmsRes, err := client.ApiCallSimple("show-resource-mms", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceMmsRes.Success {
-		return fmt.Errorf(showResourceMmsRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceMmsRes.ErrorMsg)
 	}
 
 	resourceMms := showResourceMmsRes.GetData()

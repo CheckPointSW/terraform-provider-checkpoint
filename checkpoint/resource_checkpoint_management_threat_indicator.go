@@ -285,17 +285,17 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 
 	threatIndicatorRes, err := client.ApiCall("add-threat-indicator", threatIndicator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !threatIndicatorRes.Success {
 		if threatIndicatorRes.ErrorMsg != "" {
-			return fmt.Errorf(threatIndicatorRes.ErrorMsg)
+			return fmt.Errorf("%s", threatIndicatorRes.ErrorMsg)
 		}
 
 		taskDetails := threatIndicatorRes.GetData()["tasks"].([]interface{})[0].(map[string]interface{})["task-details"].([]interface{})
 		errStr := "Status: " + taskDetails[0].(map[string]interface{})["request-status"].(string)
 		errStr += "\nDescription: " + taskDetails[0].(map[string]interface{})["request-status-description"].(string)
-		return fmt.Errorf(errStr)
+		return fmt.Errorf("%s", errStr)
 	}
 
 	//special section because of the unique type of threat indicator
@@ -306,7 +306,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 
 	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatIndicatorRes.Success {
 		// Handle delete resource from other clients
@@ -314,7 +314,7 @@ func createManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatIndicatorRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatIndicatorRes.ErrorMsg)
 	}
 	d.SetId(showThreatIndicatorRes.GetData()["uid"].(string))
 
@@ -331,7 +331,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error 
 
 	showThreatIndicatorRes, err := client.ApiCall("show-threat-indicator", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatIndicatorRes.Success {
 		// Handle delete resource from other clients
@@ -339,7 +339,7 @@ func readManagementThreatIndicator(d *schema.ResourceData, m interface{}) error 
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatIndicatorRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatIndicatorRes.ErrorMsg)
 	}
 
 	threatIndicator := showThreatIndicatorRes.GetData()
@@ -490,9 +490,9 @@ func updateManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	updateThreatIndicatorRes, err := client.ApiCall("set-threat-indicator", threatIndicator, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatIndicatorRes.Success {
 		if updateThreatIndicatorRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatIndicatorRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatIndicatorRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementThreatIndicator(d, m)
@@ -509,9 +509,9 @@ func deleteManagementThreatIndicator(d *schema.ResourceData, m interface{}) erro
 	deleteThreatIndicatorRes, err := client.ApiCall("delete-threat-indicator", threatIndicatorPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatIndicatorRes.Success {
 		if deleteThreatIndicatorRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatIndicatorRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatIndicatorRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -151,10 +151,10 @@ func dataSourceManagementServiceUdpRead(d *schema.ResourceData, m interface{}) e
 
 	showServiceUdpRes, err := client.ApiCall("show-service-udp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceUdpRes.Success {
-		return fmt.Errorf(showServiceUdpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceUdpRes.ErrorMsg)
 	}
 
 	serviceUdp := showServiceUdpRes.GetData()

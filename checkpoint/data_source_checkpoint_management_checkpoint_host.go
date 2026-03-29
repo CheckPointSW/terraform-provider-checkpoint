@@ -410,10 +410,10 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 	showCheckpointHostRes, err := client.ApiCall("show-checkpoint-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showCheckpointHostRes.Success {
-		return fmt.Errorf(showCheckpointHostRes.ErrorMsg)
+		return fmt.Errorf("%s", showCheckpointHostRes.ErrorMsg)
 	}
 
 	checkpointHost := showCheckpointHostRes.GetData()

@@ -321,9 +321,9 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	addThreatRuleRes, err := client.ApiCall("add-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatRuleRes.Success {
 		if addThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addThreatRuleRes.GetData()["uid"].(string))
@@ -342,7 +342,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 	showThreatRuleRes, err := client.ApiCall("show-threat-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showThreatRuleRes.Success {
 		// Handle delete resource from other clients
@@ -350,7 +350,7 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showThreatRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showThreatRuleRes.ErrorMsg)
 	}
 
 	threatRule := showThreatRuleRes.GetData()
@@ -645,9 +645,9 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	updateThreatRuleRes, err := client.ApiCall("set-threat-rule", threatRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatRuleRes.Success {
 		if updateThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	return readManagementThreatRule(d, m)
 }
@@ -663,9 +663,9 @@ func deleteManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 	deleteThreatRuleRes, err := client.ApiCall("delete-threat-rule", threatRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteThreatRuleRes.Success {
 		if deleteThreatRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteThreatRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteThreatRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 	return nil

@@ -128,10 +128,10 @@ func dataSourceManagementResourceTcpRead(d *schema.ResourceData, m interface{}) 
 	}
 	showResourceTcpRes, err := client.ApiCallSimple("show-resource-tcp", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceTcpRes.Success {
-		return fmt.Errorf(showResourceTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceTcpRes.ErrorMsg)
 	}
 
 	resourceTcp := showResourceTcpRes.GetData()

@@ -78,7 +78,7 @@ func createManagementGetInterfaces(d *schema.ResourceData, m interface{}) error 
 
 	GetInterfacesRes, _ := client.ApiCall("get-interfaces", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !GetInterfacesRes.Success {
-		return fmt.Errorf(GetInterfacesRes.ErrorMsg)
+		return fmt.Errorf("%s", GetInterfacesRes.ErrorMsg)
 	}
 
 	d.SetId("get-interfaces-" + acctest.RandString(10))

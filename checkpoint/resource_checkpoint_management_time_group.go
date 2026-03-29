@@ -103,9 +103,9 @@ func createManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 	addTimeGroupRes, err := client.ApiCall("add-time-group", timeGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTimeGroupRes.Success {
 		if addTimeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addTimeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addTimeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTimeGroupRes.GetData()["uid"].(string))
@@ -123,14 +123,14 @@ func readManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 
 	showTimeGroupRes, err := client.ApiCall("show-time-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTimeGroupRes.Success {
 		if objectNotFound(showTimeGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTimeGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showTimeGroupRes.ErrorMsg)
 	}
 
 	timeGroup := showTimeGroupRes.GetData()
@@ -245,9 +245,9 @@ func updateManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 	updateTimeGroupRes, err := client.ApiCall("set-time-group", timeGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTimeGroupRes.Success {
 		if updateTimeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTimeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTimeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTimeGroup(d, m)
@@ -272,9 +272,9 @@ func deleteManagementTimeGroup(d *schema.ResourceData, m interface{}) error {
 	deleteTimeGroupRes, err := client.ApiCall("delete-time-group", timeGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTimeGroupRes.Success {
 		if deleteTimeGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTimeGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTimeGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

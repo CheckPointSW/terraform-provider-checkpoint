@@ -89,10 +89,10 @@ func dataSourceOracleCloudDataCenterServerRead(d *schema.ResourceData, m interfa
 
 	showOracleCloudDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOracleCloudDataCenterServerRes.Success {
-		return fmt.Errorf(showOracleCloudDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showOracleCloudDataCenterServerRes.ErrorMsg)
 	}
 
 	oracleCloudDataCenterServer := showOracleCloudDataCenterServerRes.GetData()

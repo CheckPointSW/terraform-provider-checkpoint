@@ -29,10 +29,10 @@ func createManagementComplianceScan(d *schema.ResourceData, m interface{}) error
 	var payload = map[string]interface{}{}
 	ComplianceScanRes, err := client.ApiCall("compliance-scan", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ComplianceScanRes.Success {
-		return fmt.Errorf(ComplianceScanRes.ErrorMsg)
+		return fmt.Errorf("%s", ComplianceScanRes.ErrorMsg)
 	}
 
 	d.SetId("compliance-scan-" + acctest.RandString(10))

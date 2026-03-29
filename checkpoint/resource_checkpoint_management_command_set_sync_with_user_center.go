@@ -33,10 +33,10 @@ func createManagementSetSyncWithUserCenter(d *schema.ResourceData, m interface{}
 
 	SetSyncWithUserCenterRes, err := client.ApiCallSimple("set-sync-with-user-center", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetSyncWithUserCenterRes.Success {
-		return fmt.Errorf(SetSyncWithUserCenterRes.ErrorMsg)
+		return fmt.Errorf("%s", SetSyncWithUserCenterRes.ErrorMsg)
 	}
 
 	d.SetId("set-sync-with-user-center-" + acctest.RandString(10))

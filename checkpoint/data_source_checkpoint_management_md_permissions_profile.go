@@ -133,14 +133,14 @@ func dataSourceManagementMdPermissionsProfileRead(d *schema.ResourceData, m inte
 
 	showMdPermissionsProfileRes, err := client.ApiCall("show-md-permissions-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMdPermissionsProfileRes.Success {
 		if objectNotFound(showMdPermissionsProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMdPermissionsProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showMdPermissionsProfileRes.ErrorMsg)
 	}
 
 	mdPermissionsProfile := showMdPermissionsProfileRes.GetData()

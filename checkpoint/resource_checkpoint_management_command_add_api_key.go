@@ -49,7 +49,7 @@ func createManagementAddApiKey(d *schema.ResourceData, m interface{}) error {
 
 	AddApiKeyRes, _ := client.ApiCall("add-api-key", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddApiKeyRes.Success {
-		return fmt.Errorf(AddApiKeyRes.ErrorMsg)
+		return fmt.Errorf("%s", AddApiKeyRes.ErrorMsg)
 	}
 
 	d.SetId("add-api-key-" + acctest.RandString(10))

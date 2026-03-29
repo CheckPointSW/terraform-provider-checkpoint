@@ -293,7 +293,7 @@ func createManagementCheckThreatIocFeed(d *schema.ResourceData, m interface{}) e
 
 	CheckThreatIocFeedRes, _ := client.ApiCall("check-threat-ioc-feed", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !CheckThreatIocFeedRes.Success {
-		return fmt.Errorf(CheckThreatIocFeedRes.ErrorMsg)
+		return fmt.Errorf("%s", CheckThreatIocFeedRes.ErrorMsg)
 	}
 
 	d.SetId("check-threat-ioc-feed" + acctest.RandString(10))

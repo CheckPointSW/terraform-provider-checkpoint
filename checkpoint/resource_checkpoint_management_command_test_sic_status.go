@@ -59,7 +59,7 @@ func readManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
 
 	TestSicStatusRes, _ := client.ApiCall("test-sic-status", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !TestSicStatusRes.Success {
-		return fmt.Errorf(TestSicStatusRes.ErrorMsg)
+		return fmt.Errorf("%s", TestSicStatusRes.ErrorMsg)
 	}
 
 	d.SetId("test-sic-status" + acctest.RandString(10))

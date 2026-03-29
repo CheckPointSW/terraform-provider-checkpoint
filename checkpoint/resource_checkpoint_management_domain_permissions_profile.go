@@ -870,9 +870,9 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 	addDomainPermissionsProfileRes, err := client.ApiCall("add-domain-permissions-profile", domainPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addDomainPermissionsProfileRes.Success {
 		if addDomainPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addDomainPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addDomainPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addDomainPermissionsProfileRes.GetData()["uid"].(string))
@@ -890,14 +890,14 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 
 	showDomainPermissionsProfileRes, err := client.ApiCall("show-domain-permissions-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDomainPermissionsProfileRes.Success {
 		if objectNotFound(showDomainPermissionsProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDomainPermissionsProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showDomainPermissionsProfileRes.ErrorMsg)
 	}
 
 	domainPermissionsProfile := showDomainPermissionsProfileRes.GetData()
@@ -1656,9 +1656,9 @@ func updateManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 	updateDomainPermissionsProfileRes, err := client.ApiCall("set-domain-permissions-profile", domainPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateDomainPermissionsProfileRes.Success {
 		if updateDomainPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updateDomainPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updateDomainPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementDomainPermissionsProfile(d, m)
@@ -1685,9 +1685,9 @@ func deleteManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 	deleteDomainPermissionsProfileRes, err := client.ApiCall("delete-domain-permissions-profile", domainPermissionsProfilePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteDomainPermissionsProfileRes.Success {
 		if deleteDomainPermissionsProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteDomainPermissionsProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteDomainPermissionsProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

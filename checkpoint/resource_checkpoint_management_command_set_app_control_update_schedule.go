@@ -264,10 +264,10 @@ func createManagementSetAppControlUpdateSchedule(d *schema.ResourceData, m inter
 
 	SetAppControlUpdateScheduleRes, err := client.ApiCallSimple("set-app-control-update-schedule", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetAppControlUpdateScheduleRes.Success {
-		return fmt.Errorf(SetAppControlUpdateScheduleRes.ErrorMsg)
+		return fmt.Errorf("%s", SetAppControlUpdateScheduleRes.ErrorMsg)
 	}
 
 	d.SetId("set-app-control-update-schedule-" + acctest.RandString(10))

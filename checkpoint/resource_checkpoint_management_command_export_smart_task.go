@@ -43,10 +43,10 @@ func createManagementExportSmartTask(d *schema.ResourceData, m interface{}) erro
 
 	ExportSmartTaskRes, err := client.ApiCall("export-smart-task", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !ExportSmartTaskRes.Success {
-		return fmt.Errorf(ExportSmartTaskRes.ErrorMsg)
+		return fmt.Errorf("%s", ExportSmartTaskRes.ErrorMsg)
 	}
 
 	exportSmartTask := ExportSmartTaskRes.GetData()

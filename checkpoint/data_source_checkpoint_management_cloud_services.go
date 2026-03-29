@@ -82,10 +82,10 @@ func dataSourceManagementCloudServicesRead(d *schema.ResourceData, m interface{}
 
 	showCloudServices, err := client.ApiCall("show-cloud-services", make(map[string]interface{}), client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showCloudServices.Success {
-		return fmt.Errorf(showCloudServices.ErrorMsg)
+		return fmt.Errorf("%s", showCloudServices.ErrorMsg)
 	}
 
 	showCloudServicesRes := showCloudServices.GetData()

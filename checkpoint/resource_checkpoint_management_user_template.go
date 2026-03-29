@@ -276,9 +276,9 @@ func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 	addUserTemplateRes, err := client.ApiCall("add-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addUserTemplateRes.Success {
 		if addUserTemplateRes.ErrorMsg != "" {
-			return fmt.Errorf(addUserTemplateRes.ErrorMsg)
+			return fmt.Errorf("%s", addUserTemplateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addUserTemplateRes.GetData()["uid"].(string))
@@ -296,14 +296,14 @@ func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 
 	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showUserTemplateRes.Success {
 		if objectNotFound(showUserTemplateRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showUserTemplateRes.ErrorMsg)
+		return fmt.Errorf("%s", showUserTemplateRes.ErrorMsg)
 	}
 
 	userTemplate := showUserTemplateRes.GetData()
@@ -560,9 +560,9 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 	updateUserTemplateRes, err := client.ApiCall("set-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateUserTemplateRes.Success {
 		if updateUserTemplateRes.ErrorMsg != "" {
-			return fmt.Errorf(updateUserTemplateRes.ErrorMsg)
+			return fmt.Errorf("%s", updateUserTemplateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementUserTemplate(d, m)
@@ -587,9 +587,9 @@ func deleteManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 	deleteUserTemplateRes, err := client.ApiCall("delete-user-template", userTemplatePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteUserTemplateRes.Success {
 		if deleteUserTemplateRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteUserTemplateRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteUserTemplateRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

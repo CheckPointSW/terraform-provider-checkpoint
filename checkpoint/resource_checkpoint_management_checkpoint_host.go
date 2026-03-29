@@ -750,9 +750,9 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 	addCheckpointHostRes, err := client.ApiCall("add-checkpoint-host", checkpointHost, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addCheckpointHostRes.Success {
 		if addCheckpointHostRes.ErrorMsg != "" {
-			return fmt.Errorf(addCheckpointHostRes.ErrorMsg)
+			return fmt.Errorf("%s", addCheckpointHostRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addCheckpointHostRes.GetData()["uid"].(string))
@@ -770,14 +770,14 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
 
 	showCheckpointHostRes, err := client.ApiCall("show-checkpoint-host", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showCheckpointHostRes.Success {
 		if objectNotFound(showCheckpointHostRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showCheckpointHostRes.ErrorMsg)
+		return fmt.Errorf("%s", showCheckpointHostRes.ErrorMsg)
 	}
 
 	checkpointHost := showCheckpointHostRes.GetData()
@@ -1437,9 +1437,9 @@ func updateManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 	updateCheckpointHostRes, err := client.ApiCall("set-checkpoint-host", checkpointHost, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateCheckpointHostRes.Success {
 		if updateCheckpointHostRes.ErrorMsg != "" {
-			return fmt.Errorf(updateCheckpointHostRes.ErrorMsg)
+			return fmt.Errorf("%s", updateCheckpointHostRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementCheckpointHost(d, m)
@@ -1465,9 +1465,9 @@ func deleteManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 	deleteCheckpointHostRes, err := client.ApiCall("delete-checkpoint-host", checkpointHostPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteCheckpointHostRes.Success {
 		if deleteCheckpointHostRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteCheckpointHostRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteCheckpointHostRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 	return nil

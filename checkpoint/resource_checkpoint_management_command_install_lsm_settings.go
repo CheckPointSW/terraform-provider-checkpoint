@@ -46,7 +46,7 @@ func readManagementInstallLsmSettings(d *schema.ResourceData, m interface{}) err
 
 	InstallLsmSettingsRes, _ := client.ApiCall("install-lsm-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallLsmSettingsRes.Success {
-		return fmt.Errorf(InstallLsmSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallLsmSettingsRes.ErrorMsg)
 	}
 
 	d.SetId("install-lsm-settings" + acctest.RandString(10))

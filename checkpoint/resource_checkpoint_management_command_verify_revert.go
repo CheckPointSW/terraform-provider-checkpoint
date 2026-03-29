@@ -38,7 +38,7 @@ func createManagementVerifyRevert(d *schema.ResourceData, m interface{}) error {
 
 	VerifyRevertRes, _ := client.ApiCall("verify-revert", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !VerifyRevertRes.Success {
-		return fmt.Errorf(VerifyRevertRes.ErrorMsg)
+		return fmt.Errorf("%s", VerifyRevertRes.ErrorMsg)
 	}
 
 	d.SetId("verify-revert-" + acctest.RandString(10))

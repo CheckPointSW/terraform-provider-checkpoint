@@ -54,7 +54,7 @@ func testAccCheckCheckpointShowUpdatableObjectsRepositoryContent(resourceTfName 
 		payload["filter"] = map[string]interface{}{"text": objName}
 		response, _ := client.ApiCall("show-updatable-objects-repository-content", payload, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

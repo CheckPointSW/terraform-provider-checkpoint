@@ -186,9 +186,9 @@ func createManagementRadiusServer(d *schema.ResourceData, m interface{}) error {
 
 	if err != nil || !addRadiusServerRes.Success {
 		if addRadiusServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addRadiusServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addRadiusServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addRadiusServerRes.GetData()["uid"].(string))
@@ -206,7 +206,7 @@ func readManagementRadiusServer(d *schema.ResourceData, m interface{}) error {
 	showRadiusServerRes, err := client.ApiCall("show-radius-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRadiusServerRes.Success {
 		// Handle delete resource from other clients
@@ -214,7 +214,7 @@ func readManagementRadiusServer(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showRadiusServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showRadiusServerRes.ErrorMsg)
 	}
 
 	radiusServer := showRadiusServerRes.GetData()
@@ -388,9 +388,9 @@ func updateManagementRadiusServer(d *schema.ResourceData, m interface{}) error {
 	updateRadiusServerRes, err := client.ApiCall("set-radius-server", radiusServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateRadiusServerRes.Success {
 		if updateRadiusServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateRadiusServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateRadiusServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementRadiusServer(d, m)
@@ -407,9 +407,9 @@ func deleteManagementRadiusServer(d *schema.ResourceData, m interface{}) error {
 	deleteRadiusServerRes, err := client.ApiCall("delete-radius-server", radiusServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteRadiusServerRes.Success {
 		if deleteRadiusServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteRadiusServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteRadiusServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

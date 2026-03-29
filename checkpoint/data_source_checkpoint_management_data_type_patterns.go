@@ -79,14 +79,14 @@ func dataSourceManagementDataTypePatternsRead(d *schema.ResourceData, m interfac
 
 	showDataTypePatternsRes, err := client.ApiCall("show-data-type-patterns", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDataTypePatternsRes.Success {
 		if objectNotFound(showDataTypePatternsRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDataTypePatternsRes.ErrorMsg)
+		return fmt.Errorf("%s", showDataTypePatternsRes.ErrorMsg)
 	}
 
 	dataTypePatterns := showDataTypePatternsRes.GetData()

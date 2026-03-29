@@ -302,9 +302,9 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 	addTimeRes, err := client.ApiCall("add-time", time, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTimeRes.Success {
 		if addTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(addTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", addTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addTimeRes.GetData()["uid"].(string))
@@ -322,14 +322,14 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 
 	showTimeRes, err := client.ApiCall("show-time", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTimeRes.Success {
 		if objectNotFound(showTimeRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showTimeRes.ErrorMsg)
+		return fmt.Errorf("%s", showTimeRes.ErrorMsg)
 	}
 
 	time := showTimeRes.GetData()
@@ -647,9 +647,9 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 	updateTimeRes, err := client.ApiCall("set-time", time, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTimeRes.Success {
 		if updateTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementTime(d, m)
@@ -674,9 +674,9 @@ func deleteManagementTime(d *schema.ResourceData, m interface{}) error {
 	deleteTimeRes, err := client.ApiCall("delete-time", timePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteTimeRes.Success {
 		if deleteTimeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteTimeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteTimeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

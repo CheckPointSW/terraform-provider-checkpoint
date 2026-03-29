@@ -86,10 +86,10 @@ func dataSourceManagementDefaultAdministratorSettingsRead(d *schema.ResourceData
 
 	defaultAdministratorSettingsRes, err := client.ApiCallSimple("show-default-administrator-settings", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !defaultAdministratorSettingsRes.Success {
-		return fmt.Errorf(defaultAdministratorSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", defaultAdministratorSettingsRes.ErrorMsg)
 	}
 	defaultAdministratorSettingsData := defaultAdministratorSettingsRes.GetData()
 

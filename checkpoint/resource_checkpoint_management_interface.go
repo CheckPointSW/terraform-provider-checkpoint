@@ -575,9 +575,9 @@ func createManagementInterface(d *schema.ResourceData, m interface{}) error {
 	addInterfaceRes, err := client.ApiCall("add-interface", interfaceMap, client.GetSessionID(), true, false)
 	if err != nil || !addInterfaceRes.Success {
 		if addInterfaceRes.ErrorMsg != "" {
-			return fmt.Errorf(addInterfaceRes.ErrorMsg)
+			return fmt.Errorf("%s", addInterfaceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addInterfaceRes.GetData()["uid"].(string))
@@ -595,14 +595,14 @@ func readManagementInterface(d *schema.ResourceData, m interface{}) error {
 
 	showInterfaceRes, err := client.ApiCall("show-interface", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInterfaceRes.Success {
 		if objectNotFound(showInterfaceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInterfaceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInterfaceRes.ErrorMsg)
 	}
 
 	interfaceMap := showInterfaceRes.GetData()
@@ -1105,9 +1105,9 @@ func updateManagementInterface(d *schema.ResourceData, m interface{}) error {
 	updateInterfaceRes, err := client.ApiCall("set-interface", interfaceMap, client.GetSessionID(), true, false)
 	if err != nil || !updateInterfaceRes.Success {
 		if updateInterfaceRes.ErrorMsg != "" {
-			return fmt.Errorf(updateInterfaceRes.ErrorMsg)
+			return fmt.Errorf("%s", updateInterfaceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementInterface(d, m)
@@ -1126,9 +1126,9 @@ func deleteManagementInterface(d *schema.ResourceData, m interface{}) error {
 	deleteInterfaceRes, err := client.ApiCall("delete-interface", interfacePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteInterfaceRes.Success {
 		if deleteInterfaceRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteInterfaceRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteInterfaceRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

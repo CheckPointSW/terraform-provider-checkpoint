@@ -161,24 +161,24 @@ func createManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	addAwsDataCenterServerRes, err := client.ApiCall("add-data-center-server", awsDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addAwsDataCenterServerRes.Success {
 		if addAwsDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addAwsDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addAwsDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addAwsDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": awsDataCenterServer["name"],
 	}
 	showAwsDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAwsDataCenterServerRes.Success {
-		return fmt.Errorf(showAwsDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAwsDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showAwsDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementAwsDataCenterServer(d, m)
@@ -192,14 +192,14 @@ func readManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) er
 
 	showAwsDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAwsDataCenterServerRes.Success {
 		if objectNotFound(showAwsDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAwsDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAwsDataCenterServerRes.ErrorMsg)
 	}
 	awsDataCenterServer := showAwsDataCenterServerRes.GetData()
 
@@ -331,14 +331,14 @@ func updateManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	updateAwsDataCenterServerRes, err := client.ApiCall("set-data-center-server", awsDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateAwsDataCenterServerRes.Success {
 		if updateAwsDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAwsDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAwsDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateAwsDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementAwsDataCenterServer(d, m)
@@ -365,9 +365,9 @@ func deleteManagementAwsDataCenterServer(d *schema.ResourceData, m interface{}) 
 	deleteAwsDataCenterServerRes, err := client.ApiCall("delete-data-center-server", awsDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAwsDataCenterServerRes.Success {
 		if deleteAwsDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAwsDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAwsDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

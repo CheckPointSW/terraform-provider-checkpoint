@@ -285,10 +285,10 @@ func dataSourceManagementServicesUdpRead(d *schema.ResourceData, m interface{}) 
 	}
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServicesUdpRes.Success {
-		return fmt.Errorf(showServicesUdpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServicesUdpRes.ErrorMsg)
 	}
 
 	servicesUdp := showServicesUdpRes.GetData()

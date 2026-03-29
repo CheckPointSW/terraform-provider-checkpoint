@@ -80,13 +80,13 @@ func deleteManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error
 	res, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "DELETE")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := res.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("")
@@ -108,7 +108,7 @@ func readManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
 	GCPAccountRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	account := GCPAccountRes.GetData()
 	if checkIfRequestFailed(account) {
@@ -117,7 +117,7 @@ func readManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error {
 			return nil
 		}
 		errMessage := buildErrorMessage(account)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	GCPAccount := account["result"].(map[string]interface{})
@@ -172,13 +172,13 @@ func createManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error
 	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeAccountsRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 	d.SetId("cme-gcp-account-" + d.Get("name").(string) + "-" + acctest.RandString(10))
 
@@ -216,13 +216,13 @@ func updateManagementCMEAccountsGCP(d *schema.ResourceData, m interface{}) error
 	cmeAccountsRes, err := client.ApiCall(url, payload, client.GetSessionID(), true, client.IsProxyUsed(), "PUT")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	data := cmeAccountsRes.GetData()
 	if checkIfRequestFailed(data) {
 		errMessage := buildErrorMessage(data)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	return readManagementCMEAccountsGCP(d, m)

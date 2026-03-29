@@ -689,7 +689,7 @@ func login(client *checkpoint.ApiClient, username string, pwd string, apiKey str
 		return Session{}, err
 	}
 	if !loginRes.Success {
-		return Session{}, fmt.Errorf(loginRes.ErrorMsg)
+		return Session{}, fmt.Errorf("%s", loginRes.ErrorMsg)
 	}
 
 	uid := ""

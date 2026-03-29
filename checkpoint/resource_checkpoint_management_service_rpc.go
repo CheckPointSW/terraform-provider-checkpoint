@@ -109,9 +109,9 @@ func createManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 	addServiceRpcRes, err := client.ApiCall("add-service-rpc", serviceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceRpcRes.Success {
 		if addServiceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(addServiceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", addServiceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addServiceRpcRes.GetData()["uid"].(string))
@@ -129,14 +129,14 @@ func readManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 
 	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceRpcRes.Success {
 		if objectNotFound(showServiceRpcRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceRpcRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceRpcRes.ErrorMsg)
 	}
 
 	serviceRpc := showServiceRpcRes.GetData()
@@ -242,9 +242,9 @@ func updateManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 	updateServiceRpcRes, err := client.ApiCall("set-service-rpc", serviceRpc, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceRpcRes.Success {
 		if updateServiceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(updateServiceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", updateServiceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementServiceRpc(d, m)
@@ -269,9 +269,9 @@ func deleteManagementServiceRpc(d *schema.ResourceData, m interface{}) error {
 	deleteServiceRpcRes, err := client.ApiCall("delete-service-rpc", serviceRpcPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteServiceRpcRes.Success {
 		if deleteServiceRpcRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteServiceRpcRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteServiceRpcRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -111,7 +111,7 @@ func createManagementInstallSoftwarePackage(d *schema.ResourceData, m interface{
 
 	InstallSoftwarePackageRes, _ := client.ApiCall("install-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !InstallSoftwarePackageRes.Success {
-		return fmt.Errorf(InstallSoftwarePackageRes.ErrorMsg)
+		return fmt.Errorf("%s", InstallSoftwarePackageRes.ErrorMsg)
 	}
 
 	d.SetId("install-software-package-" + acctest.RandString(10))

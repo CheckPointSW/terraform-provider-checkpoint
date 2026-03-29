@@ -94,10 +94,10 @@ func dataSourceManagementLdapGroupRead(d *schema.ResourceData, m interface{}) er
 
 	showLdapGroupRes, err := client.ApiCallSimple("show-ldap-group", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLdapGroupRes.Success {
-		return fmt.Errorf(showLdapGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showLdapGroupRes.ErrorMsg)
 	}
 
 	ldapGroup := showLdapGroupRes.GetData()

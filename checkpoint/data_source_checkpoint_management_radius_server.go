@@ -109,10 +109,10 @@ func dataSourceManagementRadiusServerRead(d *schema.ResourceData, m interface{})
 
 	showRadiusServerRes, err := client.ApiCall("show-radius-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showRadiusServerRes.Success {
-		return fmt.Errorf(showRadiusServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showRadiusServerRes.ErrorMsg)
 	}
 
 	radiusServer := showRadiusServerRes.GetData()

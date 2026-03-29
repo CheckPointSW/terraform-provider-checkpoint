@@ -53,7 +53,7 @@ func createManagementDeleteUpdatableObject(d *schema.ResourceData, m interface{}
 
 	DeleteUpdatableObjectRes, _ := client.ApiCall("delete-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !DeleteUpdatableObjectRes.Success {
-		return fmt.Errorf(DeleteUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", DeleteUpdatableObjectRes.ErrorMsg)
 	}
 
 	d.SetId("delete-updatable-object-" + acctest.RandString(10))

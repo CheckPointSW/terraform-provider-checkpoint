@@ -79,7 +79,7 @@ func createManagementSetIdpToDomainAssignment(d *schema.ResourceData, m interfac
 
 	SetIdpToDomainAssignmentRes, _ := client.ApiCall("set-idp-to-domain-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetIdpToDomainAssignmentRes.Success {
-		return fmt.Errorf(SetIdpToDomainAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", SetIdpToDomainAssignmentRes.ErrorMsg)
 	}
 
 	d.SetId("set-idp-to-domain-assignment" + acctest.RandString(10))

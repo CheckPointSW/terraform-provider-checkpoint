@@ -70,7 +70,7 @@ func testAccCheckCheckpointNatRuleExists(resourceTfName string, res *map[string]
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-nat-rule", map[string]interface{}{"uid": rs.Primary.ID, "package": "Standard"}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

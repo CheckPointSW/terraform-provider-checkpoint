@@ -166,9 +166,9 @@ func createManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	addMobileAccessProfileRuleRes, err := client.ApiCall("add-mobile-access-profile-rule", mobileAccessProfileRule, client.GetSessionID(), true, false)
 	if err != nil || !addMobileAccessProfileRuleRes.Success {
 		if addMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(addMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", addMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addMobileAccessProfileRuleRes.GetData()["uid"].(string))
@@ -186,14 +186,14 @@ func readManagementMobileAccessProfileRule(d *schema.ResourceData, m interface{}
 
 	showMobileAccessProfileRuleRes, err := client.ApiCall("show-mobile-access-profile-rule", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileAccessProfileRuleRes.Success {
 		if objectNotFound(showMobileAccessProfileRuleRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileAccessProfileRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileAccessProfileRuleRes.ErrorMsg)
 	}
 
 	mobileAccessProfileRule := showMobileAccessProfileRuleRes.GetData()
@@ -349,9 +349,9 @@ func updateManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	updateMobileAccessProfileRuleRes, err := client.ApiCall("set-mobile-access-profile-rule", mobileAccessProfileRule, client.GetSessionID(), true, false)
 	if err != nil || !updateMobileAccessProfileRuleRes.Success {
 		if updateMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(updateMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", updateMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementMobileAccessProfileRule(d, m)
@@ -370,9 +370,9 @@ func deleteManagementMobileAccessProfileRule(d *schema.ResourceData, m interface
 	deleteMobileAccessProfileRuleRes, err := client.ApiCall("delete-mobile-access-profile-rule", mobileAccessProfileRulePayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteMobileAccessProfileRuleRes.Success {
 		if deleteMobileAccessProfileRuleRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteMobileAccessProfileRuleRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteMobileAccessProfileRuleRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

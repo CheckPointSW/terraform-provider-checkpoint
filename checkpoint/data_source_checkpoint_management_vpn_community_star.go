@@ -652,10 +652,10 @@ func dataSourceManagementVpnCommunityStarRead(d *schema.ResourceData, m interfac
 
 	showVpnCommunityStarRes, err := client.ApiCall("show-vpn-community-star", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVpnCommunityStarRes.Success {
-		return fmt.Errorf(showVpnCommunityStarRes.ErrorMsg)
+		return fmt.Errorf("%s", showVpnCommunityStarRes.ErrorMsg)
 	}
 
 	vpnCommunityStar := showVpnCommunityStarRes.GetData()

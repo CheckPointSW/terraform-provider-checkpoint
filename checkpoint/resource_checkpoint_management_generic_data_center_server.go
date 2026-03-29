@@ -140,28 +140,28 @@ func createManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	addGenericDataCenterServerRes, err := client.ApiCall("add-data-center-server", genericDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addGenericDataCenterServerRes.Success {
 		if addGenericDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addGenericDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addGenericDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addGenericDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": genericDataCenterServer["name"],
 	}
 	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGenericDataCenterServerRes.Success {
 		if objectNotFound(showGenericDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGenericDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showGenericDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showGenericDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementGenericDataCenterServer(d, m)
@@ -174,14 +174,14 @@ func readManagementGenericDataCenterServer(d *schema.ResourceData, m interface{}
 	}
 	showGenericDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), false, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGenericDataCenterServerRes.Success {
 		if objectNotFound(showGenericDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showGenericDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showGenericDataCenterServerRes.ErrorMsg)
 	}
 	genericDataCenterServer := showGenericDataCenterServerRes.GetData()
 	log.Println("payload resource: ", genericDataCenterServer)
@@ -303,14 +303,14 @@ func updateManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 
 	updateGenericDataCenterServerRes, err := client.ApiCall("set-data-center-server", genericDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateGenericDataCenterServerRes.Success {
 		if updateGenericDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateGenericDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateGenericDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateGenericDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementGenericDataCenterServer(d, m)
@@ -337,9 +337,9 @@ func deleteManagementGenericDataCenterServer(d *schema.ResourceData, m interface
 	deleteGenericDataCenterServerRes, err := client.ApiCall("delete-data-center-server", genericDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteGenericDataCenterServerRes.Success {
 		if deleteGenericDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteGenericDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteGenericDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

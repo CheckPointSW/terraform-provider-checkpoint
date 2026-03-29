@@ -309,10 +309,10 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 
 	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAccessRuleRes.Success {
-		return fmt.Errorf(showAccessRuleRes.ErrorMsg)
+		return fmt.Errorf("%s", showAccessRuleRes.ErrorMsg)
 	}
 
 	accessRule := showAccessRuleRes.GetData()
@@ -537,7 +537,7 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 				_ = d.Set("vpn_communities", nil)
 				_ = d.Set("vpn", nil)
 			} else {
-				return fmt.Errorf("Cannot read invalid VPN type [" + vpnType + "]")
+				return fmt.Errorf("Cannot read invalid VPN type [%s]", vpnType)
 			}
 		}
 	}

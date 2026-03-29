@@ -70,10 +70,10 @@ func dataSourceManagementAppControlStatusRead(d *schema.ResourceData, m interfac
 
 	showAppControlStatusRes, err := client.ApiCallSimple("show-app-control-status", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAppControlStatusRes.Success {
-		return fmt.Errorf(showAppControlStatusRes.ErrorMsg)
+		return fmt.Errorf("%s", showAppControlStatusRes.ErrorMsg)
 	}
 
 	appControlStatus := showAppControlStatusRes.GetData()

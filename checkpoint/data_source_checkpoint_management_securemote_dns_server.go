@@ -84,10 +84,10 @@ func dataSourceManagementSecuremoteDnsServerRead(d *schema.ResourceData, m inter
 
 	showSecuremoteDnsServerRes, err := client.ApiCallSimple("show-securemote-dns-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecuremoteDnsServerRes.Success {
-		return fmt.Errorf(showSecuremoteDnsServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecuremoteDnsServerRes.ErrorMsg)
 	}
 
 	securemoteDnsServer := showSecuremoteDnsServerRes.GetData()

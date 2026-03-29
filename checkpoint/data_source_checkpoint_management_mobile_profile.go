@@ -431,14 +431,14 @@ func dataSourceManagementMobileProfileRead(d *schema.ResourceData, m interface{}
 
 	showMobileProfileRes, err := client.ApiCall("show-mobile-profile", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMobileProfileRes.Success {
 		if objectNotFound(showMobileProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showMobileProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showMobileProfileRes.ErrorMsg)
 	}
 
 	mobileProfile := showMobileProfileRes.GetData()

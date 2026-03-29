@@ -78,7 +78,7 @@ func createManagementMigrateImportDomain(d *schema.ResourceData, m interface{}) 
 
 	MigrateImportDomainRes, _ := client.ApiCall("migrate-import-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !MigrateImportDomainRes.Success {
-		return fmt.Errorf(MigrateImportDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", MigrateImportDomainRes.ErrorMsg)
 	}
 
 	d.SetId("migrate-import-domain-" + acctest.RandString(10))

@@ -65,10 +65,10 @@ func dataSourceManagementServiceCitrixTcpRead(d *schema.ResourceData, m interfac
 
 	showServiceCitrixTcpRes, err := client.ApiCall("show-service-citrix-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceCitrixTcpRes.Success {
-		return fmt.Errorf(showServiceCitrixTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceCitrixTcpRes.ErrorMsg)
 	}
 
 	serviceCitrixTcp := showServiceCitrixTcpRes.GetData()

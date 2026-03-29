@@ -93,10 +93,10 @@ func dataSourceProxmoxDataCenterServerRead(d *schema.ResourceData, m interface{}
 	}
 	showProxmoxDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showProxmoxDataCenterServerRes.Success {
-		return fmt.Errorf(showProxmoxDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showProxmoxDataCenterServerRes.ErrorMsg)
 	}
 	proxmoxDataCenterServer := showProxmoxDataCenterServerRes.GetData()
 

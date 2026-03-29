@@ -98,10 +98,10 @@ func dataSourceManagementMulticastAddressRangeRead(d *schema.ResourceData, m int
 
 	showMulticastAddressRangeRes, err := client.ApiCall("show-multicast-address-range", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showMulticastAddressRangeRes.Success {
-		return fmt.Errorf(showMulticastAddressRangeRes.ErrorMsg)
+		return fmt.Errorf("%s", showMulticastAddressRangeRes.ErrorMsg)
 	}
 
 	multicastAddressRange := showMulticastAddressRangeRes.GetData()

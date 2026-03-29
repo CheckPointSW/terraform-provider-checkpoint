@@ -105,14 +105,14 @@ func dataSourceManagementResourceFtpRead(d *schema.ResourceData, m interface{}) 
 
 	showResourceFtpRes, err := client.ApiCall("show-resource-ftp", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showResourceFtpRes.Success {
 		if objectNotFound(showResourceFtpRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showResourceFtpRes.ErrorMsg)
+		return fmt.Errorf("%s", showResourceFtpRes.ErrorMsg)
 	}
 
 	resourceFtp := showResourceFtpRes.GetData()

@@ -359,10 +359,10 @@ func dataSourceManagementHostsRead(d *schema.ResourceData, m interface{}) error 
 	}
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showHostsRes.Success {
-		return fmt.Errorf(showHostsRes.ErrorMsg)
+		return fmt.Errorf("%s", showHostsRes.ErrorMsg)
 	}
 
 	hosts := showHostsRes.GetData()
@@ -538,9 +538,9 @@ func dataSourceManagementHostsRead(d *schema.ResourceData, m interface{}) error 
 							showProtectedByRes, err := client.ApiCall("show-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 							if err != nil || !showProtectedByRes.Success {
 								if showProtectedByRes.ErrorMsg != "" {
-									return fmt.Errorf(showProtectedByRes.ErrorMsg)
+									return fmt.Errorf("%s", showProtectedByRes.ErrorMsg)
 								}
-								return fmt.Errorf(err.Error())
+								return fmt.Errorf("%s", err.Error())
 							}
 
 							webServerConfigMapToReturn["protected_by"] = showProtectedByRes.GetData()["object"].(map[string]interface{})["name"]

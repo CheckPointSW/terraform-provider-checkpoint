@@ -201,9 +201,9 @@ func createManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	addAddressRangeRes, err := client.ApiCall("add-address-range", addressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAddressRangeRes.Success {
 		if addAddressRangeRes.ErrorMsg != "" {
-			return fmt.Errorf(addAddressRangeRes.ErrorMsg)
+			return fmt.Errorf("%s", addAddressRangeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addAddressRangeRes.GetData()["uid"].(string))
@@ -221,7 +221,7 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 
 	showAddressRangeRes, err := client.ApiCall("show-address-range", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAddressRangeRes.Success {
 		// Handle delete resource from other clients
@@ -229,7 +229,7 @@ func readManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showAddressRangeRes.ErrorMsg)
+		return fmt.Errorf("%s", showAddressRangeRes.ErrorMsg)
 	}
 
 	addressRange := showAddressRangeRes.GetData()
@@ -399,9 +399,9 @@ func updateManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	updateAddressRangeRes, err := client.ApiCall("set-address-range", addressRange, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAddressRangeRes.Success {
 		if updateAddressRangeRes.ErrorMsg != "" {
-			return fmt.Errorf(updateAddressRangeRes.ErrorMsg)
+			return fmt.Errorf("%s", updateAddressRangeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementAddressRange(d, m)
@@ -425,9 +425,9 @@ func deleteManagementAddressRange(d *schema.ResourceData, m interface{}) error {
 	deleteAddressRangeRes, err := client.ApiCall("delete-address-range", addressRangePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteAddressRangeRes.Success {
 		if deleteAddressRangeRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteAddressRangeRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteAddressRangeRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

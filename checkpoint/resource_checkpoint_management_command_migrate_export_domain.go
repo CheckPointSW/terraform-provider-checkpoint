@@ -58,7 +58,7 @@ func createManagementMigrateExportDomain(d *schema.ResourceData, m interface{}) 
 
 	MigrateExportDomainRes, _ := client.ApiCall("migrate-export-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !MigrateExportDomainRes.Success {
-		return fmt.Errorf(MigrateExportDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", MigrateExportDomainRes.ErrorMsg)
 	}
 
 	d.SetId("migrate-export-domain-" + acctest.RandString(10))

@@ -107,9 +107,9 @@ func createManagementVoipDomainSipProxy(d *schema.ResourceData, m interface{}) e
 	addVoipDomainSipProxyRes, err := client.ApiCall("add-voip-domain-sip-proxy", voipDomainSipProxy, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVoipDomainSipProxyRes.Success {
 		if addVoipDomainSipProxyRes.ErrorMsg != "" {
-			return fmt.Errorf(addVoipDomainSipProxyRes.ErrorMsg)
+			return fmt.Errorf("%s", addVoipDomainSipProxyRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVoipDomainSipProxyRes.GetData()["uid"].(string))
@@ -127,14 +127,14 @@ func readManagementVoipDomainSipProxy(d *schema.ResourceData, m interface{}) err
 
 	showVoipDomainSipProxyRes, err := client.ApiCall("show-voip-domain-sip-proxy", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainSipProxyRes.Success {
 		if objectNotFound(showVoipDomainSipProxyRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainSipProxyRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainSipProxyRes.ErrorMsg)
 	}
 
 	voipDomainSipProxy := showVoipDomainSipProxyRes.GetData()
@@ -245,9 +245,9 @@ func updateManagementVoipDomainSipProxy(d *schema.ResourceData, m interface{}) e
 	updateVoipDomainSipProxyRes, err := client.ApiCall("set-voip-domain-sip-proxy", voipDomainSipProxy, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVoipDomainSipProxyRes.Success {
 		if updateVoipDomainSipProxyRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVoipDomainSipProxyRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVoipDomainSipProxyRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVoipDomainSipProxy(d, m)
@@ -266,9 +266,9 @@ func deleteManagementVoipDomainSipProxy(d *schema.ResourceData, m interface{}) e
 	deleteVoipDomainSipProxyRes, err := client.ApiCall("delete-voip-domain-sip-proxy", voipDomainSipProxyPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVoipDomainSipProxyRes.Success {
 		if deleteVoipDomainSipProxyRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVoipDomainSipProxyRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVoipDomainSipProxyRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -90,14 +90,14 @@ func dataSourceManagementOutboundInspectionCertificateRead(d *schema.ResourceDat
 
 	showOutboundInspectionCertificateRes, err := client.ApiCall("show-outbound-inspection-certificate", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOutboundInspectionCertificateRes.Success {
 		if objectNotFound(showOutboundInspectionCertificateRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOutboundInspectionCertificateRes.ErrorMsg)
+		return fmt.Errorf("%s", showOutboundInspectionCertificateRes.ErrorMsg)
 	}
 
 	outboundInspectionCertificate := showOutboundInspectionCertificateRes.GetData()

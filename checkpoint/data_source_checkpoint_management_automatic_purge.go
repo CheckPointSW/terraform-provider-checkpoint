@@ -82,10 +82,10 @@ func dataSourceManagementAutomaticPurgeRead(d *schema.ResourceData, m interface{
 
 	showAutomaticPurgeRes, err := client.ApiCall("show-automatic-purge", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAutomaticPurgeRes.Success {
-		return fmt.Errorf(showAutomaticPurgeRes.ErrorMsg)
+		return fmt.Errorf("%s", showAutomaticPurgeRes.ErrorMsg)
 	}
 
 	automaticPurge := showAutomaticPurgeRes.GetData()

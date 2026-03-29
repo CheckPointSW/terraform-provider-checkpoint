@@ -74,14 +74,14 @@ func dataSourceManagementVoipDomainSipProxyRead(d *schema.ResourceData, m interf
 
 	showVoipDomainSipProxyRes, err := client.ApiCall("show-voip-domain-sip-proxy", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainSipProxyRes.Success {
 		if objectNotFound(showVoipDomainSipProxyRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainSipProxyRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainSipProxyRes.ErrorMsg)
 	}
 
 	voipDomainSipProxy := showVoipDomainSipProxyRes.GetData()

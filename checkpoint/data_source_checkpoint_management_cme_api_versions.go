@@ -38,13 +38,13 @@ func dataSourceManagementCMEAPIVersionsRead(d *schema.ResourceData, m interface{
 	cmeVersionRes, err := client.ApiCall(url, nil, client.GetSessionID(), true, client.IsProxyUsed(), "GET")
 
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	cmeAPIVersionsJson := cmeVersionRes.GetData()
 	if checkIfRequestFailed(cmeAPIVersionsJson) {
 		errMessage := buildErrorMessage(cmeAPIVersionsJson)
-		return fmt.Errorf(errMessage)
+		return fmt.Errorf("%s", errMessage)
 	}
 
 	d.SetId("cme-api-versions-" + acctest.RandString(10))

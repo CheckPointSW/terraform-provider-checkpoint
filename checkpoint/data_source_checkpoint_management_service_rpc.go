@@ -77,14 +77,14 @@ func dataSourceManagementServiceRpcRead(d *schema.ResourceData, m interface{}) e
 
 	showServiceRpcRes, err := client.ApiCall("show-service-rpc", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceRpcRes.Success {
 		if objectNotFound(showServiceRpcRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showServiceRpcRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceRpcRes.ErrorMsg)
 	}
 
 	serviceRpc := showServiceRpcRes.GetData()

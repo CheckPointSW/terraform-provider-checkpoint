@@ -88,10 +88,10 @@ func dataSourceAzureDataCenterServerRead(d *schema.ResourceData, m interface{}) 
 	}
 	showAzureDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureDataCenterServerRes.Success {
-		return fmt.Errorf(showAzureDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureDataCenterServerRes.ErrorMsg)
 	}
 	azureDataCenterServer := showAzureDataCenterServerRes.GetData()
 

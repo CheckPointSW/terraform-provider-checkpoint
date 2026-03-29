@@ -132,7 +132,7 @@ func createManagementSetAutomaticPurge(d *schema.ResourceData, m interface{}) er
 
 	SetAutomaticPurgeRes, _ := client.ApiCall("set-automatic-purge", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetAutomaticPurgeRes.Success {
-		return fmt.Errorf(SetAutomaticPurgeRes.ErrorMsg)
+		return fmt.Errorf("%s", SetAutomaticPurgeRes.ErrorMsg)
 	}
 
 	d.SetId("set-automatic-purge" + acctest.RandString(10))

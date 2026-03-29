@@ -42,7 +42,7 @@ func createManagementUpdateProvisionedSatellites(d *schema.ResourceData, m inter
 
 	UpdateProvisionedSatellitesRes, _ := client.ApiCall("update-provisioned-satellites", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !UpdateProvisionedSatellitesRes.Success {
-		return fmt.Errorf(UpdateProvisionedSatellitesRes.ErrorMsg)
+		return fmt.Errorf("%s", UpdateProvisionedSatellitesRes.ErrorMsg)
 	}
 
 	d.SetId("update-provisioned-satellites" + acctest.RandString(10))

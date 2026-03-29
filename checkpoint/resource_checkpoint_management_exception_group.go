@@ -211,9 +211,9 @@ func createManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 	addExceptionGroupRes, err := client.ApiCall("add-exception-group", exceptionGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addExceptionGroupRes.Success {
 		if addExceptionGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(addExceptionGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", addExceptionGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addExceptionGroupRes.GetData()["uid"].(string))
@@ -231,14 +231,14 @@ func readManagementExceptionGroup(d *schema.ResourceData, m interface{}) error {
 
 	showExceptionGroupRes, err := client.ApiCall("show-exception-group", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showExceptionGroupRes.Success {
 		if objectNotFound(showExceptionGroupRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showExceptionGroupRes.ErrorMsg)
+		return fmt.Errorf("%s", showExceptionGroupRes.ErrorMsg)
 	}
 
 	exceptionGroup := showExceptionGroupRes.GetData()
@@ -418,9 +418,9 @@ func updateManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 	updateExceptionGroupRes, err := client.ApiCall("set-exception-group", exceptionGroup, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateExceptionGroupRes.Success {
 		if updateExceptionGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(updateExceptionGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", updateExceptionGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementExceptionGroup(d, m)
@@ -447,9 +447,9 @@ func deleteManagementExceptionGroup(d *schema.ResourceData, m interface{}) error
 	deleteExceptionGroupRes, err := client.ApiCall("delete-exception-group", exceptionGroupPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteExceptionGroupRes.Success {
 		if deleteExceptionGroupRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteExceptionGroupRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteExceptionGroupRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -155,24 +155,24 @@ func createManagementIseDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	addIseDataCenterServerRes, err := client.ApiCall("add-data-center-server", iseDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !addIseDataCenterServerRes.Success {
 		if addIseDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addIseDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addIseDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("add-data-center-server", addIseDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 	payload := map[string]interface{}{
 		"name": iseDataCenterServer["name"],
 	}
 	showIseDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIseDataCenterServerRes.Success {
-		return fmt.Errorf(showIseDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showIseDataCenterServerRes.ErrorMsg)
 	}
 	d.SetId(showIseDataCenterServerRes.GetData()["uid"].(string))
 	return readManagementIseDataCenterServer(d, m)
@@ -186,14 +186,14 @@ func readManagementIseDataCenterServer(d *schema.ResourceData, m interface{}) er
 
 	showIseDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIseDataCenterServerRes.Success {
 		if objectNotFound(showIseDataCenterServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showIseDataCenterServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showIseDataCenterServerRes.ErrorMsg)
 	}
 	iseDataCenterServer := showIseDataCenterServerRes.GetData()
 
@@ -327,14 +327,14 @@ func updateManagementIseDataCenterServer(d *schema.ResourceData, m interface{}) 
 
 	updateIseDataCenterServerRes, err := client.ApiCall("set-data-center-server", iseDataCenterServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !updateIseDataCenterServerRes.Success {
 		if updateIseDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateIseDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateIseDataCenterServerRes.ErrorMsg)
 		}
 		msg := createTaskFailMessage("set-data-center-server", updateIseDataCenterServerRes.GetData())
-		return fmt.Errorf(msg)
+		return fmt.Errorf("%s", msg)
 	}
 
 	return readManagementIseDataCenterServer(d, m)
@@ -361,9 +361,9 @@ func deleteManagementIseDataCenterServer(d *schema.ResourceData, m interface{}) 
 	deleteIseDataCenterServerRes, err := client.ApiCall("delete-data-center-server", iseDataCenterServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteIseDataCenterServerRes.Success {
 		if deleteIseDataCenterServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteIseDataCenterServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteIseDataCenterServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

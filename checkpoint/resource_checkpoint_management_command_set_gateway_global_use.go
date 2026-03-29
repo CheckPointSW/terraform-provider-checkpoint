@@ -48,7 +48,7 @@ func createManagementSetGatewayGlobalUse(d *schema.ResourceData, m interface{}) 
 
 	SetGatewayGlobalUseRes, _ := client.ApiCall("set-gateway-global-use", payload, client.GetSessionID(), true, false)
 	if !SetGatewayGlobalUseRes.Success {
-		return fmt.Errorf(SetGatewayGlobalUseRes.ErrorMsg)
+		return fmt.Errorf("%s", SetGatewayGlobalUseRes.ErrorMsg)
 	}
 
 	res := SetGatewayGlobalUseRes.GetData()

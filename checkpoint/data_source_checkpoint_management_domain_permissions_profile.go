@@ -501,14 +501,14 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 
 	showDomainPermissionsProfileRes, err := client.ApiCall("show-domain-permissions-profile", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDomainPermissionsProfileRes.Success {
 		if objectNotFound(showDomainPermissionsProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showDomainPermissionsProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showDomainPermissionsProfileRes.ErrorMsg)
 	}
 
 	domainPermissionsProfile := showDomainPermissionsProfileRes.GetData()

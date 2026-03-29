@@ -95,7 +95,7 @@ func createManagementAddUpdatableObject(d *schema.ResourceData, m interface{}) e
 
 	AddUpdatableObjectRes, _ := client.ApiCall("add-updatable-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !AddUpdatableObjectRes.Success {
-		return fmt.Errorf(AddUpdatableObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", AddUpdatableObjectRes.ErrorMsg)
 	}
 
 	d.SetId(AddUpdatableObjectRes.GetData()["uid"].(string))

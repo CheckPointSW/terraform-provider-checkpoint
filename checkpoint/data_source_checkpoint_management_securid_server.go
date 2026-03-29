@@ -70,10 +70,10 @@ func dataSourceManagementSecuridServerRead(d *schema.ResourceData, m interface{}
 
 	showSecuridServerRes, err := client.ApiCallSimple("show-securid-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecuridServerRes.Success {
-		return fmt.Errorf(showSecuridServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecuridServerRes.ErrorMsg)
 	}
 
 	securidServer := showSecuridServerRes.GetData()

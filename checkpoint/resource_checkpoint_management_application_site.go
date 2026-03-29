@@ -153,9 +153,9 @@ func createManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteRes.Success {
 		if addApplicationSiteRes.ErrorMsg != "" {
-			return fmt.Errorf(addApplicationSiteRes.ErrorMsg)
+			return fmt.Errorf("%s", addApplicationSiteRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addApplicationSiteRes.GetData()["uid"].(string))
@@ -173,14 +173,14 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 
 	showApplicationSiteRes, err := client.ApiCall("show-application-site", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showApplicationSiteRes.Success {
 		if objectNotFound(showApplicationSiteRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showApplicationSiteRes.ErrorMsg)
+		return fmt.Errorf("%s", showApplicationSiteRes.ErrorMsg)
 	}
 
 	applicationSite := showApplicationSiteRes.GetData()
@@ -352,9 +352,9 @@ func updateManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 	updateApplicationSiteRes, err := client.ApiCall("set-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteRes.Success {
 		if updateApplicationSiteRes.ErrorMsg != "" {
-			return fmt.Errorf(updateApplicationSiteRes.ErrorMsg)
+			return fmt.Errorf("%s", updateApplicationSiteRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementApplicationSite(d, m)
@@ -381,9 +381,9 @@ func deleteManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 	deleteApplicationSiteRes, err := client.ApiCall("delete-application-site", applicationSitePayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteApplicationSiteRes.Success {
 		if deleteApplicationSiteRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteApplicationSiteRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteApplicationSiteRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

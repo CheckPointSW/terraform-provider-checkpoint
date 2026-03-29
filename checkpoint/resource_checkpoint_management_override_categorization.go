@@ -128,9 +128,9 @@ func createManagementOverrideCategorization(d *schema.ResourceData, m interface{
 	addOverrideCategorizationRes, err := client.ApiCall("add-override-categorization", overrideCategorization, client.GetSessionID(), true, false)
 	if err != nil || !addOverrideCategorizationRes.Success {
 		if addOverrideCategorizationRes.ErrorMsg != "" {
-			return fmt.Errorf(addOverrideCategorizationRes.ErrorMsg)
+			return fmt.Errorf("%s", addOverrideCategorizationRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addOverrideCategorizationRes.GetData()["uid"].(string))
@@ -152,14 +152,14 @@ func readManagementOverrideCategorization(d *schema.ResourceData, m interface{})
 
 	showOverrideCategorizationRes, err := client.ApiCall("show-override-categorization", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showOverrideCategorizationRes.Success {
 		if objectNotFound(showOverrideCategorizationRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showOverrideCategorizationRes.ErrorMsg)
+		return fmt.Errorf("%s", showOverrideCategorizationRes.ErrorMsg)
 	}
 
 	overrideCategorization := showOverrideCategorizationRes.GetData()
@@ -296,9 +296,9 @@ func updateManagementOverrideCategorization(d *schema.ResourceData, m interface{
 	updateOverrideCategorizationRes, err := client.ApiCall("set-override-categorization", overrideCategorization, client.GetSessionID(), true, false)
 	if err != nil || !updateOverrideCategorizationRes.Success {
 		if updateOverrideCategorizationRes.ErrorMsg != "" {
-			return fmt.Errorf(updateOverrideCategorizationRes.ErrorMsg)
+			return fmt.Errorf("%s", updateOverrideCategorizationRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementOverrideCategorization(d, m)
@@ -317,9 +317,9 @@ func deleteManagementOverrideCategorization(d *schema.ResourceData, m interface{
 	deleteOverrideCategorizationRes, err := client.ApiCall("delete-override-categorization", overrideCategorizationPayload, client.GetSessionID(), true, false)
 	if err != nil || !deleteOverrideCategorizationRes.Success {
 		if deleteOverrideCategorizationRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteOverrideCategorizationRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteOverrideCategorizationRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

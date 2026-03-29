@@ -70,10 +70,10 @@ func dataSourceManagementServiceCompoundTcpRead(d *schema.ResourceData, m interf
 
 	showServiceCompoundTcpRes, err := client.ApiCall("show-service-compound-tcp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showServiceCompoundTcpRes.Success {
-		return fmt.Errorf(showServiceCompoundTcpRes.ErrorMsg)
+		return fmt.Errorf("%s", showServiceCompoundTcpRes.ErrorMsg)
 	}
 
 	serviceCompoundTcp := showServiceCompoundTcpRes.GetData()

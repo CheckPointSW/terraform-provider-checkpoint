@@ -63,7 +63,7 @@ func createManagementSetLoginMessage(d *schema.ResourceData, m interface{}) erro
 
 	SetLoginMessageRes, _ := client.ApiCall("set-login-message", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetLoginMessageRes.Success {
-		return fmt.Errorf(SetLoginMessageRes.ErrorMsg)
+		return fmt.Errorf("%s", SetLoginMessageRes.ErrorMsg)
 	}
 
 	d.SetId("set-login-message-" + acctest.RandString(10))

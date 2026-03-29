@@ -107,9 +107,9 @@ func createManagementVoipDomainMgcpCallAgent(d *schema.ResourceData, m interface
 	addVoipDomainMgcpCallAgentRes, err := client.ApiCall("add-voip-domain-mgcp-call-agent", voipDomainMgcpCallAgent, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVoipDomainMgcpCallAgentRes.Success {
 		if addVoipDomainMgcpCallAgentRes.ErrorMsg != "" {
-			return fmt.Errorf(addVoipDomainMgcpCallAgentRes.ErrorMsg)
+			return fmt.Errorf("%s", addVoipDomainMgcpCallAgentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVoipDomainMgcpCallAgentRes.GetData()["uid"].(string))
@@ -127,14 +127,14 @@ func readManagementVoipDomainMgcpCallAgent(d *schema.ResourceData, m interface{}
 
 	showVoipDomainMgcpCallAgentRes, err := client.ApiCall("show-voip-domain-mgcp-call-agent", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainMgcpCallAgentRes.Success {
 		if objectNotFound(showVoipDomainMgcpCallAgentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainMgcpCallAgentRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainMgcpCallAgentRes.ErrorMsg)
 	}
 
 	voipDomainMgcpCallAgent := showVoipDomainMgcpCallAgentRes.GetData()
@@ -245,9 +245,9 @@ func updateManagementVoipDomainMgcpCallAgent(d *schema.ResourceData, m interface
 	updateVoipDomainMgcpCallAgentRes, err := client.ApiCall("set-voip-domain-mgcp-call-agent", voipDomainMgcpCallAgent, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVoipDomainMgcpCallAgentRes.Success {
 		if updateVoipDomainMgcpCallAgentRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVoipDomainMgcpCallAgentRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVoipDomainMgcpCallAgentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVoipDomainMgcpCallAgent(d, m)
@@ -266,9 +266,9 @@ func deleteManagementVoipDomainMgcpCallAgent(d *schema.ResourceData, m interface
 	deleteVoipDomainMgcpCallAgentRes, err := client.ApiCall("delete-voip-domain-mgcp-call-agent", voipDomainMgcpCallAgentPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVoipDomainMgcpCallAgentRes.Success {
 		if deleteVoipDomainMgcpCallAgentRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVoipDomainMgcpCallAgentRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVoipDomainMgcpCallAgentRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

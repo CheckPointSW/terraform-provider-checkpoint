@@ -127,9 +127,9 @@ func createManagementWildcard(d *schema.ResourceData, m interface{}) error {
 	addWildcardRes, err := client.ApiCall("add-wildcard", wildcard, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addWildcardRes.Success {
 		if addWildcardRes.ErrorMsg != "" {
-			return fmt.Errorf(addWildcardRes.ErrorMsg)
+			return fmt.Errorf("%s", addWildcardRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addWildcardRes.GetData()["uid"].(string))
@@ -147,14 +147,14 @@ func readManagementWildcard(d *schema.ResourceData, m interface{}) error {
 
 	showWildcardRes, err := client.ApiCall("show-wildcard", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showWildcardRes.Success {
 		if objectNotFound(showWildcardRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showWildcardRes.ErrorMsg)
+		return fmt.Errorf("%s", showWildcardRes.ErrorMsg)
 	}
 
 	wildcard := showWildcardRes.GetData()
@@ -276,9 +276,9 @@ func updateManagementWildcard(d *schema.ResourceData, m interface{}) error {
 	updateWildcardRes, err := client.ApiCall("set-wildcard", wildcard, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateWildcardRes.Success {
 		if updateWildcardRes.ErrorMsg != "" {
-			return fmt.Errorf(updateWildcardRes.ErrorMsg)
+			return fmt.Errorf("%s", updateWildcardRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementWildcard(d, m)
@@ -303,9 +303,9 @@ func deleteManagementWildcard(d *schema.ResourceData, m interface{}) error {
 	deleteWildcardRes, err := client.ApiCall("delete-wildcard", wildcardPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteWildcardRes.Success {
 		if deleteWildcardRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteWildcardRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteWildcardRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

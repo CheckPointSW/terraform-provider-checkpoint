@@ -76,10 +76,10 @@ func dataSourceManagementAzureAdRead(d *schema.ResourceData, m interface{}) erro
 
 	showAzureAdRes, err := client.ApiCall("show-azure-ad", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showAzureAdRes.Success {
-		return fmt.Errorf(showAzureAdRes.ErrorMsg)
+		return fmt.Errorf("%s", showAzureAdRes.ErrorMsg)
 	}
 
 	azureAd := showAzureAdRes.GetData()

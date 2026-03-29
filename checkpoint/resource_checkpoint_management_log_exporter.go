@@ -205,9 +205,9 @@ func createManagementLogExporter(d *schema.ResourceData, m interface{}) error {
 	addLogExporterRes, err := client.ApiCallSimple("add-log-exporter", logExporter)
 	if err != nil || !addLogExporterRes.Success {
 		if addLogExporterRes.ErrorMsg != "" {
-			return fmt.Errorf(addLogExporterRes.ErrorMsg)
+			return fmt.Errorf("%s", addLogExporterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addLogExporterRes.GetData()["uid"].(string))
@@ -225,14 +225,14 @@ func readManagementLogExporter(d *schema.ResourceData, m interface{}) error {
 
 	showLogExporterRes, err := client.ApiCallSimple("show-log-exporter", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLogExporterRes.Success {
 		if objectNotFound(showLogExporterRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLogExporterRes.ErrorMsg)
+		return fmt.Errorf("%s", showLogExporterRes.ErrorMsg)
 	}
 
 	logExporter := showLogExporterRes.GetData()
@@ -430,9 +430,9 @@ func updateManagementLogExporter(d *schema.ResourceData, m interface{}) error {
 	updateLogExporterRes, err := client.ApiCallSimple("set-log-exporter", logExporter)
 	if err != nil || !updateLogExporterRes.Success {
 		if updateLogExporterRes.ErrorMsg != "" {
-			return fmt.Errorf(updateLogExporterRes.ErrorMsg)
+			return fmt.Errorf("%s", updateLogExporterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementLogExporter(d, m)
@@ -451,9 +451,9 @@ func deleteManagementLogExporter(d *schema.ResourceData, m interface{}) error {
 	deleteLogExporterRes, err := client.ApiCallSimple("delete-log-exporter", logExporterPayload)
 	if err != nil || !deleteLogExporterRes.Success {
 		if deleteLogExporterRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteLogExporterRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteLogExporterRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

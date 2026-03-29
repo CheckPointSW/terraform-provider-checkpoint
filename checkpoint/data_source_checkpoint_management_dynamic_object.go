@@ -60,10 +60,10 @@ func dataSourceManagementDynamicObjectRead(d *schema.ResourceData, m interface{}
 
 	showDynamicObjectRes, err := client.ApiCall("show-dynamic-object", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showDynamicObjectRes.Success {
-		return fmt.Errorf(showDynamicObjectRes.ErrorMsg)
+		return fmt.Errorf("%s", showDynamicObjectRes.ErrorMsg)
 	}
 
 	dynamicObject := showDynamicObjectRes.GetData()

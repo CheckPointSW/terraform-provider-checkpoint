@@ -106,9 +106,9 @@ func createManagementSecuridServer(d *schema.ResourceData, m interface{}) error 
 	addSecuridServerRes, err := client.ApiCallSimple("add-securid-server", securidServer)
 	if err != nil || !addSecuridServerRes.Success {
 		if addSecuridServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addSecuridServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addSecuridServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSecuridServerRes.GetData()["uid"].(string))
@@ -126,14 +126,14 @@ func readManagementSecuridServer(d *schema.ResourceData, m interface{}) error {
 
 	showSecuridServerRes, err := client.ApiCallSimple("show-securid-server", payload)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSecuridServerRes.Success {
 		if objectNotFound(showSecuridServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSecuridServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSecuridServerRes.ErrorMsg)
 	}
 
 	securidServer := showSecuridServerRes.GetData()
@@ -236,9 +236,9 @@ func updateManagementSecuridServer(d *schema.ResourceData, m interface{}) error 
 	updateSecuridServerRes, err := client.ApiCallSimple("set-securid-server", securidServer)
 	if err != nil || !updateSecuridServerRes.Success {
 		if updateSecuridServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSecuridServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSecuridServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSecuridServer(d, m)
@@ -264,9 +264,9 @@ func deleteManagementSecuridServer(d *schema.ResourceData, m interface{}) error 
 	deleteSecuridServerRes, err := client.ApiCallSimple("delete-securid-server", securidServerPayload)
 	if err != nil || !deleteSecuridServerRes.Success {
 		if deleteSecuridServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSecuridServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSecuridServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

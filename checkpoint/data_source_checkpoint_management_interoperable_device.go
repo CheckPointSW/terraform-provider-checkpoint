@@ -242,14 +242,14 @@ func dataSourceManagementInteroperableDeviceRead(d *schema.ResourceData, m inter
 
 	showInteroperableDeviceRes, err := client.ApiCall("show-interoperable-device", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInteroperableDeviceRes.Success {
 		if objectNotFound(showInteroperableDeviceRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showInteroperableDeviceRes.ErrorMsg)
+		return fmt.Errorf("%s", showInteroperableDeviceRes.ErrorMsg)
 	}
 
 	interoperableDevice := showInteroperableDeviceRes.GetData()

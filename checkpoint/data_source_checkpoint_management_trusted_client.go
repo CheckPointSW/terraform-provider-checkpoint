@@ -123,10 +123,10 @@ func dataSourceManagementTrustedClientRead(d *schema.ResourceData, m interface{}
 
 	showTrustedClientRes, err := client.ApiCall("show-trusted-client", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTrustedClientRes.Success {
-		return fmt.Errorf(showTrustedClientRes.ErrorMsg)
+		return fmt.Errorf("%s", showTrustedClientRes.ErrorMsg)
 	}
 
 	trustedClient := showTrustedClientRes.GetData()

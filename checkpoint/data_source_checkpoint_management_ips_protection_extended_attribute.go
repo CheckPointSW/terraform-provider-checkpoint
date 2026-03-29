@@ -60,10 +60,10 @@ func dataSourceManagementIpsProtectionExtendedAttributeRead(d *schema.ResourceDa
 
 	showIpsProtectionExtendedAttributeRes, err := client.ApiCall("show-ips-protection-extended-attribute", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showIpsProtectionExtendedAttributeRes.Success {
-		return fmt.Errorf(showIpsProtectionExtendedAttributeRes.ErrorMsg)
+		return fmt.Errorf("%s", showIpsProtectionExtendedAttributeRes.ErrorMsg)
 	}
 
 	ipsProtectionExtendedAttribute := showIpsProtectionExtendedAttributeRes.GetData()

@@ -28,10 +28,10 @@ func dataSourceManagementSetTrustedCaSettingsRead(d *schema.ResourceData, m inte
 
 	showTrustedCaSettingsRes, err := client.ApiCall("show-trusted-ca-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showTrustedCaSettingsRes.Success {
-		return fmt.Errorf(showTrustedCaSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", showTrustedCaSettingsRes.ErrorMsg)
 	}
 
 	trustedCaSettings := showTrustedCaSettingsRes.GetData()

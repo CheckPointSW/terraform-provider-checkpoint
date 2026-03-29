@@ -74,14 +74,14 @@ func dataSourceManagementVoipDomainMgcpCallAgentRead(d *schema.ResourceData, m i
 
 	showVoipDomainMgcpCallAgentRes, err := client.ApiCall("show-voip-domain-mgcp-call-agent", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainMgcpCallAgentRes.Success {
 		if objectNotFound(showVoipDomainMgcpCallAgentRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainMgcpCallAgentRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainMgcpCallAgentRes.ErrorMsg)
 	}
 
 	voipDomainMgcpCallAgent := showVoipDomainMgcpCallAgentRes.GetData()

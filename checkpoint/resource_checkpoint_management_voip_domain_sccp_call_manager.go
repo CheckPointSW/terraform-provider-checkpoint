@@ -107,9 +107,9 @@ func createManagementVoipDomainSccpCallManager(d *schema.ResourceData, m interfa
 	addVoipDomainSccpCallManagerRes, err := client.ApiCall("add-voip-domain-sccp-call-manager", voipDomainSccpCallManager, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addVoipDomainSccpCallManagerRes.Success {
 		if addVoipDomainSccpCallManagerRes.ErrorMsg != "" {
-			return fmt.Errorf(addVoipDomainSccpCallManagerRes.ErrorMsg)
+			return fmt.Errorf("%s", addVoipDomainSccpCallManagerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addVoipDomainSccpCallManagerRes.GetData()["uid"].(string))
@@ -127,14 +127,14 @@ func readManagementVoipDomainSccpCallManager(d *schema.ResourceData, m interface
 
 	showVoipDomainSccpCallManagerRes, err := client.ApiCall("show-voip-domain-sccp-call-manager", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showVoipDomainSccpCallManagerRes.Success {
 		if objectNotFound(showVoipDomainSccpCallManagerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showVoipDomainSccpCallManagerRes.ErrorMsg)
+		return fmt.Errorf("%s", showVoipDomainSccpCallManagerRes.ErrorMsg)
 	}
 
 	voipDomainSccpCallManager := showVoipDomainSccpCallManagerRes.GetData()
@@ -245,9 +245,9 @@ func updateManagementVoipDomainSccpCallManager(d *schema.ResourceData, m interfa
 	updateVoipDomainSccpCallManagerRes, err := client.ApiCall("set-voip-domain-sccp-call-manager", voipDomainSccpCallManager, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateVoipDomainSccpCallManagerRes.Success {
 		if updateVoipDomainSccpCallManagerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateVoipDomainSccpCallManagerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateVoipDomainSccpCallManagerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementVoipDomainSccpCallManager(d, m)
@@ -266,9 +266,9 @@ func deleteManagementVoipDomainSccpCallManager(d *schema.ResourceData, m interfa
 	deleteVoipDomainSccpCallManagerRes, err := client.ApiCall("delete-voip-domain-sccp-call-manager", voipDomainSccpCallManagerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteVoipDomainSccpCallManagerRes.Success {
 		if deleteVoipDomainSccpCallManagerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteVoipDomainSccpCallManagerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteVoipDomainSccpCallManagerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -239,14 +239,14 @@ func dataSourceManagementLsmGatewayRead(d *schema.ResourceData, m interface{}) e
 
 	showLsmGatewayRes, err := client.ApiCall("show-lsm-gateway", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showLsmGatewayRes.Success {
 		if objectNotFound(showLsmGatewayRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showLsmGatewayRes.ErrorMsg)
+		return fmt.Errorf("%s", showLsmGatewayRes.ErrorMsg)
 	}
 
 	lsmGateway := showLsmGatewayRes.GetData()

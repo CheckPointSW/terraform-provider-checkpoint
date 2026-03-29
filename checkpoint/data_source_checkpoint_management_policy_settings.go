@@ -57,10 +57,10 @@ func dataSourceManagementPolicySettingsRead(d *schema.ResourceData, m interface{
 
 	showPolicySettingsRes, err := client.ApiCall("show-policy-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showPolicySettingsRes.Success {
-		return fmt.Errorf(showPolicySettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", showPolicySettingsRes.ErrorMsg)
 	}
 
 	policySettings := showPolicySettingsRes.GetData()

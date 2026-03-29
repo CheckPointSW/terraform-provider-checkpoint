@@ -122,10 +122,10 @@ func createManagementSetTrust(d *schema.ResourceData, m interface{}) error {
 
 	SetTrustRes, err := client.ApiCall("set-trust", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !SetTrustRes.Success {
-		return fmt.Errorf(SetTrustRes.ErrorMsg)
+		return fmt.Errorf("%s", SetTrustRes.ErrorMsg)
 	}
 
 	d.SetId("set-trust-" + acctest.RandString(10))

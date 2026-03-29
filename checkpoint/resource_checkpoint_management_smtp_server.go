@@ -158,9 +158,9 @@ func createManagementSmtpServer(d *schema.ResourceData, m interface{}) error {
 	addSmtpServerRes, err := client.ApiCall("add-smtp-server", smtpServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addSmtpServerRes.Success {
 		if addSmtpServerRes.ErrorMsg != "" {
-			return fmt.Errorf(addSmtpServerRes.ErrorMsg)
+			return fmt.Errorf("%s", addSmtpServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addSmtpServerRes.GetData()["uid"].(string))
@@ -178,14 +178,14 @@ func readManagementSmtpServer(d *schema.ResourceData, m interface{}) error {
 
 	showSmtpServerRes, err := client.ApiCall("show-smtp-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showSmtpServerRes.Success {
 		if objectNotFound(showSmtpServerRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showSmtpServerRes.ErrorMsg)
+		return fmt.Errorf("%s", showSmtpServerRes.ErrorMsg)
 	}
 
 	smtpServer := showSmtpServerRes.GetData()
@@ -348,9 +348,9 @@ func updateManagementSmtpServer(d *schema.ResourceData, m interface{}) error {
 	updateSmtpServerRes, err := client.ApiCall("set-smtp-server", smtpServer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateSmtpServerRes.Success {
 		if updateSmtpServerRes.ErrorMsg != "" {
-			return fmt.Errorf(updateSmtpServerRes.ErrorMsg)
+			return fmt.Errorf("%s", updateSmtpServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementSmtpServer(d, m)
@@ -376,9 +376,9 @@ func deleteManagementSmtpServer(d *schema.ResourceData, m interface{}) error {
 	deleteSmtpServerRes, err := client.ApiCall("delete-smtp-server", smtpServerPayload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !deleteSmtpServerRes.Success {
 		if deleteSmtpServerRes.ErrorMsg != "" {
-			return fmt.Errorf(deleteSmtpServerRes.ErrorMsg)
+			return fmt.Errorf("%s", deleteSmtpServerRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

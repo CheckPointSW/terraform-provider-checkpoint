@@ -51,7 +51,7 @@ func testAccCheckCheckpointShowObjects(resourceTfName string, res *map[string]in
 		client := testAccProvider.Meta().(*checkpoint.ApiClient)
 		response, _ := client.ApiCall("show-objects", map[string]interface{}{"type": "service-tcp", "filter": "daytime-tcp", "limit": 1}, client.GetSessionID(), true, client.IsProxyUsed())
 		if !response.Success {
-			return fmt.Errorf(response.ErrorMsg)
+			return fmt.Errorf("%s", response.ErrorMsg)
 		}
 
 		*res = response.GetData()

@@ -73,10 +73,10 @@ func dataSourceManagementDeleteInfinityIdpRead(d *schema.ResourceData, m interfa
 
 	showInfinityIdpRes, err := client.ApiCall("show-infinity-idp", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showInfinityIdpRes.Success {
-		return fmt.Errorf(showInfinityIdpRes.ErrorMsg)
+		return fmt.Errorf("%s", showInfinityIdpRes.ErrorMsg)
 	}
 
 	infinityIdp := showInfinityIdpRes.GetData()

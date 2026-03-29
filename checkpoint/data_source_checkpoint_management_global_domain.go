@@ -266,10 +266,10 @@ func dataSourceManagementGlobalDomainRead(d *schema.ResourceData, m interface{})
 
 	showGlobalDomainRes, err := client.ApiCall("show-global-domain", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showGlobalDomainRes.Success {
-		return fmt.Errorf(showGlobalDomainRes.ErrorMsg)
+		return fmt.Errorf("%s", showGlobalDomainRes.ErrorMsg)
 	}
 
 	globalDomain := showGlobalDomainRes.GetData()

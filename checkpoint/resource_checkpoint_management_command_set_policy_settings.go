@@ -105,7 +105,7 @@ func createManagementSetPolicySettings(d *schema.ResourceData, m interface{}) er
 
 	SetPolicySettingsRes, _ := client.ApiCall("set-policy-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetPolicySettingsRes.Success {
-		return fmt.Errorf(SetPolicySettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", SetPolicySettingsRes.ErrorMsg)
 	}
 
 	d.SetId("set-policy-settings-" + acctest.RandString(10))

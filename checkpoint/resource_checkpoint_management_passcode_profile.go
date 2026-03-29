@@ -208,9 +208,9 @@ func createManagementPasscodeProfile(d *schema.ResourceData, m interface{}) erro
 	addPasscodeProfileRes, err := client.ApiCall("add-passcode-profile", passcodeProfile, client.GetSessionID(), true, false)
 	if err != nil || !addPasscodeProfileRes.Success {
 		if addPasscodeProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(addPasscodeProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", addPasscodeProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	d.SetId(addPasscodeProfileRes.GetData()["uid"].(string))
@@ -228,14 +228,14 @@ func readManagementPasscodeProfile(d *schema.ResourceData, m interface{}) error 
 
 	showPasscodeProfileRes, err := client.ApiCall("show-passcode-profile", payload, client.GetSessionID(), true, false)
 	if err != nil {
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	if !showPasscodeProfileRes.Success {
 		if objectNotFound(showPasscodeProfileRes.GetData()["code"].(string)) {
 			d.SetId("")
 			return nil
 		}
-		return fmt.Errorf(showPasscodeProfileRes.ErrorMsg)
+		return fmt.Errorf("%s", showPasscodeProfileRes.ErrorMsg)
 	}
 
 	passcodeProfile := showPasscodeProfileRes.GetData()
@@ -421,9 +421,9 @@ func updateManagementPasscodeProfile(d *schema.ResourceData, m interface{}) erro
 	updatePasscodeProfileRes, err := client.ApiCall("set-passcode-profile", passcodeProfile, client.GetSessionID(), true, false)
 	if err != nil || !updatePasscodeProfileRes.Success {
 		if updatePasscodeProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(updatePasscodeProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", updatePasscodeProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 
 	return readManagementPasscodeProfile(d, m)
@@ -442,9 +442,9 @@ func deleteManagementPasscodeProfile(d *schema.ResourceData, m interface{}) erro
 	deletePasscodeProfileRes, err := client.ApiCall("delete-passcode-profile", passcodeProfilePayload, client.GetSessionID(), true, false)
 	if err != nil || !deletePasscodeProfileRes.Success {
 		if deletePasscodeProfileRes.ErrorMsg != "" {
-			return fmt.Errorf(deletePasscodeProfileRes.ErrorMsg)
+			return fmt.Errorf("%s", deletePasscodeProfileRes.ErrorMsg)
 		}
-		return fmt.Errorf(err.Error())
+		return fmt.Errorf("%s", err.Error())
 	}
 	d.SetId("")
 

@@ -51,7 +51,7 @@ func dataSourceManagementSetContentAwarenessAdvancedSettingsRead(d *schema.Resou
 
 	contentAwarenessAdvancedSettingsRes, _ := client.ApiCall("show-content-awareness-advanced-settings", payload, client.GetSessionID(), true, false)
 	if !contentAwarenessAdvancedSettingsRes.Success {
-		return fmt.Errorf(contentAwarenessAdvancedSettingsRes.ErrorMsg)
+		return fmt.Errorf("%s", contentAwarenessAdvancedSettingsRes.ErrorMsg)
 	}
 	contentAwarenessAdvancedSettingsData := contentAwarenessAdvancedSettingsRes.GetData()
 

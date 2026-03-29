@@ -59,7 +59,7 @@ func createManagementSetIdpDefaultAssignment(d *schema.ResourceData, m interface
 
 	SetIdpDefaultAssignmentRes, _ := client.ApiCall("set-idp-default-assignment", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if !SetIdpDefaultAssignmentRes.Success {
-		return fmt.Errorf(SetIdpDefaultAssignmentRes.ErrorMsg)
+		return fmt.Errorf("%s", SetIdpDefaultAssignmentRes.ErrorMsg)
 	}
 
 	d.SetId("set-idp-default-assignment" + acctest.RandString(10))
