@@ -22,7 +22,6 @@ BREAKING CHANGES
 
 BUG FIXES
 * Fix `checkpoint_management_azure_ad` resource when authentication method is set to "service-principal-authentication"
-* Fix boolean field handling (`GetOkExists`) across resources
 * General bug fixes across all provider resources and data sources following the SDK v2 migration
 
 ## 2.12.0 (November 10, 2025)
