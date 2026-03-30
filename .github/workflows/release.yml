@@ -17,8 +17,7 @@ on:
 jobs:
   goreleaser:
     permissions: write-all
-    runs-on:
-      - codebuild-checkpoint-sw-runners-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
