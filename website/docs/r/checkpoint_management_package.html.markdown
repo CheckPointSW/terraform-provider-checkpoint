@@ -29,6 +29,7 @@ The following arguments are supported:
 * `name` - (Required) Object name. Should be unique in the domain.
 * `access` - (Optional) True - enables, False - disables access & NAT policies, empty - nothing is changed.
 * `desktop_security` - (Optional) True - enables, False - disables Desktop security policy, empty - nothing is changed.
+* `installation_targets` - (Optional) Which Gateways identified by the name or UID to install the policy on. "[]" - Empty the list of specified Gateways on which to install the policy.
 * `qos` - (Optional) True - enables, False - disables QoS policy, empty - nothing is changed.
 * `qos_policy_type` - (Optional) QoS policy type.
 * `threat_prevention` - (Optional) True - enables, False - disables Threat policy, empty - nothing is changed.

@@ -115,8 +115,8 @@ func createManagementPackage(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOkExists("desktop_security"); ok {
 		_package["desktop-security"] = v.(bool)
 	}
-	if v, ok := d.GetOk("installation_targets"); ok {
-		_package["installation-targets"] = v.(*schema.Set).List()
+	if rawConfig := d.GetRawConfig(); !rawConfig.IsNull() && !rawConfig.GetAttr("installation_targets").IsNull() {
+		_package["installation-targets"] = d.Get("installation_targets").(*schema.Set).List()
 	}
 	if v, ok := d.GetOkExists("qos"); ok {
 		_package["qos"] = v.(bool)
@@ -213,12 +213,7 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 				}
 			}
 		}
-		_, installationTargetsInConf := d.GetOk("installation_targets")
-		if len(installationTargetsIds) == 1 && installationTargetsIds[0] == "all" && !installationTargetsInConf {
-			_ = d.Set("installation_targets", []interface{}{})
-		} else {
-			_ = d.Set("installation_targets", installationTargetsIds)
-		}
+		_ = d.Set("installation_targets", installationTargetsIds)
 
 	} else {
 		_ = d.Set("installation_targets", nil)
@@ -302,9 +297,9 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 		_package["desktop-security"] = d.Get("desktop_security")
 	}
 
-	if ok := d.HasChange("installation_targets"); ok {
-		if v, ok := d.GetOk("installation_targets"); ok {
-			_package["installation-targets"] = v.(*schema.Set).List()
+	if d.HasChange("installation_targets") {
+		if rawConfig := d.GetRawConfig(); !rawConfig.IsNull() && !rawConfig.GetAttr("installation_targets").IsNull() {
+			_package["installation-targets"] = d.Get("installation_targets").(*schema.Set).List()
 		} else {
 			oldInstallationTargets, _ := d.GetChange("installation_targets")
 			_package["installation-targets"] = map[string]interface{}{"remove": oldInstallationTargets.(*schema.Set).List()}
