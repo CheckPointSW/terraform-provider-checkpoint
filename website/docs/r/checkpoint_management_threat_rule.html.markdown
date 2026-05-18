@@ -17,7 +17,7 @@ This resource allows you to add/update/delete Check Point Threat Rule.
 resource "checkpoint_management_threat_rule" "test" {
 	name = "threat rule"
     layer = "Standard Threat Prevention"
-	position = {top = "top"}
+	position {top = "top"}
 }
 ```
 

@@ -16,7 +16,7 @@ This resource allows you to execute Check Point Https Rule.
 ```hcl
 resource "checkpoint_management_https_rule" "example" {
   name = "FirstRule"
-  position = {top = "top"}
+  position {top = "top"}
   layer = "MyLayer"
 }
 ```

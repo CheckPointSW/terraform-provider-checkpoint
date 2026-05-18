@@ -15,14 +15,14 @@ Use this data source to get information on an existing Check Point Access Rule.
 resource "checkpoint_management_access_rule" "access_rule" {
   name = "My Rule"
   layer = "Network"
-  position = { top = "top" }
+  position { top = "top" }
   source = ["Any"]
   destination = ["Any"]
   service = ["Any"]
   content = ["Any"]
   time = ["Any"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -30,7 +30,7 @@ resource "checkpoint_management_access_rule" "access_rule" {
     per_connection = true
     per_session = false
   }
-  custom_fields = {}
+  custom_fields {}
   vpn = "Any"
 }
 

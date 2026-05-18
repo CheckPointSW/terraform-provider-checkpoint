@@ -18,7 +18,7 @@ resource "checkpoint_management_mobile_access_profile_rule" "example" {
   name = "Rule 1"
   mobile_profile = "Default_Profile"
   user_groups = ["my_group",]
-  position = {top = "top"}
+  position {top = "top"}
 }
 
 data "checkpoint_management_mobile_access_profile_rule" "data" {

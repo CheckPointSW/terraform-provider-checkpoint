@@ -17,7 +17,7 @@ Use this data source to get information on an existing Check Point Https Section
 resource "checkpoint_management_https_section" "https_section" {
         name = "HTTPS section"
 		layer = "Default Layer"
-        position = {top = "top"}
+        position {top = "top"}
 }
 
 data "checkpoint_management_data_https_section" "data_https_section" {

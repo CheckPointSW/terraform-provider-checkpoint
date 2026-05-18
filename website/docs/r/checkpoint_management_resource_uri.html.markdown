@@ -17,7 +17,7 @@ This resource allows you to execute Check Point Resource Uri.
 resource "checkpoint_management_resource_uri" "uri" {
   name = "newUriResource"
   use_this_resource_to = "optimize_url_logging"
-  connection_methods = {
+  connection_methods {
     transparent = "false"
     tunneling = "true"
     proxy = false
@@ -47,7 +47,7 @@ resource "checkpoint_management_resource_uri" "uri" {
     strip_script_tags = true
 
   }
-  soap = {
+  soap {
     inspection = "allow_all_soap_requests"
     file_id = "scheme1"
     track_connections = "mail_alert"

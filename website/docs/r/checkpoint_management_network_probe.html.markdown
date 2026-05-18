@@ -16,7 +16,7 @@ This resource allows you to execute Check Point Network Probe.
 ```hcl
 resource "checkpoint_management_network_probe" "example" {
   name = "network1"
-  icmp_options = {
+  icmp_options {
     source = "host1"
     destination = "host2"
   }

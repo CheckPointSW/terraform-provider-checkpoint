@@ -17,14 +17,14 @@ This resource allows you to add/update/delete Check Point Access Rule.
 resource "checkpoint_management_access_rule" "rule1" {
   name = "Rule 1"
   layer = "Network"
-  position = {top = "top"}
+  position {top = "top"}
   source = ["Any"]
   destination = ["Any"]
   service = ["Any"]
   content = ["Any"]
   time = ["Any"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -32,15 +32,15 @@ resource "checkpoint_management_access_rule" "rule1" {
     per_connection = true
     per_session = false
   }
-  action_settings = {}
-  custom_fields = {}
+  action_settings {}
+  custom_fields {}
   vpn = "Any"
 }
 
 resource "checkpoint_management_access_rule" "rule2" {
   name = "Rule 2"
   layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule1.name}
+  position {below = checkpoint_management_access_rule.rule1.name}
   enabled = true
   source = ["DMZNet", "DMZZone", "WirelessZone"]
   destination = ["InternalNet", "CPDShield"]
@@ -49,7 +49,7 @@ resource "checkpoint_management_access_rule" "rule2" {
   content = ["Any"]
   time = ["Any"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -57,17 +57,17 @@ resource "checkpoint_management_access_rule" "rule2" {
     per_connection = true
     per_session = false
   }
-  action_settings = {}
-  custom_fields = {}
+  action_settings {}
+  custom_fields {}
   vpn = "All_GwToGw"
 }
 
 resource "checkpoint_management_access_rule" "rule3" {
   name = "Rule 3"
   layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule2.name}
+  position {below = checkpoint_management_access_rule.rule2.name}
   action = "Accept"
-  action_settings = {
+  action_settings {
     enable_identity_captive_portal = true
   }
   source = ["DMZNet"]
@@ -78,7 +78,7 @@ resource "checkpoint_management_access_rule" "rule3" {
   content = ["Any"]
   time = ["Weekend"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -86,14 +86,14 @@ resource "checkpoint_management_access_rule" "rule3" {
     per_connection = true
     per_session = false
   }
-  custom_fields = {}
+  custom_fields {}
   vpn_communities = ["StarCommunity", "MeshedCommunity"]
 }
 
 resource "checkpoint_management_access_rule" "rule4" {
   name = "Rule 4"
   layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule3.name}
+  position {below = checkpoint_management_access_rule.rule3.name}
   enabled = false
   source = ["Any"]
   destination = ["Any"]
@@ -101,7 +101,7 @@ resource "checkpoint_management_access_rule" "rule4" {
   content = ["Any"]
   time = ["Any"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -109,8 +109,8 @@ resource "checkpoint_management_access_rule" "rule4" {
     per_connection = true
     per_session = false
   }
-  action_settings = {}
-  custom_fields = {}
+  action_settings {}
+  custom_fields {}
   vpn_directional {
     from = "StarVpn"
     to = "MeshedCommunity"
@@ -120,9 +120,9 @@ resource "checkpoint_management_access_rule" "rule4" {
 resource "checkpoint_management_access_rule" "rule5" {
   name = "Rule 5"
   layer = "Network"
-  position = {below = checkpoint_management_access_rule.rule4.name}
+  position {below = checkpoint_management_access_rule.rule4.name}
   action = "Accept"
-  action_settings = {
+  action_settings {
     enable_identity_captive_portal = false
   }
   source = ["Any"]
@@ -131,7 +131,7 @@ resource "checkpoint_management_access_rule" "rule5" {
   content = ["Any"]
   time = ["Any"]
   install_on = ["Policy Targets"]
-  track = {
+  track {
     type = "Log"
     accounting = false
     alert = "none"
@@ -139,7 +139,7 @@ resource "checkpoint_management_access_rule" "rule5" {
     per_connection = true
     per_session = false
   }
-  custom_fields = {}
+  custom_fields {}
   vpn = "Any"
 }
 ```

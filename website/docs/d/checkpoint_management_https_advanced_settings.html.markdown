@@ -23,7 +23,7 @@ resource "checkpoint_management_set_https_advanced_settings" "example" {
   certificate_pinned_apps_action = "bypass"
   log_sessions = true
   retrieve_intermediate_ca_certificates = true
-  server_certificate_validation_actions = {
+  server_certificate_validation_actions {
     block_expired = true
     block_revoked = false
     block_untrusted = true

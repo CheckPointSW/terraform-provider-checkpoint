@@ -15,12 +15,12 @@ This resource allows you to execute Check Point Set App Control Advanced Setting
 
 ```hcl
 resource "checkpoint_management_set_app_control_advanced_settings" "example" {
-  url_filtering_settings = {
+  url_filtering_settings {
     categorize_cached_and_translated_pages = "true"
     categorize_https_websites = "false"
     enforce_safe_search ="true"
   }
-  custom_categorization_settings = {
+  custom_categorization_settings {
     social_network_widgets_mode = "hold"
     url_filtering_mode = "background"
   }

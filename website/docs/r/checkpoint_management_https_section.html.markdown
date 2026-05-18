@@ -16,7 +16,7 @@ This resource allows you to execute Check Point Https Section.
 ```hcl
 resource "checkpoint_management_https_section" "example" {
   name = "New Section 1"
-  position = {top = "top"}
+  position {top = "top"}
   layer = "Network"
 }
 ```

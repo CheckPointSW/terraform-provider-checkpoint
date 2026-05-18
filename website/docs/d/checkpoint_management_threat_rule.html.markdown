@@ -17,7 +17,7 @@ This resource allows you to execute Check Point Threat Rule.
 resource "checkpoint_management_threat_rule" "test" {
     name = "threat rule"
     layer = "Standard Threat Prevention"
-    position = {top = "top"}
+    position {top = "top"}
 }
 
 data "checkpoint_management_threat_rule" "test" {

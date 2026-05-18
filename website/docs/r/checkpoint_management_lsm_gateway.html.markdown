@@ -18,7 +18,7 @@ resource "checkpoint_management_lsm_gateway" "lsm_gw" {
   name = "lsm_gateway"
   security_profile = "lsm_profile"
   provisioning_state = "using-profile"
-  provisioning_settings = {
+  provisioning_settings {
   "provisioning_profile" = "my_proviosioning_profile"
   }
   topology {

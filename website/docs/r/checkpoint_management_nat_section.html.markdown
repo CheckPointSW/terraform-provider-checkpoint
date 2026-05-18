@@ -17,7 +17,7 @@ This resource allows you to add/update/delete Check Point NAT section.
 resource "checkpoint_management_nat_section" "nat_section" {
     name = "nat section"
     package = "Standard"
-    position = { "top": "top" }
+    position { "top": "top" }
 }
 ```
 

@@ -17,13 +17,13 @@ This resource allows you to add/update/delete Check Point Threat Exception.
 resource "checkpoint_management_threat_rule" "test" {
     name = "threat rule"
     layer = "Standard Threat Prevention"
-    position = {top = "top"}
+    position {top = "top"}
 }
 
 resource "checkpoint_management_threat_exception" "test" {
     name = "threat exception"
     layer = "Standard Threat Prevention"
-    position = {top = "top"}
+    position {top = "top"}
     rule_name = "${checkpoint_management_threat_rule.test.name}"
 }
 ```

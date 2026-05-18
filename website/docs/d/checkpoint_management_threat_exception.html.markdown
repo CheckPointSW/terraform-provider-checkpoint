@@ -17,13 +17,13 @@ This resource allows you to execute Check Point Threat Exception.
 resource "checkpoint_management_threat_rule" "threat_rule" {
     name = "threat rule"
     layer = "Standard Threat Prevention"
-    position = {top = "top"}
+    position {top = "top"}
 }
 
 resource "checkpoint_management_threat_exception" "threat_exception" {
     name = "threat exception"
     layer = "Standard Threat Prevention"
-    position = {top = "top"}
+    position {top = "top"}
     rule_name = "${checkpoint_management_threat_rule.threat_rule.name}"
 }
 

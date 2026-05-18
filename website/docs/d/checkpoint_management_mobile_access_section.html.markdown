@@ -16,7 +16,7 @@ Use this data source to get information on an existing Check Point Mobile Access
 ```hcl
 resource "checkpoint_management_mobile_access_section" "example" {
   name = "New Section 1"
-  position = {top = "top"}
+  position {top = "top"}
 }
 data "checkpoint_management_mobile_access_section" "data" {
   name = "${checkpoint_management_mobile_access_section.example.name}"

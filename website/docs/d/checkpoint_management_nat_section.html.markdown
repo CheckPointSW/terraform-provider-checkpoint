@@ -17,7 +17,7 @@ This resource allows you to execute Check Point NAT section.
 resource "checkpoint_management_nat_section" "test" {
     name = "nat section"
     package = "Standard"
-    position = {top = "top"}
+    position {top = "top"}
 }
 
 data "checkpoint_management_nat_section" "nat_section" {

@@ -16,7 +16,7 @@ This resource allows you to execute Check Point Mobile Access Section.
 ```hcl
 resource "checkpoint_management_mobile_access_section" "example" {
   name = "New Section 1"
-  position = {top = "top"}
+  position {top = "top"}
 }
 ```
 

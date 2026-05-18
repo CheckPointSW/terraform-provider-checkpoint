@@ -14,7 +14,7 @@ Use this data source to get information on an existing Check Point data center c
 ```hcl
 data "checkpoint_management_data_center_content" "test" {
   name   = "Network"
-  filter = {
+  filter {
     text = "TEXT_TO_FIND"
     uri  = "DATA_CENTER_URI"
   }

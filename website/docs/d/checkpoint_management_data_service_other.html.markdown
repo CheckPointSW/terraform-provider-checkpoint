@@ -21,7 +21,7 @@ resource "checkpoint_management_service_other" "service_other" {
 	match_for_any = true
 	sync_connections_on_cluster = true
 	ip_protocol = 51
-	aggressive_aging = {
+	aggressive_aging {
 		use_default_timeout = true
 		enable = true
 		default_timeout = 600

@@ -21,7 +21,7 @@ resource "checkpoint_management_service_tcp" "example" {
   session_timeout = 0
   match_for_any = true
   sync_connections_on_cluster = true
-  aggressive_aging = {
+  aggressive_aging {
     enable = true
     timeout = 360
     use_default_timeout = false

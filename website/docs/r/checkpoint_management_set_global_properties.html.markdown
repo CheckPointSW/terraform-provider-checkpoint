@@ -15,10 +15,10 @@ This resource allows you to execute Check Point Set Global Properties.
 
 ```hcl
 resource "checkpoint_management_command_set_global_properties" "example" {
-  hit_count = {
+  hit_count {
     enable_hit_count = false
   }
-  data_access_control = {
+  data_access_control {
     auto_download_important_data = false
   }
 }

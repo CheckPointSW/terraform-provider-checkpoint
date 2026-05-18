@@ -15,7 +15,7 @@ This resource allows you to execute Check Point Check Threat Ioc Feed.
 
 ```hcl
 resource "checkpoint_management_check_threat_ioc_feed" "example" {
-    ioc_feed = {
+    ioc_feed {
       name = "existing_feed"
     }
     targets = ["corporate-gateway"]

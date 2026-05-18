@@ -13,7 +13,7 @@ This resource allows you to execute Check Point Check Network Feed.
 
 ```hcl
 resource "checkpoint_management_check_network_feed" "example" {
-  network_feed = {
+  network_feed {
     name = "existing_feed"
   }
   targets = ["corporate-gateway"]

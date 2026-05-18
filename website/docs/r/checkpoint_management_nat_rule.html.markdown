@@ -16,19 +16,19 @@ This resource allows you to add/update/delete Check Point NAT Rule.
 ```hcl
 resource "checkpoint_management_nat_rule" "rule1" {
   package = "Standard"
-  position = {top = "top"}
+  position {top = "top"}
   name = "rule1"
 }
 
 resource "checkpoint_management_nat_rule" "rule2" {
   package = "Standard"
-  position = {below = checkpoint_management_access_rule.rule1.name}
+  position {below = checkpoint_management_access_rule.rule1.name}
   name = "rule2"
 }
 
 resource "checkpoint_management_nat_rule" "rule3" {
   package = "Standard"
-  position = {below = checkpoint_management_access_rule.rule2.name}
+  position {below = checkpoint_management_access_rule.rule2.name}
   name = "rule3"
 }
 ```

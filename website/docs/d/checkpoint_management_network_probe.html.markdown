@@ -16,7 +16,7 @@ Use this data source to get information on an existing Check Point Network Probe
 ```hcl
 resource "checkpoint_management_network_probe" "example" {
   name = "network1"
-  icmp_options = {
+  icmp_options {
     source = "host1"
     destination = "host2"
   }

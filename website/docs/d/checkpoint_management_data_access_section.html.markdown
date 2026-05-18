@@ -23,7 +23,7 @@ resource "checkpoint_management_access_layer" "access_layer" {
 resource "checkpoint_management_access_section" "access_section" {
     name = "myaccesssection"
 	layer = "${checkpoint_management_access_layer.access_layer.name}"
-	position = {top = "top"}
+	position {top = "top"}
 }
 
 data "checkpoint_management_data_access_section" "data_access_section" {

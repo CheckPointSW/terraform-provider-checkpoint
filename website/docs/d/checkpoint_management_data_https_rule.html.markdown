@@ -16,7 +16,7 @@ Use this data source to get information on an existing Check Point Https Rule.
 ```hcl
 resource "checkpoint_management_https_rule" "https_rule" {
     name = "HTTPS Rule"
-    position = {top = "top"}
+    position {top = "top"}
     layer = "Default Layer"
     blade = ["IPS"]
     destination = ["Internet"]

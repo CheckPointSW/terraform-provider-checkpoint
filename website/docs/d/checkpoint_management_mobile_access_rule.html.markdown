@@ -18,7 +18,7 @@ resource "checkpoint_management_mobile_access_rule" "example" {
   name = "Rule 1"
   applications = ["N", "e", "w", " ", "A", "p", "p", "l", "i", "c", "a", "t", "i", "o", "n",]
   user_groups = ["my_group",]
-  position = {top = "top"}
+  position {top = "top"}
 }
 data "checkpoint_management_mobile_access_rule" "data" {
   uid = "${checkpoint_management_mobile_access_rule.example.id}"

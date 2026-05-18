@@ -17,7 +17,7 @@ This resource allows you to execute Check Point NAT Rule.
 resource "checkpoint_management_nat_rule" "test" {
     name = "natrule"
     package = "Standard"
-    position = {top = "top"}
+    position {top = "top"}
 }
 
 data "checkpoint_management_nat_rule" "test" {

@@ -15,7 +15,7 @@ This resource allows you to execute Check Point Show Updatable Objects Repositor
 
 ```hcl
 data "checkpoint_management_show_updatable_objects_repository_content" "query" {
-    filter = {
+    filter {
         text = "API Gateway"
     }
 }
