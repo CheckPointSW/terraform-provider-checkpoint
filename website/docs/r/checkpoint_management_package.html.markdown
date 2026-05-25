@@ -30,6 +30,8 @@ The following arguments are supported:
 * `access` - (Optional) True - enables, False - disables access & NAT policies, empty - nothing is changed.
 * `desktop_security` - (Optional) True - enables, False - disables Desktop security policy, empty - nothing is changed.
 * `installation_targets` - (Optional) Which Gateways identified by the name or UID to install the policy on. "[]" - Empty the list of specified Gateways on which to install the policy.
+* `access_layers` - (Optional) Access policy layers. Applied via `set-package` only (ignored on create).
+* `threat_layers` - (Optional) Threat policy layers. Applied via `set-package` only (ignored on create).
 * `qos` - (Optional) True - enables, False - disables QoS policy, empty - nothing is changed.
 * `qos_policy_type` - (Optional) QoS policy type.
 * `threat_prevention` - (Optional) True - enables, False - disables Threat policy, empty - nothing is changed.

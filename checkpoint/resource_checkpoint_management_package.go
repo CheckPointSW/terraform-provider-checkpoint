@@ -42,6 +42,22 @@ func resourceManagementPackage() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"access_layers": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Access policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"threat_layers": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Threat policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"qos": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -219,6 +235,28 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("installation_targets", nil)
 	}
 
+	if v := _package["access-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("access_layers", names)
+	} else {
+		_ = d.Set("access_layers", nil)
+	}
+
+	if v := _package["threat-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("threat_layers", names)
+	} else {
+		_ = d.Set("threat_layers", nil)
+	}
+
 	if v := _package["qos"]; v != nil {
 		_ = d.Set("qos", v)
 	}
@@ -328,6 +366,13 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 			oldTags, _ := d.GetChange("tags")
 			_package["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
 		}
+	}
+
+	if d.HasChange("access_layers") {
+		_package["access-layers"] = map[string]interface{}{"value": d.Get("access_layers").([]interface{})}
+	}
+	if d.HasChange("threat_layers") {
+		_package["threat-layers"] = map[string]interface{}{"value": d.Get("threat_layers").([]interface{})}
 	}
 
 	log.Println("Update Package - Map = ", _package)

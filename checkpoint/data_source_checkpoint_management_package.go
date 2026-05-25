@@ -44,6 +44,22 @@ func dataSourceManagementPackage() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"access_layers": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Access policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"threat_layers": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Threat policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"qos": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -157,6 +173,28 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 
 	} else {
 		_ = d.Set("installation_targets", nil)
+	}
+
+	if v := _package["access-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("access_layers", names)
+	} else {
+		_ = d.Set("access_layers", nil)
+	}
+
+	if v := _package["threat-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("threat_layers", names)
+	} else {
+		_ = d.Set("threat_layers", nil)
 	}
 
 	if v := _package["qos"]; v != nil {
