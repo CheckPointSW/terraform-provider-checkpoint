@@ -24,7 +24,8 @@ resource "checkpoint_management_https_layer" "example" {
 The following arguments are supported:
 
 * `name` - (Required) Object name. 
-* `shared` - (Optional) Define the Layer as Shared (TRUE/FALSE). 
+* `shared` - (Optional) Define the Layer as Shared (TRUE/FALSE).
+* `layer_type` - (Optional) HTTPS inspection layer type. Either `inbound` or `outbound`.
 * `tags` - (Optional) Collection of tag identifiers.tags blocks are documented below.
 * `color` - (Optional) Color of the object. Should be one of existing colors. 
 * `comments` - (Optional) Comments string. 

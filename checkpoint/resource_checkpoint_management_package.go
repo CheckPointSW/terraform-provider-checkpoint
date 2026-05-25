@@ -58,6 +58,29 @@ func resourceManagementPackage() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"https_inspection_layers": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "HTTPS inspection policy layers.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"inbound_https_layer": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "HTTPS inspection policy inbound layer identified by name or UID.",
+						},
+						"outbound_https_layer": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "HTTPS inspection policy outbound layer identified by name or UID.",
+						},
+					},
+				},
+			},
 			"qos": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -257,6 +280,20 @@ func readManagementPackage(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("threat_layers", nil)
 	}
 
+	if v := _package["https-inspection-layers"]; v != nil {
+		raw := v.(map[string]interface{})
+		entry := make(map[string]interface{})
+		if inb := raw["inbound-https-layer"]; inb != nil {
+			entry["inbound_https_layer"] = inb.(map[string]interface{})["name"].(string)
+		}
+		if out := raw["outbound-https-layer"]; out != nil {
+			entry["outbound_https_layer"] = out.(map[string]interface{})["name"].(string)
+		}
+		_ = d.Set("https_inspection_layers", []interface{}{entry})
+	} else {
+		_ = d.Set("https_inspection_layers", nil)
+	}
+
 	if v := _package["qos"]; v != nil {
 		_ = d.Set("qos", v)
 	}
@@ -369,10 +406,34 @@ func updateManagementPackage(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if d.HasChange("access_layers") {
-		_package["access-layers"] = map[string]interface{}{"value": d.Get("access_layers").([]interface{})}
+		if v, ok := d.GetOk("access_layers"); ok {
+			_package["access-layers"] = map[string]interface{}{"value": v.([]interface{})}
+		}
 	}
 	if d.HasChange("threat_layers") {
-		_package["threat-layers"] = map[string]interface{}{"value": d.Get("threat_layers").([]interface{})}
+		if v, ok := d.GetOk("threat_layers"); ok {
+			_package["threat-layers"] = map[string]interface{}{"value": v.([]interface{})}
+		}
+	}
+	if d.HasChange("https_inspection_layers") {
+
+		if v, ok := d.GetOk("https_inspection_layers"); ok {
+
+			httpsInspectionLayersList := v.([]interface{})
+
+			if len(httpsInspectionLayersList) > 0 {
+
+				httpsInspectionLayersPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("https_inspection_layers.0.inbound_https_layer"); ok {
+					httpsInspectionLayersPayload["inbound-https-layer"] = v.(string)
+				}
+				if v, ok := d.GetOk("https_inspection_layers.0.outbound_https_layer"); ok {
+					httpsInspectionLayersPayload["outbound-https-layer"] = v.(string)
+				}
+				_package["https-inspection-layers"] = httpsInspectionLayersPayload
+			}
+		}
 	}
 
 	log.Println("Update Package - Map = ", _package)

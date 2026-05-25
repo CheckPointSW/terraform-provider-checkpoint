@@ -27,6 +27,11 @@ func dataSourceManagementHttpsLayer() *schema.Resource {
 				Computed:    true,
 				Description: "Define the Layer as Shared (TRUE/FALSE).",
 			},
+			"layer_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "HTTPS inspection layer type. Either 'inbound' or 'outbound'.",
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -87,6 +92,10 @@ func dataSourceManagementHttpsLayerRead(d *schema.ResourceData, m interface{}) e
 
 	if v := httpsLayer["shared"]; v != nil {
 		_ = d.Set("shared", v)
+	}
+
+	if v := httpsLayer["layer-type"]; v != nil {
+		_ = d.Set("layer_type", v)
 	}
 
 	if httpsLayer["tags"] != nil {

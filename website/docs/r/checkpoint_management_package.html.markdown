@@ -32,6 +32,7 @@ The following arguments are supported:
 * `installation_targets` - (Optional) Which Gateways identified by the name or UID to install the policy on. "[]" - Empty the list of specified Gateways on which to install the policy.
 * `access_layers` - (Optional) Access policy layers. Applied via `set-package` only (ignored on create).
 * `threat_layers` - (Optional) Threat policy layers. Applied via `set-package` only (ignored on create).
+* `https_inspection_layers` - (Optional) HTTPS inspection policy layers. Applied via `set-package` only (ignored on create). https_inspection_layers block is documented below
 * `qos` - (Optional) True - enables, False - disables QoS policy, empty - nothing is changed.
 * `qos_policy_type` - (Optional) QoS policy type.
 * `threat_prevention` - (Optional) True - enables, False - disables Threat policy, empty - nothing is changed.
@@ -42,3 +43,7 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string.
 * `tags` - (Optional) Collection of tag identifiers.
 
+`https_inspection_layers` supports the following:
+
+* `inbound_https_layer` - (Optional) HTTPS inspection policy inbound layer identified by name or UID.
+* `outbound_https_layer` - (Optional) HTTPS inspection policy outbound layer identified by name or UID.
