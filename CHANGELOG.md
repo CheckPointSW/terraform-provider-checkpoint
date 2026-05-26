@@ -1,3 +1,17 @@
+## 3.1.0 (May 26, 2026)
+
+ENHANCEMENTS
+* Add `access_layers`, `threat_layers` and `https_inspection_layers` fields to `checkpoint_management_package` resource and data source
+* Add `layer_type` field to `checkpoint_management_https_layer` resource and data source
+* Update documentation HCL examples to v2 block syntax following the SDK v2 migration
+
+FEATURES
+* **New Resource:** `checkpoint_management_illumio_data_center_server`
+* **New Data Source:** `checkpoint_management_illumio_data_center_server`
+
+BUG FIXES
+* Fix `installation_targets` empty list handling in `checkpoint_management_package` resource
+
 ## 3.0.0 (March 29, 2026)
 
 ENHANCEMENTS
