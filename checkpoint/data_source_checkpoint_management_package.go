@@ -44,6 +44,41 @@ func dataSourceManagementPackage() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"access_layers": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Access policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"threat_layers": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Threat policy layers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"https_inspection_layers": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "HTTPS inspection policy layers.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"inbound_https_layer": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "HTTPS inspection policy inbound layer identified by name or UID.",
+						},
+						"outbound_https_layer": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "HTTPS inspection policy outbound layer identified by name or UID.",
+						},
+					},
+				},
+			},
 			"qos": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -157,6 +192,42 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 
 	} else {
 		_ = d.Set("installation_targets", nil)
+	}
+
+	if v := _package["access-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("access_layers", names)
+	} else {
+		_ = d.Set("access_layers", nil)
+	}
+
+	if v := _package["threat-layers"]; v != nil {
+		layersJson := v.([]interface{})
+		names := make([]string, 0, len(layersJson))
+		for _, layer := range layersJson {
+			names = append(names, layer.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("threat_layers", names)
+	} else {
+		_ = d.Set("threat_layers", nil)
+	}
+
+	if v := _package["https-inspection-layers"]; v != nil {
+		raw := v.(map[string]interface{})
+		entry := make(map[string]interface{})
+		if inb := raw["inbound-https-layer"]; inb != nil {
+			entry["inbound_https_layer"] = inb.(map[string]interface{})["name"].(string)
+		}
+		if out := raw["outbound-https-layer"]; out != nil {
+			entry["outbound_https_layer"] = out.(map[string]interface{})["name"].(string)
+		}
+		_ = d.Set("https_inspection_layers", []map[string]interface{}{entry})
+	} else {
+		_ = d.Set("https_inspection_layers", nil)
 	}
 
 	if v := _package["qos"]; v != nil {

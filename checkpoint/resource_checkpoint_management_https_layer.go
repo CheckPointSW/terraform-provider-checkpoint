@@ -28,6 +28,13 @@ func resourceManagementHttpsLayer() *schema.Resource {
 				Optional:    true,
 				Description: "Define the Layer as Shared (TRUE/FALSE).",
 			},
+			"layer_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "HTTPS inspection layer type. Either 'inbound' or 'outbound'. Cannot be modified after creation - changing it forces the layer to be recreated.",
+				Default:     "outbound",
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -74,6 +81,10 @@ func createManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOkExists("shared"); ok {
 		httpsLayer["shared"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("layer_type"); ok {
+		httpsLayer["layer-type"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -141,6 +152,10 @@ func readManagementHttpsLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v := httpsLayer["shared"]; v != nil {
 		_ = d.Set("shared", v)
+	}
+
+	if v := httpsLayer["layer-type"]; v != nil {
+		_ = d.Set("layer_type", v)
 	}
 
 	if httpsLayer["tags"] != nil {
