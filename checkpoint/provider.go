@@ -57,7 +57,7 @@ func Provider() *schema.Provider {
 			"session_file_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", "checkpoint_session.json"),
+				DefaultFunc: schema.EnvDefaultFunc("CHECKPOINT_SESSION_FILE_NAME", DefaultSessionFilename),
 				Description: "File name used to store the current session id",
 			},
 			"proxy_host": {
