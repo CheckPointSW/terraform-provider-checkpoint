@@ -1,3 +1,288 @@
+## 3.2.0 (June 14, 2026)
+
+ENHANCEMENTS
+* Add `additional_permission_profiles` field to `checkpoint_management_access_layer` resource and data source
+
+FEATURES
+* **New Resource:** `checkpoint_gaia_alias_interface`
+* **New Resource:** `checkpoint_gaia_allowed_clients`
+* **New Resource:** `checkpoint_gaia_arp`
+* **New Resource:** `checkpoint_gaia_authentication_order`
+* **New Resource:** `checkpoint_gaia_banner`
+* **New Resource:** `checkpoint_gaia_bgp_confederation_peer`
+* **New Resource:** `checkpoint_gaia_bgp_external_peer`
+* **New Resource:** `checkpoint_gaia_bgp_internal_peer`
+* **New Resource:** `checkpoint_gaia_bond_interface`
+* **New Resource:** `checkpoint_gaia_bridge_interface`
+* **New Resource:** `checkpoint_gaia_cluster_member`
+* **New Resource:** `checkpoint_gaia_custom_intelligence_feed`
+* **New Resource:** `checkpoint_gaia_custom_intelligence_interval`
+* **New Resource:** `checkpoint_gaia_dhcp6_config`
+* **New Resource:** `checkpoint_gaia_dhcp6_server`
+* **New Resource:** `checkpoint_gaia_dhcp_server`
+* **New Resource:** `checkpoint_gaia_dns`
+* **New Resource:** `checkpoint_gaia_expert_password`
+* **New Resource:** `checkpoint_gaia_fips`
+* **New Resource:** `checkpoint_gaia_gre_interface`
+* **New Resource:** `checkpoint_gaia_grub_password`
+* **New Resource:** `checkpoint_gaia_hostname`
+* **New Resource:** `checkpoint_gaia_hostname_on_login_page`
+* **New Resource:** `checkpoint_gaia_igmp_interface`
+* **New Resource:** `checkpoint_gaia_igmp_interface_local_group`
+* **New Resource:** `checkpoint_gaia_igmp_interface_static_group`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_bgp_policy`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_ospf2`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_ospf3`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_rip`
+* **New Resource:** `checkpoint_gaia_ipv6`
+* **New Resource:** `checkpoint_gaia_ipv6_pim_interface`
+* **New Resource:** `checkpoint_gaia_isis_interface`
+* **New Resource:** `checkpoint_gaia_keyboard_layout`
+* **New Resource:** `checkpoint_gaia_license`
+* **New Resource:** `checkpoint_gaia_lightshot`
+* **New Resource:** `checkpoint_gaia_lightshot_partition`
+* **New Resource:** `checkpoint_gaia_lldp`
+* **New Resource:** `checkpoint_gaia_loopback_interface`
+* **New Resource:** `checkpoint_gaia_maestro_gateway`
+* **New Resource:** `checkpoint_gaia_maestro_port`
+* **New Resource:** `checkpoint_gaia_maestro_security_group`
+* **New Resource:** `checkpoint_gaia_maestro_site`
+* **New Resource:** `checkpoint_gaia_management_interface`
+* **New Resource:** `checkpoint_gaia_mdps`
+* **New Resource:** `checkpoint_gaia_mdps_tasks`
+* **New Resource:** `checkpoint_gaia_message_of_the_day`
+* **New Resource:** `checkpoint_gaia_mld_interface`
+* **New Resource:** `checkpoint_gaia_mld_interface_local_group`
+* **New Resource:** `checkpoint_gaia_mld_interface_static_group`
+* **New Resource:** `checkpoint_gaia_nat_pool`
+* **New Resource:** `checkpoint_gaia_nfs_mount_point`
+* **New Resource:** `checkpoint_gaia_nfs_mount_settings`
+* **New Resource:** `checkpoint_gaia_ntp`
+* **New Resource:** `checkpoint_gaia_open_telemetry`
+* **New Resource:** `checkpoint_gaia_param`
+* **New Resource:** `checkpoint_gaia_password_policy`
+* **New Resource:** `checkpoint_gaia_pbr_rule`
+* **New Resource:** `checkpoint_gaia_pbr_table`
+* **New Resource:** `checkpoint_gaia_physical_interface`
+* **New Resource:** `checkpoint_gaia_pim_interface`
+* **New Resource:** `checkpoint_gaia_pppoe_interface`
+* **New Resource:** `checkpoint_gaia_proxy`
+* **New Resource:** `checkpoint_gaia_radius`
+* **New Resource:** `checkpoint_gaia_remote_syslog`
+* **New Resource:** `checkpoint_gaia_role`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_bgp_as`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_isis`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ospf2`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ospf3`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_rip`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ripng`
+* **New Resource:** `checkpoint_gaia_routemap_id`
+* **New Resource:** `checkpoint_gaia_router_id`
+* **New Resource:** `checkpoint_gaia_scheduled_backup`
+* **New Resource:** `checkpoint_gaia_scheduled_job`
+* **New Resource:** `checkpoint_gaia_scheduled_job_mail`
+* **New Resource:** `checkpoint_gaia_scheduled_snapshot`
+* **New Resource:** `checkpoint_gaia_snmp`
+* **New Resource:** `checkpoint_gaia_snmp_custom_trap`
+* **New Resource:** `checkpoint_gaia_snmp_pre_defined_traps`
+* **New Resource:** `checkpoint_gaia_snmp_trap_receiver`
+* **New Resource:** `checkpoint_gaia_snmp_user`
+* **New Resource:** `checkpoint_gaia_ssh_server_settings`
+* **New Resource:** `checkpoint_gaia_static_mroute`
+* **New Resource:** `checkpoint_gaia_static_route`
+* **New Resource:** `checkpoint_gaia_syslog`
+* **New Resource:** `checkpoint_gaia_system_group`
+* **New Resource:** `checkpoint_gaia_tacacs`
+* **New Resource:** `checkpoint_gaia_time_and_date`
+* **New Resource:** `checkpoint_gaia_user`
+* **New Resource:** `checkpoint_gaia_virtual_gateway`
+* **New Resource:** `checkpoint_gaia_virtual_switch`
+* **New Resource:** `checkpoint_gaia_vlan_interface`
+* **New Resource:** `checkpoint_gaia_vxlan_interface`
+* **New Data Source:** `checkpoint_gaia_command_apply_maestro_security_groups_changes`
+* **New Data Source:** `checkpoint_gaia_command_discard_maestro_security_groups_changes`
+* **New Data Source:** `checkpoint_gaia_command_get_file`
+* **New Data Source:** `checkpoint_gaia_command_keepalive`
+* **New Data Source:** `checkpoint_gaia_command_login`
+* **New Data Source:** `checkpoint_gaia_command_logout`
+* **New Data Source:** `checkpoint_gaia_command_put_file`
+* **New Data Source:** `checkpoint_gaia_command_run_reboot`
+* **New Data Source:** `checkpoint_gaia_command_run_script`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_confederation`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_external`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_internal`
+* **New Data Source:** `checkpoint_gaia_command_set_dynamic_content`
+* **New Data Source:** `checkpoint_gaia_command_set_initial_setup`
+* **New Data Source:** `checkpoint_gaia_command_set_ipv6_pim`
+* **New Data Source:** `checkpoint_gaia_command_set_isis`
+* **New Data Source:** `checkpoint_gaia_command_set_pbr_table_static_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_set_pim`
+* **New Data Source:** `checkpoint_gaia_command_set_snmp_session`
+* **New Data Source:** `checkpoint_gaia_command_set_static_mroute_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_set_static_route_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_simulate_packet`
+* **New Data Source:** `checkpoint_gaia_show_alias_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_api_versions`
+* **New Data Source:** `checkpoint_gaia_show_asset`
+* **New Data Source:** `checkpoint_gaia_show_bgp_errors`
+* **New Data Source:** `checkpoint_gaia_show_bgp_groups`
+* **New Data Source:** `checkpoint_gaia_show_bgp_paths`
+* **New Data Source:** `checkpoint_gaia_show_bgp_peer`
+* **New Data Source:** `checkpoint_gaia_show_bgp_peers`
+* **New Data Source:** `checkpoint_gaia_show_bgp_route_in`
+* **New Data Source:** `checkpoint_gaia_show_bgp_route_out`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routemaps`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routes_in`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routes_out`
+* **New Data Source:** `checkpoint_gaia_show_bgp_stats`
+* **New Data Source:** `checkpoint_gaia_show_bgp_summary`
+* **New Data Source:** `checkpoint_gaia_show_bond_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_bootp_interface`
+* **New Data Source:** `checkpoint_gaia_show_bootp_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_bootp_stats`
+* **New Data Source:** `checkpoint_gaia_show_bridge_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_cluster_members`
+* **New Data Source:** `checkpoint_gaia_show_cluster_state`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_ipv6_pim`
+* **New Data Source:** `checkpoint_gaia_show_configuration_isis`
+* **New Data Source:** `checkpoint_gaia_show_configuration_pim`
+* **New Data Source:** `checkpoint_gaia_show_connections`
+* **New Data Source:** `checkpoint_gaia_show_connections_presets`
+* **New Data Source:** `checkpoint_gaia_show_custom_intelligence_feeds`
+* **New Data Source:** `checkpoint_gaia_show_diagnostics`
+* **New Data Source:** `checkpoint_gaia_show_diagnostics_topics`
+* **New Data Source:** `checkpoint_gaia_show_dynamic_layer`
+* **New Data Source:** `checkpoint_gaia_show_dynamic_layers`
+* **New Data Source:** `checkpoint_gaia_show_extended_commands`
+* **New Data Source:** `checkpoint_gaia_show_features`
+* **New Data Source:** `checkpoint_gaia_show_gre_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_igmp_groups`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interface_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interfaces_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_summary`
+* **New Data Source:** `checkpoint_gaia_show_interface`
+* **New Data Source:** `checkpoint_gaia_show_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_interfaces_by_type`
+* **New Data Source:** `checkpoint_gaia_show_ip_conflicts`
+* **New Data Source:** `checkpoint_gaia_show_ip_conflicts_configuration`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_bootstrap`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_candidate_rp`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_group_rp_mapping`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_joins`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_memory`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_rps`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_sparse_mode_stats`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_stats`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_summary`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_timers`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_virtual_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_isis_database`
+* **New Data Source:** `checkpoint_gaia_show_isis_errors`
+* **New Data Source:** `checkpoint_gaia_show_isis_hostnames`
+* **New Data Source:** `checkpoint_gaia_show_isis_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_isis_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_isis_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_isis_packets`
+* **New Data Source:** `checkpoint_gaia_show_isis_summary`
+* **New Data Source:** `checkpoint_gaia_show_isis_topology`
+* **New Data Source:** `checkpoint_gaia_show_licenses`
+* **New Data Source:** `checkpoint_gaia_show_lightshots`
+* **New Data Source:** `checkpoint_gaia_show_loopback_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_maestro_gateways`
+* **New Data Source:** `checkpoint_gaia_show_maestro_ports`
+* **New Data Source:** `checkpoint_gaia_show_maestro_security_groups`
+* **New Data Source:** `checkpoint_gaia_show_maestro_sites`
+* **New Data Source:** `checkpoint_gaia_show_mld_groups`
+* **New Data Source:** `checkpoint_gaia_show_mld_interface_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_mld_interfaces_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_summary`
+* **New Data Source:** `checkpoint_gaia_show_nat_pools`
+* **New Data Source:** `checkpoint_gaia_show_nfs_mount_points`
+* **New Data Source:** `checkpoint_gaia_show_ospf_border_routers`
+* **New Data Source:** `checkpoint_gaia_show_ospf_database`
+* **New Data Source:** `checkpoint_gaia_show_ospf_errors`
+* **New Data Source:** `checkpoint_gaia_show_ospf_events`
+* **New Data Source:** `checkpoint_gaia_show_ospf_interface`
+* **New Data Source:** `checkpoint_gaia_show_ospf_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_ospf_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_ospf_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_ospf_packets`
+* **New Data Source:** `checkpoint_gaia_show_ospf_routemap`
+* **New Data Source:** `checkpoint_gaia_show_ospf_summary`
+* **New Data Source:** `checkpoint_gaia_show_pbr_rules`
+* **New Data Source:** `checkpoint_gaia_show_pbr_tables`
+* **New Data Source:** `checkpoint_gaia_show_physical_interface_xcvr`
+* **New Data Source:** `checkpoint_gaia_show_physical_interface_xcvr_detail`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces_xcvr`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces_xcvr_detail`
+* **New Data Source:** `checkpoint_gaia_show_pim_bootstrap`
+* **New Data Source:** `checkpoint_gaia_show_pim_candidate_rp`
+* **New Data Source:** `checkpoint_gaia_show_pim_group_rp_mapping`
+* **New Data Source:** `checkpoint_gaia_show_pim_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_pim_joins`
+* **New Data Source:** `checkpoint_gaia_show_pim_memory`
+* **New Data Source:** `checkpoint_gaia_show_pim_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_pim_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_pim_rps`
+* **New Data Source:** `checkpoint_gaia_show_pim_sparse_mode_stats`
+* **New Data Source:** `checkpoint_gaia_show_pim_stats`
+* **New Data Source:** `checkpoint_gaia_show_pim_summary`
+* **New Data Source:** `checkpoint_gaia_show_pim_timers`
+* **New Data Source:** `checkpoint_gaia_show_pim_virtual_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_pppoe_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_remote_syslogs`
+* **New Data Source:** `checkpoint_gaia_show_roles`
+* **New Data Source:** `checkpoint_gaia_show_routemaps`
+* **New Data Source:** `checkpoint_gaia_show_routes`
+* **New Data Source:** `checkpoint_gaia_show_routes_aggregate`
+* **New Data Source:** `checkpoint_gaia_show_routes_bgp`
+* **New Data Source:** `checkpoint_gaia_show_routes_direct`
+* **New Data Source:** `checkpoint_gaia_show_routes_kernel`
+* **New Data Source:** `checkpoint_gaia_show_routes_ospf`
+* **New Data Source:** `checkpoint_gaia_show_routes_rip`
+* **New Data Source:** `checkpoint_gaia_show_routes_static`
+* **New Data Source:** `checkpoint_gaia_show_serial_number`
+* **New Data Source:** `checkpoint_gaia_show_snmp_custom_traps`
+* **New Data Source:** `checkpoint_gaia_show_snmp_oid`
+* **New Data Source:** `checkpoint_gaia_show_snmp_trap_receivers`
+* **New Data Source:** `checkpoint_gaia_show_snmp_users`
+* **New Data Source:** `checkpoint_gaia_show_static_mroutes`
+* **New Data Source:** `checkpoint_gaia_show_static_routes`
+* **New Data Source:** `checkpoint_gaia_show_statistics`
+* **New Data Source:** `checkpoint_gaia_show_statistics_info`
+* **New Data Source:** `checkpoint_gaia_show_statistics_view_info`
+* **New Data Source:** `checkpoint_gaia_show_system_groups`
+* **New Data Source:** `checkpoint_gaia_show_task`
+* **New Data Source:** `checkpoint_gaia_show_timezones`
+* **New Data Source:** `checkpoint_gaia_show_users`
+* **New Data Source:** `checkpoint_gaia_show_version`
+* **New Data Source:** `checkpoint_gaia_show_virtual_gateways`
+* **New Data Source:** `checkpoint_gaia_show_virtual_switches`
+* **New Data Source:** `checkpoint_gaia_show_virtual_systems`
+* **New Data Source:** `checkpoint_gaia_show_vlan_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_vsnext_state`
+* **New Data Source:** `checkpoint_gaia_show_vxlan_interfaces`
+* **New Resource:** `checkpoint_management_literal`
+
 ## 3.1.0 (May 26, 2026)
 
 ENHANCEMENTS
