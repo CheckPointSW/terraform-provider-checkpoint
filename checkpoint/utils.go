@@ -222,3 +222,64 @@ func convertDateFormat(dateStr string) (string, error) {
 	// Format the parsed time using the output layout
 	return t.Format(outputLayout), nil
 }
+
+func handleObjectLiteral(showCommand string, showPayload map[string]interface{}, addCommand string, addPayload map[string]interface{}, client *checkpoint.ApiClient) (checkpoint.APIResponse, error) {
+	// If object not exists err is nil
+	exists, response, err := getObjectIfExists(showCommand, showPayload, client)
+	if err != nil {
+		return response, fmt.Errorf(err.Error())
+	}
+	if !exists {
+		response, err = addObjectLiteral(addCommand, addPayload, showCommand, showPayload, client)
+		if err != nil {
+			return response, err
+		}
+		if !response.Success {
+			return response, fmt.Errorf(response.ErrorMsg)
+		}
+	}
+	return response, nil
+}
+
+func getObjectIfExists(command string, payload map[string]interface{}, client *checkpoint.ApiClient) (bool, checkpoint.APIResponse, error) {
+	response, err := client.ApiCallSimple(command, payload)
+	if err != nil {
+		return false, response, fmt.Errorf(err.Error())
+	}
+
+	exists := false
+	if response.Success {
+		exists = true
+	} else {
+		if !objectNotFound(response.GetData()["code"].(string)) {
+			// we got another error...
+			return false, response, fmt.Errorf(response.ErrorMsg)
+		}
+		// If we got here we got object not found error...
+	}
+	return exists, response, nil
+}
+
+func addObjectLiteral(addCommand string, addPayload map[string]interface{}, showCommand string, showPayload map[string]interface{}, client *checkpoint.ApiClient) (checkpoint.APIResponse, error) {
+	addResponse, err := client.ApiCallSimple(addCommand, addPayload)
+	if err != nil {
+		return addResponse, fmt.Errorf(err.Error())
+	}
+
+	if addResponse.Success {
+		return addResponse, nil
+	}
+
+	if !objectAlreadyExistsError(addResponse) {
+		// We got another error when try to add object literal...
+		return addResponse, fmt.Errorf(addResponse.ErrorMsg)
+	}
+
+	// Object already exists, verify with show object
+	_, showResponse, err := getObjectIfExists(showCommand, showPayload, client)
+	return showResponse, err
+}
+
+func objectAlreadyExistsError(response checkpoint.APIResponse) bool {
+	return response.GetData()["errors"] != nil && len(response.GetData()["errors"].([]interface{})) > 0 && strings.Contains(response.GetData()["errors"].([]interface{})[0].(map[string]interface{})["message"].(string), "More than one object named")
+}

@@ -56,6 +56,14 @@ func dataSourceManagementAccessLayer() *schema.Resource {
 				Computed:    true,
 				Description: "Whether this layer is shared.",
 			},
+			"additional_permission_profiles": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Collection of permission profiles identified by the name or UID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -140,6 +148,22 @@ func dataSourceManagementAccessLayerRead(d *schema.ResourceData, m interface{}) 
 
 	if v := accessLayer["shared"]; v != nil {
 		_ = d.Set("shared", v)
+	}
+
+	if accessLayer["additional-permission-profiles"] != nil {
+		profilesJson, ok := accessLayer["additional-permission-profiles"].([]interface{})
+		if ok {
+			profilesIds := make([]string, 0)
+			if len(profilesJson) > 0 {
+				for _, profile := range profilesJson {
+					profile := profile.(map[string]interface{})
+					profilesIds = append(profilesIds, profile["name"].(string))
+				}
+			}
+			_ = d.Set("additional_permission_profiles", profilesIds)
+		}
+	} else {
+		_ = d.Set("additional_permission_profiles", nil)
 	}
 
 	if accessLayer["tags"] != nil {
