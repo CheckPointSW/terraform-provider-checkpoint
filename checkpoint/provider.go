@@ -367,6 +367,7 @@ func Provider() *schema.Provider {
 			"checkpoint_management_change_password_on_next_login":                  resourceManagementChangePasswordOnNextLogin(),
 			"checkpoint_management_set_trust":                                      resourceManagementSetTrust(),
 			"checkpoint_management_test_trust":                                     resourceManagementTestTrust(),
+			"checkpoint_management_literal":                                        resourceManagementLiteral(),
 			"checkpoint_gaia_vxlan_interface": resourceGaiaVxlanInterface(),
 			"checkpoint_gaia_alias_interface": resourceGaiaAliasInterface(),
 			"checkpoint_gaia_allowed_clients": resourceGaiaAllowedClients(),

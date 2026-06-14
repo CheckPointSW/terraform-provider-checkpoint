@@ -31,7 +31,8 @@ The following arguments are supported:
 * `firewall` - (Optional) Whether to enable Firewall blade on the layer. 
 * `implicit_cleanup_action` - (Optional) The default "catch-all" action for traffic that does not match any explicit or implied rules in the layer. 
 * `mobile_access` - (Optional) Whether to enable Mobile Access blade on the layer. 
-* `shared` - (Optional) Whether this layer is shared. 
+* `shared` - (Optional) Whether this layer is shared.
+* `additional_permission_profiles` - (Optional) Collection of permission profiles identified by the name or UID.
 * `tags` - (Optional) Collection of tag identifiers.tags blocks are documented below.
 * `color` - (Optional) Color of the object. Should be one of existing colors. 
 * `comments` - (Optional) Comments string. 

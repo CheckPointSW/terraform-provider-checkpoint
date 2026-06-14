@@ -69,6 +69,14 @@ func resourceManagementAccessLayer() *schema.Resource {
 				Description: "Whether this layer is shared.",
 				Default:     false,
 			},
+			"additional_permission_profiles": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of permission profiles identified by the name or UID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -143,6 +151,10 @@ func createManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOkExists("shared"); ok {
 		accessLayer["shared"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("additional_permission_profiles"); ok {
+		accessLayer["additional-permission-profiles"] = v.(*schema.Set).List()
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -236,6 +248,22 @@ func readManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("shared", v)
 	}
 
+	if accessLayer["additional-permission-profiles"] != nil {
+		profilesJson, ok := accessLayer["additional-permission-profiles"].([]interface{})
+		if ok {
+			profilesIds := make([]string, 0)
+			if len(profilesJson) > 0 {
+				for _, profile := range profilesJson {
+					profile := profile.(map[string]interface{})
+					profilesIds = append(profilesIds, profile["name"].(string))
+				}
+			}
+			_ = d.Set("additional_permission_profiles", profilesIds)
+		}
+	} else {
+		_ = d.Set("additional_permission_profiles", nil)
+	}
+
 	if accessLayer["tags"] != nil {
 		tagsJson, ok := accessLayer["tags"].([]interface{})
 		if ok {
@@ -311,6 +339,12 @@ func updateManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOkExists("shared"); ok {
 		accessLayer["shared"] = v.(bool)
+	}
+
+	if d.HasChange("additional_permission_profiles") {
+		if v, ok := d.GetOk("additional_permission_profiles"); ok {
+			accessLayer["additional-permission-profiles"] = v.(*schema.Set).List()
+		}
 	}
 
 	if d.HasChange("tags") {
