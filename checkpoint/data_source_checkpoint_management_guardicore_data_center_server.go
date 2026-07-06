@@ -8,9 +8,9 @@ import (
 	"strings"
 )
 
-func dataSourceManagementAzureDataCenterServer() *schema.Resource {
+func dataSourceManagementGuardicoreDataCenterServer() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceAzureDataCenterServerRead,
+		Read: dataSourceGuardicoreDataCenterServerRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -22,30 +22,25 @@ func dataSourceManagementAzureDataCenterServer() *schema.Resource {
 				Optional:    true,
 				Description: "Object unique identifier.",
 			},
-			"authentication_method": {
+			"hostname": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "user-authentication\nUses the Azure AD User to authenticate.\nservice-principal-authentication\nUses the Service Principal to authenticate.\nmanaged-identity-authentication\nUses the Managed Identity to authenticate. This option requires the Security Management Server be deployed in Azure and has a Managed Identity.",
+				Description: "IP Address or hostname of the Guardicore Centra management server.",
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "An Azure Active Directory user Format <username>@<domain>.\nRequired for authentication-method: user-authentication.",
+				Description: "Username for Guardicore Centra.",
 			},
-			"application_id": {
+			"certificate_fingerprint": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The Application ID of the Service Principal, in UUID format.\nRequired for authentication-method: service-principal-authentication.",
+				Description: "Specify the SHA-1 or SHA-256 fingerprint of the Data Center Server's certificate.",
 			},
-			"directory_id": {
-				Type:        schema.TypeString,
+			"unsafe_auto_accept": {
+				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "The Directory ID of the Azure AD, in UUID format.\nRequired for authentication-method: service-principal-authentication.",
-			},
-			"environment": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Select the Azure Cloud Environment. Valid values are: AzureCloud, AzureChinaCloud, AzureUSGovernment.",
+				Description: "When set to false, the current Data Center Server's certificate should be trusted, either by providing the certificate-fingerprint argument or by relying on a previously trusted certificate of this hostname. When set to true, trust the current Data Center Server's certificate as-is.",
 			},
 			"tags": {
 				Type:        schema.TypeSet,
@@ -68,7 +63,7 @@ func dataSourceManagementAzureDataCenterServer() *schema.Resource {
 	}
 }
 
-func dataSourceAzureDataCenterServerRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGuardicoreDataCenterServerRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*checkpoint.ApiClient)
 	var name string
 	var uid string
@@ -86,32 +81,32 @@ func dataSourceAzureDataCenterServerRead(d *schema.ResourceData, m interface{}) 
 	} else if uid != "" {
 		payload["uid"] = uid
 	}
-	showAzureDataCenterServerRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	showRes, err := client.ApiCall("show-data-center-server", payload, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
 		return fmt.Errorf("%s", err.Error())
 	}
-	if !showAzureDataCenterServerRes.Success {
-		return fmt.Errorf("%s", showAzureDataCenterServerRes.ErrorMsg)
+	if !showRes.Success {
+		return fmt.Errorf("%s", showRes.ErrorMsg)
 	}
-	azureDataCenterServer := showAzureDataCenterServerRes.GetData()
+	guardicoreDataCenterServer := showRes.GetData()
 
-	if v := azureDataCenterServer["uid"]; v != nil {
+	if v := guardicoreDataCenterServer["uid"]; v != nil {
 		_ = d.Set("uid", v)
 		d.SetId(v.(string))
 	}
 
-	if v := azureDataCenterServer["name"]; v != nil {
+	if v := guardicoreDataCenterServer["name"]; v != nil {
 		_ = d.Set("name", v)
 	}
 
-	if azureDataCenterServer["properties"] != nil {
-		propsJson, ok := azureDataCenterServer["properties"].([]interface{})
+	if guardicoreDataCenterServer["properties"] != nil {
+		propsJson, ok := guardicoreDataCenterServer["properties"].([]interface{})
 		if ok {
 			for _, prop := range propsJson {
 				propMap := prop.(map[string]interface{})
 				propName := strings.ReplaceAll(propMap["name"].(string), "-", "_")
 				propValue := propMap["value"]
-				if propName == "enable_sts_assume_role" {
+				if propName == "unsafe_auto_accept" {
 					propValue, _ = strconv.ParseBool(propValue.(string))
 				}
 				_ = d.Set(propName, propValue)
@@ -119,8 +114,8 @@ func dataSourceAzureDataCenterServerRead(d *schema.ResourceData, m interface{}) 
 		}
 	}
 
-	if azureDataCenterServer["tags"] != nil {
-		tagsJson, ok := azureDataCenterServer["tags"].([]interface{})
+	if guardicoreDataCenterServer["tags"] != nil {
+		tagsJson, ok := guardicoreDataCenterServer["tags"].([]interface{})
 		if ok {
 			tagsIds := make([]string, 0)
 			if len(tagsJson) > 0 {
@@ -135,20 +130,12 @@ func dataSourceAzureDataCenterServerRead(d *schema.ResourceData, m interface{}) 
 		_ = d.Set("tags", nil)
 	}
 
-	if v := azureDataCenterServer["color"]; v != nil {
+	if v := guardicoreDataCenterServer["color"]; v != nil {
 		_ = d.Set("color", v)
 	}
 
-	if v := azureDataCenterServer["comments"]; v != nil {
+	if v := guardicoreDataCenterServer["comments"]; v != nil {
 		_ = d.Set("comments", v)
-	}
-
-	if v := azureDataCenterServer["ignore-warnings"]; v != nil {
-		_ = d.Set("ignore_warnings", v)
-	}
-
-	if v := azureDataCenterServer["ignore-errors"]; v != nil {
-		_ = d.Set("ignore_errors", v)
 	}
 
 	return nil
