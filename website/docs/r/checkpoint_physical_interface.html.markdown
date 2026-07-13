@@ -11,6 +11,8 @@ description: |-
 This resource allows you to set a Physical interface.
 <br>NOTE: This is GAIA API resource and require set provider context to `gaia_api`.
 
+#### This resource is deprecated. please use the `checkpoint_gaia_physical_interface` resource.
+
 ## Example Usage
 
 

@@ -11,6 +11,8 @@ description: |-
 This resource allows you to set the hostname of a Check Point machine.
 <br>NOTE: This is GAIA API resource and require set provider context to `gaia_api`.
 
+#### This resource is deprecated. please use the `checkpoint_gaia_hostname` resource.
+
 ## Example Usage
 
 

@@ -10,10 +10,11 @@ import (
 
 func resourcePhysicalInterface() *schema.Resource {
 	return &schema.Resource{
-		Create: createPhysicalInterface,
-		Read:   readPhysicalInterface,
-		Update: updatePhysicalInterface,
-		Delete: deletePhysicalInterface,
+		Create:             createPhysicalInterface,
+		Read:               readPhysicalInterface,
+		Update:             updatePhysicalInterface,
+		Delete:             deletePhysicalInterface,
+		DeprecationMessage: "This resource is deprecated. please use the `checkpoint_gaia_physical_interface` resource.",
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},

@@ -8,10 +8,11 @@ import (
 
 func resourcePutFile() *schema.Resource {
 	return &schema.Resource{
-		Create: createPutFile,
-		Read:   readPutFile,
-		Update: updatePutFile,
-		Delete: deletePutFile,
+		Create:             createPutFile,
+		Read:               readPutFile,
+		Update:             updatePutFile,
+		Delete:             deletePutFile,
+		DeprecationMessage: "This resource is deprecated. please use the `checkpoint_gaia_command_put_file` resource.",
 		Schema: map[string]*schema.Schema{
 			"file_name": {
 				Type:        schema.TypeString,
