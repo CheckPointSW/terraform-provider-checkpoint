@@ -26,7 +26,7 @@ resource "checkpoint_management_requirement" "example" {
 The following arguments are supported:
 
 * `name` - (Required) Requirement name.
-* `regulation` - (Optional) The relevant regulation. Identified by name or UID.
+* `regulation` - (Required) The relevant regulation. Identified by name or UID.
 * `best_practices` - (Optional) UIDs or IDs of the relevant best practices for the requirement.best_practices blocks are documented below.
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `comments` - (Optional) The requirement comments.

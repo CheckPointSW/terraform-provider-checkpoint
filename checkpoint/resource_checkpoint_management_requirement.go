@@ -21,7 +21,7 @@ func resourceManagementRequirement() *schema.Resource {
 			},
 			"regulation": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The relevant regulation. Identified by name or UID.",
 			},
 			"best_practices": {
@@ -221,12 +221,12 @@ func updateManagementRequirement(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if ok := d.HasChange("regulation"); ok {
-		requirement["regulation"] = d.Get("regulation")
+		requirement["new-regulation"] = d.Get("regulation")
 	}
 
 	if d.HasChange("best_practices") {
 		if v, ok := d.GetOk("best_practices"); ok {
-			requirement["best_practices"] = v.(*schema.Set).List()
+			requirement["best-practices"] = v.(*schema.Set).List()
 		}
 	}
 
