@@ -25,7 +25,7 @@ func dataSourceManagementAzureDataCenterServer() *schema.Resource {
 			"authentication_method": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "user-authentication\nUses the Azure AD User to authenticate.\nservice-principal-authentication\nUses the Service Principal to authenticate.",
+				Description: "user-authentication\nUses the Azure AD User to authenticate.\nservice-principal-authentication\nUses the Service Principal to authenticate.\nmanaged-identity-authentication\nUses the Managed Identity to authenticate. This option requires the Security Management Server be deployed in Azure and has a Managed Identity.",
 			},
 			"username": {
 				Type:        schema.TypeString,
@@ -45,7 +45,7 @@ func dataSourceManagementAzureDataCenterServer() *schema.Resource {
 			"environment": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Select the Azure Cloud Environment.",
+				Description: "Select the Azure Cloud Environment. Valid values are: AzureCloud, AzureChinaCloud, AzureUSGovernment.",
 			},
 			"tags": {
 				Type:        schema.TypeSet,

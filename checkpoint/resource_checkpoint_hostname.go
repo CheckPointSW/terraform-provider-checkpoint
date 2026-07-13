@@ -8,10 +8,11 @@ import (
 
 func resourceHostname() *schema.Resource {
 	return &schema.Resource{
-		Create: createHostname,
-		Read:   readHostname,
-		Update: updateHostname,
-		Delete: deleteHostname,
+		Create:             createHostname,
+		Read:               readHostname,
+		Update:             updateHostname,
+		Delete:             deleteHostname,
+		DeprecationMessage: "This resource is deprecated. please use the `checkpoint_gaia_hostname` resource.",
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
