@@ -149,7 +149,7 @@ func createGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create StaticRoute - Map = ", payload)
+    log.Println("Create StaticRoute - Map = ", safeCopyMap(payload))
 
     addStaticRouteRes, err := client.ApiCallSimple("set-static-route", payload)
     // DEBUG: generic logger
@@ -257,7 +257,7 @@ func readGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
 
     staticRoute := showStaticRouteRes.GetData()
 
-    log.Println("Read StaticRoute - Show JSON = ", staticRoute)
+    log.Println("Read StaticRoute - Show JSON = ", safeCopyMap(staticRoute))
 
     if v, exists := staticRoute["address"]; exists {
         d.Set("address", fmt.Sprintf("%v", v))

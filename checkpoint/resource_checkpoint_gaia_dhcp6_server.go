@@ -213,7 +213,7 @@ func createGaiaDhcp6Server(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create Dhcp6Server - Map = ", payload)
+    log.Println("Create Dhcp6Server - Map = ", safeCopyMap(payload))
 
     addDhcp6ServerRes, err := client.ApiCallSimple("set-dhcp6-server", payload)
     // DEBUG: generic logger
@@ -309,7 +309,7 @@ func readGaiaDhcp6Server(d *schema.ResourceData, m interface{}) error {
 
     dhcp6Server := showDhcp6ServerRes.GetData()
 
-    log.Println("Read Dhcp6Server - Show JSON = ", dhcp6Server)
+    log.Println("Read Dhcp6Server - Show JSON = ", safeCopyMap(dhcp6Server))
 
     if v, exists := dhcp6Server["enabled"]; exists {
         if b, ok := v.(bool); ok {

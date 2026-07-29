@@ -59,7 +59,7 @@ func readGaiaShowExtendedCommands(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-extended-commands - Payload = ", payload)
+    log.Println("Execute show-extended-commands - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-extended-commands", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

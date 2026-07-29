@@ -135,7 +135,7 @@ func readGaiaShowPimSparseModeStats(d *schema.ResourceData, m interface{}) error
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-sparse-mode-stats - Payload = ", payload)
+    log.Println("Execute show-pim-sparse-mode-stats - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-sparse-mode-stats", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

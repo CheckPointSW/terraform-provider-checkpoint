@@ -96,7 +96,7 @@ func createGaiaAllowedClients(d *schema.ResourceData, m interface{}) error {
         payload["allowed-any-host"] = v.(bool)
     }
 
-    log.Println("Create AllowedClients - Map = ", payload)
+    log.Println("Create AllowedClients - Map = ", safeCopyMap(payload))
 
     addAllowedClientsRes, err := client.ApiCallSimple("set-allowed-clients", payload)
     // DEBUG: generic logger
@@ -192,7 +192,7 @@ func readGaiaAllowedClients(d *schema.ResourceData, m interface{}) error {
 
     allowedClients := showAllowedClientsRes.GetData()
 
-    log.Println("Read AllowedClients - Show JSON = ", allowedClients)
+    log.Println("Read AllowedClients - Show JSON = ", safeCopyMap(allowedClients))
 
     if v, exists := allowedClients["allowed-networks"]; exists {
         if raw, ok := v.([]interface{}); ok {

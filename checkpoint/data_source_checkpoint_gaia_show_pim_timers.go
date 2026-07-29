@@ -65,7 +65,7 @@ func readGaiaShowPimTimers(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-timers - Payload = ", payload)
+    log.Println("Execute show-pim-timers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-timers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

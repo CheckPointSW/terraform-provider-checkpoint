@@ -54,7 +54,7 @@ func readGaiaShowIpConflictsConfiguration(d *schema.ResourceData, m interface{})
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ip-conflicts-configuration - Payload = ", payload)
+    log.Println("Execute show-ip-conflicts-configuration - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ip-conflicts-configuration", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

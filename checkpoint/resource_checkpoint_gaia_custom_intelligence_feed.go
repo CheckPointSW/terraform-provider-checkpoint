@@ -209,7 +209,7 @@ func createGaiaCustomIntelligenceFeed(d *schema.ResourceData, m interface{}) err
         payload["https-sha256-fingerprint"] = v.(string)
     }
 
-    log.Println("Create CustomIntelligenceFeed - Map = ", payload)
+    log.Println("Create CustomIntelligenceFeed - Map = ", safeCopyMap(payload))
 
     addCustomIntelligenceFeedRes, err := client.ApiCallSimple("add-custom-intelligence-feed", payload)
     // DEBUG: generic logger
@@ -321,7 +321,7 @@ func readGaiaCustomIntelligenceFeed(d *schema.ResourceData, m interface{}) error
 
     customIntelligenceFeed := showCustomIntelligenceFeedRes.GetData()
 
-    log.Println("Read CustomIntelligenceFeed - Show JSON = ", customIntelligenceFeed)
+    log.Println("Read CustomIntelligenceFeed - Show JSON = ", safeCopyMap(customIntelligenceFeed))
 
     if v, exists := customIntelligenceFeed["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

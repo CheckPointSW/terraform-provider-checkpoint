@@ -133,7 +133,7 @@ func readGaiaShowTask(d *schema.ResourceData, m interface{}) error {
         payload["task-id"] = v.(*schema.Set).List()
     }
 
-    log.Println("Execute show-task - Payload = ", payload)
+    log.Println("Execute show-task - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-task", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

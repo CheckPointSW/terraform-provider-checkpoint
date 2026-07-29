@@ -96,7 +96,7 @@ func createGaiaMaestroSite(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create MaestroSite - Map = ", payload)
+    log.Println("Create MaestroSite - Map = ", safeCopyMap(payload))
 
     addMaestroSiteRes, err := client.ApiCallSimple("set-maestro-site", payload)
     // DEBUG: generic logger
@@ -196,7 +196,7 @@ func readGaiaMaestroSite(d *schema.ResourceData, m interface{}) error {
 
     maestroSite := showMaestroSiteRes.GetData()
 
-    log.Println("Read MaestroSite - Show JSON = ", maestroSite)
+    log.Println("Read MaestroSite - Show JSON = ", safeCopyMap(maestroSite))
 
     if v, exists := maestroSite["site-id"]; exists {
         if f, ok := v.(float64); ok {

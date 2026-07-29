@@ -804,7 +804,7 @@ func createGaiaSimulatePacket(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute simulate-packet - Payload = ", payload)
+    log.Println("Execute simulate-packet - Payload = ", safeCopyMap(payload))
 
     GaiaSimulatePacketRes, err := client.ApiCallSimple("simulate-packet", payload)
     // DEBUG: generic logger

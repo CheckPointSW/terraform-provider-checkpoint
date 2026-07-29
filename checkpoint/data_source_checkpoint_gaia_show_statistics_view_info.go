@@ -92,7 +92,7 @@ func readGaiaShowStatisticsViewInfo(d *schema.ResourceData, m interface{}) error
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-statistics-view-info - Payload = ", payload)
+    log.Println("Execute show-statistics-view-info - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-statistics-view-info", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

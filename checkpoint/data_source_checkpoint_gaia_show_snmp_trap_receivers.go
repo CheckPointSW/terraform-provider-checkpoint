@@ -64,7 +64,7 @@ func readGaiaShowSnmpTrapReceivers(d *schema.ResourceData, m interface{}) error 
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-snmp-trap-receivers - Payload = ", payload)
+    log.Println("Execute show-snmp-trap-receivers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-snmp-trap-receivers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

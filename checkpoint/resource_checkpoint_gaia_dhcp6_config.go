@@ -125,7 +125,7 @@ func createGaiaDhcp6Config(d *schema.ResourceData, m interface{}) error {
         payload["client-mode"] = v.(string)
     }
 
-    log.Println("Create Dhcp6Config - Map = ", payload)
+    log.Println("Create Dhcp6Config - Map = ", safeCopyMap(payload))
 
     addDhcp6ConfigRes, err := client.ApiCallSimple("set-dhcp6-config", payload)
     // DEBUG: generic logger
@@ -221,7 +221,7 @@ func readGaiaDhcp6Config(d *schema.ResourceData, m interface{}) error {
 
     dhcp6Config := showDhcp6ConfigRes.GetData()
 
-    log.Println("Read Dhcp6Config - Show JSON = ", dhcp6Config)
+    log.Println("Read Dhcp6Config - Show JSON = ", safeCopyMap(dhcp6Config))
 
     if v, exists := dhcp6Config["client-mode"]; exists {
         d.Set("client_mode", fmt.Sprintf("%v", v))

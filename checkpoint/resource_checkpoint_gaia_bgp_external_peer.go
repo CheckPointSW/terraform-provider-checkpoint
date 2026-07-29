@@ -652,7 +652,7 @@ func createGaiaBgpExternalPeer(d *schema.ResourceData, m interface{}) error {
         payload["ttl"] = v.(string)
     }
 
-    log.Println("Create BgpExternalPeer - Map = ", payload)
+    log.Println("Create BgpExternalPeer - Map = ", safeCopyMap(payload))
 
     addBgpExternalPeerRes, err := client.ApiCallSimple("add-bgp-external-peer", payload)
     // DEBUG: generic logger
@@ -751,7 +751,7 @@ func readGaiaBgpExternalPeer(d *schema.ResourceData, m interface{}) error {
 
     bgpExternalPeer := showBgpExternalPeerRes.GetData()
 
-    log.Println("Read BgpExternalPeer - Show JSON = ", bgpExternalPeer)
+    log.Println("Read BgpExternalPeer - Show JSON = ", safeCopyMap(bgpExternalPeer))
 
     if v, exists := bgpExternalPeer["accept-routes"]; exists {
         d.Set("accept_routes", fmt.Sprintf("%v", v))

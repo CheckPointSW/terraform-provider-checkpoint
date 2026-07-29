@@ -84,7 +84,7 @@ func readGaiaShowRoles(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-roles - Payload = ", payload)
+    log.Println("Execute show-roles - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-roles", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

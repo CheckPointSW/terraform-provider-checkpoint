@@ -108,7 +108,7 @@ func readGaiaShowMaestroPorts(d *schema.ResourceData, m interface{}) error {
 
     payload := map[string]interface{}{}
 
-    log.Println("Execute show-maestro-ports - Payload = ", payload)
+    log.Println("Execute show-maestro-ports - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-maestro-ports", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

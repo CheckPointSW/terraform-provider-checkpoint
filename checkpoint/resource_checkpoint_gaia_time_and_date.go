@@ -79,7 +79,7 @@ func createGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
         payload["date"] = v.(string)
     }
 
-    log.Println("Create TimeAndDate - Map = ", payload)
+    log.Println("Create TimeAndDate - Map = ", safeCopyMap(payload))
 
     addTimeAndDateRes, err := client.ApiCallSimple("set-time-and-date", payload)
     // DEBUG: generic logger
@@ -187,7 +187,7 @@ func readGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
 
     timeAndDate := showTimeAndDateRes.GetData()
 
-    log.Println("Read TimeAndDate - Show JSON = ", timeAndDate)
+    log.Println("Read TimeAndDate - Show JSON = ", safeCopyMap(timeAndDate))
 
     if v, exists := timeAndDate["date"]; exists {
         if s, ok := v.(string); ok {

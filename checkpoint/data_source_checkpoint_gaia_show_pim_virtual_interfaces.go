@@ -101,7 +101,7 @@ func readGaiaShowPimVirtualInterfaces(d *schema.ResourceData, m interface{}) err
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-virtual-interfaces - Payload = ", payload)
+    log.Println("Execute show-pim-virtual-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-virtual-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

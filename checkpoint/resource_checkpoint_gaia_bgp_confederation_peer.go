@@ -278,7 +278,7 @@ func createGaiaBgpConfederationPeer(d *schema.ResourceData, m interface{}) error
         payload["weight"] = v.(int)
     }
 
-    log.Println("Create BgpConfederationPeer - Map = ", payload)
+    log.Println("Create BgpConfederationPeer - Map = ", safeCopyMap(payload))
 
     addBgpConfederationPeerRes, err := client.ApiCallSimple("add-bgp-confederation-peer", payload)
     // DEBUG: generic logger
@@ -377,7 +377,7 @@ func readGaiaBgpConfederationPeer(d *schema.ResourceData, m interface{}) error {
 
     bgpConfederationPeer := showBgpConfederationPeerRes.GetData()
 
-    log.Println("Read BgpConfederationPeer - Show JSON = ", bgpConfederationPeer)
+    log.Println("Read BgpConfederationPeer - Show JSON = ", safeCopyMap(bgpConfederationPeer))
 
     if v, exists := bgpConfederationPeer["accept-routes"]; exists {
         d.Set("accept_routes", fmt.Sprintf("%v", v))

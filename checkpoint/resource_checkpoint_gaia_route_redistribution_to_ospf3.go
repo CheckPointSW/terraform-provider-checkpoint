@@ -1218,7 +1218,7 @@ func createGaiaRouteRedistributionToOspf3(d *schema.ResourceData, m interface{})
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToOspf3 - Map = ", payload)
+    log.Println("Create RouteRedistributionToOspf3 - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToOspf3Res, err := client.ApiCallSimple("set-route-redistribution-to-ospf3", payload)
     // DEBUG: generic logger
@@ -1318,7 +1318,7 @@ func readGaiaRouteRedistributionToOspf3(d *schema.ResourceData, m interface{}) e
 
     routeRedistributionToOspf3 := showRouteRedistributionToOspf3Res.GetData()
 
-    log.Println("Read RouteRedistributionToOspf3 - Show JSON = ", routeRedistributionToOspf3)
+    log.Println("Read RouteRedistributionToOspf3 - Show JSON = ", safeCopyMap(routeRedistributionToOspf3))
 
     if v, exists := routeRedistributionToOspf3["ospf3"]; exists {
         // Bug 1: API returns redistribution data under "ospf3"; remap to Terraform "from" field.

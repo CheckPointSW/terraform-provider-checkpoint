@@ -2315,7 +2315,7 @@ func createGaiaRouteRedistributionToBgpAs(d *schema.ResourceData, m interface{})
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToBgpAs - Map = ", payload)
+    log.Println("Create RouteRedistributionToBgpAs - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToBgpAsRes, err := client.ApiCallSimple("set-route-redistribution-to-bgp-as", payload)
     // DEBUG: generic logger
@@ -2415,7 +2415,7 @@ func readGaiaRouteRedistributionToBgpAs(d *schema.ResourceData, m interface{}) e
 
     routeRedistributionToBgpAs := showRouteRedistributionToBgpAsRes.GetData()
 
-    log.Println("Read RouteRedistributionToBgpAs - Show JSON = ", routeRedistributionToBgpAs)
+    log.Println("Read RouteRedistributionToBgpAs - Show JSON = ", safeCopyMap(routeRedistributionToBgpAs))
 
     if v, exists := routeRedistributionToBgpAs["bgp-as"]; exists {
         if bgpAsItems, ok := v.([]interface{}); ok && len(bgpAsItems) > 0 {

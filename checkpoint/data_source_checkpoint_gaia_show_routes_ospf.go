@@ -177,7 +177,7 @@ func readGaiaShowRoutesOspf(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-routes-ospf - Payload = ", payload)
+    log.Println("Execute show-routes-ospf - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-routes-ospf", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

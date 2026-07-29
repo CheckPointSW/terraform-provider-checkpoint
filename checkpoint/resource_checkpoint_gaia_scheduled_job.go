@@ -190,7 +190,7 @@ func createGaiaScheduledJob(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create ScheduledJob - Map = ", payload)
+    log.Println("Create ScheduledJob - Map = ", safeCopyMap(payload))
 
     addScheduledJobRes, err := client.ApiCallSimple("add-scheduled-job", payload)
     // DEBUG: generic logger
@@ -290,7 +290,7 @@ func readGaiaScheduledJob(d *schema.ResourceData, m interface{}) error {
 
     scheduledJob := showScheduledJobRes.GetData()
 
-    log.Println("Read ScheduledJob - Show JSON = ", scheduledJob)
+    log.Println("Read ScheduledJob - Show JSON = ", safeCopyMap(scheduledJob))
 
     if v, exists := scheduledJob["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

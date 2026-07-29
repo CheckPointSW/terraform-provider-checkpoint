@@ -139,7 +139,7 @@ func readGaiaShowCustomIntelligenceFeeds(d *schema.ResourceData, m interface{}) 
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-custom-intelligence-feeds - Payload = ", payload)
+    log.Println("Execute show-custom-intelligence-feeds - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-custom-intelligence-feeds", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

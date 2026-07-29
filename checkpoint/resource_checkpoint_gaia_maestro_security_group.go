@@ -328,7 +328,7 @@ func createGaiaMaestroSecurityGroup(d *schema.ResourceData, m interface{}) error
         }
     }
 
-    log.Println("Create MaestroSecurityGroup - Map = ", payload)
+    log.Println("Create MaestroSecurityGroup - Map = ", safeCopyMap(payload))
 
     addMaestroSecurityGroupRes, err := client.ApiCallSimple("add-maestro-security-group", payload)
     // DEBUG: generic logger
@@ -437,7 +437,7 @@ func readGaiaMaestroSecurityGroup(d *schema.ResourceData, m interface{}) error {
 
     maestroSecurityGroup := showMaestroSecurityGroupRes.GetData()
 
-    log.Println("Read MaestroSecurityGroup - Show JSON = ", maestroSecurityGroup)
+    log.Println("Read MaestroSecurityGroup - Show JSON = ", safeCopyMap(maestroSecurityGroup))
 
     if v, exists := maestroSecurityGroup["id"]; exists {
         if f, ok := v.(float64); ok {

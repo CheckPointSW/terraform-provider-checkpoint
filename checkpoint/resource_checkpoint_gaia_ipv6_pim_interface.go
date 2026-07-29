@@ -102,7 +102,7 @@ func createGaiaIpv6PimInterface(d *schema.ResourceData, m interface{}) error {
         payload["enable-virtual-address"] = v.(bool)
     }
 
-    log.Println("Create Ipv6PimInterface - Map = ", payload)
+    log.Println("Create Ipv6PimInterface - Map = ", safeCopyMap(payload))
 
     addIpv6PimInterfaceRes, err := client.ApiCallSimple("add-ipv6-pim-interface", payload)
     // DEBUG: generic logger
@@ -212,7 +212,7 @@ func readGaiaIpv6PimInterface(d *schema.ResourceData, m interface{}) error {
 
     ipv6PimInterface := showIpv6PimInterfaceRes.GetData()
 
-    log.Println("Read Ipv6PimInterface - Show JSON = ", ipv6PimInterface)
+    log.Println("Read Ipv6PimInterface - Show JSON = ", safeCopyMap(ipv6PimInterface))
 
     if v, exists := ipv6PimInterface["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

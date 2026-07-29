@@ -535,7 +535,7 @@ func createGaiaBondInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create BondInterface - Map = ", payload)
+    log.Println("Create BondInterface - Map = ", safeCopyMap(payload))
 
     addBondInterfaceRes, err := client.ApiCallSimple("add-bond-interface", payload)
     // DEBUG: generic logger
@@ -591,7 +591,7 @@ func createGaiaBondInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setBondInterfaceRes, err := client.ApiCallSimple("set-bond-interface", updatePayload)
         if err != nil {
@@ -665,7 +665,7 @@ func readGaiaBondInterface(d *schema.ResourceData, m interface{}) error {
 
     bondInterface := showBondInterfaceRes.GetData()
 
-    log.Println("Read BondInterface - Show JSON = ", bondInterface)
+    log.Println("Read BondInterface - Show JSON = ", safeCopyMap(bondInterface))
 
     if v, exists := bondInterface["sd-wan"]; exists {
         d.Set("sd_wan", v)

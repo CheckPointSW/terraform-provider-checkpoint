@@ -438,7 +438,7 @@ func createGaiaSetPim(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Execute set-pim - Payload = ", payload)
+    log.Println("Execute set-pim - Payload = ", safeCopyMap(payload))
 
     GaiaSetPimRes, err := client.ApiCallSimple("set-pim", payload)
     // DEBUG: generic logger

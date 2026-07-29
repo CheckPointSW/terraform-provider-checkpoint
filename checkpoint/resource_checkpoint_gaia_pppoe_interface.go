@@ -297,7 +297,7 @@ func createGaiaPppoeInterface(d *schema.ResourceData, m interface{}) error {
         payload["comments"] = v.(string)
     }
 
-    log.Println("Create PppoeInterface - Map = ", payload)
+    log.Println("Create PppoeInterface - Map = ", safeCopyMap(payload))
 
     addPppoeInterfaceRes, err := client.ApiCallSimple("add-pppoe-interface", payload)
     // DEBUG: generic logger
@@ -355,7 +355,7 @@ func createGaiaPppoeInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setPppoeInterfaceRes, err := client.ApiCallSimple("set-pppoe-interface", updatePayload)
         if err != nil {
@@ -425,7 +425,7 @@ func readGaiaPppoeInterface(d *schema.ResourceData, m interface{}) error {
 
     pppoeInterface := showPppoeInterfaceRes.GetData()
 
-    log.Println("Read PppoeInterface - Show JSON = ", pppoeInterface)
+    log.Println("Read PppoeInterface - Show JSON = ", safeCopyMap(pppoeInterface))
 
     if v, exists := pppoeInterface["sd-wan"]; exists {
         if sm, ok := v.(map[string]interface{}); ok {

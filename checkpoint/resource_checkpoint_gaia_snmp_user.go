@@ -142,7 +142,7 @@ func createGaiaSnmpUser(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create SnmpUser - Map = ", payload)
+    log.Println("Create SnmpUser - Map = ", safeCopyMap(payload))
 
     addSnmpUserRes, err := client.ApiCallSimple("add-snmp-user", payload)
     // DEBUG: generic logger
@@ -242,7 +242,7 @@ func readGaiaSnmpUser(d *schema.ResourceData, m interface{}) error {
 
     snmpUser := showSnmpUserRes.GetData()
 
-    log.Println("Read SnmpUser - Show JSON = ", snmpUser)
+    log.Println("Read SnmpUser - Show JSON = ", safeCopyMap(snmpUser))
 
     if v, exists := snmpUser["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

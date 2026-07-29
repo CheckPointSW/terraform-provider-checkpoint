@@ -242,7 +242,7 @@ func readGaiaShowConfigurationBgpConfederationPeers(d *schema.ResourceData, m in
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-configuration-bgp-confederation-peers - Payload = ", payload)
+    log.Println("Execute show-configuration-bgp-confederation-peers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-configuration-bgp-confederation-peers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

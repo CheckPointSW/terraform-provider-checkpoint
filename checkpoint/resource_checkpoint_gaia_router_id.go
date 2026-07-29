@@ -45,7 +45,7 @@ func createGaiaRouterId(d *schema.ResourceData, m interface{}) error {
         payload["router-id"] = v.(string)
     }
 
-    log.Println("Create RouterId - Map = ", payload)
+    log.Println("Create RouterId - Map = ", safeCopyMap(payload))
 
     addRouterIdRes, err := client.ApiCallSimple("set-router-id", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaRouterId(d *schema.ResourceData, m interface{}) error {
 
     routerId := showRouterIdRes.GetData()
 
-    log.Println("Read RouterId - Show JSON = ", routerId)
+    log.Println("Read RouterId - Show JSON = ", safeCopyMap(routerId))
 
     if v, exists := routerId["router-id"]; exists {
         if configuredVal, ok := d.GetOk("router_id"); ok && configuredVal.(string) == "default" {

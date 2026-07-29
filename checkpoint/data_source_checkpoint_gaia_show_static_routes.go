@@ -159,7 +159,7 @@ func readGaiaShowStaticRoutes(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-static-routes - Payload = ", payload)
+    log.Println("Execute show-static-routes - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-static-routes", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -156,7 +156,7 @@ func createGaiaSyslog(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create Syslog - Map = ", payload)
+    log.Println("Create Syslog - Map = ", safeCopyMap(payload))
 
     addSyslogRes, err := client.ApiCallSimple("set-syslog", payload)
     // DEBUG: generic logger
@@ -252,7 +252,7 @@ func readGaiaSyslog(d *schema.ResourceData, m interface{}) error {
 
     syslog := showSyslogRes.GetData()
 
-    log.Println("Read Syslog - Show JSON = ", syslog)
+    log.Println("Read Syslog - Show JSON = ", safeCopyMap(syslog))
 
     if v, exists := syslog["audit-log"]; exists {
         if b, ok := v.(bool); ok {

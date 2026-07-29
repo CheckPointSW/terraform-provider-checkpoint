@@ -117,7 +117,7 @@ func createGaiaRunScript(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Execute run-script - Payload = ", payload)
+    log.Println("Execute run-script - Payload = ", safeCopyMap(payload))
 
     GaiaRunScriptRes, err := client.ApiCallSimple("run-script", payload)
     // DEBUG: generic logger

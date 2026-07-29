@@ -158,7 +158,7 @@ func readGaiaShowRoutesAggregate(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-routes-aggregate - Payload = ", payload)
+    log.Println("Execute show-routes-aggregate - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-routes-aggregate", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

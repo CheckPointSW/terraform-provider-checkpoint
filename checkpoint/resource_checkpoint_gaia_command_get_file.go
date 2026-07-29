@@ -59,7 +59,7 @@ func createGaiaGetFile(d *schema.ResourceData, m interface{}) error {
         payload["file-name"] = v.(string)
     }
 
-    log.Println("Execute get-file - Payload = ", payload)
+    log.Println("Execute get-file - Payload = ", safeCopyMap(payload))
 
     GaiaGetFileRes, err := client.ApiCallSimple("get-file", payload)
     // DEBUG: generic logger
@@ -128,7 +128,7 @@ func readGaiaGetFile(d *schema.ResourceData, m interface{}) error {
         payload["file-name"] = v.(string)
     }
 
-    log.Println("Execute get-file - Payload = ", payload)
+    log.Println("Execute get-file - Payload = ", safeCopyMap(payload))
 
     GaiaGetFileRes, err := client.ApiCallSimple("get-file", payload)
     // DEBUG: generic logger

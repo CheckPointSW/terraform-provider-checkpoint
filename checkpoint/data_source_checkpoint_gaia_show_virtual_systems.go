@@ -137,7 +137,7 @@ func readGaiaShowVirtualSystems(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-virtual-systems - Payload = ", payload)
+    log.Println("Execute show-virtual-systems - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-virtual-systems", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

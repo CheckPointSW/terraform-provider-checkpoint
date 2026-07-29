@@ -111,7 +111,7 @@ func createGaiaMaestroGateway(d *schema.ResourceData, m interface{}) error {
         payload["security-group"] = v.(int)
     }
 
-    log.Println("Create MaestroGateway - Map = ", payload)
+    log.Println("Create MaestroGateway - Map = ", safeCopyMap(payload))
 
     addMaestroGatewayRes, err := client.ApiCallSimple("set-maestro-gateway", payload)
     // DEBUG: generic logger
@@ -211,7 +211,7 @@ func readGaiaMaestroGateway(d *schema.ResourceData, m interface{}) error {
 
     maestroGateway := showMaestroGatewayRes.GetData()
 
-    log.Println("Read MaestroGateway - Show JSON = ", maestroGateway)
+    log.Println("Read MaestroGateway - Show JSON = ", safeCopyMap(maestroGateway))
 
     if v, exists := maestroGateway["id"]; exists {
         d.Set("resource_id", fmt.Sprintf("%v", v))

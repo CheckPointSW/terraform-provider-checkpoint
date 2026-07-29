@@ -520,7 +520,7 @@ func createGaiaSnmpPreDefinedTraps(d *schema.ResourceData, m interface{}) error 
         }
     }
 
-    log.Println("Create SnmpPreDefinedTraps - Map = ", payload)
+    log.Println("Create SnmpPreDefinedTraps - Map = ", safeCopyMap(payload))
 
     addSnmpPreDefinedTrapsRes, err := client.ApiCallSimple("set-snmp-pre-defined-traps", payload)
     // DEBUG: generic logger
@@ -616,7 +616,7 @@ func readGaiaSnmpPreDefinedTraps(d *schema.ResourceData, m interface{}) error {
 
     snmpPreDefinedTraps := showSnmpPreDefinedTrapsRes.GetData()
 
-    log.Println("Read SnmpPreDefinedTraps - Show JSON = ", snmpPreDefinedTraps)
+    log.Println("Read SnmpPreDefinedTraps - Show JSON = ", safeCopyMap(snmpPreDefinedTraps))
 
     if v, exists := snmpPreDefinedTraps["authorizationError"]; exists {
         d.Set("authorizationerror", v)

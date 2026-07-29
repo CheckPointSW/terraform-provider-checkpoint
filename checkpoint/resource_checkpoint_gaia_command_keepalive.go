@@ -34,7 +34,7 @@ func createGaiaKeepalive(d *schema.ResourceData, m interface{}) error {
 
     payload := make(map[string]interface{})
 
-    log.Println("Execute keepalive - Payload = ", payload)
+    log.Println("Execute keepalive - Payload = ", safeCopyMap(payload))
 
     GaiaKeepaliveRes, err := client.ApiCallSimple("keepalive", payload)
     // DEBUG: generic logger
@@ -88,7 +88,7 @@ func readGaiaKeepalive(d *schema.ResourceData, m interface{}) error {
 
     payload := make(map[string]interface{})
 
-    log.Println("Execute keepalive - Payload = ", payload)
+    log.Println("Execute keepalive - Payload = ", safeCopyMap(payload))
 
     GaiaKeepaliveRes, err := client.ApiCallSimple("keepalive", payload)
     // DEBUG: generic logger

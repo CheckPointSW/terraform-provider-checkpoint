@@ -83,7 +83,7 @@ func createGaiaNtp(d *schema.ResourceData, m interface{}) error {
         payload["preferred"] = v.(string)
     }
 
-    log.Println("Create Ntp - Map = ", payload)
+    log.Println("Create Ntp - Map = ", safeCopyMap(payload))
 
     addNtpRes, err := client.ApiCallSimple("set-ntp", payload)
     // DEBUG: generic logger
@@ -179,7 +179,7 @@ func readGaiaNtp(d *schema.ResourceData, m interface{}) error {
 
     ntp := showNtpRes.GetData()
 
-    log.Println("Read Ntp - Show JSON = ", ntp)
+    log.Println("Read Ntp - Show JSON = ", safeCopyMap(ntp))
 
     if v, exists := ntp["enabled"]; exists {
         if b, ok := v.(bool); ok {

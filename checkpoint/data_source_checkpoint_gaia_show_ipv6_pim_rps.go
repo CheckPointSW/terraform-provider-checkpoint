@@ -130,7 +130,7 @@ func readGaiaShowIpv6PimRps(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ipv6-pim-rps - Payload = ", payload)
+    log.Println("Execute show-ipv6-pim-rps - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ipv6-pim-rps", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

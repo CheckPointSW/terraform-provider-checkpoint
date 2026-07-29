@@ -64,7 +64,7 @@ func readGaiaShowNfsMountPoints(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-nfs-mount-points - Payload = ", payload)
+    log.Println("Execute show-nfs-mount-points - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-nfs-mount-points", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

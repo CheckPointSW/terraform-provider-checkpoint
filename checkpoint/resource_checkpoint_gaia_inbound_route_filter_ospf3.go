@@ -127,7 +127,7 @@ func createGaiaInboundRouteFilterOspf3(d *schema.ResourceData, m interface{}) er
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create InboundRouteFilterOspf3 - Map = ", payload)
+    log.Println("Create InboundRouteFilterOspf3 - Map = ", safeCopyMap(payload))
 
     addInboundRouteFilterOspf3Res, err := client.ApiCallSimple("set-inbound-route-filter-ospf3", payload)
     // DEBUG: generic logger
@@ -227,7 +227,7 @@ func readGaiaInboundRouteFilterOspf3(d *schema.ResourceData, m interface{}) erro
 
     inboundRouteFilterOspf3 := showInboundRouteFilterOspf3Res.GetData()
 
-    log.Println("Read InboundRouteFilterOspf3 - Show JSON = ", inboundRouteFilterOspf3)
+    log.Println("Read InboundRouteFilterOspf3 - Show JSON = ", safeCopyMap(inboundRouteFilterOspf3))
 
     if v, exists := inboundRouteFilterOspf3["ospf3"]; exists {
         if items, ok := v.([]interface{}); ok && len(items) > 0 {

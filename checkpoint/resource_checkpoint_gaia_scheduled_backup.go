@@ -238,7 +238,7 @@ func createGaiaScheduledBackup(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create ScheduledBackup - Map = ", payload)
+    log.Println("Create ScheduledBackup - Map = ", safeCopyMap(payload))
 
     addScheduledBackupRes, err := client.ApiCallSimple("add-scheduled-backup", payload)
     // DEBUG: generic logger
@@ -338,7 +338,7 @@ func readGaiaScheduledBackup(d *schema.ResourceData, m interface{}) error {
 
     scheduledBackup := showScheduledBackupRes.GetData()
 
-    log.Println("Read ScheduledBackup - Show JSON = ", scheduledBackup)
+    log.Println("Read ScheduledBackup - Show JSON = ", safeCopyMap(scheduledBackup))
 
     if v, exists := scheduledBackup["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

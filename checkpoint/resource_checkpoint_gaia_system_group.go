@@ -66,7 +66,7 @@ func createGaiaSystemGroup(d *schema.ResourceData, m interface{}) error {
         payload["users"] = v.(*schema.Set).List()
     }
 
-    log.Println("Create SystemGroup - Map = ", payload)
+    log.Println("Create SystemGroup - Map = ", safeCopyMap(payload))
 
     addSystemGroupRes, err := client.ApiCallSimple("add-system-group", payload)
     // DEBUG: generic logger
@@ -166,7 +166,7 @@ func readGaiaSystemGroup(d *schema.ResourceData, m interface{}) error {
 
     systemGroup := showSystemGroupRes.GetData()
 
-    log.Println("Read SystemGroup - Show JSON = ", systemGroup)
+    log.Println("Read SystemGroup - Show JSON = ", safeCopyMap(systemGroup))
 
     if v, exists := systemGroup["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

@@ -139,7 +139,7 @@ func createGaiaRadius(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create Radius - Map = ", payload)
+    log.Println("Create Radius - Map = ", safeCopyMap(payload))
 
     addRadiusRes, err := client.ApiCallSimple("set-radius", payload)
     // DEBUG: generic logger
@@ -235,7 +235,7 @@ func readGaiaRadius(d *schema.ResourceData, m interface{}) error {
 
     radius := showRadiusRes.GetData()
 
-    log.Println("Read Radius - Show JSON = ", radius)
+    log.Println("Read Radius - Show JSON = ", safeCopyMap(radius))
 
     if v, exists := radius["nas-ip"]; exists {
         d.Set("nas_ip", fmt.Sprintf("%v", v))

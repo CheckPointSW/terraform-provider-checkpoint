@@ -226,7 +226,7 @@ func readGaiaShowOspfSummary(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ospf-summary - Payload = ", payload)
+    log.Println("Execute show-ospf-summary - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ospf-summary", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

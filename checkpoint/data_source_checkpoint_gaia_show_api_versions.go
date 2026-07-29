@@ -48,7 +48,7 @@ func readGaiaShowApiVersions(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-api-versions - Payload = ", payload)
+    log.Println("Execute show-api-versions - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-api-versions", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

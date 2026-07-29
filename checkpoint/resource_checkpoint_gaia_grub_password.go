@@ -56,7 +56,7 @@ func createGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
         payload["password-hash"] = v.(string)
     }
 
-    log.Println("Create GrubPassword - Map = ", payload)
+    log.Println("Create GrubPassword - Map = ", safeCopyMap(payload))
 
     addGrubPasswordRes, err := client.ApiCallSimple("set-grub-password", payload)
     // DEBUG: generic logger
@@ -152,7 +152,7 @@ func readGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
 
     grubPassword := showGrubPasswordRes.GetData()
 
-    log.Println("Read GrubPassword - Show JSON = ", grubPassword)
+    log.Println("Read GrubPassword - Show JSON = ", safeCopyMap(grubPassword))
 
     if v, exists := grubPassword["password-hash"]; exists {
         d.Set("password_hash", fmt.Sprintf("%v", v))

@@ -275,7 +275,7 @@ func createGaiaSetInitialSetup(d *schema.ResourceData, m interface{}) error {
         payload["grub-password"] = v.(string)
     }
 
-    log.Println("Execute set-initial-setup - Payload = ", payload)
+    log.Println("Execute set-initial-setup - Payload = ", safeCopyMap(payload))
 
     GaiaSetInitialSetupRes, err := client.ApiCallSimple("set-initial-setup", payload)
     // DEBUG: generic logger

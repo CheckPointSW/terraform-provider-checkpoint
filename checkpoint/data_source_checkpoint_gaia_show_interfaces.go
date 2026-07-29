@@ -125,7 +125,7 @@ func readGaiaShowInterfaces(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-interfaces - Payload = ", payload)
+    log.Println("Execute show-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

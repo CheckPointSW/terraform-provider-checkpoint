@@ -88,7 +88,7 @@ func createGaiaLicense(d *schema.ResourceData, m interface{}) error {
         payload["target"] = v.(string)
     }
 
-    log.Println("Create License - Map = ", payload)
+    log.Println("Create License - Map = ", safeCopyMap(payload))
 
     addLicenseRes, err := client.ApiCallSimple("add-license", payload)
     // DEBUG: generic logger
@@ -195,7 +195,7 @@ func readGaiaLicense(d *schema.ResourceData, m interface{}) error {
 
     license := showLicenseRes.GetData()
 
-    log.Println("Read License - Show JSON = ", license)
+    log.Println("Read License - Show JSON = ", safeCopyMap(license))
 
     if v, exists := license["ip_addr"]; exists {
         d.Set("ip_addr", fmt.Sprintf("%v", v))
