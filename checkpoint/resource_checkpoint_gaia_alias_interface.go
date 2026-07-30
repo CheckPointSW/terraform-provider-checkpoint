@@ -82,7 +82,7 @@ func createGaiaAliasInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create AliasInterface - Map = ", payload)
+    log.Println("Create AliasInterface - Map = ", safeCopyMap(payload))
 
     addAliasInterfaceRes, err := client.ApiCallSimple("add-alias-interface", payload)
     // DEBUG: generic logger
@@ -196,7 +196,7 @@ func readGaiaAliasInterface(d *schema.ResourceData, m interface{}) error {
 
     aliasInterface := showAliasInterfaceRes.GetData()
 
-    log.Println("Read AliasInterface - Show JSON = ", aliasInterface)
+    log.Println("Read AliasInterface - Show JSON = ", safeCopyMap(aliasInterface))
 
     if v, exists := aliasInterface["parent"]; exists {
         d.Set("parent", fmt.Sprintf("%v", v))

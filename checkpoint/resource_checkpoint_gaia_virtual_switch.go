@@ -99,7 +99,7 @@ func createGaiaVirtualSwitch(d *schema.ResourceData, m interface{}) error {
         payload["set-if-exist"] = v.(bool)
     }
 
-    log.Println("Create VirtualSwitch - Map = ", payload)
+    log.Println("Create VirtualSwitch - Map = ", safeCopyMap(payload))
 
     addVirtualSwitchRes, err := client.ApiCallSimple("add-virtual-switch", payload)
     // DEBUG: generic logger
@@ -211,7 +211,7 @@ func readGaiaVirtualSwitch(d *schema.ResourceData, m interface{}) error {
 
     virtualSwitch := showVirtualSwitchRes.GetData()
 
-    log.Println("Read VirtualSwitch - Show JSON = ", virtualSwitch)
+    log.Println("Read VirtualSwitch - Show JSON = ", safeCopyMap(virtualSwitch))
 
     if v, exists := virtualSwitch["id"]; exists {
         d.Set("resource_id", fmt.Sprintf("%v", v))

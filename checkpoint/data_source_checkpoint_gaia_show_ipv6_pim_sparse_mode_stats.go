@@ -135,7 +135,7 @@ func readGaiaShowIpv6PimSparseModeStats(d *schema.ResourceData, m interface{}) e
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ipv6-pim-sparse-mode-stats - Payload = ", payload)
+    log.Println("Execute show-ipv6-pim-sparse-mode-stats - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ipv6-pim-sparse-mode-stats", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -130,7 +130,7 @@ func createGaiaAuthenticationOrder(d *schema.ResourceData, m interface{}) error 
         }
     }
 
-    log.Println("Create AuthenticationOrder - Map = ", payload)
+    log.Println("Create AuthenticationOrder - Map = ", safeCopyMap(payload))
 
     addAuthenticationOrderRes, err := client.ApiCallSimple("set-authentication-order", payload)
     // DEBUG: generic logger
@@ -226,7 +226,7 @@ func readGaiaAuthenticationOrder(d *schema.ResourceData, m interface{}) error {
 
     authenticationOrder := showAuthenticationOrderRes.GetData()
 
-    log.Println("Read AuthenticationOrder - Show JSON = ", authenticationOrder)
+    log.Println("Read AuthenticationOrder - Show JSON = ", safeCopyMap(authenticationOrder))
 
     if v, exists := authenticationOrder["radius"]; exists {
         d.Set("radius", v)

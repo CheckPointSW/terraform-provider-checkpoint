@@ -125,7 +125,7 @@ func readGaiaShowOspfBorderRouters(d *schema.ResourceData, m interface{}) error 
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ospf-border-routers - Payload = ", payload)
+    log.Println("Execute show-ospf-border-routers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ospf-border-routers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

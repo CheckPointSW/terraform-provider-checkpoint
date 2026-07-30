@@ -163,7 +163,7 @@ func readGaiaShowOspfDatabase(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ospf-database - Payload = ", payload)
+    log.Println("Execute show-ospf-database - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ospf-database", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

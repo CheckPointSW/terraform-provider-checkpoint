@@ -120,7 +120,7 @@ func createGaiaMdps(d *schema.ResourceData, m interface{}) error {
         payload["resource-separation"] = resourceseparationMap
     }
 
-    log.Println("Create Mdps - Map = ", payload)
+    log.Println("Create Mdps - Map = ", safeCopyMap(payload))
 
     addMdpsRes, err := client.ApiCallSimple("set-mdps", payload)
     // DEBUG: generic logger
@@ -216,7 +216,7 @@ func readGaiaMdps(d *schema.ResourceData, m interface{}) error {
 
     mdps := showMdpsRes.GetData()
 
-    log.Println("Read Mdps - Show JSON = ", mdps)
+    log.Println("Read Mdps - Show JSON = ", safeCopyMap(mdps))
 
     if v, exists := mdps["separation-interfaces"]; exists {
         if m, ok := v.(map[string]interface{}); ok {

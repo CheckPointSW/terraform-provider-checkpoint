@@ -94,7 +94,7 @@ func readGaiaShowPbrTables(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-pbr-tables - Payload = ", payload)
+    log.Println("Execute show-pbr-tables - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pbr-tables", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

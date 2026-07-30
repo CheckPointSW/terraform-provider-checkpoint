@@ -284,7 +284,7 @@ func createGaiaOpenTelemetry(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create OpenTelemetry - Map = ", payload)
+    log.Println("Create OpenTelemetry - Map = ", safeCopyMap(payload))
 
     addOpenTelemetryRes, err := client.ApiCallSimple("set-open-telemetry", payload)
     // DEBUG: generic logger
@@ -380,7 +380,7 @@ func readGaiaOpenTelemetry(d *schema.ResourceData, m interface{}) error {
 
     openTelemetry := showOpenTelemetryRes.GetData()
 
-    log.Println("Read OpenTelemetry - Show JSON = ", openTelemetry)
+    log.Println("Read OpenTelemetry - Show JSON = ", safeCopyMap(openTelemetry))
 
     if v, exists := openTelemetry["enabled"]; exists {
         if b, ok := v.(bool); ok {

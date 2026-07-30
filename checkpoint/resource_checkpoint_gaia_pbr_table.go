@@ -168,7 +168,7 @@ func createGaiaPbrTable(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create PbrTable - Map = ", payload)
+    log.Println("Create PbrTable - Map = ", safeCopyMap(payload))
 
     addPbrTableRes, err := client.ApiCallSimple("set-pbr-table", payload)
     // DEBUG: generic logger
@@ -284,7 +284,7 @@ func readGaiaPbrTable(d *schema.ResourceData, m interface{}) error {
 
     pbrTable := showPbrTableRes.GetData()
 
-    log.Println("Read PbrTable - Show JSON = ", pbrTable)
+    log.Println("Read PbrTable - Show JSON = ", safeCopyMap(pbrTable))
 
     if v, exists := pbrTable["table"]; exists {
         d.Set("table", fmt.Sprintf("%v", v))

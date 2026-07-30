@@ -144,7 +144,7 @@ func createGaiaParam(d *schema.ResourceData, m interface{}) error {
         payload["use-regex"] = v.(bool)
     }
 
-    log.Println("Create Param - Map = ", payload)
+    log.Println("Create Param - Map = ", safeCopyMap(payload))
 
     addParamRes, err := client.ApiCallSimple("set-param", payload)
     // DEBUG: generic logger
@@ -268,7 +268,7 @@ func readGaiaParam(d *schema.ResourceData, m interface{}) error {
 
     param := showParamRes.GetData()
 
-    log.Println("Read Param - Show JSON = ", param)
+    log.Println("Read Param - Show JSON = ", safeCopyMap(param))
 
     if v, exists := param["param-list"]; exists {
         d.Set("param_list", v.([]interface{}))

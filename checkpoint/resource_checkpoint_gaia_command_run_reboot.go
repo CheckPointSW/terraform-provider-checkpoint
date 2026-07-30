@@ -34,7 +34,7 @@ func createGaiaRunReboot(d *schema.ResourceData, m interface{}) error {
 
     payload := make(map[string]interface{})
 
-    log.Println("Execute run-reboot - Payload = ", payload)
+    log.Println("Execute run-reboot - Payload = ", safeCopyMap(payload))
 
     GaiaRunRebootRes, err := client.ApiCallSimple("run-reboot", payload)
     // DEBUG: generic logger

@@ -128,7 +128,7 @@ func readGaiaShowDynamicLayers(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-dynamic-layers - Payload = ", payload)
+    log.Println("Execute show-dynamic-layers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-dynamic-layers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

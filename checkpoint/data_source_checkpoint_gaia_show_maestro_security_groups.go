@@ -276,7 +276,7 @@ func readGaiaShowMaestroSecurityGroups(d *schema.ResourceData, m interface{}) er
         payload["include-pending-changes"] = v.(bool)
     }
 
-    log.Println("Execute show-maestro-security-groups - Payload = ", payload)
+    log.Println("Execute show-maestro-security-groups - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-maestro-security-groups", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

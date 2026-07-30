@@ -279,7 +279,7 @@ func createGaiaSetBgpExternal(d *schema.ResourceData, m interface{}) error {
         payload["remote-as"] = v.(string)
     }
 
-    log.Println("Execute set-bgp-external - Payload = ", payload)
+    log.Println("Execute set-bgp-external - Payload = ", safeCopyMap(payload))
 
     GaiaSetBgpExternalRes, err := client.ApiCallSimple("set-bgp-external", payload)
     // DEBUG: generic logger

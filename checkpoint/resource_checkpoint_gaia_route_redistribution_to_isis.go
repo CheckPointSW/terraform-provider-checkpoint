@@ -1886,7 +1886,7 @@ func createGaiaRouteRedistributionToIsis(d *schema.ResourceData, m interface{}) 
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToIsis - Map = ", payload)
+    log.Println("Create RouteRedistributionToIsis - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToIsisRes, err := client.ApiCallSimple("set-route-redistribution-to-isis", payload)
     // DEBUG: generic logger
@@ -1986,7 +1986,7 @@ func readGaiaRouteRedistributionToIsis(d *schema.ResourceData, m interface{}) er
 
     routeRedistributionToIsis := showRouteRedistributionToIsisRes.GetData()
 
-    log.Println("Read RouteRedistributionToIsis - Show JSON = ", routeRedistributionToIsis)
+    log.Println("Read RouteRedistributionToIsis - Show JSON = ", safeCopyMap(routeRedistributionToIsis))
 
     if v, exists := routeRedistributionToIsis["isis"]; exists {
         if isisItems, ok := v.([]interface{}); ok && len(isisItems) > 0 {

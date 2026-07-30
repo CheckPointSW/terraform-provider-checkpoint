@@ -129,7 +129,7 @@ func createGaiaRemoteSyslog(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create RemoteSyslog - Map = ", payload)
+    log.Println("Create RemoteSyslog - Map = ", safeCopyMap(payload))
 
     addRemoteSyslogRes, err := client.ApiCallSimple("add-remote-syslog", payload)
     // DEBUG: generic logger
@@ -229,7 +229,7 @@ func readGaiaRemoteSyslog(d *schema.ResourceData, m interface{}) error {
 
     remoteSyslog := showRemoteSyslogRes.GetData()
 
-    log.Println("Read RemoteSyslog - Show JSON = ", remoteSyslog)
+    log.Println("Read RemoteSyslog - Show JSON = ", safeCopyMap(remoteSyslog))
 
     if v, exists := remoteSyslog["server-ip"]; exists {
         d.Set("server_ip", fmt.Sprintf("%v", v))

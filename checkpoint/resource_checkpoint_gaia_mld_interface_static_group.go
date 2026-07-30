@@ -140,7 +140,7 @@ func createGaiaMldInterfaceStaticGroup(d *schema.ResourceData, m interface{}) er
         }
     }
 
-    log.Println("Create MldInterfaceStaticGroup - Map = ", payload)
+    log.Println("Create MldInterfaceStaticGroup - Map = ", safeCopyMap(payload))
 
     addMldInterfaceStaticGroupRes, err := client.ApiCallSimple("add-mld-interface-static-group", payload)
     // DEBUG: generic logger
@@ -191,7 +191,7 @@ func createGaiaMldInterfaceStaticGroup(d *schema.ResourceData, m interface{}) er
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setMldInterfaceStaticGroupRes, err := client.ApiCallSimple("set-mld-interface-static-group", updatePayload)
         if err != nil {
@@ -268,7 +268,7 @@ func readGaiaMldInterfaceStaticGroup(d *schema.ResourceData, m interface{}) erro
 
     mldInterfaceStaticGroup := showMldInterfaceStaticGroupRes.GetData()
 
-    log.Println("Read MldInterfaceStaticGroup - Show JSON = ", mldInterfaceStaticGroup)
+    log.Println("Read MldInterfaceStaticGroup - Show JSON = ", safeCopyMap(mldInterfaceStaticGroup))
 
     if v, exists := mldInterfaceStaticGroup["interface"]; exists {
         d.Set("interface", fmt.Sprintf("%v", v))

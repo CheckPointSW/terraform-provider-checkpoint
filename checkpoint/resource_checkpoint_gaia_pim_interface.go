@@ -123,7 +123,7 @@ func createGaiaPimInterface(d *schema.ResourceData, m interface{}) error {
         payload["ip-reachability-detection"] = v.(bool)
     }
 
-    log.Println("Create PimInterface - Map = ", payload)
+    log.Println("Create PimInterface - Map = ", safeCopyMap(payload))
 
     addPimInterfaceRes, err := client.ApiCallSimple("add-pim-interface", payload)
     // DEBUG: generic logger
@@ -223,7 +223,7 @@ func readGaiaPimInterface(d *schema.ResourceData, m interface{}) error {
 
     pimInterface := showPimInterfaceRes.GetData()
 
-    log.Println("Read PimInterface - Show JSON = ", pimInterface)
+    log.Println("Read PimInterface - Show JSON = ", safeCopyMap(pimInterface))
 
     if v, exists := pimInterface["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

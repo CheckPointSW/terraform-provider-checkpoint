@@ -180,7 +180,7 @@ func createGaiaArp(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create Arp - Map = ", payload)
+    log.Println("Create Arp - Map = ", safeCopyMap(payload))
 
     addArpRes, err := client.ApiCallSimple("set-arp", payload)
     // DEBUG: generic logger
@@ -276,7 +276,7 @@ func readGaiaArp(d *schema.ResourceData, m interface{}) error {
 
     arp := showArpRes.GetData()
 
-    log.Println("Read Arp - Show JSON = ", arp)
+    log.Println("Read Arp - Show JSON = ", safeCopyMap(arp))
 
     if v, exists := arp["settings"]; exists {
         if sm, ok := v.(map[string]interface{}); ok {

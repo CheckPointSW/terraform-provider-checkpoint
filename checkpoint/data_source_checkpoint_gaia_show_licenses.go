@@ -84,7 +84,7 @@ func readGaiaShowLicenses(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-licenses - Payload = ", payload)
+    log.Println("Execute show-licenses - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-licenses", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

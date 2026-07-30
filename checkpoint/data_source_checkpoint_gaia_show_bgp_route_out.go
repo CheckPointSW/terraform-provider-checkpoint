@@ -151,7 +151,7 @@ func readGaiaShowBgpRouteOut(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-bgp-route-out - Payload = ", payload)
+    log.Println("Execute show-bgp-route-out - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-bgp-route-out", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

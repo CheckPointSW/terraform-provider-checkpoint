@@ -153,7 +153,7 @@ func readGaiaShowConnections(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-connections - Payload = ", payload)
+    log.Println("Execute show-connections - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-connections", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -58,7 +58,7 @@ func createGaiaLightshotPartition(d *schema.ResourceData, m interface{}) error {
         payload["size"] = v.(int)
     }
 
-    log.Println("Create LightshotPartition - Map = ", payload)
+    log.Println("Create LightshotPartition - Map = ", safeCopyMap(payload))
 
     addLightshotPartitionRes, err := client.ApiCallSimple("set-lightshot-partition", payload)
     // DEBUG: generic logger
@@ -166,7 +166,7 @@ func readGaiaLightshotPartition(d *schema.ResourceData, m interface{}) error {
 
     lightshotPartition := showLightshotPartitionRes.GetData()
 
-    log.Println("Read LightshotPartition - Show JSON = ", lightshotPartition)
+    log.Println("Read LightshotPartition - Show JSON = ", safeCopyMap(lightshotPartition))
 
     if v, exists := lightshotPartition["size"]; exists {
         if f, ok := v.(float64); ok {

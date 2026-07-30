@@ -110,7 +110,7 @@ func createGaiaTacacs(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create Tacacs - Map = ", payload)
+    log.Println("Create Tacacs - Map = ", safeCopyMap(payload))
 
     addTacacsRes, err := client.ApiCallSimple("set-tacacs", payload)
     // DEBUG: generic logger
@@ -206,7 +206,7 @@ func readGaiaTacacs(d *schema.ResourceData, m interface{}) error {
 
     tacacs := showTacacsRes.GetData()
 
-    log.Println("Read Tacacs - Show JSON = ", tacacs)
+    log.Println("Read Tacacs - Show JSON = ", safeCopyMap(tacacs))
 
     if v, exists := tacacs["enabled"]; exists {
         if b, ok := v.(bool); ok {

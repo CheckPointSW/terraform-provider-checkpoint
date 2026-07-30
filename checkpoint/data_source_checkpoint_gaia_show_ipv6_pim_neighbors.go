@@ -121,7 +121,7 @@ func readGaiaShowIpv6PimNeighbors(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ipv6-pim-neighbors - Payload = ", payload)
+    log.Println("Execute show-ipv6-pim-neighbors - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ipv6-pim-neighbors", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

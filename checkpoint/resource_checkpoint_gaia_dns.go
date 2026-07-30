@@ -137,7 +137,7 @@ func createGaiaDns(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create Dns - Map = ", payload)
+    log.Println("Create Dns - Map = ", safeCopyMap(payload))
 
     addDnsRes, err := client.ApiCallSimple("set-dns", payload)
     // DEBUG: generic logger
@@ -237,7 +237,7 @@ func readGaiaDns(d *schema.ResourceData, m interface{}) error {
 
     dns := showDnsRes.GetData()
 
-    log.Println("Read Dns - Show JSON = ", dns)
+    log.Println("Read Dns - Show JSON = ", safeCopyMap(dns))
 
     if v, exists := dns["primary"]; exists {
         d.Set("primary", fmt.Sprintf("%v", v))

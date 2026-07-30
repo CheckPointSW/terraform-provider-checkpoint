@@ -191,7 +191,7 @@ func readGaiaShowPbrRules(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-pbr-rules - Payload = ", payload)
+    log.Println("Execute show-pbr-rules - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pbr-rules", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

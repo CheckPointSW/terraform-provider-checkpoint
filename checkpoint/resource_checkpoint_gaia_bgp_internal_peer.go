@@ -403,7 +403,7 @@ func createGaiaBgpInternalPeer(d *schema.ResourceData, m interface{}) error {
         payload["weight"] = v.(string)
     }
 
-    log.Println("Create BgpInternalPeer - Map = ", payload)
+    log.Println("Create BgpInternalPeer - Map = ", safeCopyMap(payload))
 
     addBgpInternalPeerRes, err := client.ApiCallSimple("add-bgp-internal-peer", payload)
     // DEBUG: generic logger
@@ -501,7 +501,7 @@ func readGaiaBgpInternalPeer(d *schema.ResourceData, m interface{}) error {
 
     bgpInternalPeer := showBgpInternalPeerRes.GetData()
 
-    log.Println("Read BgpInternalPeer - Show JSON = ", bgpInternalPeer)
+    log.Println("Read BgpInternalPeer - Show JSON = ", safeCopyMap(bgpInternalPeer))
 
     if v, exists := bgpInternalPeer["accept-routes"]; exists {
         d.Set("accept_routes", fmt.Sprintf("%v", v))

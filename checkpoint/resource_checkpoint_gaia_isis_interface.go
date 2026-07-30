@@ -421,7 +421,7 @@ func createGaiaIsisInterface(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create IsisInterface - Map = ", payload)
+    log.Println("Create IsisInterface - Map = ", safeCopyMap(payload))
 
     addIsisInterfaceRes, err := client.ApiCallSimple("add-isis-interface", payload)
     // DEBUG: generic logger
@@ -526,7 +526,7 @@ func readGaiaIsisInterface(d *schema.ResourceData, m interface{}) error {
 
     isisInterface := showIsisInterfaceRes.GetData()
 
-    log.Println("Read IsisInterface - Show JSON = ", isisInterface)
+    log.Println("Read IsisInterface - Show JSON = ", safeCopyMap(isisInterface))
 
     if v, exists := isisInterface["member-id"]; exists {
         d.Set("member_id", fmt.Sprintf("%v", v))

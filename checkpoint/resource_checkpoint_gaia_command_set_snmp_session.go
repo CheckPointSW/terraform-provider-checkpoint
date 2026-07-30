@@ -128,7 +128,7 @@ func createGaiaSetSnmpSession(d *schema.ResourceData, m interface{}) error {
         payload["session-timeout"] = v.(int)
     }
 
-    log.Println("Execute set-snmp-session - Payload = ", payload)
+    log.Println("Execute set-snmp-session - Payload = ", safeCopyMap(payload))
 
     GaiaSetSnmpSessionRes, err := client.ApiCallSimple("set-snmp-session", payload)
     // DEBUG: generic logger

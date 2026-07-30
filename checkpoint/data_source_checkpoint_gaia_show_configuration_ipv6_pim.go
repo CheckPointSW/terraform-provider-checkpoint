@@ -237,7 +237,7 @@ func readGaiaShowConfigurationIpv6Pim(d *schema.ResourceData, m interface{}) err
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-configuration-ipv6-pim - Payload = ", payload)
+    log.Println("Execute show-configuration-ipv6-pim - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-configuration-ipv6-pim", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

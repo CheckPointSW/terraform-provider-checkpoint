@@ -1961,7 +1961,7 @@ func createGaiaSetDynamicContent(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute set-dynamic-content - Payload = ", payload)
+    log.Println("Execute set-dynamic-content - Payload = ", safeCopyMap(payload))
 
     GaiaSetDynamicContentRes, err := client.ApiCallSimple("set-dynamic-content", payload)
     // DEBUG: generic logger

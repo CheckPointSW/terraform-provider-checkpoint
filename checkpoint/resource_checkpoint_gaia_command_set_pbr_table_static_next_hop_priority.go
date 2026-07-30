@@ -95,7 +95,7 @@ func createGaiaSetPbrTableStaticNextHopPriority(d *schema.ResourceData, m interf
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute set-pbr-table-static-next-hop-priority - Payload = ", payload)
+    log.Println("Execute set-pbr-table-static-next-hop-priority - Payload = ", safeCopyMap(payload))
 
     GaiaSetPbrTableStaticNextHopPriorityRes, err := client.ApiCallSimple("set-pbr-table-static-next-hop-priority", payload)
     // DEBUG: generic logger
@@ -156,7 +156,7 @@ func readGaiaSetPbrTableStaticNextHopPriority(d *schema.ResourceData, m interfac
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Read set-pbr-table-static-next-hop-priority - show-pbr-table payload = ", payload)
+    log.Println("Read set-pbr-table-static-next-hop-priority - show-pbr-table payload = ", safeCopyMap(payload))
 
     showRes, err := client.ApiCallSimple("show-pbr-table", payload)
     if err != nil {

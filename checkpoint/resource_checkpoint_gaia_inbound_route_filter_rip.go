@@ -153,7 +153,7 @@ func createGaiaInboundRouteFilterRip(d *schema.ResourceData, m interface{}) erro
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create InboundRouteFilterRip - Map = ", payload)
+    log.Println("Create InboundRouteFilterRip - Map = ", safeCopyMap(payload))
 
     addInboundRouteFilterRipRes, err := client.ApiCallSimple("set-inbound-route-filter-rip", payload)
     // DEBUG: generic logger
@@ -249,7 +249,7 @@ func readGaiaInboundRouteFilterRip(d *schema.ResourceData, m interface{}) error 
 
     inboundRouteFilterRip := showInboundRouteFilterRipRes.GetData()
 
-    log.Println("Read InboundRouteFilterRip - Show JSON = ", inboundRouteFilterRip)
+    log.Println("Read InboundRouteFilterRip - Show JSON = ", safeCopyMap(inboundRouteFilterRip))
 
     if val, ok := inboundRouteFilterRip["rank"]; ok {
         d.Set("rank", fmt.Sprintf("%v", val))

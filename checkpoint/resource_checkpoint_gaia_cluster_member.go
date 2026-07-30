@@ -125,7 +125,7 @@ func createGaiaClusterMember(d *schema.ResourceData, m interface{}) error {
         payload["site-id"] = v.(int)
     }
 
-    log.Println("Create ClusterMember - Map = ", payload)
+    log.Println("Create ClusterMember - Map = ", safeCopyMap(payload))
 
     addClusterMemberRes, err := client.ApiCallSimple("add-cluster-member", payload)
     // DEBUG: generic logger
@@ -217,7 +217,7 @@ func readGaiaClusterMember(d *schema.ResourceData, m interface{}) error {
 
     clusterMember := showClusterMemberRes.GetData()
 
-    log.Println("Read ClusterMember - Show JSON = ", clusterMember)
+    log.Println("Read ClusterMember - Show JSON = ", safeCopyMap(clusterMember))
 
     if v, exists := clusterMember["pending-gateways"]; exists {
         d.Set("pending_gateways", v.([]interface{}))

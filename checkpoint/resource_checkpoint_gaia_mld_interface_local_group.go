@@ -50,7 +50,7 @@ func createGaiaMldInterfaceLocalGroup(d *schema.ResourceData, m interface{}) err
 		payload["local-group"] = v.(string)
 	}
 
-	log.Println("Create MldInterfaceLocalGroup - Map = ", payload)
+	log.Println("Create MldInterfaceLocalGroup - Map = ", safeCopyMap(payload))
 
 	addMldInterfaceLocalGroupRes, err := client.ApiCallSimple("add-mld-interface-local-group", payload)
 	// DEBUG: generic logger

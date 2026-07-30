@@ -54,7 +54,7 @@ func createGaiaProxy(d *schema.ResourceData, m interface{}) error {
         payload["port"] = v.(int)
     }
 
-    log.Println("Create Proxy - Map = ", payload)
+    log.Println("Create Proxy - Map = ", safeCopyMap(payload))
 
     addProxyRes, err := client.ApiCallSimple("set-proxy", payload)
     // DEBUG: generic logger
@@ -150,7 +150,7 @@ func readGaiaProxy(d *schema.ResourceData, m interface{}) error {
 
     proxy := showProxyRes.GetData()
 
-    log.Println("Read Proxy - Show JSON = ", proxy)
+    log.Println("Read Proxy - Show JSON = ", safeCopyMap(proxy))
 
     if v, exists := proxy["address"]; exists {
         d.Set("address", fmt.Sprintf("%v", v))

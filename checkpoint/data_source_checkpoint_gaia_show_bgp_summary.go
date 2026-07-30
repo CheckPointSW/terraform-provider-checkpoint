@@ -85,7 +85,7 @@ func readGaiaShowBgpSummary(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-bgp-summary - Payload = ", payload)
+    log.Println("Execute show-bgp-summary - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-bgp-summary", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

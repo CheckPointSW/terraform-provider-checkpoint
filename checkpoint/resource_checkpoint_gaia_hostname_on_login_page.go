@@ -45,7 +45,7 @@ func createGaiaHostnameOnLoginPage(d *schema.ResourceData, m interface{}) error 
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create HostnameOnLoginPage - Map = ", payload)
+    log.Println("Create HostnameOnLoginPage - Map = ", safeCopyMap(payload))
 
     addHostnameOnLoginPageRes, err := client.ApiCallSimple("set-hostname-on-login-page", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaHostnameOnLoginPage(d *schema.ResourceData, m interface{}) error {
 
     hostnameOnLoginPage := showHostnameOnLoginPageRes.GetData()
 
-    log.Println("Read HostnameOnLoginPage - Show JSON = ", hostnameOnLoginPage)
+    log.Println("Read HostnameOnLoginPage - Show JSON = ", safeCopyMap(hostnameOnLoginPage))
 
     if v, exists := hostnameOnLoginPage["enabled"]; exists {
         if b, ok := v.(bool); ok {

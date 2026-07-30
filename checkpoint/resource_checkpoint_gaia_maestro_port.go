@@ -123,7 +123,7 @@ func createGaiaMaestroPort(d *schema.ResourceData, m interface{}) error {
         payload["type"] = v.(string)
     }
 
-    log.Println("Create MaestroPort - Map = ", payload)
+    log.Println("Create MaestroPort - Map = ", safeCopyMap(payload))
 
     addMaestroPortRes, err := client.ApiCallSimple("set-maestro-port", payload)
     // DEBUG: generic logger
@@ -223,7 +223,7 @@ func readGaiaMaestroPort(d *schema.ResourceData, m interface{}) error {
 
     maestroPort := showMaestroPortRes.GetData()
 
-    log.Println("Read MaestroPort - Show JSON = ", maestroPort)
+    log.Println("Read MaestroPort - Show JSON = ", safeCopyMap(maestroPort))
 
     if v, exists := maestroPort["id"]; exists {
         d.Set("resource_id", fmt.Sprintf("%v", v))

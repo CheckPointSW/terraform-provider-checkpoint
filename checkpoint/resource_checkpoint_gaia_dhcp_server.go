@@ -230,7 +230,7 @@ func createGaiaDhcpServer(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create DhcpServer - Map = ", payload)
+    log.Println("Create DhcpServer - Map = ", safeCopyMap(payload))
 
     addDhcpServerRes, err := client.ApiCallSimple("set-dhcp-server", payload)
     // DEBUG: generic logger
@@ -330,7 +330,7 @@ func readGaiaDhcpServer(d *schema.ResourceData, m interface{}) error {
 
     dhcpServer := showDhcpServerRes.GetData()
 
-    log.Println("Read DhcpServer - Show JSON = ", dhcpServer)
+    log.Println("Read DhcpServer - Show JSON = ", safeCopyMap(dhcpServer))
 
     if v, exists := dhcpServer["enabled"]; exists {
         if b, ok := v.(bool); ok {

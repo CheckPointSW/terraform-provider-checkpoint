@@ -40,7 +40,7 @@ func readGaiaShowSerialNumber(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-serial-number - Payload = ", payload)
+    log.Println("Execute show-serial-number - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-serial-number", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

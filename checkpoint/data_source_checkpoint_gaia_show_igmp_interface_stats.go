@@ -142,7 +142,7 @@ func readGaiaShowIgmpInterfaceStats(d *schema.ResourceData, m interface{}) error
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-igmp-interface-stats - Payload = ", payload)
+    log.Println("Execute show-igmp-interface-stats - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-igmp-interface-stats", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

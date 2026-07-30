@@ -54,7 +54,7 @@ func createGaiaManagementInterface(d *schema.ResourceData, m interface{}) error 
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create ManagementInterface - Map = ", payload)
+    log.Println("Create ManagementInterface - Map = ", safeCopyMap(payload))
 
     addManagementInterfaceRes, err := client.ApiCallSimple("set-management-interface", payload)
     // DEBUG: generic logger
@@ -154,7 +154,7 @@ func readGaiaManagementInterface(d *schema.ResourceData, m interface{}) error {
 
     managementInterface := showManagementInterfaceRes.GetData()
 
-    log.Println("Read ManagementInterface - Show JSON = ", managementInterface)
+    log.Println("Read ManagementInterface - Show JSON = ", safeCopyMap(managementInterface))
 
     if v, exists := managementInterface["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

@@ -54,7 +54,7 @@ func createGaiaNatPool(d *schema.ResourceData, m interface{}) error {
         payload["comment"] = v.(string)
     }
 
-    log.Println("Create NatPool - Map = ", payload)
+    log.Println("Create NatPool - Map = ", safeCopyMap(payload))
 
     addNatPoolRes, err := client.ApiCallSimple("add-nat-pool", payload)
     // DEBUG: generic logger
@@ -154,7 +154,7 @@ func readGaiaNatPool(d *schema.ResourceData, m interface{}) error {
 
     natPool := showNatPoolRes.GetData()
 
-    log.Println("Read NatPool - Show JSON = ", natPool)
+    log.Println("Read NatPool - Show JSON = ", safeCopyMap(natPool))
 
     if v, exists := natPool["prefix"]; exists {
         d.Set("prefix", fmt.Sprintf("%v", v))

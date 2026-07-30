@@ -105,7 +105,7 @@ func readGaiaShowIsisHostnames(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-isis-hostnames - Payload = ", payload)
+    log.Println("Execute show-isis-hostnames - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-isis-hostnames", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

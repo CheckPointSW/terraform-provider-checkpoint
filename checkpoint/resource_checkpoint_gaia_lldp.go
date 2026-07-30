@@ -196,7 +196,7 @@ func createGaiaLldp(d *schema.ResourceData, m interface{}) error {
         payload["interfaces"] = ifaceArray
     }
 
-    log.Println("Create Lldp - Map = ", payload)
+    log.Println("Create Lldp - Map = ", safeCopyMap(payload))
 
     addLldpRes, err := client.ApiCallSimple("set-lldp", payload)
     // DEBUG: generic logger
@@ -292,7 +292,7 @@ func readGaiaLldp(d *schema.ResourceData, m interface{}) error {
 
     lldp := showLldpRes.GetData()
 
-    log.Println("Read Lldp - Show JSON = ", lldp)
+    log.Println("Read Lldp - Show JSON = ", safeCopyMap(lldp))
 
     if v, exists := lldp["enabled"]; exists {
         if b, ok := v.(bool); ok {

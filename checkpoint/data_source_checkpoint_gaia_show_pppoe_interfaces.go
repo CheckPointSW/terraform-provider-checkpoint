@@ -196,7 +196,7 @@ func readGaiaShowPppoeInterfaces(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pppoe-interfaces - Payload = ", payload)
+    log.Println("Execute show-pppoe-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pppoe-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -468,7 +468,7 @@ func createGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create PhysicalInterface - Map = ", payload)
+    log.Println("Create PhysicalInterface - Map = ", safeCopyMap(payload))
 
     addPhysicalInterfaceRes, err := client.ApiCallSimple("set-physical-interface", payload)
     // DEBUG: generic logger
@@ -572,7 +572,7 @@ func readGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
     physicalInterface := showPhysicalInterfaceRes.GetData()
 
-    log.Println("Read PhysicalInterface - Show JSON = ", physicalInterface)
+    log.Println("Read PhysicalInterface - Show JSON = ", safeCopyMap(physicalInterface))
 
     if v, exists := physicalInterface["sd-wan"]; exists {
         d.Set("sd_wan", v)

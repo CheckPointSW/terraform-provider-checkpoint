@@ -45,7 +45,7 @@ func createGaiaHostname(d *schema.ResourceData, m interface{}) error {
         payload["name"] = v.(string)
     }
 
-    log.Println("Create Hostname - Map = ", payload)
+    log.Println("Create Hostname - Map = ", safeCopyMap(payload))
 
     addHostnameRes, err := client.ApiCallSimple("set-hostname", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaHostname(d *schema.ResourceData, m interface{}) error {
 
     hostname := showHostnameRes.GetData()
 
-    log.Println("Read Hostname - Show JSON = ", hostname)
+    log.Println("Read Hostname - Show JSON = ", safeCopyMap(hostname))
 
     if v, exists := hostname["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

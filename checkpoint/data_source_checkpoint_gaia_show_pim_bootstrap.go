@@ -60,7 +60,7 @@ func readGaiaShowPimBootstrap(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-bootstrap - Payload = ", payload)
+    log.Println("Execute show-pim-bootstrap - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-bootstrap", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

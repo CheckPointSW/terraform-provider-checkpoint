@@ -93,7 +93,7 @@ func createGaiaRoutemapId(d *schema.ResourceData, m interface{}) error {
         payload["state"] = v.(string)
     }
 
-    log.Println("Create RoutemapId - Map = ", payload)
+    log.Println("Create RoutemapId - Map = ", safeCopyMap(payload))
 
     addRoutemapIdRes, err := client.ApiCallSimple("add-routemap-id", payload)
     // DEBUG: generic logger
@@ -197,7 +197,7 @@ func readGaiaRoutemapId(d *schema.ResourceData, m interface{}) error {
 
     routemapId := showRoutemapIdRes.GetData()
 
-    log.Println("Read RoutemapId - Show JSON = ", routemapId)
+    log.Println("Read RoutemapId - Show JSON = ", safeCopyMap(routemapId))
 
     if v, exists := routemapId["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

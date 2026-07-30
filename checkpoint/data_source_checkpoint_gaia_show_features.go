@@ -54,7 +54,7 @@ func readGaiaShowFeatures(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-features - Payload = ", payload)
+    log.Println("Execute show-features - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-features", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

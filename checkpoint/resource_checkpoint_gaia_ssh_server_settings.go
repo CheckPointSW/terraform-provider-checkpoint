@@ -232,7 +232,7 @@ func createGaiaSshServerSettings(d *schema.ResourceData, m interface{}) error {
         payload["login-grace-time"] = v.(int)
     }
 
-    log.Println("Create SshServerSettings - Map = ", payload)
+    log.Println("Create SshServerSettings - Map = ", safeCopyMap(payload))
 
     addSshServerSettingsRes, err := client.ApiCallSimple("set-ssh-server-settings", payload)
     // DEBUG: generic logger
@@ -332,7 +332,7 @@ func readGaiaSshServerSettings(d *schema.ResourceData, m interface{}) error {
 
     sshServerSettings := showSshServerSettingsRes.GetData()
 
-    log.Println("Read SshServerSettings - Show JSON = ", sshServerSettings)
+    log.Println("Read SshServerSettings - Show JSON = ", safeCopyMap(sshServerSettings))
 
     if v, exists := sshServerSettings["password-authentication"]; exists {
         if b, ok := v.(bool); ok {

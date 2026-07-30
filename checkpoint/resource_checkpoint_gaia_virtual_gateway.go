@@ -267,7 +267,7 @@ func createGaiaVirtualGateway(d *schema.ResourceData, m interface{}) error {
         payload["set-if-exist"] = v.(bool)
     }
 
-    log.Println("Create VirtualGateway - Map = ", payload)
+    log.Println("Create VirtualGateway - Map = ", safeCopyMap(payload))
 
     addVirtualGatewayRes, err := client.ApiCallSimple("add-virtual-gateway", payload)
     // DEBUG: generic logger
@@ -379,7 +379,7 @@ func readGaiaVirtualGateway(d *schema.ResourceData, m interface{}) error {
 
     virtualGateway := showVirtualGatewayRes.GetData()
 
-    log.Println("Read VirtualGateway - Show JSON = ", virtualGateway)
+    log.Println("Read VirtualGateway - Show JSON = ", safeCopyMap(virtualGateway))
 
     if v, exists := virtualGateway["id"]; exists {
         if f, ok := v.(float64); ok {

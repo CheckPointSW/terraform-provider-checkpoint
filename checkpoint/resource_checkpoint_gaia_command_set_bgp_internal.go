@@ -278,7 +278,7 @@ func createGaiaSetBgpInternal(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Execute set-bgp-internal - Payload = ", payload)
+    log.Println("Execute set-bgp-internal - Payload = ", safeCopyMap(payload))
 
     GaiaSetBgpInternalRes, err := client.ApiCallSimple("set-bgp-internal", payload)
     // DEBUG: generic logger

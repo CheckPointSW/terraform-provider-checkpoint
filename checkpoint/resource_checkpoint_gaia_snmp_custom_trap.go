@@ -90,7 +90,7 @@ func createGaiaSnmpCustomTrap(d *schema.ResourceData, m interface{}) error {
         payload["message"] = v.(string)
     }
 
-    log.Println("Create SnmpCustomTrap - Map = ", payload)
+    log.Println("Create SnmpCustomTrap - Map = ", safeCopyMap(payload))
 
     addSnmpCustomTrapRes, err := client.ApiCallSimple("add-snmp-custom-trap", payload)
     // DEBUG: generic logger
@@ -190,7 +190,7 @@ func readGaiaSnmpCustomTrap(d *schema.ResourceData, m interface{}) error {
 
     snmpCustomTrap := showSnmpCustomTrapRes.GetData()
 
-    log.Println("Read SnmpCustomTrap - Show JSON = ", snmpCustomTrap)
+    log.Println("Read SnmpCustomTrap - Show JSON = ", safeCopyMap(snmpCustomTrap))
 
     if v, exists := snmpCustomTrap["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

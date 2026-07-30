@@ -67,7 +67,7 @@ func createGaiaNfsMountPoint(d *schema.ResourceData, m interface{}) error {
         payload["options"] = v.(string)
     }
 
-    log.Println("Create NfsMountPoint - Map = ", payload)
+    log.Println("Create NfsMountPoint - Map = ", safeCopyMap(payload))
 
     addNfsMountPointRes, err := client.ApiCallSimple("add-nfs-mount-point", payload)
     // DEBUG: generic logger
@@ -167,7 +167,7 @@ func readGaiaNfsMountPoint(d *schema.ResourceData, m interface{}) error {
 
     nfsMountPoint := showNfsMountPointRes.GetData()
 
-    log.Println("Read NfsMountPoint - Show JSON = ", nfsMountPoint)
+    log.Println("Read NfsMountPoint - Show JSON = ", safeCopyMap(nfsMountPoint))
 
     if v, exists := nfsMountPoint["mount-point"]; exists {
         d.Set("mount_point", fmt.Sprintf("%v", v))

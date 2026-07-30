@@ -45,7 +45,7 @@ func readGaiaShowPimCandidateRp(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-candidate-rp - Payload = ", payload)
+    log.Println("Execute show-pim-candidate-rp - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-candidate-rp", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

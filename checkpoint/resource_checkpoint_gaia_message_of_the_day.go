@@ -54,7 +54,7 @@ func createGaiaMessageOfTheDay(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create MessageOfTheDay - Map = ", payload)
+    log.Println("Create MessageOfTheDay - Map = ", safeCopyMap(payload))
 
     addMessageOfTheDayRes, err := client.ApiCallSimple("set-message-of-the-day", payload)
     // DEBUG: generic logger
@@ -150,7 +150,7 @@ func readGaiaMessageOfTheDay(d *schema.ResourceData, m interface{}) error {
 
     messageOfTheDay := showMessageOfTheDayRes.GetData()
 
-    log.Println("Read MessageOfTheDay - Show JSON = ", messageOfTheDay)
+    log.Println("Read MessageOfTheDay - Show JSON = ", safeCopyMap(messageOfTheDay))
 
     if v, exists := messageOfTheDay["message"]; exists {
         d.Set("message", fmt.Sprintf("%v", v))

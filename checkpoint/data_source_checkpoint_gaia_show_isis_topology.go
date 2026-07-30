@@ -138,7 +138,7 @@ func readGaiaShowIsisTopology(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-isis-topology - Payload = ", payload)
+    log.Println("Execute show-isis-topology - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-isis-topology", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {
