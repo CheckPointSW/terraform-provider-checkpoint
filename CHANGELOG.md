@@ -1,3 +1,60 @@
+## 3.3.0 (July 30, 2026)
+
+FEATURES
+* **New Resource:** `checkpoint_management_checkpoint_sase_data_center_server`
+* **New Resource:** `checkpoint_management_claroty_ctd_data_center_server`
+* **New Resource:** `checkpoint_management_def_setting`
+* **New Resource:** `checkpoint_management_dlp_next_data_type`
+* **New Resource:** `checkpoint_management_export_access_rulebase`
+* **New Resource:** `checkpoint_management_firewall_best_practice`
+* **New Resource:** `checkpoint_management_guardicore_data_center_server`
+* **New Resource:** `checkpoint_management_guideline`
+* **New Resource:** `checkpoint_management_guideline_cell_approvals`
+* **New Resource:** `checkpoint_management_nozomi_data_center_server`
+* **New Resource:** `checkpoint_management_regulation`
+* **New Resource:** `checkpoint_management_requirement`
+* **New Resource:** `checkpoint_management_scheduled_event`
+* **New Resource:** `checkpoint_management_servicenow_cmdb_data_center_server`
+* **New Resource:** `checkpoint_management_set_cloud_license_gateway`
+* **New Resource:** `checkpoint_management_set_cloud_license_pool`
+* **New Resource:** `checkpoint_management_set_cloud_license_scope`
+* **New Resource:** `checkpoint_management_set_threat_emulation_file_type`
+* **New Resource:** `checkpoint_management_set_threat_emulation_file_types`
+* **New Resource:** `checkpoint_management_set_threat_extraction_file_type`
+* **New Resource:** `checkpoint_management_set_threat_extraction_file_types`
+* **New Resource:** `checkpoint_management_set_threat_protection_category`
+* **New Resource:** `checkpoint_management_set_threat_protection_sub_category`
+* **New Resource:** `checkpoint_management_test_ai_guard_api_key`
+* **New Resource:** `checkpoint_management_update_cloud_license`
+* **New Data Source:** `checkpoint_management_checkpoint_sase_data_center_server`
+* **New Data Source:** `checkpoint_management_claroty_ctd_data_center_server`
+* **New Data Source:** `checkpoint_management_cloud_license_gateway`
+* **New Data Source:** `checkpoint_management_cloud_license_pool`
+* **New Data Source:** `checkpoint_management_cloud_license_scope`
+* **New Data Source:** `checkpoint_management_def_setting`
+* **New Data Source:** `checkpoint_management_dlp_next_data_type`
+* **New Data Source:** `checkpoint_management_firewall_best_practice`
+* **New Data Source:** `checkpoint_management_guardicore_data_center_server`
+* **New Data Source:** `checkpoint_management_guideline`
+* **New Data Source:** `checkpoint_management_nozomi_data_center_server`
+* **New Data Source:** `checkpoint_management_regulation`
+* **New Data Source:** `checkpoint_management_requirement`
+* **New Data Source:** `checkpoint_management_scheduled_event`
+* **New Data Source:** `checkpoint_management_servicenow_cmdb_data_center_server`
+* **New Data Source:** `checkpoint_management_threat_emulation_file_type`
+* **New Data Source:** `checkpoint_management_threat_emulation_image`
+* **New Data Source:** `checkpoint_management_threat_extraction_file_type`
+* **New Data Source:** `checkpoint_management_threat_protection_category`
+* **New Data Source:** `checkpoint_management_threat_protection_sub_category`
+
+DEPRECATED
+* **Resource:** `checkpoint_hostname`
+* **Resource:** `checkpoint_physical_interface`
+* **Resource:** `checkpoint_put_file`
+
+BUG FIXES
+* Redact credential fields and restrict file permissions in the debug log written by the GAiA resources `debug` flag
+
 ## 3.2.0 (June 14, 2026)
 
 ENHANCEMENTS
