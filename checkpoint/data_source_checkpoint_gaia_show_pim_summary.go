@@ -50,7 +50,7 @@ func readGaiaShowPimSummary(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-summary - Payload = ", payload)
+    log.Println("Execute show-pim-summary - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-summary", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

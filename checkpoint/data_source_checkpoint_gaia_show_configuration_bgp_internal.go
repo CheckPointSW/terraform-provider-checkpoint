@@ -148,7 +148,7 @@ func readGaiaShowConfigurationBgpInternal(d *schema.ResourceData, m interface{})
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-configuration-bgp-internal - Payload = ", payload)
+    log.Println("Execute show-configuration-bgp-internal - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-configuration-bgp-internal", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

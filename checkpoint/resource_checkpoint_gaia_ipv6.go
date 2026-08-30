@@ -45,7 +45,7 @@ func createGaiaIpv6(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create Ipv6 - Map = ", payload)
+    log.Println("Create Ipv6 - Map = ", safeCopyMap(payload))
 
     addIpv6Res, err := client.ApiCallSimple("set-ipv6", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaIpv6(d *schema.ResourceData, m interface{}) error {
 
     ipv6 := showIpv6Res.GetData()
 
-    log.Println("Read Ipv6 - Show JSON = ", ipv6)
+    log.Println("Read Ipv6 - Show JSON = ", safeCopyMap(ipv6))
 
     if v, exists := ipv6["reboot-required"]; exists {
         if b, ok := v.(bool); ok {

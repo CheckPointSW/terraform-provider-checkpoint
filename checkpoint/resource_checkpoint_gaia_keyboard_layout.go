@@ -45,7 +45,7 @@ func createGaiaKeyboardLayout(d *schema.ResourceData, m interface{}) error {
         payload["keyboard-layout"] = v.(string)
     }
 
-    log.Println("Create KeyboardLayout - Map = ", payload)
+    log.Println("Create KeyboardLayout - Map = ", safeCopyMap(payload))
 
     addKeyboardLayoutRes, err := client.ApiCallSimple("set-keyboard-layout", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaKeyboardLayout(d *schema.ResourceData, m interface{}) error {
 
     keyboardLayout := showKeyboardLayoutRes.GetData()
 
-    log.Println("Read KeyboardLayout - Show JSON = ", keyboardLayout)
+    log.Println("Read KeyboardLayout - Show JSON = ", safeCopyMap(keyboardLayout))
 
     if v, exists := keyboardLayout["keyboard-layout"]; exists {
         d.Set("keyboard_layout", fmt.Sprintf("%v", v))

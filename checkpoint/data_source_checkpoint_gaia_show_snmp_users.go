@@ -97,7 +97,7 @@ func readGaiaShowSnmpUsers(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-snmp-users - Payload = ", payload)
+    log.Println("Execute show-snmp-users - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-snmp-users", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

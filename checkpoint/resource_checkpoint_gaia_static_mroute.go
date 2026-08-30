@@ -111,7 +111,7 @@ func createGaiaStaticMroute(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create StaticMroute - Map = ", payload)
+    log.Println("Create StaticMroute - Map = ", safeCopyMap(payload))
 
     addStaticMrouteRes, err := client.ApiCallSimple("set-static-mroute", payload)
     // DEBUG: generic logger
@@ -219,7 +219,7 @@ func readGaiaStaticMroute(d *schema.ResourceData, m interface{}) error {
 
     staticMroute := showStaticMrouteRes.GetData()
 
-    log.Println("Read StaticMroute - Show JSON = ", staticMroute)
+    log.Println("Read StaticMroute - Show JSON = ", safeCopyMap(staticMroute))
 
     if v, exists := staticMroute["address"]; exists {
         d.Set("address", fmt.Sprintf("%v", v))

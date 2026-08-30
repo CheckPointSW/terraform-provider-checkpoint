@@ -208,7 +208,7 @@ func readGaiaShowPimJoins(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-pim-joins - Payload = ", payload)
+    log.Println("Execute show-pim-joins - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-pim-joins", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

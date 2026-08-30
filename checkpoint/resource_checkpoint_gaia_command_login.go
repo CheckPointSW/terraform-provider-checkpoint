@@ -129,7 +129,7 @@ func createGaiaLogin(d *schema.ResourceData, m interface{}) error {
         payload["verification-code"] = v.(string)
     }
 
-    log.Println("Execute login - Payload = ", payload)
+    log.Println("Execute login - Payload = ", safeCopyMap(payload))
 
     GaiaLoginRes, err := client.ApiCallSimple("login", payload)
     // DEBUG: generic logger

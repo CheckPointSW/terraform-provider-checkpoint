@@ -123,29 +123,151 @@ func debugLogOperation(
 	}
 
 	dir := debugDir()
-	_ = os.MkdirAll(dir, 0o755)
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		return
+	}
+	// refuse symlinks: Chmod/OpenFile would follow one out of our own directory
+	if fi, err := os.Lstat(dir); err != nil || fi.Mode()&os.ModeSymlink != 0 {
+		return
+	}
+	// re-tighten: modes above apply only on creation, not to pre-existing paths
+	_ = os.Chmod(dir, 0o700)
 	path := filepath.Join(dir, "terraform-gw-requests.jsonl")
+	if fi, err := os.Lstat(path); err == nil && fi.Mode()&os.ModeSymlink != 0 {
+		return
+	}
 
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
 	if err != nil {
 		// never break Terraform because debug logging failed
 		return
 	}
 	defer f.Close()
+	_ = f.Chmod(0o600)
 
 	enc := json.NewEncoder(f)
 	_ = enc.Encode(&rec)
 }
 
+// credential-bearing keys that carry no "password"/"secret" token in their name
+var sensitiveKeys = map[string]bool{
+	"token":                true,
+	"header-bearer-token":  true,
+	"community-string":     true,
+	"read-only-community":  true,
+	"read-write-community": true,
+	"sid":                  true,
+	"session-id":           true,
+	"activation-key":       true,
+	"verification-code":    true,
+	"private-key":          true,
+}
+
+// isSensitiveKey reports whether a payload key holds a credential that must not
+// be written to the debug log. Matches the explicit list above plus any key
+// whose name embeds a credential token. Over-matching is safe: this only
+// affects the logged copy, never the payload sent to the API.
+func isSensitiveKey(k string) bool {
+	// normalise separators: payload keys mix private_key and private-key spellings
+	lk := strings.ReplaceAll(strings.ToLower(k), "_", "-")
+	if sensitiveKeys[lk] {
+		return true
+	}
+	return strings.Contains(lk, "password") ||
+		strings.Contains(lk, "secret") ||
+		strings.Contains(lk, "passphrase") ||
+		strings.Contains(lk, "psk")
+}
+
+// bounded so a malformed or self-referential payload can never panic Terraform
+const maxRedactDepth = 32
+
 func safeCopyMap(in map[string]interface{}) map[string]interface{} {
+	return redactMap(in, 0)
+}
+
+func redactMap(in map[string]interface{}, depth int) map[string]interface{} {
 	if in == nil {
 		return nil
 	}
 	out := make(map[string]interface{}, len(in))
 	for k, v := range in {
-		out[k] = v
+		if isSensitiveKey(k) {
+			out[k] = redactSensitive(v)
+			continue
+		}
+		out[k] = redactValue(v, depth+1)
 	}
 	return out
+}
+
+// redactSensitive masks a value stored under a sensitive key. Numbers and
+// booleans cannot carry a credential, so policy knobs such as
+// password-expiration-days stay readable; strings and sub-objects are masked.
+func redactSensitive(v interface{}) interface{} {
+	switch v.(type) {
+	case nil, bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
+		return v
+	default:
+		return "****"
+	}
+}
+
+// redactValue copies v, redacting sensitive keys at any nesting depth. Secrets
+// nest inside BGP authtype, RADIUS/TACACS servers and ISIS authentication, and
+// arrive as typed collections as well as plain JSON containers.
+func redactValue(v interface{}, depth int) interface{} {
+	if depth > maxRedactDepth {
+		return "****"
+	}
+
+	switch vv := v.(type) {
+	case map[string]interface{}:
+		return redactMap(vv, depth)
+	case []interface{}:
+		out := make([]interface{}, len(vv))
+		for i, child := range vv {
+			out[i] = redactValue(child, depth+1)
+		}
+		return out
+	}
+
+	// typed containers such as expandList's []map[string]interface{} match
+	// neither case above, so walk them reflectively rather than logging as-is
+	rv := reflect.ValueOf(v)
+	switch rv.Kind() {
+	case reflect.Map:
+		if rv.Type().Key().Kind() != reflect.String {
+			return "****"
+		}
+		out := make(map[string]interface{}, rv.Len())
+		iter := rv.MapRange()
+		for iter.Next() {
+			k := iter.Key().String()
+			if isSensitiveKey(k) {
+				out[k] = redactSensitive(iter.Value().Interface())
+				continue
+			}
+			out[k] = redactValue(iter.Value().Interface(), depth+1)
+		}
+		return out
+	case reflect.Slice, reflect.Array:
+		if rv.Type().Elem().Kind() == reflect.Uint8 {
+			return v // []byte: keep as-is rather than exploding into elements
+		}
+		out := make([]interface{}, rv.Len())
+		for i := 0; i < rv.Len(); i++ {
+			out[i] = redactValue(rv.Index(i).Interface(), depth+1)
+		}
+		return out
+	case reflect.Ptr, reflect.Interface:
+		if rv.IsNil() {
+			return v
+		}
+		return redactValue(rv.Elem().Interface(), depth+1)
+	default:
+		return v
+	}
 }
 
 // Heuristic classifier: gateway_issue / provider_bug / schema_or_user_misuse / ok

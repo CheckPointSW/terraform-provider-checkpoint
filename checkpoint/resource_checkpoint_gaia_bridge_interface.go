@@ -314,7 +314,7 @@ func createGaiaBridgeInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create BridgeInterface - Map = ", payload)
+    log.Println("Create BridgeInterface - Map = ", safeCopyMap(payload))
 
     addBridgeInterfaceRes, err := client.ApiCallSimple("add-bridge-interface", payload)
     // DEBUG: generic logger
@@ -370,7 +370,7 @@ func createGaiaBridgeInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setBridgeInterfaceRes, err := client.ApiCallSimple("set-bridge-interface", updatePayload)
         if err != nil {
@@ -444,7 +444,7 @@ func readGaiaBridgeInterface(d *schema.ResourceData, m interface{}) error {
 
     bridgeInterface := showBridgeInterfaceRes.GetData()
 
-    log.Println("Read BridgeInterface - Show JSON = ", bridgeInterface)
+    log.Println("Read BridgeInterface - Show JSON = ", safeCopyMap(bridgeInterface))
 
     if v, exists := bridgeInterface["dhcp6"]; exists {
         d.Set("dhcp6", v)

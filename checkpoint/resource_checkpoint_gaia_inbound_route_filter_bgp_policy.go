@@ -317,7 +317,7 @@ func createGaiaInboundRouteFilterBgpPolicy(d *schema.ResourceData, m interface{}
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create InboundRouteFilterBgpPolicy - Map = ", payload)
+    log.Println("Create InboundRouteFilterBgpPolicy - Map = ", safeCopyMap(payload))
 
     // Check if inbound-route-filter-bgp-policy already exists on the device.
     _checkPayload := map[string]interface{}{"policy-id": d.Get("policy_id")}
@@ -433,7 +433,7 @@ func readGaiaInboundRouteFilterBgpPolicy(d *schema.ResourceData, m interface{}) 
 
     inboundRouteFilterBgpPolicy := showInboundRouteFilterBgpPolicyRes.GetData()
 
-    log.Println("Read InboundRouteFilterBgpPolicy - Show JSON = ", inboundRouteFilterBgpPolicy)
+    log.Println("Read InboundRouteFilterBgpPolicy - Show JSON = ", safeCopyMap(inboundRouteFilterBgpPolicy))
 
     if v, exists := inboundRouteFilterBgpPolicy["bgp"]; exists {
         if items, ok := v.([]interface{}); ok && len(items) > 0 {

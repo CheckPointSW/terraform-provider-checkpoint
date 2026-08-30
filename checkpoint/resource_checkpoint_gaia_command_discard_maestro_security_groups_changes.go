@@ -34,7 +34,7 @@ func createGaiaDiscardMaestroSecurityGroupsChanges(d *schema.ResourceData, m int
 
     payload := make(map[string]interface{})
 
-    log.Println("Execute discard-maestro-security-groups-changes - Payload = ", payload)
+    log.Println("Execute discard-maestro-security-groups-changes - Payload = ", safeCopyMap(payload))
 
     GaiaDiscardMaestroSecurityGroupsChangesRes, err := client.ApiCallSimple("discard-maestro-security-groups-changes", payload)
     // DEBUG: generic logger

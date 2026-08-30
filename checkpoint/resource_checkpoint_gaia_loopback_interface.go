@@ -161,7 +161,7 @@ func createGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create LoopbackInterface - Map = ", payload)
+    log.Println("Create LoopbackInterface - Map = ", safeCopyMap(payload))
 
     addLoopbackInterfaceRes, err := client.ApiCallSimple("add-loopback-interface", payload)
     // DEBUG: generic logger
@@ -217,7 +217,7 @@ func createGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setLoopbackInterfaceRes, err := client.ApiCallSimple("set-loopback-interface", updatePayload)
         if err != nil {
@@ -291,7 +291,7 @@ func readGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {
 
     loopbackInterface := showLoopbackInterfaceRes.GetData()
 
-    log.Println("Read LoopbackInterface - Show JSON = ", loopbackInterface)
+    log.Println("Read LoopbackInterface - Show JSON = ", safeCopyMap(loopbackInterface))
 
     if v, exists := loopbackInterface["link-state"]; exists {
         if b, ok := v.(bool); ok {

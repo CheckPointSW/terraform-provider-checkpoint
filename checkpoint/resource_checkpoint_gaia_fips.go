@@ -51,7 +51,7 @@ func createGaiaFips(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create Fips - Map = ", payload)
+    log.Println("Create Fips - Map = ", safeCopyMap(payload))
 
     addFipsRes, err := client.ApiCallSimple("set-fips", payload)
     // DEBUG: generic logger
@@ -159,7 +159,7 @@ func readGaiaFips(d *schema.ResourceData, m interface{}) error {
 
     fips := showFipsRes.GetData()
 
-    log.Println("Read Fips - Show JSON = ", fips)
+    log.Println("Read Fips - Show JSON = ", safeCopyMap(fips))
 
     if v, exists := fips["enabled"]; exists {
         if b, ok := v.(bool); ok {

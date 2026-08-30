@@ -385,7 +385,7 @@ func readGaiaShowIsisDatabase(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-isis-database - Payload = ", payload)
+    log.Println("Execute show-isis-database - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-isis-database", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

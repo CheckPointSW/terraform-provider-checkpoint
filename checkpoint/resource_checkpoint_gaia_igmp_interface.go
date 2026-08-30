@@ -108,7 +108,7 @@ func createGaiaIgmpInterface(d *schema.ResourceData, m interface{}) error {
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create IgmpInterface - Map = ", payload)
+    log.Println("Create IgmpInterface - Map = ", safeCopyMap(payload))
 
     addIgmpInterfaceRes, err := client.ApiCallSimple("set-igmp-interface", payload)
     // DEBUG: generic logger
@@ -212,7 +212,7 @@ func readGaiaIgmpInterface(d *schema.ResourceData, m interface{}) error {
 
     igmpInterface := showIgmpInterfaceRes.GetData()
 
-    log.Println("Read IgmpInterface - Show JSON = ", igmpInterface)
+    log.Println("Read IgmpInterface - Show JSON = ", safeCopyMap(igmpInterface))
 
     if v, exists := igmpInterface["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

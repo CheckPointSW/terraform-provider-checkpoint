@@ -45,7 +45,7 @@ func createGaiaScheduledJobMail(d *schema.ResourceData, m interface{}) error {
         payload["email-address"] = v.(string)
     }
 
-    log.Println("Create ScheduledJobMail - Map = ", payload)
+    log.Println("Create ScheduledJobMail - Map = ", safeCopyMap(payload))
 
     addScheduledJobMailRes, err := client.ApiCallSimple("set-scheduled-job-mail", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaScheduledJobMail(d *schema.ResourceData, m interface{}) error {
 
     scheduledJobMail := showScheduledJobMailRes.GetData()
 
-    log.Println("Read ScheduledJobMail - Show JSON = ", scheduledJobMail)
+    log.Println("Read ScheduledJobMail - Show JSON = ", safeCopyMap(scheduledJobMail))
 
     if v, exists := scheduledJobMail["email-address"]; exists {
         d.Set("email_address", fmt.Sprintf("%v", v))

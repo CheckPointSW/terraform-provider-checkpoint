@@ -396,7 +396,7 @@ func createGaiaSetIpv6Pim(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Execute set-ipv6-pim - Payload = ", payload)
+    log.Println("Execute set-ipv6-pim - Payload = ", safeCopyMap(payload))
 
     GaiaSetIpv6PimRes, err := client.ApiCallSimple("set-ipv6-pim", payload)
     // DEBUG: generic logger

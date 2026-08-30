@@ -45,7 +45,7 @@ func createGaiaCustomIntelligenceInterval(d *schema.ResourceData, m interface{})
         payload["interval"] = v.(int)
     }
 
-    log.Println("Create CustomIntelligenceInterval - Map = ", payload)
+    log.Println("Create CustomIntelligenceInterval - Map = ", safeCopyMap(payload))
 
     addCustomIntelligenceIntervalRes, err := client.ApiCallSimple("set-custom-intelligence-interval", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaCustomIntelligenceInterval(d *schema.ResourceData, m interface{}) e
 
     customIntelligenceInterval := showCustomIntelligenceIntervalRes.GetData()
 
-    log.Println("Read CustomIntelligenceInterval - Show JSON = ", customIntelligenceInterval)
+    log.Println("Read CustomIntelligenceInterval - Show JSON = ", safeCopyMap(customIntelligenceInterval))
 
     if v, exists := customIntelligenceInterval["interval"]; exists {
         if f, ok := v.(float64); ok {

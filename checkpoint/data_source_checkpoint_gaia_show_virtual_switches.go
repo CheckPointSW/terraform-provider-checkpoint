@@ -109,7 +109,7 @@ func readGaiaShowVirtualSwitches(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-virtual-switches - Payload = ", payload)
+    log.Println("Execute show-virtual-switches - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-virtual-switches", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

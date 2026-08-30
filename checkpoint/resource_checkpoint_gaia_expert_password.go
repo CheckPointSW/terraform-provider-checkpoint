@@ -56,7 +56,7 @@ func createGaiaExpertPassword(d *schema.ResourceData, m interface{}) error {
         payload["password-hash"] = v.(string)
     }
 
-    log.Println("Create ExpertPassword - Map = ", payload)
+    log.Println("Create ExpertPassword - Map = ", safeCopyMap(payload))
 
     addExpertPasswordRes, err := client.ApiCallSimple("set-expert-password", payload)
     // DEBUG: generic logger
@@ -152,7 +152,7 @@ func readGaiaExpertPassword(d *schema.ResourceData, m interface{}) error {
 
     expertPassword := showExpertPasswordRes.GetData()
 
-    log.Println("Read ExpertPassword - Show JSON = ", expertPassword)
+    log.Println("Read ExpertPassword - Show JSON = ", safeCopyMap(expertPassword))
 
     if v, exists := expertPassword["password-hash"]; exists {
         d.Set("password_hash", fmt.Sprintf("%v", v))

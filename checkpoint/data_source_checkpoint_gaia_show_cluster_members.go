@@ -154,7 +154,7 @@ func readGaiaShowClusterMembers(d *schema.ResourceData, m interface{}) error {
 
     payload := map[string]interface{}{}
 
-    log.Println("Execute show-cluster-members - Payload = ", payload)
+    log.Println("Execute show-cluster-members - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-cluster-members", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

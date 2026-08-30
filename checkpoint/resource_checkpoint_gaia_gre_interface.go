@@ -196,7 +196,7 @@ func createGaiaGreInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create GreInterface - Map = ", payload)
+    log.Println("Create GreInterface - Map = ", safeCopyMap(payload))
 
     addGreInterfaceRes, err := client.ApiCallSimple("add-gre-interface", payload)
     // DEBUG: generic logger
@@ -262,7 +262,7 @@ func createGaiaGreInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setGreInterfaceRes, err := client.ApiCallSimple("set-gre-interface", updatePayload)
         if err != nil {
@@ -336,7 +336,7 @@ func readGaiaGreInterface(d *schema.ResourceData, m interface{}) error {
 
     greInterface := showGreInterfaceRes.GetData()
 
-    log.Println("Read GreInterface - Show JSON = ", greInterface)
+    log.Println("Read GreInterface - Show JSON = ", safeCopyMap(greInterface))
 
     if v, exists := greInterface["link-state"]; exists {
         if b, ok := v.(bool); ok {

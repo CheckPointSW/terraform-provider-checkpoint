@@ -146,7 +146,7 @@ func readGaiaShowMldStats(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-mld-stats - Payload = ", payload)
+    log.Println("Execute show-mld-stats - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-mld-stats", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -250,7 +250,7 @@ func createGaiaPasswordPolicy(d *schema.ResourceData, m interface{}) error {
         payload["all-users-require-two-factor-authentication"] = v.(bool)
     }
 
-    log.Println("Create PasswordPolicy - Map = ", payload)
+    log.Println("Create PasswordPolicy - Map = ", safeCopyMap(payload))
 
     addPasswordPolicyRes, err := client.ApiCallSimple("set-password-policy", payload)
     // DEBUG: generic logger
@@ -346,7 +346,7 @@ func readGaiaPasswordPolicy(d *schema.ResourceData, m interface{}) error {
 
     passwordPolicy := showPasswordPolicyRes.GetData()
 
-    log.Println("Read PasswordPolicy - Show JSON = ", passwordPolicy)
+    log.Println("Read PasswordPolicy - Show JSON = ", safeCopyMap(passwordPolicy))
 
     if v, exists := passwordPolicy["lock-settings"]; exists {
         if m, ok := v.(map[string]interface{}); ok {

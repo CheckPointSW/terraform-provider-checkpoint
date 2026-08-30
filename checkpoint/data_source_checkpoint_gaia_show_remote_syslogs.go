@@ -96,7 +96,7 @@ func readGaiaShowRemoteSyslogs(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-remote-syslogs - Payload = ", payload)
+    log.Println("Execute show-remote-syslogs - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-remote-syslogs", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

@@ -104,7 +104,7 @@ func createGaiaSetStaticMrouteNextHopPriority(d *schema.ResourceData, m interfac
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute set-static-mroute-next-hop-priority - Payload = ", payload)
+    log.Println("Execute set-static-mroute-next-hop-priority - Payload = ", safeCopyMap(payload))
 
     GaiaSetStaticMrouteNextHopPriorityRes, err := client.ApiCallSimple("set-static-mroute-next-hop-priority", payload)
     // DEBUG: generic logger
@@ -184,7 +184,7 @@ func readGaiaSetStaticMrouteNextHopPriority(d *schema.ResourceData, m interface{
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Read set-static-mroute-next-hop-priority - show-static-mroute payload = ", payload)
+    log.Println("Read set-static-mroute-next-hop-priority - show-static-mroute payload = ", safeCopyMap(payload))
 
     showRes, err := client.ApiCallSimple("show-static-mroute", payload)
     if err != nil {

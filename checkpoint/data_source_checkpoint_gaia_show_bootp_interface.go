@@ -103,7 +103,7 @@ func readGaiaShowBootpInterface(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-bootp-interface - Payload = ", payload)
+    log.Println("Execute show-bootp-interface - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-bootp-interface", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

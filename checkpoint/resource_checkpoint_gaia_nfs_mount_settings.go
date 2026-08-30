@@ -45,7 +45,7 @@ func createGaiaNfsMountSettings(d *schema.ResourceData, m interface{}) error {
         payload["timeout"] = v.(int)
     }
 
-    log.Println("Create NfsMountSettings - Map = ", payload)
+    log.Println("Create NfsMountSettings - Map = ", safeCopyMap(payload))
 
     addNfsMountSettingsRes, err := client.ApiCallSimple("set-nfs-mount-settings", payload)
     // DEBUG: generic logger
@@ -141,7 +141,7 @@ func readGaiaNfsMountSettings(d *schema.ResourceData, m interface{}) error {
 
     nfsMountSettings := showNfsMountSettingsRes.GetData()
 
-    log.Println("Read NfsMountSettings - Show JSON = ", nfsMountSettings)
+    log.Println("Read NfsMountSettings - Show JSON = ", safeCopyMap(nfsMountSettings))
 
     if v, exists := nfsMountSettings["NFS-Version-4-Settings"]; exists {
         if settingsMap, ok := v.(map[string]interface{}); ok {

@@ -49,7 +49,7 @@ func readGaiaShowIpv6PimGroupRpMapping(d *schema.ResourceData, m interface{}) er
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ipv6-pim-group-rp-mapping - Payload = ", payload)
+    log.Println("Execute show-ipv6-pim-group-rp-mapping - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ipv6-pim-group-rp-mapping", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

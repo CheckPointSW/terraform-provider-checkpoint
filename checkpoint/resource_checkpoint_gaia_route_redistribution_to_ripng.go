@@ -1105,7 +1105,7 @@ func createGaiaRouteRedistributionToRipng(d *schema.ResourceData, m interface{})
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToRipng - Map = ", payload)
+    log.Println("Create RouteRedistributionToRipng - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToRipngRes, err := client.ApiCallSimple("set-route-redistribution-to-ripng", payload)
     // DEBUG: generic logger
@@ -1201,7 +1201,7 @@ func readGaiaRouteRedistributionToRipng(d *schema.ResourceData, m interface{}) e
 
     routeRedistributionToRipng := showRouteRedistributionToRipngRes.GetData()
 
-    log.Println("Read RouteRedistributionToRipng - Show JSON = ", routeRedistributionToRipng)
+    log.Println("Read RouteRedistributionToRipng - Show JSON = ", safeCopyMap(routeRedistributionToRipng))
 
     if v, exists := routeRedistributionToRipng["ripng"]; exists {
         // Bug 1: API returns redistribution data under "ripng"; remap to Terraform "from" field.

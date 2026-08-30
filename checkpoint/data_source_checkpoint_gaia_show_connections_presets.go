@@ -54,7 +54,7 @@ func readGaiaShowConnectionsPresets(d *schema.ResourceData, m interface{}) error
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-connections-presets - Payload = ", payload)
+    log.Println("Execute show-connections-presets - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-connections-presets", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

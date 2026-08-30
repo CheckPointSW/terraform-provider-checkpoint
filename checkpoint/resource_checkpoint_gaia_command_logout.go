@@ -34,7 +34,7 @@ func createGaiaLogout(d *schema.ResourceData, m interface{}) error {
 
     payload := make(map[string]interface{})
 
-    log.Println("Execute logout - Payload = ", payload)
+    log.Println("Execute logout - Payload = ", safeCopyMap(payload))
 
     GaiaLogoutRes, err := client.ApiCallSimple("logout", payload)
     // DEBUG: generic logger

@@ -178,7 +178,7 @@ func createGaiaUser(d *schema.ResourceData, m interface{}) error {
         payload["requires-two-factor-authentication"] = v.(bool)
     }
 
-    log.Println("Create User - Map = ", payload)
+    log.Println("Create User - Map = ", safeCopyMap(payload))
 
     addUserRes, err := client.ApiCallSimple("add-user", payload)
     // DEBUG: generic logger
@@ -278,7 +278,7 @@ func readGaiaUser(d *schema.ResourceData, m interface{}) error {
 
     user := showUserRes.GetData()
 
-    log.Println("Read User - Show JSON = ", user)
+    log.Println("Read User - Show JSON = ", safeCopyMap(user))
 
     if v, exists := user["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

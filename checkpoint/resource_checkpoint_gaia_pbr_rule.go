@@ -212,7 +212,7 @@ func createGaiaPbrRule(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create PbrRule - Map = ", payload)
+    log.Println("Create PbrRule - Map = ", safeCopyMap(payload))
 
     addPbrRuleRes, err := client.ApiCallSimple("set-pbr-rule", payload)
     // DEBUG: generic logger
@@ -316,7 +316,7 @@ func readGaiaPbrRule(d *schema.ResourceData, m interface{}) error {
 
     pbrRule := showPbrRuleRes.GetData()
 
-    log.Println("Read PbrRule - Show JSON = ", pbrRule)
+    log.Println("Read PbrRule - Show JSON = ", safeCopyMap(pbrRule))
 
     if v, exists := pbrRule["priority"]; exists {
         if f, ok := v.(float64); ok {

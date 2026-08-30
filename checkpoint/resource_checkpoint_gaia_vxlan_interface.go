@@ -200,7 +200,7 @@ func createGaiaVxlanInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create VxlanInterface - Map = ", payload)
+    log.Println("Create VxlanInterface - Map = ", safeCopyMap(payload))
 
     addVxlanInterfaceRes, err := client.ApiCallSimple("add-vxlan-interface", payload)
     // DEBUG: generic logger
@@ -254,7 +254,7 @@ func createGaiaVxlanInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setVxlanInterfaceRes, err := client.ApiCallSimple("set-vxlan-interface", updatePayload)
         if err != nil {
@@ -334,7 +334,7 @@ func readGaiaVxlanInterface(d *schema.ResourceData, m interface{}) error {
 
     vxlanInterface := showVxlanInterfaceRes.GetData()
 
-    log.Println("Read VxlanInterface - Show JSON = ", vxlanInterface)
+    log.Println("Read VxlanInterface - Show JSON = ", safeCopyMap(vxlanInterface))
 
     if v, exists := vxlanInterface["link-state"]; exists {
         if b, ok := v.(bool); ok {

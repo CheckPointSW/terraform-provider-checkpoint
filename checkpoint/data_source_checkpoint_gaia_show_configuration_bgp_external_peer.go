@@ -389,7 +389,7 @@ func readGaiaShowConfigurationBgpExternalPeer(d *schema.ResourceData, m interfac
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-configuration-bgp-external-peer - Payload = ", payload)
+    log.Println("Execute show-configuration-bgp-external-peer - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-configuration-bgp-external-peer", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

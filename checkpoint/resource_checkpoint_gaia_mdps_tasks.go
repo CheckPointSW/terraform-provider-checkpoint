@@ -119,7 +119,7 @@ func createGaiaMdpsTasks(d *schema.ResourceData, m interface{}) error {
         payload["cp-port-protocol"] = map[string]interface{}{"add": arr}
     }
 
-    log.Println("Create MdpsTasks - Map = ", payload)
+    log.Println("Create MdpsTasks - Map = ", safeCopyMap(payload))
 
     addMdpsTasksRes, err := client.ApiCallSimple("set-mdps-tasks", payload)
     // DEBUG: generic logger
@@ -215,7 +215,7 @@ func readGaiaMdpsTasks(d *schema.ResourceData, m interface{}) error {
 
     mdpsTasks := showMdpsTasksRes.GetData()
 
-    log.Println("Read MdpsTasks - Show JSON = ", mdpsTasks)
+    log.Println("Read MdpsTasks - Show JSON = ", safeCopyMap(mdpsTasks))
 
     if v, exists := mdpsTasks["external-address"]; exists {
         d.Set("external_address", v.([]interface{}))

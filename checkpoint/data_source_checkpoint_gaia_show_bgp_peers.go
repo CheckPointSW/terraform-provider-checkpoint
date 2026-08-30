@@ -384,7 +384,7 @@ func readGaiaShowBgpPeers(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-bgp-peers - Payload = ", payload)
+    log.Println("Execute show-bgp-peers - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-bgp-peers", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

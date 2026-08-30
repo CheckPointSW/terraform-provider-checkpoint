@@ -94,7 +94,7 @@ func createGaiaPutFile(d *schema.ResourceData, m interface{}) error {
         payload["permissions"] = v.(int)
     }
 
-    log.Println("Execute put-file - Payload = ", payload)
+    log.Println("Execute put-file - Payload = ", safeCopyMap(payload))
 
     GaiaPutFileRes, err := client.ApiCallSimple("put-file", payload)
     // DEBUG: generic logger
@@ -172,7 +172,7 @@ func readGaiaPutFile(d *schema.ResourceData, m interface{}) error {
         payload["permissions"] = v.(int)
     }
 
-    log.Println("Execute put-file - Payload = ", payload)
+    log.Println("Execute put-file - Payload = ", safeCopyMap(payload))
 
     GaiaPutFileRes, err := client.ApiCallSimple("put-file", payload)
     // DEBUG: generic logger

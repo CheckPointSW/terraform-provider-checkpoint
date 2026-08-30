@@ -82,7 +82,7 @@ func createGaiaLightshot(d *schema.ResourceData, m interface{}) error {
         payload["name"] = v.(string)
     }
 
-    log.Println("Create Lightshot - Map = ", payload)
+    log.Println("Create Lightshot - Map = ", safeCopyMap(payload))
 
     addLightshotRes, err := client.ApiCall("add-lightshot", payload, client.GetSessionID(), false, client.IsProxyUsed())
     // DEBUG: generic logger
@@ -193,7 +193,7 @@ func readGaiaLightshot(d *schema.ResourceData, m interface{}) error {
 	
 	lightshot := showLightshotRes.GetData()
 
-	log.Println("Read Lightshot - Show JSON = ", lightshot)
+	log.Println("Read Lightshot - Show JSON = ", safeCopyMap(lightshot))
 
         if items, ok := lightshot["lightshots"].([]interface{}); ok {
                 nameVal := ""

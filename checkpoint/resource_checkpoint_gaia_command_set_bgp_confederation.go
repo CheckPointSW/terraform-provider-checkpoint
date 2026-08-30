@@ -143,7 +143,7 @@ func createGaiaSetBgpConfederation(d *schema.ResourceData, m interface{}) error 
         }
     }
 
-    log.Println("Execute set-bgp-confederation - Payload = ", payload)
+    log.Println("Execute set-bgp-confederation - Payload = ", safeCopyMap(payload))
 
     GaiaSetBgpConfederationRes, err := client.ApiCallSimple("set-bgp-confederation", payload)
     // DEBUG: generic logger

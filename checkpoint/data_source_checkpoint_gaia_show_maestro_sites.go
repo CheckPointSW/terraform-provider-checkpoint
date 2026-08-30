@@ -150,7 +150,7 @@ func readGaiaShowMaestroSites(d *schema.ResourceData, m interface{}) error {
         payload["include-pending-changes"] = v.(bool)
     }
 
-    log.Println("Execute show-maestro-sites - Payload = ", payload)
+    log.Println("Execute show-maestro-sites - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-maestro-sites", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

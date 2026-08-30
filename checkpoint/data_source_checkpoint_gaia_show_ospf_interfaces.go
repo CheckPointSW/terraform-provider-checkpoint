@@ -145,7 +145,7 @@ func readGaiaShowOspfInterfaces(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ospf-interfaces - Payload = ", payload)
+    log.Println("Execute show-ospf-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ospf-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

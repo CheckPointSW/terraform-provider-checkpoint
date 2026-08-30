@@ -329,7 +329,7 @@ func createGaiaSetBgp(d *schema.ResourceData, m interface{}) error {
         payload["enable-synchronization"] = v.(bool)
     }
 
-    log.Println("Execute set-bgp - Payload = ", payload)
+    log.Println("Execute set-bgp - Payload = ", safeCopyMap(payload))
 
     // Pre-create cleanup: ensure no stale BGP state from a prior failed run.
     client.ApiCallSimple("set-bgp", map[string]interface{}{

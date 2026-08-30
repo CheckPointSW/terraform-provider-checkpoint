@@ -444,7 +444,7 @@ func createGaiaVlanInterface(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Create VlanInterface - Map = ", payload)
+    log.Println("Create VlanInterface - Map = ", safeCopyMap(payload))
 
     addVlanInterfaceRes, err := client.ApiCallSimple("add-vlan-interface", payload)
     // DEBUG: generic logger
@@ -493,7 +493,7 @@ func createGaiaVlanInterface(d *schema.ResourceData, m interface{}) error {
     }
 
     if hasUpdateOnlyFields {
-        log.Println("Two-phase creation: Applying update-only fields - Map = ", updatePayload)
+        log.Println("Two-phase creation: Applying update-only fields - Map = ", safeCopyMap(updatePayload))
         
         setVlanInterfaceRes, err := client.ApiCallSimple("set-vlan-interface", updatePayload)
         if err != nil {
@@ -574,7 +574,7 @@ func readGaiaVlanInterface(d *schema.ResourceData, m interface{}) error {
 
     vlanInterface := showVlanInterfaceRes.GetData()
 
-    log.Println("Read VlanInterface - Show JSON = ", vlanInterface)
+    log.Println("Read VlanInterface - Show JSON = ", safeCopyMap(vlanInterface))
 
     if v, exists := vlanInterface["sd-wan"]; exists {
         d.Set("sd_wan", v)

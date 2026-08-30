@@ -89,7 +89,7 @@ func createGaiaRole(d *schema.ResourceData, m interface{}) error {
         payload["extended-commands"] = v.(*schema.Set).List()
     }
 
-    log.Println("Create Role - Map = ", payload)
+    log.Println("Create Role - Map = ", safeCopyMap(payload))
 
     addRoleRes, err := client.ApiCallSimple("add-role", payload)
     // DEBUG: generic logger
@@ -189,7 +189,7 @@ func readGaiaRole(d *schema.ResourceData, m interface{}) error {
 
     role := showRoleRes.GetData()
 
-    log.Println("Read Role - Show JSON = ", role)
+    log.Println("Read Role - Show JSON = ", safeCopyMap(role))
 
     if v, exists := role["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

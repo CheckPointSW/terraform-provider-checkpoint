@@ -207,7 +207,7 @@ func readGaiaShowVxlanInterfaces(d *schema.ResourceData, m interface{}) error {
         payload["virtual-system-id"] = v.(int)
     }
 
-    log.Println("Execute show-vxlan-interfaces - Payload = ", payload)
+    log.Println("Execute show-vxlan-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-vxlan-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

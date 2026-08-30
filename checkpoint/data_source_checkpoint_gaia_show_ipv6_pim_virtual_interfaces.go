@@ -101,7 +101,7 @@ func readGaiaShowIpv6PimVirtualInterfaces(d *schema.ResourceData, m interface{})
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-ipv6-pim-virtual-interfaces - Payload = ", payload)
+    log.Println("Execute show-ipv6-pim-virtual-interfaces - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-ipv6-pim-virtual-interfaces", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

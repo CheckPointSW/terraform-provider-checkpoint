@@ -256,7 +256,7 @@ func createGaiaScheduledSnapshot(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Create ScheduledSnapshot - Map = ", payload)
+    log.Println("Create ScheduledSnapshot - Map = ", safeCopyMap(payload))
 
     addScheduledSnapshotRes, err := client.ApiCallSimple("set-scheduled-snapshot", payload)
     // DEBUG: generic logger
@@ -352,7 +352,7 @@ func readGaiaScheduledSnapshot(d *schema.ResourceData, m interface{}) error {
 
     scheduledSnapshot := showScheduledSnapshotRes.GetData()
 
-    log.Println("Read ScheduledSnapshot - Show JSON = ", scheduledSnapshot)
+    log.Println("Read ScheduledSnapshot - Show JSON = ", safeCopyMap(scheduledSnapshot))
 
     if v, exists := scheduledSnapshot["enabled"]; exists {
         if b, ok := v.(bool); ok {

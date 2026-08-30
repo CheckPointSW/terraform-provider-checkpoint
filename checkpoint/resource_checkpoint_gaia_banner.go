@@ -54,7 +54,7 @@ func createGaiaBanner(d *schema.ResourceData, m interface{}) error {
         payload["enabled"] = v.(bool)
     }
 
-    log.Println("Create Banner - Map = ", payload)
+    log.Println("Create Banner - Map = ", safeCopyMap(payload))
 
     addBannerRes, err := client.ApiCallSimple("set-banner", payload)
     // DEBUG: generic logger
@@ -150,7 +150,7 @@ func readGaiaBanner(d *schema.ResourceData, m interface{}) error {
 
     banner := showBannerRes.GetData()
 
-    log.Println("Read Banner - Show JSON = ", banner)
+    log.Println("Read Banner - Show JSON = ", safeCopyMap(banner))
 
     if v, exists := banner["message"]; exists {
         d.Set("message", fmt.Sprintf("%v", v))

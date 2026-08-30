@@ -1355,7 +1355,7 @@ func createGaiaRouteRedistributionToRip(d *schema.ResourceData, m interface{}) e
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToRip - Map = ", payload)
+    log.Println("Create RouteRedistributionToRip - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToRipRes, err := client.ApiCallSimple("set-route-redistribution-to-rip", payload)
     // DEBUG: generic logger
@@ -1451,7 +1451,7 @@ func readGaiaRouteRedistributionToRip(d *schema.ResourceData, m interface{}) err
 
     routeRedistributionToRip := showRouteRedistributionToRipRes.GetData()
 
-    log.Println("Read RouteRedistributionToRip - Show JSON = ", routeRedistributionToRip)
+    log.Println("Read RouteRedistributionToRip - Show JSON = ", safeCopyMap(routeRedistributionToRip))
 
     if v, exists := routeRedistributionToRip["rip"]; exists {
         // Bug: API wraps rip redistribution under "rip" dict; remap to "from".

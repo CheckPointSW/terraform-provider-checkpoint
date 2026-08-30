@@ -154,7 +154,7 @@ func readGaiaShowPhysicalInterfaceXcvr(d *schema.ResourceData, m interface{}) er
         payload["virtual-system-id"] = v.(string)
     }
 
-    log.Println("Execute show-physical-interface-xcvr - Payload = ", payload)
+    log.Println("Execute show-physical-interface-xcvr - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-physical-interface-xcvr", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

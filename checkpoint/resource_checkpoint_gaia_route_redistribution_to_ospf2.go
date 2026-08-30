@@ -1511,7 +1511,7 @@ func createGaiaRouteRedistributionToOspf2(d *schema.ResourceData, m interface{})
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create RouteRedistributionToOspf2 - Map = ", payload)
+    log.Println("Create RouteRedistributionToOspf2 - Map = ", safeCopyMap(payload))
 
     addRouteRedistributionToOspf2Res, err := client.ApiCallSimple("set-route-redistribution-to-ospf2", payload)
     // DEBUG: generic logger
@@ -1611,7 +1611,7 @@ func readGaiaRouteRedistributionToOspf2(d *schema.ResourceData, m interface{}) e
 
     routeRedistributionToOspf2 := showRouteRedistributionToOspf2Res.GetData()
 
-    log.Println("Read RouteRedistributionToOspf2 - Show JSON = ", routeRedistributionToOspf2)
+    log.Println("Read RouteRedistributionToOspf2 - Show JSON = ", safeCopyMap(routeRedistributionToOspf2))
 
     if v, exists := routeRedistributionToOspf2["ospf2"]; exists {
         if ospf2Items, ok := v.([]interface{}); ok && len(ospf2Items) > 0 {

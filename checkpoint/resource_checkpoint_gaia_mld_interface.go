@@ -132,7 +132,7 @@ func createGaiaMldInterface(d *schema.ResourceData, m interface{}) error {
         payload["reset"] = v.(bool)
     }
 
-    log.Println("Create MldInterface - Map = ", payload)
+    log.Println("Create MldInterface - Map = ", safeCopyMap(payload))
 
     addMldInterfaceRes, err := client.ApiCallSimple("set-mld-interface", payload)
     // DEBUG: generic logger
@@ -240,7 +240,7 @@ func readGaiaMldInterface(d *schema.ResourceData, m interface{}) error {
 
     mldInterface := showMldInterfaceRes.GetData()
 
-    log.Println("Read MldInterface - Show JSON = ", mldInterface)
+    log.Println("Read MldInterface - Show JSON = ", safeCopyMap(mldInterface))
 
     if v, exists := mldInterface["name"]; exists {
         d.Set("name", fmt.Sprintf("%v", v))

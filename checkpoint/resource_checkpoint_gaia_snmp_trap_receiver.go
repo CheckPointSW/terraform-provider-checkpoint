@@ -63,7 +63,7 @@ func createGaiaSnmpTrapReceiver(d *schema.ResourceData, m interface{}) error {
         payload["community-string"] = v.(string)
     }
 
-    log.Println("Create SnmpTrapReceiver - Map = ", payload)
+    log.Println("Create SnmpTrapReceiver - Map = ", safeCopyMap(payload))
 
     addSnmpTrapReceiverRes, err := client.ApiCallSimple("add-snmp-trap-receiver", payload)
     // DEBUG: generic logger
@@ -163,7 +163,7 @@ func readGaiaSnmpTrapReceiver(d *schema.ResourceData, m interface{}) error {
 
     snmpTrapReceiver := showSnmpTrapReceiverRes.GetData()
 
-    log.Println("Read SnmpTrapReceiver - Show JSON = ", snmpTrapReceiver)
+    log.Println("Read SnmpTrapReceiver - Show JSON = ", safeCopyMap(snmpTrapReceiver))
 
     if v, exists := snmpTrapReceiver["address"]; exists {
         d.Set("address", fmt.Sprintf("%v", v))

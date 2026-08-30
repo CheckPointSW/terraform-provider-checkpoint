@@ -45,7 +45,7 @@ func readGaiaShowVsnextState(d *schema.ResourceData, m interface{}) error {
         payload["member-id"] = v.(string)
     }
 
-    log.Println("Execute show-vsnext-state - Payload = ", payload)
+    log.Println("Execute show-vsnext-state - Payload = ", safeCopyMap(payload))
     commandRes, err := client.ApiCallSimple("show-vsnext-state", payload)
     // DEBUG: generic logger
     if resourceDebugEnabled(d) {

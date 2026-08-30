@@ -891,7 +891,7 @@ func createGaiaSetIsis(d *schema.ResourceData, m interface{}) error {
         }
     }
 
-    log.Println("Execute set-isis - Payload = ", payload)
+    log.Println("Execute set-isis - Payload = ", safeCopyMap(payload))
 
     GaiaSetIsisRes, err := client.ApiCallSimple("set-isis", payload)
     // DEBUG: generic logger
