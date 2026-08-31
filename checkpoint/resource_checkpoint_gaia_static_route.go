@@ -101,7 +101,7 @@ func createGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
         payload["address"] = v.(string)
     }
 
-    if v, ok := d.GetOk("mask_length"); ok {
+    if v, ok := d.GetOkExists("mask_length"); ok {
         payload["mask-length"] = v.(int)
     }
 
@@ -202,7 +202,7 @@ func readGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
         payload["address"] = v.(string)
     }
 
-    if v, ok := d.GetOk("mask_length"); ok {
+    if v, ok := d.GetOkExists("mask_length"); ok {
         payload["mask-length"] = v.(int)
     }
 
@@ -321,7 +321,7 @@ func updateGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
         payload["address"] = v.(string)
     }
 
-    if v, ok := d.GetOk("mask_length"); ok {
+    if v, ok := d.GetOkExists("mask_length"); ok {
         payload["mask-length"] = v.(int)
     }
 
@@ -416,7 +416,7 @@ func deleteGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
         payload["address"] = v.(string)
     }
 
-    if v, ok := d.GetOk("mask_length"); ok {
+    if v, ok := d.GetOkExists("mask_length"); ok {
         payload["mask-length"] = v.(int)
     }
 
