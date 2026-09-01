@@ -209,7 +209,7 @@ func createManagementNetworkFeed(d *schema.ResourceData, m interface{}) error {
 				}
 				customHeaderPayload = append(customHeaderPayload, Payload)
 			}
-			networkFeed["customHeader"] = customHeaderPayload
+			networkFeed["custom-header"] = customHeaderPayload
 		}
 	}
 
