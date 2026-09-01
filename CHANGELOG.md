@@ -1,4 +1,4 @@
-## 3.4.0 (September 1, 2026)
+## 3.3.1 (September 1, 2026)
 
 BUG FIXES
 * Fix `custom_header` field in `checkpoint_management_network_feed` resource
