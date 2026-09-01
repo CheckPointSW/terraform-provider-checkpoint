@@ -1,3 +1,9 @@
+## 3.4.0 (September 1, 2026)
+
+BUG FIXES
+* Fix `custom_header` field in `checkpoint_management_network_feed` resource
+* Fix `mask_length` field in `checkpoint_gaia_static_route` resource
+
 ## 3.3.0 (July 30, 2026)
 
 FEATURES
