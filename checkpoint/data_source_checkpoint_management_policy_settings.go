@@ -46,7 +46,7 @@ func dataSourceManagementPolicySettings() *schema.Resource {
 						"track": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Track default value identified by name.",
 						},
 					},
 				},
@@ -54,7 +54,7 @@ func dataSourceManagementPolicySettings() *schema.Resource {
 			"log_generation": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Log generation settings for existing and new rules.",
 			},
 		},
 	}

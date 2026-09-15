@@ -41,7 +41,7 @@ The following arguments are supported:
 * `hardware` -  Check Point hardware.
 * `platform` - Check Point gateway platform.
 * `version` - Gateway platform version.
-* `hardware_subtype` - N/A.
+* `hardware_subtype` - Gateway type (relevant only for Spark gateways).
 
 `supported_blades` supports the following:
 

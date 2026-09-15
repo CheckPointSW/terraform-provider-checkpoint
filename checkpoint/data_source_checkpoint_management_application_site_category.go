@@ -55,12 +55,12 @@ func dataSourceManagementApplicationSiteCategory() *schema.Resource {
 			"category_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Web category ID.",
 			},
 			"user_defined": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "True if application site category was defined by user (not predefined one).",
 			},
 		},
 	}

@@ -26,9 +26,9 @@ The following arguments are supported:
 
 * `uid` - (Required) Object unique identifier.
 * `limit_interfaces` - (Optional) Limit number of cluster member interfaces to show.
-* `auto_generate_ip` - N/A.
+* `auto_generate_ip` - Use an automatically generated IP address for the Gateway object (applies only to Smart-1 Cloud).
 * `trust_details` - Details for trusted communication.trust_details blocks are documented below.
-* `trust_method` - N/A.
+* `trust_method` - Trust method that was used for establishing communication.
 
 
 `trust_details` supports the following:

@@ -45,17 +45,17 @@ func dataSourceManagementServerCertificate() *schema.Resource {
 			"base64_certificate": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Certificate file encoded in base64.",
 			},
 			"base64_public_certificate": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Public Certificate file encoded in base64 (pem format).",
 			},
 			"issued_by": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The DN (Distinguished Name) of the certificate.",
 			},
 		},
 	}

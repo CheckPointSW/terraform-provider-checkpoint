@@ -56,7 +56,7 @@ The following arguments are supported:
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 * `advanced_dns_settings` - Advanced DNS Settings.advanced_dns_settings blocks are documented below.
-* `ai_guard` - N/A.
+* `ai_guard` - Is AI Guard blade activated.
 * `ai_guard_settings` - AI Guard blade settings.ai_guard_settings blocks are documented below.
 
 `indicator_overrides` supports the following:

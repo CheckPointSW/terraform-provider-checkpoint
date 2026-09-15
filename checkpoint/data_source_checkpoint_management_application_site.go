@@ -92,7 +92,7 @@ func dataSourceManagementApplicationSite() *schema.Resource {
 			"primary_category_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Primary category id.",
 			},
 			"risk": {
 				Type:        schema.TypeString,
@@ -102,7 +102,7 @@ func dataSourceManagementApplicationSite() *schema.Resource {
 			"user_defined": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "True if this application site was defined by user (not predefined one).",
 			},
 			"match_settings": {
 				Type:        schema.TypeList,

@@ -36,5 +36,5 @@ The following arguments are supported:
 * `additional_categories` -  Uid or name of the categories to override in the Application and URL Filtering or Threat Prevention.
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `comment` - N/A.
+* `comment` - Comment for the categorization override.
 

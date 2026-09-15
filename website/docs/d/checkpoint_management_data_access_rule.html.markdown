@@ -74,7 +74,7 @@ The following arguments are supported:
 * `expiration_settings` - Displays the expiration date settings.expiration_settings blocks are documented below.
 * `hits` - Hits count object.hits blocks are documented below.
 * `service_ranges` - Displays the services and applications as ranges of port numbers, in case show-as-ranges is set to true.<br />In this case, 'service' and 'service-neg...service_ranges blocks are documented below.
-* `service_resource` - N/A.
+* `service_resource` - Resource of the service.
 * `source_ranges` - Displays the source as ranges of IP addresses, in case show-as-ranges is set to true.<br />In this case, 'source' and 'source-negate' parameters are o...source_ranges blocks are documented below.
 
 `action_settings` supports the following:

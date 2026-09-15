@@ -30,4 +30,4 @@ The following arguments are supported:
 
 * `uid` - (Optional) Object unique identifier.
 * `name` - (Optional) Object name. 
-* `subnet_mask4` - N/A.
+* `subnet_mask4` - IPv4 mask.

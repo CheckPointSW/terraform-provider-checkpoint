@@ -67,7 +67,7 @@ func dataSourceManagementResourceFtp() *schema.Resource {
 						"cvp_server_is_allowed_to_modify_content": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Configures the CVP server to inspect but not modify content.",
 						},
 					},
 				},
@@ -93,7 +93,7 @@ func dataSourceManagementResourceFtp() *schema.Resource {
 			"resource_path": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Refers to a location on the FTP server.",
 			},
 		},
 	}

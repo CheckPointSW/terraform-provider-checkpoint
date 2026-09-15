@@ -337,7 +337,7 @@ func dataSourceManagementNatRuleBase() *schema.Resource {
 			"objects_dictionary": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard level.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

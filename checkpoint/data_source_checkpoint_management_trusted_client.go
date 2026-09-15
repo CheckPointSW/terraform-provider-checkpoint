@@ -105,7 +105,7 @@ func dataSourceManagementTrustedClient() *schema.Resource {
 			"subnet_mask4": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "IPv4 mask.",
 			},
 		},
 	}

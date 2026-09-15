@@ -53,7 +53,7 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 						"hardware_subtype": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Gateway type (relevant only for Spark gateways).",
 						},
 					},
 				},

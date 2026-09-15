@@ -66,12 +66,12 @@ func dataSourceManagementThreatIndicator() *schema.Resource {
 			"number_of_observables": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The amount of observables in the indicator.",
 			},
 			"observables_raw_data": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The contents of the file containing the indicator's observables.<br>Available only when details-level is full.",
 			},
 		},
 	}

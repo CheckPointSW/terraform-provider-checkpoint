@@ -36,4 +36,4 @@ The following arguments are supported:
 
 * `name` - (Optional) Object name.
 * `uid` - (Optional) Object unique identifier.
-* `remote_access_client` - N/A.
+* `remote_access_client` - Remote access clients identified by name or UID. Level of details in the output corresponds to the number of details for search. This table shows the ...

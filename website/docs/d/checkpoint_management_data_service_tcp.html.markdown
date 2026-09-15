@@ -45,9 +45,9 @@ The following arguments are supported:
 * `comments` - Comments string.
 * `groups` - Collection of group identifiers.
 * `tags` - Collection of tag identifiers.
-* `delayed_sync_value` - N/A.
-* `enable_tcp_resource` - N/A.
-* `use_delayed_sync` - N/A.
+* `delayed_sync_value` - Specify the delay (in seconds) in which a synchronization will start after connection initiation.
+* `enable_tcp_resource` - Enable for tcp resource.
+* `use_delayed_sync` - Enable this option to delay notifying the Security Gateway about a connection, so that the connection will only be synchronized if it still exists x s...
 
 `aggressive_aging` supports the following:
 

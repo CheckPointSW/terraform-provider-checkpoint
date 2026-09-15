@@ -59,17 +59,17 @@ func dataSourceManagementSetGatewayGlobalUse() *schema.Resource {
 			"enable_identity_sharing": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Indicates whether Identity Awareness Sharing global use is enabled on the target.",
 			},
 			"enable_vpn": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Indicates whether VPN global use is enabled on the target.",
 			},
 			"identity_sharing_domains": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Domains that Identity Awareness Sharing global use applied to them.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

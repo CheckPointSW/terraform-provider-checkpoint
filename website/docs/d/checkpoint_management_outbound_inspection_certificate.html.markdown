@@ -41,6 +41,6 @@ The following arguments are supported:
 * `tags` -  Collection of tag identifiers.tags blocks are documented below.
 * `color` -  Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `public_key_algorithm` - N/A.
-* `subject` - N/A.
+* `public_key_algorithm` - Public key algorithm and size of the outbound certificate.
+* `subject` - Certificate's subject.
 

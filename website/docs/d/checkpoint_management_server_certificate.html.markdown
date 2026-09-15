@@ -38,5 +38,5 @@ The following arguments are supported:
 * `subject` - Certificate's subject.
 * `valid_from` - Server certificate valid from date.
 * `valid_to` - Server certificate valid up to date.
-* `base64_public_certificate` - N/A.
-* `issued_by` - N/A.
+* `base64_public_certificate` - Public Certificate file encoded in base64 (pem format).
+* `issued_by` - The DN (Distinguished Name) of the certificate.

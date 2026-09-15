@@ -30,4 +30,4 @@ The following arguments are supported:
 
 * `uid` - (Optional) Object unique identifier.
 * `name` - (Optional) Object name.
-* `autonomous_system_number` - N/A.
+* `autonomous_system_number` - The Autonomous System Number (ASN) for this Interoperable Device object.

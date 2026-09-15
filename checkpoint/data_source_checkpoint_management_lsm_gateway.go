@@ -222,17 +222,17 @@ func dataSourceManagementLsmGateway() *schema.Resource {
 			"gateway_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The current status of the Gateway. Shown only when the 'show-statuses' parameter is set to 'true'.",
 			},
 			"policy_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The current status of the Security Policy. Shown only when the 'show-statuses' parameter is set to 'true'.",
 			},
 			"provisioning_settings_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The current status of the Provisioning Settings. Shown only when the 'show-statuses' parameter is set to 'true'.",
 			},
 			"last_applied_provisioning_settings_time": {
 				Type:        schema.TypeList,

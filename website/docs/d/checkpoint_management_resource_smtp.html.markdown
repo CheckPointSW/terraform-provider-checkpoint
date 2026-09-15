@@ -103,7 +103,7 @@ The following arguments are supported:
 * `server` -  The UID or Name of the CVP server, make sure the CVP server is already be defined as an OPSEC Application. 
 * `allowed_to_modify_content` -  Configures the CVP server to inspect but not modify content. 
 * `reply_order` - Designates when the CVP server returns data to the Security Gateway security server. 
-* `cvp_server_is_allowed_to_modify_content` - N/A.
+* `cvp_server_is_allowed_to_modify_content` - Configures the CVP server to inspect but not modify content.
 
 
 `sender` supports the following:

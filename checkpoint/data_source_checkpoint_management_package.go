@@ -120,27 +120,27 @@ func dataSourceManagementPackage() *schema.Resource {
 			"autonomous_threat_policy": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "UID of the Autonomous Threat Prevention policy.",
 			},
 			"https_inspection_policy": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "True - enables, False - disables HTTPS Inspection policy, empty - nothing is changed.",
 			},
 			"nat_layer": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "UID of the NAT policy.",
 			},
 			"nat_policy": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "True - enables, False - disables NAT policy, empty - nothing is changed.",
 			},
 			"sd_wan": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "True - enables, False - disables SD-WAN policy, empty - nothing is changed.",
 			},
 			"installation_targets_revision": {
 				Type:        schema.TypeList,

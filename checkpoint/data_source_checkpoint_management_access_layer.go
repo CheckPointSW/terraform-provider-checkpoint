@@ -85,12 +85,12 @@ func dataSourceManagementAccessLayer() *schema.Resource {
 			"dynamic_layer": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Whether this layer is set as a Dynamic layer.",
 			},
 			"parent_layer": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Parent layer of this layer.",
 			},
 		},
 	}

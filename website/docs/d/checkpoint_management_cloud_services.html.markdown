@@ -24,7 +24,7 @@ The following arguments are supported:
 * `management_url` - The Management Server's public URL.
 * `tenant_id` - Tenant ID of Infinity Portal.
 * `gateways_onboarding_settings` - Gateways on-boarding to Infinity Portal settings. `gateways_onboarding_settings` is documented below.
-* `environment_id` - N/A.
+* `environment_id` - The connected environment's ID in the Infinity Portal.
 
 `connected_at` supports the following:
 * `iso_8601` - Date and time represented in international ISO 8601 format.
@@ -34,7 +34,7 @@ The following arguments are supported:
 * `connection_method` - Indicate whether Gateways will be connected to Infinity Portal automatically or only after policy installation.
 * `participant_gateways` - Which Gateways will be connected to Infinity Portal.
 * `specific_gateways` - Collection of targets identified by Name or UID.
-* `enabled` - N/A.
+* `enabled` - Enable/Disable automatic connection of Security Gateways to Infinity Portal.
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

@@ -126,7 +126,7 @@ func dataSourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 			"show_block_page": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Whether a block page should be displayed when TLS Inspection rejects a connection due to server certificate issues.",
 			},
 		},
 	}

@@ -124,27 +124,27 @@ func dataSourceManagementUser() *schema.Resource {
 						"data_integrity_algorithm": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "IKE data integrity algorithm.",
 						},
 						"encryption_algorithm": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "IKE encryption algorithm.",
 						},
 						"ike": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "IKE users encryption enabled.",
 						},
 						"public_key": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "IKE public key enabled.",
 						},
 						"shared_secret": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "IKE shared secret enabled.",
 						},
 					},
 				},

@@ -50,7 +50,7 @@ The following arguments are supported:
 * `tags` - Collection of tag identifiers.
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `server` - N/A.
+* `server` - The UID or Name of the host that is the OPSEC Server.
 
 
 `cpmi` supports the following:

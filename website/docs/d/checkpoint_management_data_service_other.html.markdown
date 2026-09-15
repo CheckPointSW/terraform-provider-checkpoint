@@ -57,7 +57,7 @@ Example: tcp, dport = 21, direction = 0 matches incoming FTP control connections
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
 * `groups` - Collection of group identifiers.
-* `protocol` - N/A.
+* `protocol` - Protocol name or uid. The protocol type associated with the service, and by implication, the management server (if any) that enforces Content Security...
 
 
 `aggressive_aging` supports the following:

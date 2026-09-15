@@ -338,7 +338,7 @@ func dataSourceManagementInterface() *schema.Resource {
 			"gateway": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Properties of the gateway or cluster that the interface belongs to.",
 			},
 		},
 	}

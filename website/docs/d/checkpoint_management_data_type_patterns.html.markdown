@@ -39,5 +39,5 @@ For custom-made data types, you can use this field to provide more details.
 * `tags` -  Collection of tag identifiers.tags blocks are documented below.
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `use_statistical_analysis` - N/A.
+* `use_statistical_analysis` - Indicates whether to use statistical analysis to enhance accuracy. Relevant only for built-in data types.
 

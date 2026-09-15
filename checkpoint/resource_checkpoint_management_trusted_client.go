@@ -121,7 +121,7 @@ func resourceManagementTrustedClient() *schema.Resource {
 			"subnet_mask4": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "N/A",
+				Description: "IPv4 mask.",
 			},
 			"subnet_mask": {
 				Type:        schema.TypeString,

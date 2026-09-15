@@ -84,24 +84,24 @@ The following arguments are supported:
 * `groups` - Collection of group identifiers.groups blocks are documented below.
 * `ignore_warnings` - Apply changes ignoring warnings.
 * `ignore_errors` - Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
-* `anti_spam_and_email_security` - N/A.
-* `auto_topology_custom_recalculation_time` - N/A.
-* `auto_topology_use_custom_recalculation_time` - N/A.
-* `autonomous_system_number` - N/A.
-* `cluster_xl` - N/A.
+* `anti_spam_and_email_security` - Anti-Spam & Email-Security blade enabled.
+* `auto_topology_custom_recalculation_time` - Auto topology custom recalculation time (seconds).
+* `auto_topology_use_custom_recalculation_time` - Auto topology to use custom recalculation time instead of default.
+* `autonomous_system_number` - The Autonomous System Number (ASN) for this Check Point Security Gateway.
+* `cluster_xl` - Cluster XL blade enabled.
 * `communication_with_servers_behind_nat` - Gateway behind NAT communications settings with the server.communication_with_servers_behind_nat blocks are documented below.
-* `data_loss_prevention` - N/A.
-* `dns_server` - N/A.
-* `hardware_subtype` - N/A.
-* `legacy_url_filtering` - N/A.
-* `mobile_access` - N/A.
-* `monitoring` - N/A.
-* `policy_server` - N/A.
-* `rtm_counters_report` - N/A.
-* `rtm_traffic_report` - N/A.
-* `rtm_traffic_report_per_connection` - N/A.
+* `data_loss_prevention` - Data Loss Prevention.
+* `dns_server` - DNS Server.
+* `hardware_subtype` - Gateway type (relevant only for Spark gateways).
+* `legacy_url_filtering` - Legacy URL Filtering enabled.
+* `mobile_access` - Mobile-Access blade enabled.
+* `monitoring` - Monitoring blade enabled.
+* `policy_server` - Policy-Server blade enabled.
+* `rtm_counters_report` - Enables monitoring blades system counters report (e.g CPU Usage,Memory Usage).
+* `rtm_traffic_report` - Enables monitoring blades traffic report.
+* `rtm_traffic_report_per_connection` - Enables Monitoring blade traffic report per connection.
 * `smb_logs_settings` - Logs settings that apply to Quantum Spark Appliances that run Gaia Embedded OS.smb_logs_settings blocks are documented below.
-* `workforce_ai` - N/A.
+* `workforce_ai` - Workforce AI Security blade enabled. Requires content awareness blade and version R82.20 or higher to be enabled.
 * `zero_phishing_settings` - Fqdn settings.zero_phishing_settings blocks are documented below.
 
 
@@ -233,7 +233,7 @@ The following arguments are supported:
 * `hide_behind` - Hide behind method. This parameter is forbidden in case "method" parameter is "static".
 * `install_on` - Which gateway should apply the NAT translation.
 * `method` - NAT translation method.
-* `apply_control_connections` - N/A.
+* `apply_control_connections` - This option performs NAT on VPN control connections to and from this object.
 
 
 `platform_portal_settings` supports the following:
@@ -241,7 +241,7 @@ The following arguments are supported:
 * `portal_web_settings` - Configuration of the portal web settings.portal_web_settings blocks are documented below.
 * `certificate_settings` - Configuration of the portal certificate settings.certificate_settings blocks are documented below.
 * `accessibility` - Configuration of the portal access settings.accessibility blocks are documented below.
-* `enabled` - N/A.
+* `enabled` - State of the web portal (enabled or disabled).
 
 
 `proxy_settings` supports the following:
@@ -750,8 +750,8 @@ The following arguments are supported:
 
 `logs_settings` supports the following:
 
-* `distribute_logs_between_all_active_servers` - N/A.
-* `include_tcp_state_information` - N/A.
+* `distribute_logs_between_all_active_servers` - Distribute logs between all active servers.
+* `include_tcp_state_information` - Include TCP state information. Relevant only when Firewall blade is enabled.
 
 
 `application_control_and_url_filtering_settings` supports the following:

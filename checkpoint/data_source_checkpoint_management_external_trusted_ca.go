@@ -77,12 +77,12 @@ func dataSourceManagementExternalTrustedCa() *schema.Resource {
 			"cache_crl": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Cache Certificate Revocation List on the Security Gateway.",
 			},
 			"retrieve_crl_from_ldap_servers": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Whether to retrieve Certificate Revocation List from ldap servers.",
 			},
 		},
 	}

@@ -38,12 +38,12 @@ The following arguments are supported:
 * `color` - Color of the object. Should be one of existing colors.
 * `comments` - Comments string.
 * `tags` - Collection of tag identifiers.
-* `autonomous_threat_policy` - N/A.
-* `https_inspection_policy` - N/A.
+* `autonomous_threat_policy` - UID of the Autonomous Threat Prevention policy.
+* `https_inspection_policy` - True - enables, False - disables HTTPS Inspection policy, empty - nothing is changed.
 * `installation_targets_revision` - List of installation targets and revisions on which this policy package was installed.installation_targets_revision blocks are documented below.
-* `nat_layer` - N/A.
-* `nat_policy` - N/A.
-* `sd_wan` - N/A.
+* `nat_layer` - UID of the NAT policy.
+* `nat_policy` - True - enables, False - disables NAT policy, empty - nothing is changed.
+* `sd_wan` - True - enables, False - disables SD-WAN policy, empty - nothing is changed.
 * `sd_wan_layer` - SD-WAN policy layer. Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Stan...
 
 

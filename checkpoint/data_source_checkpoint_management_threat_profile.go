@@ -451,7 +451,7 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 			"ai_guard": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Is AI Guard blade activated.",
 			},
 			"advanced_dns_settings": {
 				Type:        schema.TypeList,

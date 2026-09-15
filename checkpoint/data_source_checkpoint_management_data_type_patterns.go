@@ -61,7 +61,7 @@ func dataSourceManagementDataTypePatterns() *schema.Resource {
 			"use_statistical_analysis": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Indicates whether to use statistical analysis to enhance accuracy. Relevant only for built-in data types.",
 			},
 		},
 	}

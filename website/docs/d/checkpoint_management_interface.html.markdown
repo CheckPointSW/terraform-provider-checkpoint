@@ -61,7 +61,7 @@ The following arguments are supported:
 * `topology_settings_manual` -  Topology settings manually defined.
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `gateway` - N/A.
+* `gateway` - Properties of the gateway or cluster that the interface belongs to.
 
 
 `anti_spoofing_settings` supports the following:

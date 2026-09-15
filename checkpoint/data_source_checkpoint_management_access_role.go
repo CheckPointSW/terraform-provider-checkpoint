@@ -109,7 +109,7 @@ func dataSourceManagementAccessRole() *schema.Resource {
 			"remote_access_client": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Remote access clients identified by name or UID. Level of details in the output corresponds to the number of details for search. This table shows the ...",
 			},
 		},
 	}

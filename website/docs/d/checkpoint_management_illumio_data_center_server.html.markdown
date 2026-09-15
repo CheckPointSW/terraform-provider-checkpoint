@@ -39,8 +39,8 @@ The following arguments are supported:
 * `tags` - Collection of tag objects identified by the name or UID.
 * `color` - Color of the object.
 * `comments` - Comments string.
-* `automatic_refresh` - N/A.
-* `data_center_type` - N/A.
+* `automatic_refresh` - Indicates whether the data center server's content is automatically updated.
+* `data_center_type` - Data Center type.
 * `properties` - Data Center properties.properties blocks are documented below.
 
 

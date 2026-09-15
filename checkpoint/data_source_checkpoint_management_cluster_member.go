@@ -153,12 +153,12 @@ func dataSourceManagementClusterMember() *schema.Resource {
 			"auto_generate_ip": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Use an automatically generated IP address for the Gateway object (applies only to Smart-1 Cloud).",
 			},
 			"trust_method": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Trust method that was used for establishing communication.",
 			},
 			"trust_details": {
 				Type:        schema.TypeList,

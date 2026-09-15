@@ -44,9 +44,9 @@ The following arguments are supported:
 * `additional_categories_ids` - Additional categories Id's.
 * `application_id` - N/A.
 * `match_settings` - Match settings for application services.match_settings blocks are documented below.
-* `primary_category_id` - N/A.
+* `primary_category_id` - Primary category id.
 * `risk` - N/A.
-* `user_defined` - N/A.
+* `user_defined` - True if this application site was defined by user (not predefined one).
 
 
 `match_settings` supports the following:

@@ -48,9 +48,9 @@ The following arguments are supported:
 * `track_settings` - Threat rule track settings. track_settings block are documented below.
 * `comments` - Comments string.
 * `exceptions` - Collection of the rule's exceptions identified by UID.
-* `exceptions_layer` - N/A.
+* `exceptions_layer` - The rule's exceptions layer.
 
 `track_settings` supports the following:
 
 * `packet_capture` - Packet capture.
-* `forensics` - N/A.
+* `forensics` - Whether to enable forensics.

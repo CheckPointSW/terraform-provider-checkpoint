@@ -33,4 +33,4 @@ note: terraform execution is not sequential.
 
 `nat_settings` supports the following:
 
-* `apply_control_connections` - N/A.
+* `apply_control_connections` - This option performs NAT on VPN control connections to and from this object.

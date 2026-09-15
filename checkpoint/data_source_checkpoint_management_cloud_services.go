@@ -73,7 +73,7 @@ func dataSourceManagementCloudServices() *schema.Resource {
 						"enabled": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Enable/Disable automatic connection of Security Gateways to Infinity Portal.",
 						},
 					},
 				},
@@ -81,7 +81,7 @@ func dataSourceManagementCloudServices() *schema.Resource {
 			"environment_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The connected environment's ID in the Infinity Portal.",
 			},
 		},
 	}

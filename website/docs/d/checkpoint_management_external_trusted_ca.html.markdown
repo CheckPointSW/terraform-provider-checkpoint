@@ -40,5 +40,5 @@ The following arguments are supported:
 * `tags` -  Collection of tag identifiers.tags blocks are documented below.
 * `color` -  Color of the object. Should be one of existing colors. 
 * `comments` -  Comments string. 
-* `cache_crl` - N/A.
-* `retrieve_crl_from_ldap_servers` - N/A.
+* `cache_crl` - Cache Certificate Revocation List on the Security Gateway.
+* `retrieve_crl_from_ldap_servers` - Whether to retrieve Certificate Revocation List from ldap servers.

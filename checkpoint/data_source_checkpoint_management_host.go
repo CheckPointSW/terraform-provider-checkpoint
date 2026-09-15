@@ -176,7 +176,7 @@ func dataSourceManagementHost() *schema.Resource {
 									"standard_port_number": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "N/A",
+										Description: "Server standard port number.",
 									},
 								},
 							},

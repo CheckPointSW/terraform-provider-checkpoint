@@ -128,17 +128,17 @@ func dataSourceManagementServiceTcp() *schema.Resource {
 			"delayed_sync_value": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Specify the delay (in seconds) in which a synchronization will start after connection initiation.",
 			},
 			"enable_tcp_resource": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Enable for tcp resource.",
 			},
 			"use_delayed_sync": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Enable this option to delay notifying the Security Gateway about a connection, so that the connection will only be synchronized if it still exists x s...",
 			},
 		},
 	}

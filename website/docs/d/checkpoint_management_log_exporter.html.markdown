@@ -52,8 +52,8 @@ The following arguments are supported:
 
 * `aggregate_log_updates` - Indicates whether to aggregate log updates.
 * `format` - Logs format. 
-* `add_custom_log_header` - N/A.
-* `aggregation_mode` - N/A.
+* `add_custom_log_header` - Custom header for log export.
+* `aggregation_mode` - Aggregation mode for aggregated logs.<br> Determines how log updates are processed when aggregate-log-updates is true or not specified:<br> - semi-uni...
 
 
 `advanced` supports the following:

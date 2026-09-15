@@ -113,7 +113,7 @@ func dataSourceManagementNetwork() *schema.Resource {
 			"subnet_mask": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "IPv4 network mask.",
 			},
 		},
 	}

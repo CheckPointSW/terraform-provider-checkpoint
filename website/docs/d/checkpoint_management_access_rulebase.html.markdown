@@ -34,7 +34,7 @@ The following arguments are supported:
 * `hits_settings` - hits_settings blocks are documented below.
 * `dereference_group_members` - Indicates whether to dereference "members" field by details level for every object in reply.
 * `show_membership` - Indicates whether to calculate and show "groups" field for every object in reply.
-* `objects_dictionary` - N/A.
+* `objects_dictionary` - Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard level.
 
 `filter_settings` supports the following:
 

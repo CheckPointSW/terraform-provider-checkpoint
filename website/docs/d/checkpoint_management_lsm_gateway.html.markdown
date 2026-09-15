@@ -40,12 +40,12 @@ If 'using-profile' state is provided a provisioning profile must be provided in 
 * `comments` -  Comments string. 
 * `ignore_warnings` -  Apply changes ignoring warnings. 
 * `ignore_errors` -  Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
-* `gateway_status` - N/A.
+* `gateway_status` - The current status of the Gateway. Shown only when the 'show-statuses' parameter is set to 'true'.
 * `last_applied_provisioning_settings_time` - The last time when the Provisioning Settings were changed. Shown only when the 'show-statuses' parameter is set to 'true'.last_applied_provisioning_settings_time blocks are documented below.
 * `last_policy_fetch_time` - The last time when the Security Policy was fetched. Shown only when the 'show-statuses' parameter is set to 'true'.last_policy_fetch_time blocks are documented below.
 * `last_provisioning_settings_sync_time` - The last time of Provisioning Settings synchronization with the Gateway. Shown only when the 'show-statuses' parameter is set to 'true'.last_provisioning_settings_sync_time blocks are documented below.
-* `policy_status` - N/A.
-* `provisioning_settings_status` - N/A.
+* `policy_status` - The current status of the Security Policy. Shown only when the 'show-statuses' parameter is set to 'true'.
+* `provisioning_settings_status` - The current status of the Provisioning Settings. Shown only when the 'show-statuses' parameter is set to 'true'.
 
 
 `dynamic_objects` supports the following:

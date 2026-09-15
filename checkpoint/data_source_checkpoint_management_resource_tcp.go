@@ -90,7 +90,7 @@ func dataSourceManagementResourceTcp() *schema.Resource {
 						"cvp_server_is_allowed_to_modify_content": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Configures the CVP server to inspect but not modify content.",
 						},
 					},
 				},

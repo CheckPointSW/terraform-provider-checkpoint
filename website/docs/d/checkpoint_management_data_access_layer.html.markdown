@@ -42,5 +42,5 @@ The following arguments are supported:
 * `tags` - Collection of tag identifiers.
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
-* `dynamic_layer` - N/A.
-* `parent_layer` - N/A.
+* `dynamic_layer` - Whether this layer is set as a Dynamic layer.
+* `parent_layer` - Parent layer of this layer.

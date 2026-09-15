@@ -67,7 +67,7 @@ func dataSourceManagementOverrideCategorization() *schema.Resource {
 			"comment": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Comment for the categorization override.",
 			},
 		},
 	}

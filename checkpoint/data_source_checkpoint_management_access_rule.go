@@ -386,7 +386,7 @@ func dataSourceManagementAccessRule() *schema.Resource {
 			"service_resource": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Resource of the service.",
 			},
 			"expiration_settings": {
 				Type:        schema.TypeList,

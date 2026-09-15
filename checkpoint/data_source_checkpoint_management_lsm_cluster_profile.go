@@ -530,7 +530,7 @@ func dataSourceManagementLsmClusterProfile() *schema.Resource {
 						"apply_control_connections": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "This option performs NAT on VPN control connections to and from this object.",
 						},
 					},
 				},

@@ -115,12 +115,12 @@ func dataSourceManagementMdPermissionsProfile() *schema.Resource {
 			"limit_mgmt_api_commands": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Enable limitation of Management API commands the profile may or may not run.",
 			},
 			"manage_all_domains": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Create and manage all Domains and Global Domains.",
 			},
 			"allowed_mgmt_api_commands": {
 				Type:        schema.TypeSet,

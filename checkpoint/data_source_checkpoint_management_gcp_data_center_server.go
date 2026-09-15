@@ -47,12 +47,12 @@ func dataSourceManagementGcpDataCenterServer() *schema.Resource {
 			"automatic_refresh": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Indicates whether the data center server's content is automatically updated.",
 			},
 			"data_center_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Data Center type.",
 			},
 			"properties": {
 				Type:        schema.TypeList,

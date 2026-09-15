@@ -64,7 +64,7 @@ The following arguments are supported:
 * `domains_to_process` -  Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ignore-warnings true. Valid values are: CURRENT_DOMAIN, ALL_DOMAINS_ON_THIS_SERVER.domains_to_process blocks are documented below.
 * `ignore_warnings` -  Apply changes ignoring warnings. 
 * `ignore_errors` -  Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
-* `show_block_page` - N/A.
+* `show_block_page` - Whether a block page should be displayed when TLS Inspection rejects a connection due to server certificate issues.
 
 
 `bypass_under_load` supports the following:

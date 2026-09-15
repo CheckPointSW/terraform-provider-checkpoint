@@ -677,17 +677,17 @@ func dataSourceManagementBestPractice() *schema.Resource {
 			"deactivation_comment": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The deactivation comment of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.",
 			},
 			"deactivation_mode": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The deactivation mode of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.",
 			},
 			"depends_on": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Shows the dependency of this Best Practice.Level of details in the output corresponds to the number of details for search. This table shows the level ...",
 			},
 			"deactivation_expiration_date": {
 				Type:        schema.TypeList,

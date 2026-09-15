@@ -75,4 +75,4 @@ The following arguments are supported:
 * `listen_standard_port` - "Whether server listens to standard port.
 * `operating_system` - Operating System.
 * `protected_by` - Network object which protects this server identified by the name or UID.
-* `standard_port_number` - N/A.
+* `standard_port_number` - Server standard port number.

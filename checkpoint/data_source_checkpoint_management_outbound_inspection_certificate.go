@@ -73,12 +73,12 @@ func dataSourceManagementOutboundInspectionCertificate() *schema.Resource {
 			"public_key_algorithm": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Public key algorithm and size of the outbound certificate.",
 			},
 			"subject": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Certificate's subject.",
 			},
 		},
 	}

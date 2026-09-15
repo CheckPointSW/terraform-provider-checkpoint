@@ -39,8 +39,8 @@ The following arguments are supported:
 * `color` - Color of the object. Should be one of existing colors.
 * `comments` - Comments string.
 * `tags` - Collection of tag identifiers.
-* `number_of_observables` - N/A.
-* `observables_raw_data` - N/A.
+* `number_of_observables` - The amount of observables in the indicator.
+* `observables_raw_data` - The contents of the file containing the indicator's observables.<br>Available only when details-level is full.
 
 
 `profile_overrides` supports the following:

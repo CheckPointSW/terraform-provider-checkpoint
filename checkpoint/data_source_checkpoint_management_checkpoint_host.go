@@ -119,17 +119,17 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 						"automatic_nat_rules": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Whether to add automatic address translation rules.<br>checkpoint-gateway: generate automatic address translation rules using the install-on values.<b...",
 						},
 						"communication_with_this_server": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "How gateways will communicate with this server.<br> <br>Note: original-ip-only and translated-ip-only Supported only by Security Gateways R82 and higher.",
 						},
 						"enable_address_translation": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Whether to enable address translation.",
 						},
 					},
 				},
@@ -357,32 +357,32 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 						"alert_when_free_disk_space_below_metrics": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Alert when free disk space below metrics.",
 						},
 						"delete_when_free_disk_space_below_metrics": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Delete when free disk space below metrics.",
 						},
 						"distribute_logs_between_all_active_servers": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Distribute logs between all active servers.",
 						},
 						"include_tcp_state_information": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Include TCP state information. Relevant only when Firewall blade is enabled.",
 						},
 						"smart_event_intro_correlation_unit": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "N/A",
+							Description: "SmartEvent intro correlation unit enabled.",
 						},
 						"stop_logging_when_free_disk_space_below_metrics": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Stop logging when free disk space below metrics.",
 						},
 					},
 				},
@@ -437,12 +437,12 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 			"dns_server": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "DNS Server.",
 			},
 			"firewall": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Firewall blade enabled.",
 			},
 		},
 	}

@@ -41,7 +41,7 @@ The following arguments are supported:
 * `broadcast` - Allow broadcast address inclusion.
 * `color` - Color of the object. Should be one of existing colors.
 * `comments` - Comments string.
-* `subnet_mask` - N/A.
+* `subnet_mask` - IPv4 network mask.
 
 `nat_settings` supports the following:
 

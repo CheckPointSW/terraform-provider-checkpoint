@@ -224,7 +224,7 @@ func dataSourceManagementInteroperableDevice() *schema.Resource {
 			"autonomous_system_number": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The Autonomous System Number (ASN) for this Interoperable Device object.",
 			},
 		},
 	}

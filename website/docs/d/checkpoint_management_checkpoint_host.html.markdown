@@ -48,8 +48,8 @@ The following arguments are supported:
 * `comments` - Comments string. 
 * `sic_name` - Name of the Secure Internal Connection Trust.
 * `sic_state` - State the Secure Internal Connection Trust.
-* `dns_server` - N/A.
-* `firewall` - N/A.
+* `dns_server` - DNS Server.
+* `firewall` - Firewall blade enabled.
 
 
 `interfaces` supports the following:
@@ -72,9 +72,9 @@ The following arguments are supported:
 * `hide_behind` - Hide behind method. This parameter is not required in case "method" parameter is "static". 
 * `install_on` - Which gateway should apply the NAT translation. 
 * `method` - NAT translation method. 
-* `automatic_nat_rules` - N/A.
-* `communication_with_this_server` - N/A.
-* `enable_address_translation` - N/A.
+* `automatic_nat_rules` - Whether to add automatic address translation rules.<br>checkpoint-gateway: generate automatic address translation rules using the install-on values.<b...
+* `communication_with_this_server` - How gateways will communicate with this server.<br> <br>Note: original-ip-only and translated-ip-only Supported only by Security Gateways R82 and higher.
+* `enable_address_translation` - Whether to enable address translation.
 
 
 `management_blades` supports the following:
@@ -118,9 +118,9 @@ The following arguments are supported:
 * `stop_logging_when_free_disk_space_below_threshold` - Stop logging when free disk space below threshold. 
 * `turn_on_qos_logging` - Enable turn on qos logging. 
 * `update_account_log_every` - Update account log in every amount of seconds.
-* `alert_when_free_disk_space_below_metrics` - N/A.
-* `delete_when_free_disk_space_below_metrics` - N/A.
-* `distribute_logs_between_all_active_servers` - N/A.
-* `include_tcp_state_information` - N/A.
-* `smart_event_intro_correlation_unit` - N/A.
-* `stop_logging_when_free_disk_space_below_metrics` - N/A.
+* `alert_when_free_disk_space_below_metrics` - Alert when free disk space below metrics.
+* `delete_when_free_disk_space_below_metrics` - Delete when free disk space below metrics.
+* `distribute_logs_between_all_active_servers` - Distribute logs between all active servers.
+* `include_tcp_state_information` - Include TCP state information. Relevant only when Firewall blade is enabled.
+* `smart_event_intro_correlation_unit` - SmartEvent intro correlation unit enabled.
+* `stop_logging_when_free_disk_space_below_metrics` - Stop logging when free disk space below metrics.

@@ -130,7 +130,7 @@ The following arguments are supported:
 * `reply_order` -  Designates when the CVP server returns data to the Security Gateway security server. 
 * `send_http_request_to_cvp` -  Used to protect against undesirable content in the HTTP request, for example, when inspecting peer-to-peer connections. 
 * `send_only_unsafe_file_types` -  Improves the performance of the CVP server. This option does not send to the CVP server traffic that is considered safe. 
-* `cvp_server_is_allowed_to_modify_content` - N/A.
+* `cvp_server_is_allowed_to_modify_content` - Configures the CVP server to inspect but not modify content.
 
 
 `soap` supports the following:

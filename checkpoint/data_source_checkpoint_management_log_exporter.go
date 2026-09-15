@@ -84,12 +84,12 @@ func dataSourceManagementLogExporter() *schema.Resource {
 						"add_custom_log_header": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Custom header for log export.",
 						},
 						"aggregation_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "N/A",
+							Description: "Aggregation mode for aggregated logs.<br> Determines how log updates are processed when aggregate-log-updates is true or not specified:<br> - semi-uni...",
 						},
 					},
 				},

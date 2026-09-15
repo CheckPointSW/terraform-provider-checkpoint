@@ -77,7 +77,7 @@ func dataSourceManagementDataCenterQuery() *schema.Resource {
 			"using_all_data_center": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Using all Data Centers.",
 			},
 		},
 	}

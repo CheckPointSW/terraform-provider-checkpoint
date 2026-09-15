@@ -90,7 +90,7 @@ func dataSourceManagementOpsecApplication() *schema.Resource {
 			"server": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "The UID or Name of the host that is the OPSEC Server.",
 			},
 		},
 	}

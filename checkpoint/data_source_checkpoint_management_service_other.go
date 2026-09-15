@@ -129,7 +129,7 @@ func dataSourceManagementServiceOther() *schema.Resource {
 			"protocol": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Protocol name or uid. The protocol type associated with the service, and by implication, the management server (if any) that enforces Content Security...",
 			},
 		},
 	}

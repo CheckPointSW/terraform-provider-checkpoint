@@ -50,10 +50,10 @@ The following arguments are supported:
 * `relevant_objects` - The applicable objects of the Best Practice. relevant_objects blocks are documented below.
 * `user_defined_firewall` - The definitions of the user-defined Firewall Best Practice. Relevant only for Firewall Best Practices created by the user. user_defined_firewall blocks are documented below.
 * `user_defined_gaia_os` - The definitions of the user-defined Gaia OS Best Practice. Relevant only for Gaia OS Best Practices created by the user. user_defined_gaia_os blocks are documented below.
-* `deactivation_comment` - N/A.
+* `deactivation_comment` - The deactivation comment of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.
 * `deactivation_expiration_date` - The deactivation expiration date of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false', and the value...deactivation_expiration_date blocks are documented below.
-* `deactivation_mode` - N/A.
-* `depends_on` - N/A.
+* `deactivation_mode` - The deactivation mode of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.
+* `depends_on` - Shows the dependency of this Best Practice.Level of details in the output corresponds to the number of details for search. This table shows the level ...
 
 `regulations` supports the following:
 

@@ -52,12 +52,12 @@ func dataSourceManagementThreatLayer() *schema.Resource {
 			"shared": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Whether this layer is shared.",
 			},
 			"permissions_profiles": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Collection of permission profile objects associated with this layer.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

@@ -31,5 +31,5 @@ The following arguments are supported:
 * `name` - (Optional) Object name. 
 * `allowed_mgmt_api_commands` - List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...
 * `blocked_mgmt_api_commands` - List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...
-* `limit_mgmt_api_commands` - N/A.
-* `manage_all_domains` - N/A.
+* `limit_mgmt_api_commands` - Enable limitation of Management API commands the profile may or may not run.
+* `manage_all_domains` - Create and manage all Domains and Global Domains.

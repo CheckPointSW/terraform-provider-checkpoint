@@ -47,7 +47,7 @@ func dataSourceManagementServiceCitrixTcp() *schema.Resource {
 			"port": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "N/A",
+				Description: "Service port.",
 			},
 		},
 	}
