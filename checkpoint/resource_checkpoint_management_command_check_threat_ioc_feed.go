@@ -135,6 +135,7 @@ func resourceManagementCheckThreatIocFeed() *schema.Resource {
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "password for authenticating with the URL.",
 						},
 						"use_custom_feed_settings": {

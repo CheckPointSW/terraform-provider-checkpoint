@@ -26,6 +26,7 @@ func dataSourceManagementCMEGWConfigurationsAWS() *schema.Resource {
 			"sic_key": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "The configuration sic key.",
 			},
 			"policy": {

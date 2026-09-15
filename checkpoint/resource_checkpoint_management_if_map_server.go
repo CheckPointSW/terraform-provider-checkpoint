@@ -89,6 +89,7 @@ func resourceManagementIfMapServer() *schema.Resource {
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "Username for the IF-MAP server authentication. <font color=\"red\">Required only when</font> 'authentication-method' is set to 'basic'.",
 						},
 					},

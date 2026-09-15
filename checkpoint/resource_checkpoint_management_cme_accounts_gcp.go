@@ -37,6 +37,7 @@ func resourceManagementCMEAccountsGCP() *schema.Resource {
 			"credentials_data": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "Base64 encoded string that represents the content of the credentials file.",
 			},
 			"deletion_tolerance": {

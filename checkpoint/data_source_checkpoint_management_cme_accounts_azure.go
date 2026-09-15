@@ -35,6 +35,7 @@ func dataSourceManagementCMEAccountsAzure() *schema.Resource {
 			"client_secret": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "The service principal's client secret.",
 			},
 			"deletion_tolerance": {

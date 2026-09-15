@@ -500,6 +500,7 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 									"l2tp_pre_shared_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Type in the pre-shared key.<br>Available only if support-l2tp-with-pre-shared-key is set to true.",
 									},
 								},

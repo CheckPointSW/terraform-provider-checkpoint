@@ -399,6 +399,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 												"client_secret": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Sensitive:   true,
 													Description: "Client Secret.",
 												},
 											},
@@ -584,6 +585,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 															"base64_password": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Sensitive:   true,
 																Description: "Password (encoded in Base64 with padding) for the certificate file.",
 															},
 														},
@@ -795,6 +797,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 												"client_secret": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Sensitive:   true,
 													Description: "Client Secret.",
 												},
 											},
@@ -1112,6 +1115,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 									"base64_password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password (encoded in Base64 with padding) for the certificate file.",
 									},
 								},
@@ -1247,6 +1251,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 									"base64_password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password (encoded in Base64 with padding) for the certificate file.",
 									},
 								},
@@ -1513,6 +1518,7 @@ func resourceManagementSimpleCluster() *schema.Resource {
 						"one_time_password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "SIC one time password.",
 						},
 						"priority": {

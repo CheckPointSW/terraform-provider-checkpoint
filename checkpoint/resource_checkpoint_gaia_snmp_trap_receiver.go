@@ -34,6 +34,7 @@ func resourceGaiaSnmpTrapReceiver() *schema.Resource {
             "community_string": {
                 Type:        schema.TypeString,
                 Optional:    true,
+                Sensitive:   true,
                 Description: `Receiver community - Required only in case of v1/v2 versions<br>Trap Community String used by the trap receiver to determine which traps are accepted from a device.`,
             },
             "member_id": {

@@ -23,6 +23,7 @@ func dataGaiaSetSnmpSession() *schema.Resource {
                 Type:        schema.TypeString,
                 Optional:    true,
                 ForceNew:    true,
+                Sensitive:   true,
                 Description: `SNMP v2 community password.<br>                 <b>required for SNMP v1/v2</b>`,
             },
             "v3_object": {

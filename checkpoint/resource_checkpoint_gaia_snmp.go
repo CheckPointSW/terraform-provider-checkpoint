@@ -49,11 +49,13 @@ func resourceGaiaSnmp() *schema.Resource {
             "read_only_community": {
                 Type:        schema.TypeString,
                 Optional:    true,
+                Sensitive:   true,
                 Description: `SNMP read-only community password, Where:<br>* read-only: lets you only read the values of SNMP objects`,
             },
             "read_write_community": {
                 Type:        schema.TypeString,
                 Optional:    true,
+                Sensitive:   true,
                 Description: `SNMP read-write community password, Where:<br>* read-write: read and set the values as well`,
             },
             "interfaces": {

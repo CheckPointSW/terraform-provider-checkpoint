@@ -389,6 +389,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 												"client_secret": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Sensitive:   true,
 													Description: "Client Secret.",
 												},
 											},
@@ -574,6 +575,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 															"base64_password": {
 																Type:        schema.TypeString,
 																Optional:    true,
+																Sensitive:   true,
 																Description: "Password (encoded in Base64 with padding) for the certificate file.",
 															},
 														},
@@ -785,6 +787,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 												"client_secret": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Sensitive:   true,
 													Description: "Client Secret.",
 												},
 											},
@@ -1102,6 +1105,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 									"base64_password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password (encoded in Base64 with padding) for the certificate file.",
 									},
 								},
@@ -1237,6 +1241,7 @@ func resourceManagementSimpleGateway() *schema.Resource {
 									"base64_password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password (encoded in Base64 with padding) for the certificate file.",
 									},
 								},

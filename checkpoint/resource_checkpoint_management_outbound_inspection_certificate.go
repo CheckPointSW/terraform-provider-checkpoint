@@ -27,6 +27,7 @@ func resourceManagementOutboundInspectionCertificate() *schema.Resource {
 			"base64_password": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Password (encoded in Base64 with padding) for the certificate file.",
 			},
 			"base64_certificate": {

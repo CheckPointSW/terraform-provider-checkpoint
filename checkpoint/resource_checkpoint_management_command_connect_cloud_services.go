@@ -27,6 +27,7 @@ func resourceManagementConnectCloudServices() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "Copy the authentication token from the Smart-1 cloud service hosted in the Infinity Portal.",
 			},
 			"status": {

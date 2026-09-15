@@ -140,6 +140,7 @@ func resourceManagementUser() *schema.Resource {
 						"shared_secret": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "IKE shared secret.",
 						},
 						"data_integrity_algorithm": {
