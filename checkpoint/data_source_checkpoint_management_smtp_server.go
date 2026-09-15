@@ -41,11 +41,6 @@ func dataSourceManagementSmtpServer() *schema.Resource {
 				Computed:    true,
 				Description: "Encryption type.",
 			},
-			"password": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "A password for the SMTP server.<br><font color=\"red\">Required only if</font> authentication is set to true.",
-			},
 			"username": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -134,10 +129,6 @@ func dataSourceManagementSmtpServerRead(d *schema.ResourceData, m interface{}) e
 
 	if v := smtpServer["encryption"]; v != nil {
 		_ = d.Set("encryption", v)
-	}
-
-	if v := smtpServer["password"]; v != nil {
-		_ = d.Set("password", v)
 	}
 
 	if v := smtpServer["username"]; v != nil {

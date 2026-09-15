@@ -82,11 +82,6 @@ func dataSourceManagementIfMapServer() *schema.Resource {
 							Computed:    true,
 							Description: "Username for the IF-MAP server authentication. <font color=\"red\">Required only when</font> 'authentication-method' is set to 'basic'.",
 						},
-						"password": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Username for the IF-MAP server authentication. <font color=\"red\">Required only when</font> 'authentication-method' is set to 'basic'.",
-						},
 					},
 				},
 			},

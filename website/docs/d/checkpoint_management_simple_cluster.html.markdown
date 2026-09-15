@@ -429,7 +429,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The certificate distinguished name.
 * `certificate_valid_from` - The date from which the certificate is valid.
@@ -453,7 +452,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The DN (Distinguished Name) of the certificate.
 * `certificate_valid_from` - The date, from which the certificate is valid.
@@ -571,7 +569,6 @@ The following arguments are supported:
 `authorized_clients` supports the following:
 
 * `client` - Host / Network Group Name or UID.
-* `client_secret` - Client Secret.
 
 
 `authentication_settings` supports the following:
@@ -663,7 +660,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The DN (Distinguished Name) of the certificate.
 * `certificate_valid_from` - The date, from which the certificate is valid.

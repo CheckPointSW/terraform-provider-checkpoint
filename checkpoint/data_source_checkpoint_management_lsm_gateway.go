@@ -125,11 +125,6 @@ func dataSourceManagementLsmGateway() *schema.Resource {
 				Description: "Secure Internal Communication.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"one_time_password": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "One-time password. When one-time password is provided without ip-address- trusted communication is automatically initiated  when the gateway connects to the Security Management server for the first time.",
-						},
 						"ip_address": {
 							Type:        schema.TypeString,
 							Computed:    true,

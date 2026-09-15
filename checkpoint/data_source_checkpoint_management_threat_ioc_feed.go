@@ -95,11 +95,6 @@ func dataSourceManagementThreatIocFeed() *schema.Resource {
 				Computed:    true,
 				Description: "Feed type to be enforced.",
 			},
-			"password": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "password for authenticating with the URL.",
-			},
 			"tags": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -278,10 +273,6 @@ func dataSourceManagementThreatIocFeedRead(d *schema.ResourceData, m interface{}
 
 	if v := threatIocFeed["feed-type"]; v != nil {
 		_ = d.Set("feed_type", v)
-	}
-
-	if v := threatIocFeed["password"]; v != nil {
-		_ = d.Set("password", v)
 	}
 
 	if threatIocFeed["tags"] != nil {

@@ -48,4 +48,3 @@ The following arguments are supported:
 
 * `authentication_method` - Authentication method for the IF-MAP server.
 * `username` - Username for the IF-MAP server authentication.
-* `password` - Username for the IF-MAP server authentication.

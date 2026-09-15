@@ -55,7 +55,6 @@ The following arguments are supported:
 * `ips_update_policy` - Specifies whether the IPS will be downloaded from the Management or directly to the Gateway.
 * `nat_hide_internal_interfaces` - Hide internal networks behind the Gateway's external IP.
 * `nat_settings` - NAT settings.nat_settings blocks are documented below.
-* `one_time_password` - N/A
 * `os_name` - Gateway platform operating system.
 * `platform_portal_settings` - Platform portal settings.platform_portal_settings blocks are documented below.
 * `proxy_settings` - Proxy Server for Gateway.proxy_settings blocks are documented below.
@@ -415,7 +414,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The certificate distinguished name.
 * `certificate_valid_from` - The date from which the certificate is valid.
@@ -439,7 +437,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The DN (Distinguished Name) of the certificate.
 * `certificate_valid_from` - The date, from which the certificate is valid.
@@ -557,7 +554,6 @@ The following arguments are supported:
 `authorized_clients` supports the following:
 
 * `client` - Host / Network Group Name or UID.
-* `client_secret` - Client Secret.
 
 
 `authentication_settings` supports the following:
@@ -628,7 +624,6 @@ The following arguments are supported:
 
 * `base64_certificate` - The certificate file encoded in Base64 with padding.
   This file must be in the *.p12 format.
-* `base64_password` - Password (encoded in Base64 with padding) for the certificate file.
 * `certificate` - The certificate.
 * `certificate_dn` - The DN (Distinguished Name) of the certificate.
 * `certificate_valid_from` - The date, from which the certificate is valid.

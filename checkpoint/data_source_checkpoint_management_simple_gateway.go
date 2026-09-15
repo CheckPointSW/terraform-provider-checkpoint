@@ -436,11 +436,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 																Computed:    true,
 																Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
 															},
-															"base64_password": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Password (encoded in Base64 with padding) for the certificate file.",
-															},
 															"certificate": {
 																Type:        schema.TypeString,
 																Computed:    true,
@@ -707,11 +702,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 													Type:        schema.TypeString,
 													Computed:    true,
 													Description: "Host / Network Group Name or UID.",
-												},
-												"client_secret": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Client Secret.",
 												},
 											},
 										},
@@ -1285,11 +1275,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Computed:    true,
 										Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
 									},
-									"base64_password": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Password (encoded in Base64 with padding) for the certificate file.",
-									},
 								},
 							},
 						},
@@ -1436,11 +1421,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "The certificate file encoded in Base64 with padding.  This file must be in the *.p12 format.",
-									},
-									"base64_password": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Password (encoded in Base64 with padding) for the certificate file.",
 									},
 								},
 							},
@@ -1836,11 +1816,6 @@ func dataSourceManagementSimpleGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Gateway platform hardware type.",
-			},
-			"one_time_password": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "SIC one time password.",
 			},
 			"sic_name": {
 				Type:        schema.TypeString,
@@ -4146,9 +4121,6 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 					if v, _ := certificateSettingsMap["base64-certificate"]; v != nil {
 						certificateSettingsMapToReturn["base64_certificate"] = v
 					}
-					if v, _ := certificateSettingsMap["base64-password"]; v != nil {
-						certificateSettingsMapToReturn["base64_password"] = v
-					}
 					if v, _ := certificateSettingsMap["certificate"]; v != nil {
 						certificateSettingsMapToReturn["certificate"] = v
 					}
@@ -4251,9 +4223,6 @@ func dataSourceManagementSimpleGatewayRead(d *schema.ResourceData, m interface{}
 
 					if v, _ := certificateSettingsMap["base64-certificate"]; v != nil {
 						certificateSettingsMapToReturn["base64_certificate"] = v
-					}
-					if v, _ := certificateSettingsMap["base64-password"]; v != nil {
-						certificateSettingsMapToReturn["base64_password"] = v
 					}
 					if v, _ := certificateSettingsMap["certificate"]; v != nil {
 						certificateSettingsMapToReturn["certificate"] = v
