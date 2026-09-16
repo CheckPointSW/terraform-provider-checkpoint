@@ -1,3 +1,121 @@
+## 3.4.0 (September 16, 2026)
+
+ENHANCEMENTS
+* Add new fields to the following resources and data sources according to Management API v2.2:
+  * **Resource:** `checkpoint_management_access_layer`
+  * **Resource:** `checkpoint_management_access_rule`
+  * **Resource:** `checkpoint_management_application_site`
+  * **Resource:** `checkpoint_management_checkpoint_host`
+  * **Resource:** `checkpoint_management_command_check_threat_ioc_feed`
+  * **Resource:** `checkpoint_management_command_connect_cloud_services`
+  * **Resource:** `checkpoint_management_command_export_management`
+  * **Resource:** `checkpoint_management_command_import_management`
+  * **Resource:** `checkpoint_management_command_install_software_package`
+  * **Resource:** `checkpoint_management_command_reset_sic`
+  * **Resource:** `checkpoint_management_command_run_script`
+  * **Resource:** `checkpoint_management_command_set_automatic_purge`
+  * **Resource:** `checkpoint_management_command_set_gateway_global_use`
+  * **Resource:** `checkpoint_management_command_set_global_properties`
+  * **Resource:** `checkpoint_management_command_set_https_advanced_settings`
+  * **Resource:** `checkpoint_management_command_set_policy_settings`
+  * **Resource:** `checkpoint_management_command_test_sic_status`
+  * **Resource:** `checkpoint_management_command_test_trust`
+  * **Resource:** `checkpoint_management_command_verify_software_package`
+  * **Resource:** `checkpoint_management_command_where_used`
+  * **Resource:** `checkpoint_management_data_type_patterns`
+  * **Resource:** `checkpoint_management_domain_permissions_profile`
+  * **Resource:** `checkpoint_management_interoperable_device`
+  * **Resource:** `checkpoint_management_log_exporter`
+  * **Resource:** `checkpoint_management_md_permissions_profile`
+  * **Resource:** `checkpoint_management_outbound_inspection_certificate`
+  * **Resource:** `checkpoint_management_requirement`
+  * **Resource:** `checkpoint_management_service_other`
+  * **Resource:** `checkpoint_management_service_tcp`
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_threat_exception`
+  * **Resource:** `checkpoint_management_threat_ioc_feed`
+  * **Resource:** `checkpoint_management_threat_layer`
+  * **Resource:** `checkpoint_management_threat_profile`
+  * **Resource:** `checkpoint_management_threat_rule`
+  * **Resource:** `checkpoint_management_time`
+  * **Resource:** `checkpoint_management_trusted_client`
+  * **Resource:** `checkpoint_management_user`
+  * **Resource:** `checkpoint_management_user_template`
+  * **Resource:** `checkpoint_management_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_vpn_community_star`
+  * **Data Source:** `checkpoint_management_access_layer`
+  * **Data Source:** `checkpoint_management_access_role`
+  * **Data Source:** `checkpoint_management_access_rule`
+  * **Data Source:** `checkpoint_management_application_site`
+  * **Data Source:** `checkpoint_management_application_site_category`
+  * **Data Source:** `checkpoint_management_best_practice`
+  * **Data Source:** `checkpoint_management_checkpoint_host`
+  * **Data Source:** `checkpoint_management_cloud_services`
+  * **Data Source:** `checkpoint_management_cluster_member`
+  * **Data Source:** `checkpoint_management_data_type_file_type_attributes`
+  * **Data Source:** `checkpoint_management_data_type_patterns`
+  * **Data Source:** `checkpoint_management_domain`
+  * **Data Source:** `checkpoint_management_domain_permissions_profile`
+  * **Data Source:** `checkpoint_management_external_trusted_ca`
+  * **Data Source:** `checkpoint_management_gateway_capabilities`
+  * **Data Source:** `checkpoint_management_gateway_global_use`
+  * **Data Source:** `checkpoint_management_group`
+  * **Data Source:** `checkpoint_management_group_with_exclusion`
+  * **Data Source:** `checkpoint_management_host`
+  * **Data Source:** `checkpoint_management_https_advanced_settings`
+  * **Data Source:** `checkpoint_management_https_rule`
+  * **Data Source:** `checkpoint_management_interface`
+  * **Data Source:** `checkpoint_management_interoperable_device`
+  * **Data Source:** `checkpoint_management_log_exporter`
+  * **Data Source:** `checkpoint_management_lsm_cluster`
+  * **Data Source:** `checkpoint_management_lsm_cluster_profile`
+  * **Data Source:** `checkpoint_management_lsm_gateway`
+  * **Data Source:** `checkpoint_management_lsm_gateway_profile`
+  * **Data Source:** `checkpoint_management_md_permissions_profile`
+  * **Data Source:** `checkpoint_management_mds`
+  * **Data Source:** `checkpoint_management_nat_rule`
+  * **Data Source:** `checkpoint_management_network`
+  * **Data Source:** `checkpoint_management_opsec_application`
+  * **Data Source:** `checkpoint_management_outbound_inspection_certificate`
+  * **Data Source:** `checkpoint_management_override_categorization`
+  * **Data Source:** `checkpoint_management_package`
+  * **Data Source:** `checkpoint_management_policy_settings`
+  * **Data Source:** `checkpoint_management_resource_ftp`
+  * **Data Source:** `checkpoint_management_resource_smtp`
+  * **Data Source:** `checkpoint_management_resource_tcp`
+  * **Data Source:** `checkpoint_management_resource_uri`
+  * **Data Source:** `checkpoint_management_server_certificate`
+  * **Data Source:** `checkpoint_management_service_citrix_tcp`
+  * **Data Source:** `checkpoint_management_service_compound_tcp`
+  * **Data Source:** `checkpoint_management_service_group`
+  * **Data Source:** `checkpoint_management_service_other`
+  * **Data Source:** `checkpoint_management_service_tcp`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_subordinate_ca`
+  * **Data Source:** `checkpoint_management_tacacs_server`
+  * **Data Source:** `checkpoint_management_task`
+  * **Data Source:** `checkpoint_management_threat_indicator`
+  * **Data Source:** `checkpoint_management_threat_ioc_feed`
+  * **Data Source:** `checkpoint_management_threat_layer`
+  * **Data Source:** `checkpoint_management_threat_profile`
+  * **Data Source:** `checkpoint_management_threat_rule`
+  * **Data Source:** `checkpoint_management_trusted_client`
+  * **Data Source:** `checkpoint_management_user`
+  * **Data Source:** `checkpoint_management_user_template`
+  * **Data Source:** `checkpoint_management_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_vpn_community_star`
+* Mark credential fields as sensitive across resources and data sources
+
+DEPRECATED
+* **Field:** `encryption_algorithms` in `checkpoint_management_command_set_global_properties` - use `encryption.ike_phase_1` and `encryption.ike_phase_2` in `checkpoint_management_vpn_community_remote_access` instead
+* **Field:** `encryption_method` in `checkpoint_management_command_set_global_properties` - use `encryption.encryption_method` in `checkpoint_management_vpn_community_remote_access` instead
+* **Field:** `http_next_proxy_host` and `http_next_proxy_port` in `checkpoint_management_command_set_global_properties`
+* **Field:** `zero_phishing_fqdn` in `checkpoint_management_lsm_gateway_profile` and `checkpoint_management_lsm_cluster_profile` data sources
+
 ## 3.3.1 (September 1, 2026)
 
 BUG FIXES
