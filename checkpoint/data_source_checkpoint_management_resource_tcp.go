@@ -87,6 +87,11 @@ func dataSourceManagementResourceTcp() *schema.Resource {
 							Computed:    true,
 							Description: "Designates when the CVP server returns data to the Security Gateway security server.",
 						},
+						"cvp_server_is_allowed_to_modify_content": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Configures the CVP server to inspect but not modify content.",
+						},
 					},
 				},
 			},
@@ -200,6 +205,9 @@ func dataSourceManagementResourceTcpRead(d *schema.ResourceData, m interface{}) 
 		}
 		if v, _ := cvpMap["reply-order"]; v != nil {
 			cvpMapToReturn["reply_order"] = v
+		}
+		if v := cvpMap["cvp-server-is-allowed-to-modify-content"]; v != nil {
+			cvpMapToReturn["cvp_server_is_allowed_to_modify_content"] = v
 		}
 		_ = d.Set("cvp_settings", []interface{}{cvpMapToReturn})
 	} else {

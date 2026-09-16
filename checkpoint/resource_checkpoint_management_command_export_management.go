@@ -91,6 +91,36 @@ func resourceManagementExportManagement() *schema.Resource {
 				Computed:    true,
 				Description: "Asynchronous task unique identifier.",
 			},
+			"verify_all_servers": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Runs the verification process on all Management Servers and Log Servers.<br>For more information see <span class='show-only-in-doc-ui'><a data-toggle=...",
+			},
+			"prepare_background_export": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', the export will run in the background and 'Prepare' phase will start. You can continue making changes on the Management Server during and a...",
+			},
+			"days_of_logs": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Export <N> last days of logs.",
+			},
+			"complete_background_export": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', export the changes you made during the 'Prepare' phase and the 'Complete' phase will start. You can't make any changes during the 'Complete...",
+			},
+			"cancel_prepare_export": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', cancels the export in background process. If you do not run this command within the number of days defined in 'show-background-upgrade-sett...",
+			},
 		},
 	}
 }
@@ -141,6 +171,26 @@ func createManagementExportManagement(d *schema.ResourceData, m interface{}) err
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
 		payload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("verify_all_servers"); ok {
+		payload["verify-all-servers"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("prepare_background_export"); ok {
+		payload["prepare-background-export"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("days_of_logs"); ok {
+		payload["days-of-logs"] = v.(int)
+	}
+
+	if v, ok := d.GetOkExists("complete_background_export"); ok {
+		payload["complete-background-export"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("cancel_prepare_export"); ok {
+		payload["cancel-prepare-export"] = v.(bool)
 	}
 
 	ExportManagementRes, err := client.ApiCall("export-management", payload, client.GetSessionID(), true, client.IsProxyUsed())

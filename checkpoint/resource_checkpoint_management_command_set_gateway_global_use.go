@@ -29,6 +29,12 @@ func resourceManagementSetGatewayGlobalUse() *schema.Resource {
 				ForceNew:    true,
 				Description: "On what target to execute this command. Target may be identified by its object name, or object unique identifier.",
 			},
+			"enable_identity_sharing": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether Identity Awareness Sharing global use is enabled on the target.",
+			},
 		},
 	}
 }
@@ -44,6 +50,10 @@ func createManagementSetGatewayGlobalUse(d *schema.ResourceData, m interface{}) 
 
 	if v, ok := d.GetOk("target"); ok {
 		payload["target"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("enable_identity_sharing"); ok {
+		payload["enable-identity-sharing"] = v.(bool)
 	}
 
 	SetGatewayGlobalUseRes, _ := client.ApiCall("set-gateway-global-use", payload, client.GetSessionID(), true, false)

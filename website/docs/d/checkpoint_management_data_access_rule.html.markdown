@@ -70,11 +70,19 @@ The following arguments are supported:
 * `vpn_directional` - Collection of VPN directional. VPN directional block documented below.
 * `comments` - Comments string.
 * `fields_with_uid_identifier` - (Optional) List of resource fields that will use object UIDs as object identifiers. Default is object name.
+* `destination_ranges` - Displays the destination as ranges of IP addresses, in case show-as-ranges is set to true.<br />In this case, 'destination' and 'destination-negate' p...destination_ranges blocks are documented below.
+* `expiration_settings` - Displays the expiration date settings.expiration_settings blocks are documented below.
+* `hits` - Hits count object.hits blocks are documented below.
+* `service_ranges` - Displays the services and applications as ranges of port numbers, in case show-as-ranges is set to true.<br />In this case, 'service' and 'service-neg...service_ranges blocks are documented below.
+* `service_resource` - Resource of the service.
+* `source_ranges` - Displays the source as ranges of IP addresses, in case show-as-ranges is set to true.<br />In this case, 'source' and 'source-negate' parameters are o...source_ranges blocks are documented below.
 
 `action_settings` supports the following:
 
 * `enable_identity_captive_portal`
 * `limit`
+* `client_auth_settings` - N/A.client_auth_settings blocks are documented below.
+* `user_auth_settings` - N/A.user_auth_settings blocks are documented below.
 
 `custom_fields` supports the following:
 
@@ -109,11 +117,122 @@ The following arguments are supported:
 * `to` - To VPN community.
 
 
+`client_auth_settings` supports the following:
+
+* `destination` - How destination hosts are matched against the user database.
+* `require_desktop_config_verification` - When true, the rule only applies if the client's desktop security policy configuration has been verified by the gateway.
+* `sessions_limit` - Maximum number of concurrent sessions allowed per user. Only used when unlimited-sessions is false. Must be 1 or greater.
+* `sign_on_method` - Mechanism used to authenticate the client.
+* `sign_on_type` - Determines whether a standard or specific sign-on policy is applied. Allowed values: standard, specific.
+* `source` - How source users are matched against the user database.
+* `timeout` - Controls how long an authenticated session remains valid.timeout blocks are documented below.
+* `tracking` - Action to take in the log when a user successfully authenticates. Allowed values: none, log, alert.
+* `unlimited_sessions` - When true, a single user may have any number of concurrent authenticated sessions. When false, the number of concurrent sessions is capped at sessions...
 
 
+`timeout` supports the following:
+
+* `enable` - When true, authenticated sessions expire after the duration defined by minutes. When false, authenticated sessions never expire.
+* `minutes` - Number of minutes before an authenticated session expires. Only used when enable is true. Must be 0 or greater.
+* `refreshable` - When true, the session timeout timer resets each time the authenticated user performs a network action.
 
 
+`user_auth_settings` supports the following:
+
+* `allowed_http_servers` - Restricts which HTTP servers authenticated users may access.
+* `destination` - How destination hosts are matched against the user database.
+* `source` - How source users are matched against the user database.
 
 
+`destination_ranges` supports the following:
+
+* `excluded_others` - Objects which are not represented as IP addresses and are negated in the given rule - for example if negate is set for the source or destination of th...
+* `ipv4` - Range of IPv4 addresses that match in the given rule.ipv4 blocks are documented below.
+* `ipv6` - Range of IPv6 addresses that match in the given rule.ipv6 blocks are documented below.
+* `others` - Objects which are not represented as IP addresses and match the given rule. The details-level parameter of the request determines whether they are dis...
 
 
+`ipv4` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.
+
+
+`ipv6` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.
+
+
+`expiration_settings` supports the following:
+
+* `expiration_date` - Expiration date.expiration_date blocks are documented below.
+* `expired` - Expired rule.
+* `has_expiration_date` - Rule has expiration date.
+
+
+`expiration_date` supports the following:
+
+* `iso_8601` - N/A.
+* `posix` - N/A.
+
+
+`hits` supports the following:
+
+* `first_date` - N/A.first_date blocks are documented below.
+* `last_date` - N/A.last_date blocks are documented below.
+* `level` - N/A.
+* `percentage` - N/A.
+* `value` - N/A.
+
+
+`first_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`last_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`service_ranges` supports the following:
+
+* `excluded_others` - Objects which are not represented as port numbers and are negated in the given rule - for example if negate is set for the service of this rule. The d...
+* `others` - Objects which are not represented as port numbers and match the given rule. The details-level parameter of the request determines whether they are dis...
+* `tcp` - Range of TCP ports that match in the given rule.tcp blocks are documented below.
+* `udp` - Range of UDP ports that match in the given rule.udp blocks are documented below.
+
+
+`tcp` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.
+
+
+`udp` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.
+
+
+`source_ranges` supports the following:
+
+* `excluded_others` - Objects which are not represented as IP addresses and are negated in the given rule - for example if negate is set for the source or destination of th...
+* `ipv4` - Range of IPv4 addresses that match in the given rule.ipv4 blocks are documented below.
+* `ipv6` - Range of IPv6 addresses that match in the given rule.ipv6 blocks are documented below.
+* `others` - Objects which are not represented as IP addresses and match the given rule. The details-level parameter of the request determines whether they are dis...
+
+
+`ipv4` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.
+
+
+`ipv6` supports the following:
+
+* `end` - N/A.
+* `start` - N/A.

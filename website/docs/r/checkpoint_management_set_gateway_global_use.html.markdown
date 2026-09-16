@@ -26,6 +26,7 @@ The following arguments are supported:
 
 * `enabled` - (Required) Indicates whether global use is enabled on the target. 
 * `target` - (Required) On what target to execute this command. Target may be identified by its object name, or object unique identifier. 
+* `enable_identity_sharing` - (Optional) Indicates whether Identity Awareness Sharing global use is enabled on the target.
 
 
 ## How To Use

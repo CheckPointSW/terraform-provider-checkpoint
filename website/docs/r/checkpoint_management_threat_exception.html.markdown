@@ -56,6 +56,7 @@ The following arguments are supported:
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 * `comments` - (Optional) Comments string.
 * `owner` - (Computed) Owner UID.
+* `exception_number` - (Optional) N/A.
 
 
 `position` supports the following:

@@ -170,6 +170,11 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 							Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 							Default:     1440,
 						},
+						"ike_p2_rekey_time_unit": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
 						"use_standard_proposal": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -234,6 +239,11 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "Interface redundancy mode (Active/Backup).",
+									},
+									"ip_version": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The IP version of the interface's IP address (IPv4/IPv6).",
 									},
 								},
 							},
@@ -342,6 +352,27 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Description: "Indicates the time interval for IKE phase 1 renegotiation.",
 										Default:     1440,
 									},
+									"ike_p1_rekey_time_unit": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Indicates the time unit for the 'ike-p1-rekey-time-unit' parameter, rounded up to minutes scale.",
+									},
+									"use_standard_proposal": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to use a proposal with a single Diffie-Hellman group.",
+									},
+									"use_multiple_key_exchanges": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to use a proposal with Multiple Key Exchanges.",
+									},
+									"multiple_key_exchanges": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Multiple Key Exchanges proposal object.",
+									},
 								},
 							},
 						},
@@ -381,6 +412,27 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 										Optional:    true,
 										Description: "Indicates the time interval for IKE phase 2 renegotiation.",
 										Default:     1440,
+									},
+									"ike_p2_rekey_time_unit": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Indicates the time unit for the 'ike-p2-rekey-time-unit' parameter, rounded up to minutes scale.",
+									},
+									"use_standard_proposal": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to use a proposal with a single Diffie-Hellman group.",
+									},
+									"use_multiple_key_exchanges": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Indicates whether to use a proposal with Multiple Key Exchanges.",
+									},
+									"multiple_key_exchanges": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Multiple Key Exchanges proposal object.",
 									},
 								},
 							},
@@ -583,6 +635,95 @@ func resourceManagementVpnCommunityMeshed() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"route_based_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "<html>VPN Community Route-Based settings.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"add_automatic_routes": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "<html>The type of routes to use for the automatic Route-Based configuration.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+						},
+						"advanced": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "<html>Advanced settings<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"bfd": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "<html>Indicates whether to enable Bidirectional Forwarding Detection.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+									},
+									"graceful_restart": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "<html>Indicates whether to enable Graceful Restart in the applicable Dynamic Routing protocols.<br><b>Relevant only in Route-Based VPN Communities</b>...",
+									},
+								},
+							},
+						},
+						"override_routes": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "<html>Override automatic routing settings in a specific Security Gateway in this VPN Community.<br><b>Relevant only in Route-Based VPN Communities</b>...",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"auto_config": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "<html>Indicates whether to configure the routing settings automatically for the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</...",
+									},
+									"exported_routes": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "<html>Exported Routes.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"custom_routes": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "<html>Specifies to export user-defined networks from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+												},
+												"custom_routes_object": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "<html>Specifies the name of the Network object or Network Group object that represents the exported routes.<br><b>Relevant only in Route-Based VPN Com...",
+												},
+												"internal_interfaces": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "<html>Specifies to export networks from interfaces with Topology 'Internal' from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communit...",
+												},
+												"static_routes": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "<html>Specifies to export static routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+												},
+											},
+										},
+									},
+									"gateway": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "<html>Name of the Security Gateway object in which to override the automatic routing settings.<br><b>Relevant only in Route-Based VPN Communities</b><...",
+									},
+									"mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "<html>Specifies how to export routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -752,6 +893,9 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".redundancy_mode"); ok {
 								interfacesPayload["redundancy-mode"] = v.(string)
 							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".ip_version"); ok {
+								interfacesPayload["ip-version"] = v.(string)
+							}
 							overrideInterfacesInterfacesPayload = append(overrideInterfacesInterfacesPayload, interfacesPayload)
 						}
 						Payload["interfaces"] = overrideInterfacesInterfacesPayload
@@ -837,6 +981,15 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 					ikePhase1Payload := make(map[string]interface{})
+					if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.use_standard_proposal"); ok {
+						ikePhase1Payload["use-standard-proposal"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.use_multiple_key_exchanges"); ok {
+						ikePhase1Payload["use-multiple-key-exchanges"] = v.(bool)
+					}
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.multiple_key_exchanges"); ok {
+						ikePhase1Payload["multiple-key-exchanges"] = v.(string)
+					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 						ikePhase1Payload["encryption-algorithm"] = v.(string)
 					}
@@ -849,10 +1002,22 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
 						ikePhase1Payload["ike-p1-rekey-time"] = v.(int)
 					}
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time_unit"); ok {
+						ikePhase1Payload["ike-p1-rekey-time-unit"] = v.(string)
+					}
 					payload["ike-phase-1"] = ikePhase1Payload
 				}
 				if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 					ikePhase2Payload := make(map[string]interface{})
+					if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.use_standard_proposal"); ok {
+						ikePhase2Payload["use-standard-proposal"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.use_multiple_key_exchanges"); ok {
+						ikePhase2Payload["use-multiple-key-exchanges"] = v.(bool)
+					}
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.multiple_key_exchanges"); ok {
+						ikePhase2Payload["multiple-key-exchanges"] = v.(string)
+					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 						ikePhase2Payload["encryption-algorithm"] = v.(string)
 					}
@@ -867,6 +1032,9 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 					}
 					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
 						ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
+					}
+					if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time_unit"); ok {
+						ikePhase2Payload["ike-p2-rekey-time-unit"] = v.(string)
 					}
 					payload["ike-phase-2"] = ikePhase2Payload
 				}
@@ -1013,6 +1181,63 @@ func createManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		vpnCommunityMeshed["ignore-errors"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("route_based_settings"); ok {
+		routeBasedSettingsList := v.([]interface{})
+		if len(routeBasedSettingsList) > 0 {
+			routeBasedSettingsPayload := make(map[string]interface{})
+			if v, ok := d.GetOk("route_based_settings.0.add_automatic_routes"); ok {
+				routeBasedSettingsPayload["add-automatic-routes"] = v.(string)
+			}
+			if _, ok := d.GetOk("route_based_settings.0.advanced"); ok {
+				advancedPayload := make(map[string]interface{})
+				if v, ok := d.GetOkExists("route_based_settings.0.advanced.0.bfd"); ok {
+					advancedPayload["bfd"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("route_based_settings.0.advanced.0.graceful_restart"); ok {
+					advancedPayload["graceful-restart"] = v.(bool)
+				}
+				routeBasedSettingsPayload["advanced"] = advancedPayload
+			}
+			if v, ok := d.GetOk("route_based_settings.0.override_routes"); ok {
+				overrideRoutesList := v.([]interface{})
+				if len(overrideRoutesList) > 0 {
+					var overrideRoutesPayload []map[string]interface{}
+					for i := range overrideRoutesList {
+						overrideRoutesItem := make(map[string]interface{})
+						if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".auto_config"); ok {
+							overrideRoutesItem["auto-config"] = v.(bool)
+						}
+						if _, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes"); ok {
+							exportedRoutesPayload := make(map[string]interface{})
+							if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.custom_routes"); ok {
+								exportedRoutesPayload["custom-routes"] = v.(bool)
+							}
+							if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.custom_routes_object"); ok {
+								exportedRoutesPayload["custom-routes-object"] = v.(string)
+							}
+							if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.internal_interfaces"); ok {
+								exportedRoutesPayload["internal-interfaces"] = v.(bool)
+							}
+							if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.static_routes"); ok {
+								exportedRoutesPayload["static-routes"] = v.(bool)
+							}
+							overrideRoutesItem["exported-routes"] = exportedRoutesPayload
+						}
+						if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".gateway"); ok {
+							overrideRoutesItem["gateway"] = v.(string)
+						}
+						if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".mode"); ok {
+							overrideRoutesItem["mode"] = v.(string)
+						}
+						overrideRoutesPayload = append(overrideRoutesPayload, overrideRoutesItem)
+					}
+					routeBasedSettingsPayload["override-routes"] = overrideRoutesPayload
+				}
+			}
+			vpnCommunityMeshed["route-based-settings"] = routeBasedSettingsPayload
+		}
 	}
 
 	log.Println("Create VpnCommunityMeshed - Map = ", vpnCommunityMeshed)
@@ -1220,24 +1445,34 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 						overrideInterfacesMapToAdd["gateway"] = v
 					}
 					if v := overrideInterfacesMap["interfaces"]; v != nil {
-						interfacesShow := v.(map[string]interface{})
-						interfacesState := make(map[string]interface{})
-						if v := interfacesShow["interface-name"]; v != nil {
-							interfacesState["interface_name"] = v
+						interfacesList := v.([]interface{})
+						if len(interfacesList) > 0 {
+							var interfacesListState []map[string]interface{}
+							for j := range interfacesList {
+								interfacesShow := interfacesList[j].(map[string]interface{})
+								interfacesState := make(map[string]interface{})
+								if v := interfacesShow["interface-name"]; v != nil {
+									interfacesState["interface_name"] = v
+								}
+								if v := interfacesShow["next-hop-ip"]; v != nil {
+									interfacesState["next_hop_ip"] = v
+								}
+								if v := interfacesShow["static-nat-ip"]; v != nil {
+									interfacesState["static_nat_ip"] = v
+								}
+								if v := interfacesShow["priority"]; v != nil {
+									interfacesState["priority"] = v
+								}
+								if v := interfacesShow["redundancy-mode"]; v != nil {
+									interfacesState["redundancy_mode"] = v
+								}
+								if v := interfacesShow["ip-version"]; v != nil {
+									interfacesState["ip_version"] = v
+								}
+								interfacesListState = append(interfacesListState, interfacesState)
+							}
+							overrideInterfacesMapToAdd["interfaces"] = interfacesListState
 						}
-						if v := interfacesShow["next-hop-ip"]; v != nil {
-							interfacesState["next_hop_ip"] = v
-						}
-						if v := interfacesShow["static-nat-ip"]; v != nil {
-							interfacesState["static_nat_ip"] = v
-						}
-						if v := interfacesShow["priority"]; v != nil {
-							interfacesState["priority"] = v
-						}
-						if v := interfacesShow["redundancy-mode"]; v != nil {
-							interfacesState["redundancy_mode"] = v
-						}
-						overrideInterfacesMapToAdd["interfaces"] = interfacesState
 					}
 					overrideInterfacesListToReturn = append(overrideInterfacesListToReturn, overrideInterfacesMapToAdd)
 				}
@@ -1373,6 +1608,18 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 						if v := ikePhase1Show["ike-p1-rekey-time"]; v != nil {
 							ikePhase1State["ike_p1_rekey_time"] = int(v.(float64))
 						}
+						if v := ikePhase1Show["ike-p1-rekey-time-unit"]; v != nil {
+							ikePhase1State["ike_p1_rekey_time_unit"] = v
+						}
+						if v := ikePhase1Show["use-standard-proposal"]; v != nil {
+							ikePhase1State["use_standard_proposal"] = v
+						}
+						if v := ikePhase1Show["use-multiple-key-exchanges"]; v != nil {
+							ikePhase1State["use_multiple_key_exchanges"] = v
+						}
+						if v := ikePhase1Show["multiple-key-exchanges"]; v != nil {
+							ikePhase1State["multiple_key_exchanges"] = v.(map[string]interface{})["name"]
+						}
 						granularEncryptionState["ike_phase_1"] = []interface{}{ikePhase1State}
 					}
 
@@ -1393,6 +1640,18 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 						}
 						if v := ikePhase2Show["ike-p2-rekey-time"]; v != nil {
 							ikePhase2State["ike_p2_rekey_time"] = int(v.(float64))
+						}
+						if v := ikePhase2Show["ike-p2-rekey-time-unit"]; v != nil {
+							ikePhase2State["ike_p2_rekey_time_unit"] = v
+						}
+						if v := ikePhase2Show["use-standard-proposal"]; v != nil {
+							ikePhase2State["use_standard_proposal"] = v
+						}
+						if v := ikePhase2Show["use-multiple-key-exchanges"]; v != nil {
+							ikePhase2State["use_multiple_key_exchanges"] = v
+						}
+						if v := ikePhase2Show["multiple-key-exchanges"]; v != nil {
+							ikePhase2State["multiple_key_exchanges"] = v.(map[string]interface{})["name"]
 						}
 						granularEncryptionState["ike_phase_2"] = []interface{}{ikePhase2State}
 					}
@@ -1601,6 +1860,62 @@ func readManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) err
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := vpnCommunityMeshed["route-based-settings"]; v != nil {
+		routeBasedSettingsShow := v.(map[string]interface{})
+		routeBasedSettingsState := make(map[string]interface{})
+		if v := routeBasedSettingsShow["add-automatic-routes"]; v != nil {
+			routeBasedSettingsState["add_automatic_routes"] = v
+		}
+		if v := routeBasedSettingsShow["advanced"]; v != nil {
+			advancedShow := v.(map[string]interface{})
+			advancedState := make(map[string]interface{})
+			if v := advancedShow["bfd"]; v != nil {
+				advancedState["bfd"] = v
+			}
+			if v := advancedShow["graceful-restart"]; v != nil {
+				advancedState["graceful_restart"] = v
+			}
+			routeBasedSettingsState["advanced"] = []interface{}{advancedState}
+		}
+		if v := routeBasedSettingsShow["override-routes"]; v != nil {
+			overrideRoutesList := v.([]interface{})
+			var overrideRoutesListState []map[string]interface{}
+			for i := range overrideRoutesList {
+				overrideRoutesShow := overrideRoutesList[i].(map[string]interface{})
+				overrideRoutesState := make(map[string]interface{})
+				if v := overrideRoutesShow["auto-config"]; v != nil {
+					overrideRoutesState["auto_config"] = v
+				}
+				if v := overrideRoutesShow["exported-routes"]; v != nil {
+					exportedRoutesShow := v.(map[string]interface{})
+					exportedRoutesState := make(map[string]interface{})
+					if v := exportedRoutesShow["custom-routes"]; v != nil {
+						exportedRoutesState["custom_routes"] = v
+					}
+					if v := exportedRoutesShow["custom-routes-object"]; v != nil {
+						exportedRoutesState["custom_routes_object"] = v.(map[string]interface{})["name"]
+					}
+					if v := exportedRoutesShow["internal-interfaces"]; v != nil {
+						exportedRoutesState["internal_interfaces"] = v
+					}
+					if v := exportedRoutesShow["static-routes"]; v != nil {
+						exportedRoutesState["static_routes"] = v
+					}
+					overrideRoutesState["exported_routes"] = []interface{}{exportedRoutesState}
+				}
+				if v := overrideRoutesShow["gateway"]; v != nil {
+					overrideRoutesState["gateway"] = v.(map[string]interface{})["name"]
+				}
+				if v := overrideRoutesShow["mode"]; v != nil {
+					overrideRoutesState["mode"] = v
+				}
+				overrideRoutesListState = append(overrideRoutesListState, overrideRoutesState)
+			}
+			routeBasedSettingsState["override_routes"] = overrideRoutesListState
+		}
+		_ = d.Set("route_based_settings", []interface{}{routeBasedSettingsState})
+	}
+
 	return nil
 
 }
@@ -1790,6 +2105,9 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".redundancy_mode"); ok {
 								interfacesPayload["redundancy-mode"] = v
 							}
+							if v, ok := d.GetOk("override_interfaces." + strconv.Itoa(i) + ".interfaces." + strconv.Itoa(j) + ".ip_version"); ok {
+								interfacesPayload["ip-version"] = v.(string)
+							}
 							overrideInterfacesInterfacesPayload = append(overrideInterfacesInterfacesPayload, interfacesPayload)
 						}
 						Payload["interfaces"] = overrideInterfacesInterfacesPayload
@@ -1890,6 +2208,15 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1"); ok {
 						ikePhase1Payload := make(map[string]interface{})
+						if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.use_standard_proposal"); ok {
+							ikePhase1Payload["use-standard-proposal"] = v.(bool)
+						}
+						if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.use_multiple_key_exchanges"); ok {
+							ikePhase1Payload["use-multiple-key-exchanges"] = v.(bool)
+						}
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.multiple_key_exchanges"); ok {
+							ikePhase1Payload["multiple-key-exchanges"] = v.(string)
+						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.encryption_algorithm"); ok {
 							ikePhase1Payload["encryption-algorithm"] = v.(string)
 						}
@@ -1902,10 +2229,22 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time"); ok {
 							ikePhase1Payload["ike-p1-rekey-time"] = v.(string)
 						}
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_1.0.ike_p1_rekey_time_unit"); ok {
+							ikePhase1Payload["ike-p1-rekey-time-unit"] = v.(string)
+						}
 						payload["ike-phase-1"] = ikePhase1Payload
 					}
 					if _, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2"); ok {
 						ikePhase2Payload := make(map[string]interface{})
+						if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.use_standard_proposal"); ok {
+							ikePhase2Payload["use-standard-proposal"] = v.(bool)
+						}
+						if v, ok := d.GetOkExists("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.use_multiple_key_exchanges"); ok {
+							ikePhase2Payload["use-multiple-key-exchanges"] = v.(bool)
+						}
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.multiple_key_exchanges"); ok {
+							ikePhase2Payload["multiple-key-exchanges"] = v.(string)
+						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.encryption_algorithm"); ok {
 							ikePhase2Payload["encryption-algorithm"] = v.(string)
 						}
@@ -1920,6 +2259,9 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 						}
 						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time"); ok {
 							ikePhase2Payload["ike-p2-rekey-time"] = v.(int)
+						}
+						if v, ok := d.GetOk("granular_encryptions." + strconv.Itoa(i) + ".ike_phase_2.0.ike_p2_rekey_time_unit"); ok {
+							ikePhase2Payload["ike-p2-rekey-time-unit"] = v.(string)
 						}
 						payload["ike-phase-2"] = ikePhase2Payload
 					}
@@ -2091,6 +2433,65 @@ func updateManagementVpnCommunityMeshed(d *schema.ResourceData, m interface{}) e
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		vpnCommunityMeshed["ignore-errors"] = v.(bool)
+	}
+
+	if d.HasChange("route_based_settings") {
+		if v, ok := d.GetOk("route_based_settings"); ok {
+			routeBasedSettingsList := v.([]interface{})
+			if len(routeBasedSettingsList) > 0 {
+				routeBasedSettingsPayload := make(map[string]interface{})
+				if v, ok := d.GetOk("route_based_settings.0.add_automatic_routes"); ok {
+					routeBasedSettingsPayload["add-automatic-routes"] = v.(string)
+				}
+				if _, ok := d.GetOk("route_based_settings.0.advanced"); ok {
+					advancedPayload := make(map[string]interface{})
+					if v, ok := d.GetOkExists("route_based_settings.0.advanced.0.bfd"); ok {
+						advancedPayload["bfd"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("route_based_settings.0.advanced.0.graceful_restart"); ok {
+						advancedPayload["graceful-restart"] = v.(bool)
+					}
+					routeBasedSettingsPayload["advanced"] = advancedPayload
+				}
+				if v, ok := d.GetOk("route_based_settings.0.override_routes"); ok {
+					overrideRoutesList := v.([]interface{})
+					if len(overrideRoutesList) > 0 {
+						var overrideRoutesPayload []map[string]interface{}
+						for i := range overrideRoutesList {
+							overrideRoutesItem := make(map[string]interface{})
+							if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".auto_config"); ok {
+								overrideRoutesItem["auto-config"] = v.(bool)
+							}
+							if _, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes"); ok {
+								exportedRoutesPayload := make(map[string]interface{})
+								if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.custom_routes"); ok {
+									exportedRoutesPayload["custom-routes"] = v.(bool)
+								}
+								if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.custom_routes_object"); ok {
+									exportedRoutesPayload["custom-routes-object"] = v.(string)
+								}
+								if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.internal_interfaces"); ok {
+									exportedRoutesPayload["internal-interfaces"] = v.(bool)
+								}
+								if v, ok := d.GetOkExists("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".exported_routes.0.static_routes"); ok {
+									exportedRoutesPayload["static-routes"] = v.(bool)
+								}
+								overrideRoutesItem["exported-routes"] = exportedRoutesPayload
+							}
+							if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".gateway"); ok {
+								overrideRoutesItem["gateway"] = v.(string)
+							}
+							if v, ok := d.GetOk("route_based_settings.0.override_routes." + strconv.Itoa(i) + ".mode"); ok {
+								overrideRoutesItem["mode"] = v.(string)
+							}
+							overrideRoutesPayload = append(overrideRoutesPayload, overrideRoutesItem)
+						}
+						routeBasedSettingsPayload["override-routes"] = overrideRoutesPayload
+					}
+				}
+				vpnCommunityMeshed["route-based-settings"] = routeBasedSettingsPayload
+			}
+		}
 	}
 
 	log.Println("Update VpnCommunityMeshed - Map = ", vpnCommunityMeshed)

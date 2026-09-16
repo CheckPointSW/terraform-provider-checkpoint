@@ -71,6 +71,18 @@ func resourceManagementInstallSoftwarePackage() *schema.Resource {
 				Computed:    true,
 				Description: "Command asynchronous task unique identifier.",
 			},
+			"package_location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The package repository.",
+			},
+			"method": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "How we want to use the package.",
+			},
 		},
 	}
 }
@@ -107,6 +119,14 @@ func createManagementInstallSoftwarePackage(d *schema.ResourceData, m interface{
 
 	if v, ok := d.GetOk("concurrency_limit"); ok {
 		payload["concurrency-limit"] = v.(int)
+	}
+
+	if v, ok := d.GetOk("package_location"); ok {
+		payload["package-location"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("method"); ok {
+		payload["method"] = v.(string)
 	}
 
 	InstallSoftwarePackageRes, _ := client.ApiCall("install-software-package", payload, client.GetSessionID(), true, client.IsProxyUsed())

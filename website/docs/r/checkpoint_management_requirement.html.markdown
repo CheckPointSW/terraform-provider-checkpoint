@@ -33,3 +33,5 @@ The following arguments are supported:
 * `tags` - (Optional) Collection of tag identifiers.tags blocks are documented below.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+* `new_regulation_uid` - (Optional) The new regulation UID for this requirement.
+* `regulation_uid` - (Optional) The relevant regulation UID for this requirement.

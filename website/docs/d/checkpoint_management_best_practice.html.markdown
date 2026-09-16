@@ -50,6 +50,10 @@ The following arguments are supported:
 * `relevant_objects` - The applicable objects of the Best Practice. relevant_objects blocks are documented below.
 * `user_defined_firewall` - The definitions of the user-defined Firewall Best Practice. Relevant only for Firewall Best Practices created by the user. user_defined_firewall blocks are documented below.
 * `user_defined_gaia_os` - The definitions of the user-defined Gaia OS Best Practice. Relevant only for Gaia OS Best Practices created by the user. user_defined_gaia_os blocks are documented below.
+* `deactivation_comment` - The deactivation comment of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.
+* `deactivation_expiration_date` - The deactivation expiration date of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false', and the value...deactivation_expiration_date blocks are documented below.
+* `deactivation_mode` - The deactivation mode of deactivated best practices. Appears only when the value of the 'active' parameter is set to 'false'.
+* `depends_on_name` - Shows the dependency of this Best Practice.Level of details in the output corresponds to the number of details for search. This table shows the level ...
 
 `regulations` supports the following:
 
@@ -180,3 +184,9 @@ The following arguments are supported:
 
 * `expected_output_base64` - The expected output of the script in the Base64.
 * `practice_script_base64` - The script in Base64 to run on Gaia Security Gateways during the Compliance scans. 
+
+
+`deactivation_expiration_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

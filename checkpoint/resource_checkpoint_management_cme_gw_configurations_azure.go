@@ -32,6 +32,7 @@ func resourceManagementCMEGWConfigurationsAzure() *schema.Resource {
 			"base64_sic_key": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Base64 key for trusted communication between management and GW.",
 			},
 			"policy": {

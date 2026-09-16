@@ -96,6 +96,63 @@ func resourceManagementImportManagement() *schema.Resource {
 				Computed:    true,
 				Description: "If set to \"True\", session is expired and login is required.",
 			},
+			"prepare_background_import": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', the import will run in the background and 'Prepare' phase will be achieved. You can continue making changes on the Management Server during...",
+			},
+			"keep_cloud_sharing": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Preserve the connection of the Management Server to Check Point's Infinity Portal.<br>Use this flag after ensuring that the original Management Server...",
+			},
+			"domain_ipv6_address": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "IPv6 address for the imported Domain.",
+			},
+			"days_of_logs": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Export <N> last days of logs.",
+			},
+			"complete_background_import": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', import the changes you made during the 'Prepare' phase, and the 'Complete' phase will be achieved. You can't make any changes during the 'C...",
+			},
+			"change_ips": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "New IP addresses (IPv4, IPv6, or both) of the servers.<br><font color='red'>Required only if</font> one or more of the servers in the Security Managem...",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"new_ipv4_address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The new IPv4 address of the server that migrates to a new IP address.",
+						},
+						"server_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The object name of the server that migrates to a new IP address.",
+						},
+					},
+				},
+			},
+			"cancel_prepare_import": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "If 'true', cancels the import in background process. If you do not run this command within the number of days defined in 'show-background-upgrade-sett...",
+			},
 		},
 	}
 }
@@ -146,6 +203,41 @@ func createManagementImportManagement(d *schema.ResourceData, m interface{}) err
 
 	if v, ok := d.GetOkExists("ignore_warnings"); ok {
 		payload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("prepare_background_import"); ok {
+		payload["prepare-background-import"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("keep_cloud_sharing"); ok {
+		payload["keep-cloud-sharing"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("domain_ipv6_address"); ok {
+		payload["domain-ipv6-address"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("days_of_logs"); ok {
+		payload["days-of-logs"] = v.(int)
+	}
+
+	if v, ok := d.GetOkExists("complete_background_import"); ok {
+		payload["complete-background-import"] = v.(bool)
+	}
+
+	if _, ok := d.GetOk("change_ips"); ok {
+		changeIpsPayload := make(map[string]interface{})
+		if v, ok := d.GetOk("change_ips.0.new_ipv4_address"); ok {
+			changeIpsPayload["new-ipv4-address"] = v.(string)
+		}
+		if v, ok := d.GetOk("change_ips.0.server_name"); ok {
+			changeIpsPayload["server-name"] = v.(string)
+		}
+		payload["change-ips"] = changeIpsPayload
+	}
+
+	if v, ok := d.GetOkExists("cancel_prepare_import"); ok {
+		payload["cancel-prepare-import"] = v.(bool)
 	}
 
 	ImportManagementRes, err := client.ApiCall("import-management", payload, client.GetSessionID(), true, client.IsProxyUsed())

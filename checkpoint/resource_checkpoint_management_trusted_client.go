@@ -118,6 +118,16 @@ func resourceManagementTrustedClient() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"subnet_mask4": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "IPv4 mask.",
+			},
+			"subnet_mask": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "N/A",
+			},
 		},
 	}
 }
@@ -200,6 +210,13 @@ func createManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Create TrustedClient - Map = ", trustedClient)
+
+	if v, ok := d.GetOk("subnet_mask4"); ok {
+		trustedClient["subnet-mask4"] = v.(string)
+	}
+	if v, ok := d.GetOk("subnet_mask"); ok {
+		trustedClient["subnet-mask"] = v.(string)
+	}
 
 	addTrustedClientRes, err := client.ApiCall("add-trusted-client", trustedClient, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addTrustedClientRes.Success {
@@ -334,6 +351,10 @@ func readManagementTrustedClient(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := trustedClient["subnet-mask4"]; v != nil {
+		_ = d.Set("subnet_mask4", v)
+	}
+
 	return nil
 
 }
@@ -430,6 +451,15 @@ func updateManagementTrustedClient(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Update TrustedClient - Map = ", trustedClient)
+
+	if ok := d.HasChange("subnet_mask4"); ok {
+		trustedClient["subnet-mask4"] = d.Get("subnet_mask4")
+	}
+	if ok := d.HasChange("subnet_mask"); ok {
+		if v, ok := d.GetOk("subnet_mask"); ok {
+			trustedClient["subnet-mask"] = v.(string)
+		}
+	}
 
 	updateTrustedClientRes, err := client.ApiCall("set-trusted-client", trustedClient, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateTrustedClientRes.Success {

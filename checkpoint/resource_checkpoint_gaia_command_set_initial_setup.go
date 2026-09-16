@@ -39,6 +39,7 @@ func dataGaiaSetInitialSetup() *schema.Resource {
                             Type:        schema.TypeString,
                             Optional:    true,
                             ForceNew:    true,
+                            Sensitive:   true,
                             Description: `Secure Internal Communication key`,
                         },
                         "dynamically_assigned_ip": {
@@ -155,6 +156,7 @@ func dataGaiaSetInitialSetup() *schema.Resource {
                             Type:        schema.TypeString,
                             Optional:    true,
                             ForceNew:    true,
+                            Sensitive:   true,
                             Description: `Secure Internal Communication key, relevant in case of secondary or Log Server`,
                         },
                         "leading_interface": {

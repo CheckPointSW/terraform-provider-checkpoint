@@ -35,3 +35,20 @@ The following arguments are supported:
 * `progress_percentage` - The progress percentage of the task.
 * `suppressed` - Is the task suppressed.
 * `comments` - Comments string.
+* `last_update_time` - N/A.last_update_time blocks are documented below.
+* `previous_task_id` - ID of the previous task in the execution sequence, on which this task depends.
+* `progress_description` - N/A.
+* `revert_status` - N/A.
+* `start_time` - N/A.start_time blocks are documented below.
+
+
+`last_update_time` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`start_time` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

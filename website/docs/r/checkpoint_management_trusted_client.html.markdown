@@ -42,3 +42,5 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `subnet_mask` - (Optional) N/A.
+* `subnet_mask4` - (Optional) IPv4 mask.

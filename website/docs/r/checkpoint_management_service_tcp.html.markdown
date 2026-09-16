@@ -51,6 +51,9 @@ The following arguments are supported:
 * `color` - (Optional) Color of the object. Should be one of existing colors.
 * `comments` - (Optional) Comments string.
 * `tags` - (Optional) Collection of tag identifiers.
+* `delayed_sync_value` - (Optional) Specify the delay (in seconds) in which a synchronization will start after connection initiation.
+* `enable_tcp_resource` - (Optional) Enable for tcp resource.
+* `use_delayed_sync` - (Optional) Enable this option to delay notifying the Security Gateway about a connection, so that the connection will only be synchronized if it still exists x seconds aft.
 
 `aggressive_aging` supports the following:
 

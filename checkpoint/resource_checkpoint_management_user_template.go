@@ -129,6 +129,16 @@ func resourceManagementUserTemplate() *schema.Resource {
 							Optional:    true,
 							Description: "Enable IKE shared secret.",
 						},
+						"data_integrity_algorithm": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IKE data integrity algorithm.",
+						},
+						"encryption_algorithm": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IKE encryption algorithm.",
+						},
 					},
 				},
 			},
@@ -246,6 +256,12 @@ func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 			}
 			if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
 				encryptionPayload["enable-shared-secret"] = v.(bool)
+			}
+			if v, ok := d.GetOk("encryption.0.data_integrity_algorithm"); ok {
+				encryptionPayload["data-integrity-algorithm"] = v.(string)
+			}
+			if v, ok := d.GetOk("encryption.0.encryption_algorithm"); ok {
+				encryptionPayload["encryption-algorithm"] = v.(string)
 			}
 			userTemplate["encryption"] = encryptionPayload
 		}
@@ -392,6 +408,12 @@ func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 			encryptionMapToReturn["enable_shared_secret"] = v
 		}
 
+		if v := encryptionMap["data-integrity-algorithm"]; v != nil {
+			encryptionMapToReturn["data_integrity_algorithm"] = v
+		}
+		if v := encryptionMap["encryption-algorithm"]; v != nil {
+			encryptionMapToReturn["encryption_algorithm"] = v
+		}
 		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {
@@ -524,6 +546,12 @@ func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
 				}
 				if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
 					encryptionPayload["enable-shared-secret"] = v.(bool)
+				}
+				if v, ok := d.GetOk("encryption.0.data_integrity_algorithm"); ok {
+					encryptionPayload["data-integrity-algorithm"] = v.(string)
+				}
+				if v, ok := d.GetOk("encryption.0.encryption_algorithm"); ok {
+					encryptionPayload["encryption-algorithm"] = v.(string)
 				}
 				userTemplate["encryption"] = encryptionPayload
 			}

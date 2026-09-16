@@ -31,6 +31,15 @@ func resourceManagementTestTrust() *schema.Resource {
 				ForceNew:    true,
 				Description: "Establish the trust communication method.",
 			},
+			"domains_to_process": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -51,6 +60,10 @@ func createManagementTestTrust(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("trust_method"); ok {
 		payload["trust-method"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("domains_to_process"); ok {
+		payload["domains-to-process"] = v.(*schema.Set).List()
 	}
 
 	TestTrustRes, err := client.ApiCall("test-trust", payload, client.GetSessionID(), true, client.IsProxyUsed())

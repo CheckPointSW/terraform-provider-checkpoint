@@ -126,6 +126,11 @@ func dataSourceManagementServiceOther() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"protocol": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Protocol name or uid. The protocol type associated with the service, and by implication, the management server (if any) that enforces Content Security...",
+			},
 		},
 	}
 }
@@ -269,6 +274,10 @@ func dataSourceManagementServiceOtherRead(d *schema.ResourceData, m interface{})
 		}
 	} else {
 		_ = d.Set("groups", nil)
+	}
+
+	if v := serviceOther["protocol"]; v != nil {
+		_ = d.Set("protocol", v)
 	}
 
 	return nil

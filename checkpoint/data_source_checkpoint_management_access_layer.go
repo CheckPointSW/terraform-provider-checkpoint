@@ -82,6 +82,16 @@ func dataSourceManagementAccessLayer() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"dynamic_layer": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether this layer is set as a Dynamic layer.",
+			},
+			"parent_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parent layer of this layer.",
+			},
 		},
 	}
 }
@@ -188,6 +198,14 @@ func dataSourceManagementAccessLayerRead(d *schema.ResourceData, m interface{}) 
 
 	if v := accessLayer["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := accessLayer["dynamic-layer"]; v != nil {
+		_ = d.Set("dynamic_layer", v)
+	}
+
+	if v := accessLayer["parent-layer"]; v != nil {
+		_ = d.Set("parent_layer", v)
 	}
 
 	return nil

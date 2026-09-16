@@ -117,6 +117,84 @@ func dataSourceManagementPackage() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"autonomous_threat_policy": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "UID of the Autonomous Threat Prevention policy.",
+			},
+			"https_inspection_policy": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "True - enables, False - disables HTTPS Inspection policy, empty - nothing is changed.",
+			},
+			"nat_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "UID of the NAT policy.",
+			},
+			"nat_policy": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "True - enables, False - disables NAT policy, empty - nothing is changed.",
+			},
+			"sd_wan": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "True - enables, False - disables SD-WAN policy, empty - nothing is changed.",
+			},
+			"installation_targets_revision": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of installation targets and revisions on which this policy package was installed.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cluster_members_revision": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "If this target is a cluster, this list shows a revision which was installed on each cluster member.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"revision": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The revision installed on this target. Level of details in the output corresponds to the number of details for search. This table shows the level of d...",
+									},
+									"target_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The name of the installation target.",
+									},
+									"target_uid": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Installation target unique identifier.",
+									},
+								},
+							},
+						},
+						"revision": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The revision installed on this target. Level of details in the output corresponds to the number of details for search. This table shows the level of d...",
+						},
+						"target_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of the installation target.",
+						},
+						"target_uid": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Installation target unique identifier.",
+						},
+					},
+				},
+			},
+			"sd_wan_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "SD-WAN policy layer. Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Stan...",
+			},
 		},
 	}
 }
@@ -267,6 +345,69 @@ func dataSourceManagementPackageRead(d *schema.ResourceData, m interface{}) erro
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := _package["autonomous-threat-policy"]; v != nil {
+		_ = d.Set("autonomous_threat_policy", v)
+	}
+
+	if v := _package["https-inspection-policy"]; v != nil {
+		_ = d.Set("https_inspection_policy", v)
+	}
+
+	if v := _package["nat-layer"]; v != nil {
+		_ = d.Set("nat_layer", v)
+	}
+
+	if v := _package["nat-policy"]; v != nil {
+		_ = d.Set("nat_policy", v)
+	}
+
+	if v := _package["sd-wan"]; v != nil {
+		_ = d.Set("sd_wan", v)
+	}
+
+	if v := _package["installation-targets-revision"]; v != nil {
+		installationTargetsRevisionList := v.([]interface{})
+		var installationTargetsRevisionListState []map[string]interface{}
+		for i := range installationTargetsRevisionList {
+			installationTargetsRevisionShow := installationTargetsRevisionList[i].(map[string]interface{})
+			installationTargetsRevisionState := make(map[string]interface{})
+			if v := installationTargetsRevisionShow["cluster-members-revision"]; v != nil {
+				clusterMembersRevisionList := v.([]interface{})
+				var clusterMembersRevisionListState []map[string]interface{}
+				for i := range clusterMembersRevisionList {
+					clusterMembersRevisionShow := clusterMembersRevisionList[i].(map[string]interface{})
+					clusterMembersRevisionState := make(map[string]interface{})
+					if v := clusterMembersRevisionShow["revision"]; v != nil {
+						clusterMembersRevisionState["revision"] = v.(map[string]interface{})["name"]
+					}
+					if v := clusterMembersRevisionShow["target-name"]; v != nil {
+						clusterMembersRevisionState["target_name"] = v
+					}
+					if v := clusterMembersRevisionShow["target-uid"]; v != nil {
+						clusterMembersRevisionState["target_uid"] = v
+					}
+					clusterMembersRevisionListState = append(clusterMembersRevisionListState, clusterMembersRevisionState)
+				}
+				installationTargetsRevisionState["cluster_members_revision"] = clusterMembersRevisionListState
+			}
+			if v := installationTargetsRevisionShow["revision"]; v != nil {
+				installationTargetsRevisionState["revision"] = v.(map[string]interface{})["name"]
+			}
+			if v := installationTargetsRevisionShow["target-name"]; v != nil {
+				installationTargetsRevisionState["target_name"] = v
+			}
+			if v := installationTargetsRevisionShow["target-uid"]; v != nil {
+				installationTargetsRevisionState["target_uid"] = v
+			}
+			installationTargetsRevisionListState = append(installationTargetsRevisionListState, installationTargetsRevisionState)
+		}
+		_ = d.Set("installation_targets_revision", installationTargetsRevisionListState)
+	}
+
+	if v := _package["sd-wan-layer"]; v != nil {
+		_ = d.Set("sd_wan_layer", v.(map[string]interface{})["name"])
 	}
 
 	return nil

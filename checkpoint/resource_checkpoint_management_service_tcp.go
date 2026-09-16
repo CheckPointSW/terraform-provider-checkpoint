@@ -147,6 +147,21 @@ func resourceManagementServiceTcp() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"delayed_sync_value": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Specify the delay (in seconds) in which a synchronization will start after connection initiation.",
+			},
+			"enable_tcp_resource": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable for tcp resource.",
+			},
+			"use_delayed_sync": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable this option to delay notifying the Security Gateway about a connection, so that the connection will only be synchronized if it still exists x seconds aft",
+			},
 		},
 	}
 }
@@ -233,6 +248,15 @@ func createManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Service Tcp - Map = ", serviceTcp)
 
+	if v, ok := d.GetOk("delayed_sync_value"); ok {
+		serviceTcp["delayed-sync-value"] = v.(int)
+	}
+	if v, ok := d.GetOkExists("enable_tcp_resource"); ok {
+		serviceTcp["enable-tcp-resource"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("use_delayed_sync"); ok {
+		serviceTcp["use-delayed-sync"] = v.(bool)
+	}
 	addServiceTcpRes, err := client.ApiCall("add-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceTcpRes.Success {
 		if addServiceTcpRes.ErrorMsg != "" {
@@ -359,6 +383,18 @@ func readManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := serviceTcp["delayed-sync-value"]; v != nil {
+		_ = d.Set("delayed_sync_value", v)
+	}
+
+	if v := serviceTcp["enable-tcp-resource"]; v != nil {
+		_ = d.Set("enable_tcp_resource", v)
+	}
+
+	if v := serviceTcp["use-delayed-sync"]; v != nil {
+		_ = d.Set("use_delayed_sync", v)
 	}
 
 	return nil
@@ -499,6 +535,15 @@ func updateManagementServiceTcp(d *schema.ResourceData, m interface{}) error {
 	log.Println("Update Service Tcp - Map = ", serviceTcp)
 
 	if len(serviceTcp) != 3 {
+		if ok := d.HasChange("delayed_sync_value"); ok {
+			serviceTcp["delayed-sync-value"] = d.Get("delayed_sync_value")
+		}
+		if ok := d.HasChange("enable_tcp_resource"); ok {
+			serviceTcp["enable-tcp-resource"] = d.Get("enable_tcp_resource")
+		}
+		if ok := d.HasChange("use_delayed_sync"); ok {
+			serviceTcp["use-delayed-sync"] = d.Get("use_delayed_sync")
+		}
 		setServiceTcpRes, err := client.ApiCall("set-service-tcp", serviceTcp, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil {
 			fmt.Errorf("%s", err.Error())

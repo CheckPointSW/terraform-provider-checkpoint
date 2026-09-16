@@ -52,6 +52,7 @@ The following arguments are supported:
 * `domains_to_process` - (Optional) Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ignore-warnings true. Valid values are: CURRENT_DOMAIN, ALL_DOMAINS_ON_THIS_SERVER.domains_to_process blocks are documented below.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `identity_awareness` - (Optional) Configure Identity Awareness properties.identity_awareness blocks are documented below.
 
 
 `firewall` supports the following:
@@ -292,6 +293,7 @@ The following arguments are supported:
 `advanced_conf` supports the following:
 
 * `certs_and_pki` - (Optional) Configure Certificates and PKI properties.certs_and_pki blocks are documented below.
+* `keep_ike_sas` - (Optional) Enabled: Keep ALL IKEv1 phase 1 Security Associations (SA) upon policy installation.<br>Disabled: Delete ALL IKEv1 phase 1 Security Associations (SA) ...
 
 
 `security_server` supports the following:
@@ -302,16 +304,14 @@ The following arguments are supported:
 * `telnet_welcome_msg_file` - (Optional) Telnet welcome message file is the name of a file whose contents are to be displayed when a user begins an Authenticated Telnet session. 
 * `mdq_welcome_msg` - (Optional) MDQ Welcome Message is the message to be displayed when a user begins an MDQ session. The MDQ Welcome Message should contain characters according to RFC 1035 and it must follow the ARPANET host name rules:<br>   - This message must begin with a number or letter. After the first letter or number character the remaining characters can be a letter, number, space, tab or hyphen.<br>   - This message must not end with a space or a tab and is limited to 63 characters. 
 * `smtp_welcome_msg` - (Optional) SMTP Welcome Message is the message to be displayed when a user begins an SMTP session. 
-* `http_next_proxy_host` - (Optional) HTTP next proxy host is the host name of the HTTP proxy behind the Check Point Security Gateway HTTP security server (if there is one). Changing the HTTP Next Proxy fields takes effect after the Security Gateway database is downloaded to the authenticating gateway, or after the security policy is re-installed. <br>These settings apply only to firewalled gateways prior to NG. For later versions, these settings should be defined in the Node Properties window. 
-* `http_next_proxy_port` - (Optional) HTTP next proxy port is the port of the HTTP proxy behind the Check Point Security Gateway HTTP security server (if there is one). Changing the HTTP Next Proxy fields takes effect after the Security Gateway database is downloaded to the authenticating gateway, or after the security policy is re-installed. <br>These settings apply only to firewalled gateways prior to NG. For later versions, these settings should be defined in the Node Properties window. 
 * `http_servers` - (Optional) This list specifies the HTTP servers. Defining HTTP servers allows you to restrict incoming HTTP.http_servers blocks are documented below.
 * `server_for_null_requests` - (Optional) The Logical Name of a Null Requests Server from http-servers. 
 
 
 `vpn_authentication_and_encryption` supports the following:
 
-* `encryption_algorithms` - (Optional) Select the methods negotiated in IKE phase 2 and used in IPSec connections.encryption_algorithms blocks are documented below.
-* `encryption_method` - (Optional) Select the encryption method. 
+* `encryption_algorithms` - (Optional) Select the methods negotiated in IKE phase 2 and used in IPSec connections.encryption_algorithms blocks are documented below. **Deprecated** - moved to the `checkpoint_management_vpn_community_remote_access` resource under `encryption`: use `encryption.ike_phase_1` instead of `ike`, and `encryption.ike_phase_2` instead of `ipsec`.
+* `encryption_method` - (Optional) Select the encryption method. **Deprecated** - moved to the `checkpoint_management_vpn_community_remote_access` resource as `encryption.encryption_method`.
 * `pre_shared_secret` - (Optional) the user password is specified in the Authentication tab in the user's IKE properties (in the user properties window: Encryption tab > Edit). 
 * `support_legacy_auth_for_sc_l2tp_nokia_clients` - (Optional) Support Legacy Authentication for SC (hybrid mode), L2TP (PAP) and Nokia clients (CRACK). 
 * `support_legacy_eap` - (Optional) Support Legacy EAP (Extensible Authentication Protocol). 
@@ -492,23 +492,12 @@ The following arguments are supported:
 * `group5` - (Optional) Select whether Diffie-Hellman Group 5 (1536 bit) will be supported with remote hosts. 
 
 
-`support_encryption_algorithms` supports the following:
+`identity_awareness` supports the following:
 
-* `aes_128` - (Optional) Select whether the AES-128 encryption algorithm will be supported with remote hosts. 
-* `aes_256` - (Optional) Select whether the AES-256 encryption algorithm will be supported with remote hosts. 
-* `des` - (Optional) Select whether the DES encryption algorithm will be supported with remote hosts. 
-* `tdes` - (Optional) Select whether the Triple DES encryption algorithm will be supported with remote hosts. 
-
-
-`support_data_integrity` supports the following:
-
-* `aes_xcbc` - (Optional) Select whether the AES-XCBC hash algorithm will be supported with remote hosts to ensure data integrity. 
-* `md5` - (Optional) Select whether the MD5 hash algorithm will be supported with remote hosts to ensure data integrity. 
-* `sha1` - (Optional) Select whether the SHA1 hash algorithm will be supported with remote hosts to ensure data integrity. 
-* `sha256` - (Optional) Select whether the SHA256 hash algorithm will be supported with remote hosts to ensure data integrity. 
+* `cache_mode` - (Optional) True: In case of connectivity loss from the Policy-Decision-Point (PDP), extend Identity cache up-to 'cache-mode-duration'.<br>False: Identity Cache M...
+* `cache_mode_duration` - (Optional) Time limit for keeping Identities in the cache.
 
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 
 note: terraform execution is not sequential.  
-

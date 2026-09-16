@@ -51,6 +51,7 @@ The following arguments are supported:
 * `tags` - Collection of tag identifiers.
 * `color` - Color of the object.
 * `comments` - Comments string. 
+* `certificates` - User certificates.certificates blocks are documented below.
 
 
 `allowed_locations` supports the following:
@@ -63,3 +64,25 @@ The following arguments are supported:
 * `enable_ike` - Enable IKE encryption for users.
 * `enable_public_key` - Enable IKE public key.
 * `enable_shared_secret` - Enable IKE shared secret.
+* `data_integrity_algorithm` - IKE data integrity algorithm.
+* `encryption_algorithm` - IKE encryption algorithm.
+* `ike` - IKE users encryption enabled.
+* `public_key` - IKE public key enabled.
+* `shared_secret` - IKE shared secret enabled.
+
+
+`certificates` supports the following:
+
+* `base64_certificate` - Certificate file encoded in base64.<br/>File format: .P12.
+* `comments` - Certificate comments.
+* `registration_key` - Registration key for enrollment.
+* `status` - Certificate status.
+* `subject` - Certificate subject.
+* `uid` - Object unique identifier.
+* `valid_to` - Expiration date.valid_to blocks are documented below.
+
+
+`valid_to` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

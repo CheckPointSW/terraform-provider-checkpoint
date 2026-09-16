@@ -116,6 +116,31 @@ func dataSourceManagementUserTemplate() *schema.Resource {
 							Computed:    true,
 							Description: "Enable IKE shared secret.",
 						},
+						"data_integrity_algorithm": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IKE data integrity algorithm.",
+						},
+						"encryption_algorithm": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IKE encryption algorithm.",
+						},
+						"ike": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE users encryption enabled.",
+						},
+						"public_key": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE public key enabled.",
+						},
+						"shared_secret": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE shared secret enabled.",
+						},
 					},
 				},
 			},
@@ -254,6 +279,21 @@ func dataSourceManagementUserTemplateRead(d *schema.ResourceData, m interface{})
 			encryptionMapToReturn["enable_shared_secret"] = v.(bool)
 		}
 
+		if v := encryptionMap["data-integrity-algorithm"]; v != nil {
+			encryptionMapToReturn["data_integrity_algorithm"] = v
+		}
+		if v := encryptionMap["encryption-algorithm"]; v != nil {
+			encryptionMapToReturn["encryption_algorithm"] = v
+		}
+		if v := encryptionMap["ike"]; v != nil {
+			encryptionMapToReturn["ike"] = v
+		}
+		if v := encryptionMap["public-key"]; v != nil {
+			encryptionMapToReturn["public_key"] = v
+		}
+		if v := encryptionMap["shared-secret"]; v != nil {
+			encryptionMapToReturn["shared_secret"] = v
+		}
 		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {

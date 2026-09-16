@@ -67,13 +67,39 @@ The following arguments are supported:
 * `vpn` - (Optional) VPN blade enabled. 
 * `vpn_settings` - (Optional) Gateway VPN settings.vpn_settings blocks are documented below.
 * `zero_phishing` - (Optional) Zero Phishing blade enabled. 
-* `zero_phishing_fqdn` - (Optional) Zero Phishing gateway FQDN. 
+* `zero_phishing_fqdn` - (Optional) Zero Phishing gateway FQDN. **Deprecated** - use `zero_phishing_settings.manual_fqdn` instead.
 * `logs_settings` - (Optional) Logs settings that apply to Quantum Security Gateways that run Gaia OS.logs_settings blocks are documented below.
 * `show_portals_certificate` - (Optional) Indicates whether to show the portals certificate value in the reply. 
 * `color` - (Optional) Color of the object. Should be one of existing colors. 
 * `comments` - (Optional) Comments string. 
 * `groups` - (Optional) Collection of group identifiers.groups blocks are documented below.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `accept_syslog_messages` - (Optional) Enables the gateway accept syslog messages, relevant only when Logging and Status/Network Policy Management blades are enabled.
+* `anti_spam_and_email_security` - (Optional) Enables Anti-Spam & Email-Security blade.
+* `auto_generate_ip` - (Optional) Use an automatically generated IP address for the Gateway object (applies only to Smart-1 Cloud).
+* `auto_topology_custom_recalculation_time` - (Optional) Auto topology custom recalculation time (seconds).
+* `auto_topology_use_custom_recalculation_time` - (Optional) Auto topology to use custom recalculation time instead of default.
+* `autonomous_system_number` - (Optional) The Autonomous System Number (ASN). It is automatically fetched from the Security Gateway object. You can change this value only for externally manage...
+* `communication_with_servers_behind_nat` - (Optional) Gateway behind NAT communications settings with the server.communication_with_servers_behind_nat blocks are documented below.
+* `data_loss_prevention` - (Optional) Data Loss Prevention blade.
+* `dns_server` - (Optional) DNS Server.
+* `enable_log_indexing` - (Optional) Enable log indexing, The Log Indexing uses more storage to provide fast log queries, relevant only when Logging and Status blade is enabled.
+* `export_logs_to_servers` - (Optional) Export logs to syslog/SIEM servers. NOTE:After you configure a Log Exporter, you must run Install Database. Relevant only when Logging and Status/Netw...
+* `fetch_policy_scheduler` - (Optional) Fetch policy functionality settings.fetch_policy_scheduler blocks are documented below.
+* `hardware_subtype` - (Optional) Gateway type (relevant only for Spark gateways).
+* `install_policy_without_push` - (Optional) Specifies whether the policy is pushed to the gateway during policy installation, or whether the gateway should fetch the policy.
+* `interfaces_topology_settings` - (Optional) Topology setting for all interfaces on a Security Gateway. Default for Security Gateways that run Gaia OS: 'per interface'. Default for Quantum Spark gateways t.
+* `mobile_access` - (Optional) Mobile Access blade.
+* `monitoring` - (Optional) Enables Real Time Monitoring blade.
+* `policy_server` - (Optional) Policy Server blade.
+* `rtm_counters_report` - (Optional) Enables monitoring blades system counters report (e.g CPU Usage,Memory Usage).
+* `rtm_traffic_report` - (Optional) Enables monitoring blades traffic report.
+* `rtm_traffic_report_per_connection` - (Optional) Enables Monitoring blade traffic report per connection.
+* `smart_event_intro_correlation_unit` - (Optional) Enables the gateway use SmartEvent intro correlation unit with one Security Gateway Software Blade. Relevant only when the Logging and Status blade is enabled,.
+* `trust_method` - (Optional) Establish the trust communication method.
+* `trust_settings` - (Optional) Settings for the trusted communication establishment.trust_settings blocks are documented below.
+* `workforce_ai` - (Optional) Workforce AI Security blade enabled. Requires content awareness blade and version R82.20 or higher to be enabled.
+* `zero_phishing_settings` - (Optional) Fqdn settings.zero_phishing_settings blocks are documented below.
 
 
 `advanced_settings` supports the following:
@@ -105,6 +131,10 @@ The following arguments are supported:
 * `deny_untrusted_server_cert` - (Optional) Set to be true in order to drop traffic from servers with untrusted server certificate.deny_untrusted_server_cert blocks are documented below.
 * `deny_revoked_server_cert` - (Optional) Set to be true in order to drop traffic from servers with revoked server certificate (validate CRL).deny_revoked_server_cert blocks are documented below.
 * `deny_expired_server_cert` - (Optional) Set to be true in order to drop traffic from servers with expired server certificate.deny_expired_server_cert blocks are documented below.
+* `bypass_on_client_failure` - (Optional) Bypass HTTPS inspection on client failure.bypass_on_client_failure blocks are documented below.
+* `bypass_under_load` - (Optional) Bypass HTTPS inspection under load.bypass_under_load blocks are documented below.
+* `deployment_mode` - (Optional) HTTPS inspection deployment mode.
+* `outbound_certificate` - (Optional) Outbound HTTPS inspection certificate.outbound_certificate blocks are documented below.
 
 
 `identity_awareness_settings` supports the following:
@@ -118,6 +148,9 @@ The following arguments are supported:
 * `identity_sharing_settings` - (Optional) Identity sharing settings.identity_sharing_settings blocks are documented below.
 * `proxy_settings` - (Optional) Identity-Awareness Proxy settings.proxy_settings blocks are documented below.
 * `remote_access` - (Optional) Enable Remote Access Identity source. 
+* `identity_based_enforcement` - (Optional) ON: Configures this object as a PEP-only object - identity-based enforcement (PEP) is enabled.<br>OFF: Configures this object as a PDP-only object - identity-ba.
+* `identity_web_api` - (Optional) Enable Identity Web API source.
+* `identity_web_api_settings` - (Optional) Identity Web API settings.identity_web_api_settings blocks are documented below.
 
 
 `interfaces` supports the following:
@@ -140,6 +173,7 @@ The following arguments are supported:
 * `color` - (Optional) Color of the object. Should be one of existing colors. 
 * `comments` - (Optional) Comments string. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `dynamic_ip` - (Optional) The Topology of interface with Dynamic IP is set to Automatic - External.
 
 `ips_settings` supports the following:
 
@@ -161,6 +195,7 @@ The following arguments are supported:
 * `hide_behind` - (Optional) Hide behind method. This parameter is forbidden in case "method" parameter is "static". 
 * `install_on` - (Optional) Which gateway should apply the NAT translation. 
 * `method` - (Optional) NAT translation method. 
+* `apply_control_connections` - (Optional) This option performs NAT on VPN control connections to and from this object.
 
 
 `platform_portal_settings` supports the following:
@@ -197,6 +232,13 @@ Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to
 * `vpn_domain` - (Optional) Gateway VPN domain identified by the name or UID. 
 * `vpn_domain_exclude_external_ip_addresses` - (Optional) Exclude the external IP addresses from the VPN domain of this Security Gateway. 
 * `vpn_domain_type` - (Optional) Gateway VPN domain type. 
+* `advanced` - (Optional) Advanced VPN settings.advanced blocks are documented below.
+* `clientless_vpn_settings` - (Optional) Clientless VPN settings.clientless_vpn_settings blocks are documented below.
+* `enable_clientless_vpn` - (Optional) Enable clientless VPN.
+* `exported_routes` - (Optional) Exported routes.exported_routes blocks are documented below.
+* `interfaces` - (Optional) Enhanced Link Selection Interfaces.interfaces blocks are documented below.
+* `saml_portal_settings` - (Optional) SAML portal settings.saml_portal_settings blocks are documented below.
+* `vpn_clients` - (Optional) VPN clients settings.vpn_clients blocks are documented below.
 
 
 `logs_settings` supports the following:
@@ -232,6 +274,7 @@ Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to
 * `stop_logging_when_free_disk_space_below_threshold` - (Optional) Stop logging when free disk space below threshold. 
 * `turn_on_qos_logging` - (Optional) Enable turn on QoS Logging. 
 * `update_account_log_every` - (Optional) Update account log in every amount of seconds. 
+* `include_tcp_state_information` - (Optional) Include TCP state information. Relevant only when Firewall blade is enabled.
 
 
 `sam` supports the following:
@@ -303,6 +346,10 @@ Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to
 * `share_with_other_gateways` - (Optional) Enable identity sharing with other gateways. 
 * `receive_from_other_gateways` - (Optional) Enable receiving identity from other gateways. 
 * `receive_from` - (Optional) Gateway(s) to receive identity from.receive_from blocks are documented below.
+* `cache_mode` - (Optional) Identity cache mode.cache_mode blocks are documented below.
+* `cache_mode_duration` - (Optional) Identity cache mode duration.cache_mode_duration blocks are documented below.
+* `receive_from_infinity_identity` - (Optional) Whether to receive identities from Infinity Identity.
+* `scaled_sharing` - (Optional) Whether scaled identity sharing is enabled.
 
 
 `proxy_settings` supports the following:
@@ -335,6 +382,7 @@ Notation Wide Impact - Office Mode apply IPSec VPN Software Blade clients and to
 
 * `aliases` - (Optional) List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
 * `main_url` - (Optional) The main URL for the web portal. 
+* `ip_address` - (Optional) Optional IP address to be used for the portal URL.
 
 
 `certificate_settings` supports the following:
@@ -354,6 +402,7 @@ This file must be in the *.p12 format.
 
 * `aliases` - (Optional) List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
 * `main_url` - (Optional) The main URL for the web portal. 
+* `ip_address` - (Optional) Optional IP address to be used for the portal URL.
 
 
 `certificate_settings` supports the following:
@@ -372,11 +421,21 @@ This file must be in the *.p12 format.
 `authentication` supports the following:
 
 * `authentication_clients` - (Optional) Collection of VPN Authentication clients identified by the name or UID.authentication_clients blocks are documented below.
+* `dynamic_id_settings` - (Optional) Dynamic ID settings, relevant only when "override-global-dynamic-id-settings" is true.dynamic_id_settings blocks are documented below.
+* `override_global_dynamic_id_settings` - (Optional) Override global dynamic ID settings.
+* `send_machine_certificate` - (Optional) Configure when to send machine certificate.
+* `single_authentication_client` - (Optional) Settings for clients that support only single authentication method.single_authentication_client blocks are documented below.
 
 
 `link_selection` supports the following:
 
 * `dns_resolving_hostname` - (Optional) DNS Resolving Hostname. Must be set when "ip-selection" was selected to be "dns-resolving-from-hostname". 
+* `outgoing_link_tracking` - (Optional) Outgoing link tracking method.
+* `probing_settings` - (Optional) Probing settings configuration. Only available when "ip-selection" is "use-probing-with-high-availability" or "use-probing-with-load-sharing".probing_settings blocks are documented below.
+* `responding_traffic` - (Optional) Responding traffic route selection method.
+* `route_selection_method` - (Optional) Outgoing route selection method when initiating a tunnel.
+* `selected_ip` - (Optional) Selected IP address. Must be set when "source-ip-selection" was selected to be "manual".
+* `source_ip_selection` - (Optional) Source IP address selection method for outgoing traffic.
 
 
 `office_mode` supports the following:
@@ -524,6 +583,7 @@ Must be set when "allocate-method" was selected to be "automatic".
 
 * `aliases` - (Optional) List of URL aliases that are redirected to the main portal URL.aliases blocks are documented below.
 * `main_url` - (Optional) The main URL for the web portal. 
+* `ip_address` - (Optional) Optional IP address to be used for the portal URL.
 
 
 `certificate_settings` supports the following:
@@ -609,3 +669,259 @@ Must be set when "use-second-backup-wins-server" is true and can not be set when
 * `undefined` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'. 
 * `dmz` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'. 
 * `vpn` - (Optional) Controls portal access settings for interfaces that are part of a VPN Encryption Domain. 
+
+
+`communication_with_servers_behind_nat` supports the following:
+
+* `override_profile` - (Optional) Whether to override the Server (Check Point Host) object configuration.
+* `value` - (Optional) according-to-topology: Use the original or translated IP address of the server based on the Topology of Security Gateway interfaces.<br>original-ip-only: Use on.
+
+
+`fetch_policy_scheduler` supports the following:
+
+* `enabled` - (Optional) Indicates if the Security Gateway will fetch policy according to a schedule (true) or manually (false).
+* `schedule` - (Optional) Scheduled Event for fetching policy by.<br><font color='red'>Will be applied only</font> when the `enabled` field is set to true.<br>When not defined ...
+
+
+`bypass_on_client_failure` supports the following:
+
+* `override_profile` - (Optional) Whether to override the value inherited from the profile.
+* `value` - (Optional) Whether to bypass on client failure.
+
+
+`bypass_under_load` supports the following:
+
+* `value` - (Optional) Whether to bypass under load.
+
+
+`outbound_certificate` supports the following:
+
+* `override_profile` - (Optional) Whether to override the value inherited from the profile.
+* `value` - (Optional) Outbound certificate identified by the name or UID.
+
+
+`cache_mode` supports the following:
+
+* `override_profile` - (Optional) Whether to override the value inherited from the profile.
+* `value` - (Optional) Whether the identity cache is enabled.
+
+
+`cache_mode_duration` supports the following:
+
+* `override_profile` - (Optional) Whether to override the value inherited from the profile.
+* `value` - (Optional) Identity cache duration in minutes.
+
+
+`identity_web_api_settings` supports the following:
+
+* `authentication_settings` - (Optional) Authentication Settings for Identity Web Api.authentication_settings blocks are documented below.
+* `authorized_clients` - (Optional) Authorized Clients.authorized_clients blocks are documented below.
+* `client_access_permissions` - (Optional) Identity Web Api accessibility settings.client_access_permissions blocks are documented below.
+
+
+`authentication_settings` supports the following:
+
+* `users_directories` - (Optional) Users directories.users_directories blocks are documented below.
+
+
+`users_directories` supports the following:
+
+* `external_user_profile` - (Optional) External user profile.
+* `internal_users` - (Optional) Internal users.
+* `specific` - (Optional) LDAP AU objects identified by the name or UID. Must be set when 'users-from-external-directories' was selected to be 'specific'.
+* `users_from_external_directories` - (Optional) Users from external directories.
+
+
+`authorized_clients` supports the following:
+
+* `client` - (Optional) Host / Network Group Name or UID.
+* `client_secret` - (Optional) Client Secret.
+
+
+`client_access_permissions` supports the following:
+
+* `accessibility` - (Optional) Configuration of the portal access settings.accessibility blocks are documented below.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - (Optional) Allowed access to the web portal (based on interfaces, or security policy).
+* `internal_access_settings` - (Optional) Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`internal_access_settings` supports the following:
+
+* `dmz` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to 'DMZ'.
+* `undefined` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to 'Undefined'.
+* `vpn` - (Optional) Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`trust_settings` supports the following:
+
+* `gateway_mac_address` - (Optional) Use the Security Gateway MAC address, relevant for the gateway_mac_address identification-method.
+* `identification_method` - (Optional) How to identify the gateway (relevant for DAIP gateways only).
+* `initiation_phase` - (Optional) Push the certificate to the Security Gateway immediately, or wait for the Security Gateway to pull the certificate. Default value for Spark Gateway is...
+
+
+`advanced` supports the following:
+
+* `enable_nat_traversal` - (Optional) Enable NAT traversal.
+* `enable_wire_mode` - (Optional) Enable wire mode.
+* `enable_wire_mode_log_traffic` - (Optional) Log traffic in wire mode.
+* `shutdown_on_gateway_restart` - (Optional) Shutdown VPN tunnels on gateway restart.
+* `tunnel_sharing_mode` - (Optional) Tunnel sharing mode.
+* `wire_mode_interfaces` - (Optional) Wire mode interfaces.
+
+
+`dynamic_id_settings` supports the following:
+
+* `advanced_settings` - (Optional) Advanced Dynamic ID configuration settings.advanced_settings blocks are documented below.
+* `sms_provider_and_email_settings` - (Optional) SMS provider and email configuration.
+* `sms_provider_credentials` - (Optional) SMS provider credentials configuration.sms_provider_credentials blocks are documented below.
+
+
+`advanced_settings` supports the following:
+
+* `country_code` - (Optional) Country code for SMS services.
+* `dynamic_id_message` - (Optional) Dynamic ID message displayed to users.
+* `enable_display_user_details` - (Optional) Enable display of user details.
+* `otp_settings` - (Optional) One Time Password configuration settings.otp_settings blocks are documented below.
+* `user_details_retrieval` - (Optional) User details retrieval method.
+
+
+`otp_settings` supports the following:
+
+* `expiration` - (Optional) One time password expiration (in minutes).
+* `length` - (Optional) Length of one time password.
+* `max_attempts` - (Optional) Number of times users can attempt to enter the one time password before the entire authentication process restarts.
+
+
+`sms_provider_credentials` supports the following:
+
+* `api_id` - (Optional) SMS provider API ID.
+* `password` - (Optional) SMS provider password.
+* `username` - (Optional) SMS provider username.
+
+
+`single_authentication_client` supports the following:
+
+* `allow_multiple_authentication_clients` - (Optional) Allow clients that support multiple authentication methods to connect.
+* `client_display_settings` - (Optional) Client display configuration settings.client_display_settings blocks are documented below.
+* `display_name` - (Optional) Display name for the authentication method.
+* `enabled` - (Optional) Allow clients that support only single authentication method.
+* `method` - (Optional) Authentication method type.
+* `personal_certificate` - (Optional) Personal certificate authentication settings, relevant only when method is "personal-certificate".personal_certificate blocks are documented below.
+* `radius` - (Optional) RADIUS authentication settings, relevant only when method is "radius".radius blocks are documented below.
+* `secur_id` - (Optional) SecurID authentication settings, relevant only when method is "secur-id".secur_id blocks are documented below.
+
+
+`client_display_settings` supports the following:
+
+* `headline` - (Optional) Display headline for authentication dialog.
+* `password_label` - (Optional) Label for password field.
+* `username_label` - (Optional) Label for username field.
+
+
+`personal_certificate` supports the following:
+
+* `dn_concurrence` - (Optional) DN part occurrence number.
+* `dn_part` - (Optional) DN part to extract.
+* `fetch_username_from` - (Optional) Fetch username from.
+* `source` - (Optional) Certificate source field.
+* `storage_type` - (Optional) Certificate storage type.
+
+
+`radius` supports the following:
+
+* `ask_user_password` - (Optional) Ask user for password during authentication.
+* `server` - (Optional) Server object identified by the name or UID.
+
+
+`secur_id` supports the following:
+
+* `server` - (Optional) Server object identified by the name or UID.
+* `token_card_type` - (Optional) Token card type.
+
+
+`clientless_vpn_settings` supports the following:
+
+* `accept_only_3des` - (Optional) Accept only 3DES.
+* `certificate_gateway_authentication` - (Optional) Certificate gateway authentication.
+* `client_authentication` - (Optional) Client authentication.
+* `concurrent_servers_or_processes` - (Optional) Number of concurrent servers or processes.
+
+
+`exported_routes` supports the following:
+
+* `custom_routes` - (Optional) Export custom routes.
+* `custom_routes_object` - (Optional) Custom routes object identified by the name or UID.
+* `internal_interfaces` - (Optional) Export internal interfaces.
+* `static_routes` - (Optional) Export static routes.
+
+
+`interfaces` supports the following:
+
+* `interface_name` - (Optional) The name of the interface.
+* `ip_version` - (Optional) The IP version of the interface's IP address (IPv4/IPv6).
+* `next_hop_ip` - (Optional) The IP address of the next hop.
+* `priority` - (Optional) Priority of a 'Backup' interface.
+* `redundancy_mode` - (Optional) Interface redundancy mode (Active/Backup).
+* `static_nat_ip` - (Optional) The NATed IPv4 address that hides the source IPv4 address of outgoing connections (applies only to IPv4).
+
+
+`probing_settings` supports the following:
+
+* `primary_address` - (Optional) Primary IP address to use. Must be one of the addresses from "probed-interface-list". Required when "use-primary-address" is true.
+* `probed_interface_list` - (Optional) List of specific IP addresses to probe. Only relevant when "probed-interfaces" is set to "specific".
+* `probed_interfaces` - (Optional) Specifies whether to probe all addresses defined in the topology tab or specific addresses.
+* `probing_method` - (Optional) Probing method.
+* `use_primary_address` - (Optional) Whether to use a primary address for high availability probing.
+
+
+`saml_portal_settings` supports the following:
+
+* `accessibility` - (Optional) Configuration of the portal access settings.accessibility blocks are documented below.
+* `certificate_settings` - (Optional) Configuration of the SAML portal certificate.certificate_settings blocks are documented below.
+* `portal_web_settings` - (Optional) Configuration of the SAML portal web settings.portal_web_settings blocks are documented below.
+
+
+`accessibility` supports the following:
+
+* `allow_access_from` - (Optional) Allowed access to the SAML portal.
+* `internal_access_settings` - (Optional) Configuration of the additional portal access settings for internal interfaces only.internal_access_settings blocks are documented below.
+
+
+`internal_access_settings` supports the following:
+
+* `dmz` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to "DMZ".
+* `undefined` - (Optional) Controls portal access settings for internal interfaces, whose topology is set to "Undefined".
+* `vpn` - (Optional) Controls portal access settings for interfaces that are part of a VPN Encryption Domain.
+
+
+`certificate_settings` supports the following:
+
+* `base64_certificate` - (Optional) The certificate file encoded in Base64 with padding.
+* `base64_password` - (Optional) Certificate file password.
+
+
+`portal_web_settings` supports the following:
+
+* `aliases` - (Optional) List of URL aliases that are redirected to the main portal URL.
+* `ip_address` - (Optional) Optional IP address to be used for the portal URL.
+* `main_url` - (Optional) The main URL for the portal.
+
+
+`vpn_clients` supports the following:
+
+* `enable_capsule_vpn_connect` - (Optional) Enable Capsule VPN Connect client.
+* `enable_cp_mobile_for_windows` - (Optional) Enable Check Point Mobile for Windows client.
+* `enable_endpoint_security_vpn` - (Optional) Enable Endpoint Security VPN client.
+* `enable_secu_remote` - (Optional) Enable SecuRemote client.
+* `enable_ssl_network_extender` - (Optional) Enable SSL Network Extender client.
+* `gateway_authentication_certificate` - (Optional) Gateway authentication certificate.
+
+
+`zero_phishing_settings` supports the following:
+
+* `gateway_fqdn_mode` - (Optional) Manual Fqdn.
+* `manual_fqdn` - (Optional) Zero Phishing gateway FQDN.

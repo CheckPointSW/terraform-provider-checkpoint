@@ -50,6 +50,11 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 							Computed:    true,
 							Description: "Gateway platform version.",
 						},
+						"hardware_subtype": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Gateway type (relevant only for Spark gateways).",
+						},
 					},
 				},
 			},
@@ -255,6 +260,28 @@ func dataSourceManagementSetGatewayCapabilities() *schema.Resource {
 					},
 				},
 			},
+			"supported_hardware_subtypes": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Supported hardware-subtypes according to restrictions.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"default": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Default hardware subtype.",
+						},
+						"hardware_subtypes": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "List of Check Point hardware subtypes.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -303,6 +330,9 @@ func dataSourceManagementSetGatewayCapabilitiesRead(d *schema.ResourceData, m in
 		}
 		if v := objMap["version"]; v != nil {
 			restrictionsMapToAdd["version"] = v
+		}
+		if v := objMap["hardware-subtype"]; v != nil {
+			restrictionsMapToAdd["hardware_subtype"] = v
 		}
 		_ = d.Set("restrictions", []interface{}{restrictionsMapToAdd})
 	}
@@ -507,6 +537,18 @@ func dataSourceManagementSetGatewayCapabilitiesRead(d *schema.ResourceData, m in
 		}
 
 		_ = d.Set("supported_versions", []interface{}{mapToReturn})
+	}
+
+	if v := gatewayCapabilities["supported-hardware-subtypes"]; v != nil {
+		supportedHardwareSubtypesShow := v.(map[string]interface{})
+		supportedHardwareSubtypesState := make(map[string]interface{})
+		if v := supportedHardwareSubtypesShow["default"]; v != nil {
+			supportedHardwareSubtypesState["default"] = v
+		}
+		if v := supportedHardwareSubtypesShow["hardware-subtypes"]; v != nil {
+			supportedHardwareSubtypesState["hardware_subtypes"] = v
+		}
+		_ = d.Set("supported_hardware_subtypes", []interface{}{supportedHardwareSubtypesState})
 	}
 
 	return nil

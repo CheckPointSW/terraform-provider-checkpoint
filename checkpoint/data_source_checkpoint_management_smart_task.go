@@ -56,6 +56,7 @@ func dataSourceManagementSmartTask() *schema.Resource {
 									"shared_secret": {
 										Type:        schema.TypeString,
 										Computed:    true,
+										Sensitive:   true,
 										Description: "Shared secret that can be used by the target server to identify the Management Server.<br>The value will be sent as part of the request in the \"X-chkp-shared-secret\" header.",
 									},
 									"time_out": {

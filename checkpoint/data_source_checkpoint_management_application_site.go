@@ -84,6 +84,75 @@ func dataSourceManagementApplicationSite() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"application_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"primary_category_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Primary category id.",
+			},
+			"risk": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"user_defined": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "True if this application site was defined by user (not predefined one).",
+			},
+			"match_settings": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Match settings for application services.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Match mode for the application services.",
+						},
+						"negate": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "All ports except those listed in override-services.",
+						},
+						"override_services": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Services used when matching is customized.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"recommended_services": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Recommended services for this application. Use when mode is set to 'recommended'.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"port": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Service port.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"additional_categories_ids": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Additional categories Id's.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -210,6 +279,59 @@ func dataSourceManagementApplicationSiteRead(d *schema.ResourceData, m interface
 		}
 	} else {
 		_ = d.Set("groups", nil)
+	}
+
+	if v := applicationSite["application-id"]; v != nil {
+		_ = d.Set("application_id", v)
+	}
+
+	if v := applicationSite["primary-category-id"]; v != nil {
+		_ = d.Set("primary_category_id", v)
+	}
+
+	if v := applicationSite["risk"]; v != nil {
+		_ = d.Set("risk", v)
+	}
+
+	if v := applicationSite["user-defined"]; v != nil {
+		_ = d.Set("user_defined", v)
+	}
+
+	if v := applicationSite["match-settings"]; v != nil {
+		matchSettingsShow := v.(map[string]interface{})
+		matchSettingsState := make(map[string]interface{})
+		if v := matchSettingsShow["mode"]; v != nil {
+			matchSettingsState["mode"] = v
+		}
+		if v := matchSettingsShow["negate"]; v != nil {
+			matchSettingsState["negate"] = v
+		}
+		if v := matchSettingsShow["override-services"]; v != nil {
+			overrideServicesIdsList := v.([]interface{})
+			var overrideServicesIds = make([]string, 0)
+			for _, item := range overrideServicesIdsList {
+				overrideServicesIds = append(overrideServicesIds, item.(map[string]interface{})["name"].(string))
+			}
+			matchSettingsState["override_services"] = overrideServicesIds
+		}
+		if v := matchSettingsShow["recommended-services"]; v != nil {
+			recommendedServicesList := v.([]interface{})
+			var recommendedServicesListState []map[string]interface{}
+			for i := range recommendedServicesList {
+				recommendedServicesShow := recommendedServicesList[i].(map[string]interface{})
+				recommendedServicesState := make(map[string]interface{})
+				if v := recommendedServicesShow["port"]; v != nil {
+					recommendedServicesState["port"] = v
+				}
+				recommendedServicesListState = append(recommendedServicesListState, recommendedServicesState)
+			}
+			matchSettingsState["recommended_services"] = recommendedServicesListState
+		}
+		_ = d.Set("match_settings", []interface{}{matchSettingsState})
+	}
+
+	if v := applicationSite["additional-categories-ids"]; v != nil {
+		_ = d.Set("additional_categories_ids", v)
 	}
 
 	return nil

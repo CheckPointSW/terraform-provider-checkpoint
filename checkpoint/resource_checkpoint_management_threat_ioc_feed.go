@@ -101,6 +101,7 @@ func resourceManagementThreatIocFeed() *schema.Resource {
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "password for authenticating with the URL.",
 			},
 			"tags": {
@@ -159,6 +160,26 @@ func resourceManagementThreatIocFeed() *schema.Resource {
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
+			},
+			"confidence": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Set in order to configure the confidence of the snort protections in snort format. 1-Low, 5-High.",
+			},
+			"performance_impact": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Set in order to configure the performance impact of the snort protections in snort format. 1-Very Low, 4-High.",
+			},
+			"severity": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Set in order to configure the severity of the snort protections in snort format. 1-Low, 4-Critical.",
+			},
+			"use_snort_format": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Set in order to configure a snort format indicator feed.",
 			},
 		},
 	}
@@ -287,6 +308,18 @@ func createManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Create ThreatIocFeed - Map = ", threatIocFeed)
 
+	if v, ok := d.GetOk("confidence"); ok {
+		threatIocFeed["confidence"] = v.(int)
+	}
+	if v, ok := d.GetOk("performance_impact"); ok {
+		threatIocFeed["performance-impact"] = v.(int)
+	}
+	if v, ok := d.GetOk("severity"); ok {
+		threatIocFeed["severity"] = v.(int)
+	}
+	if v, ok := d.GetOkExists("use_snort_format"); ok {
+		threatIocFeed["use-snort-format"] = v.(bool)
+	}
 	addThreatIocFeedRes, err := client.ApiCall("add-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addThreatIocFeedRes.Success {
 		if addThreatIocFeedRes.ErrorMsg != "" {
@@ -453,6 +486,22 @@ func readManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := threatIocFeed["confidence"]; v != nil {
+		_ = d.Set("confidence", v)
+	}
+
+	if v := threatIocFeed["performance-impact"]; v != nil {
+		_ = d.Set("performance_impact", v)
+	}
+
+	if v := threatIocFeed["severity"]; v != nil {
+		_ = d.Set("severity", v)
+	}
+
+	if v := threatIocFeed["use-snort-format"]; v != nil {
+		_ = d.Set("use_snort_format", v)
+	}
+
 	return nil
 
 }
@@ -596,6 +645,18 @@ func updateManagementThreatIocFeed(d *schema.ResourceData, m interface{}) error 
 
 	log.Println("Update ThreatIocFeed - Map = ", threatIocFeed)
 
+	if ok := d.HasChange("confidence"); ok {
+		threatIocFeed["confidence"] = d.Get("confidence")
+	}
+	if ok := d.HasChange("performance_impact"); ok {
+		threatIocFeed["performance-impact"] = d.Get("performance_impact")
+	}
+	if ok := d.HasChange("severity"); ok {
+		threatIocFeed["severity"] = d.Get("severity")
+	}
+	if ok := d.HasChange("use_snort_format"); ok {
+		threatIocFeed["use-snort-format"] = d.Get("use_snort_format")
+	}
 	updateThreatIocFeedRes, err := client.ApiCall("set-threat-ioc-feed", threatIocFeed, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatIocFeedRes.Success {
 		if updateThreatIocFeedRes.ErrorMsg != "" {

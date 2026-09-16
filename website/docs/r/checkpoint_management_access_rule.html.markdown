@@ -176,6 +176,7 @@ The following arguments are supported:
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
 * `comments` - (Optional) Comments string.
 * `fields_with_uid_identifier` - (Optional) List of resource fields that will use object UIDs as object identifiers. Default is object name.
+* `service_resource` - (Optional) Resource of the service identified by the name or UID. When a service-resource exists, the service parameter should contains exactly one service element.
 
 `position` supports the following:
 
@@ -188,6 +189,8 @@ The following arguments are supported:
 
 * `enable_identity_captive_portal` - (Optional) N/A.
 * `limit` - (Optional) N/A.
+* `client_auth_settings` - (Optional) Client authentication settings.client_auth_settings blocks are documented below.
+* `user_auth_settings` - (Optional) User authentication settings.user_auth_settings blocks are documented below.
 
 `custom_fields` supports the following:
 
@@ -228,3 +231,30 @@ The following arguments are supported:
 ```
 $ terraform import checkpoint_management_access_rule.example "Network;9423d36f-2d66-4754-b9e2-e9f4493751d3"
 ```
+
+
+`client_auth_settings` supports the following:
+
+* `destination` - (Optional) Destination object identified by the name or UID.
+* `require_desktop_config_verification` - (Optional) Require Desktop configuration verification.
+* `sessions_limit` - (Optional) Maximum number of concurrent sessions.
+* `sign_on_method` - (Optional) Sign on method.
+* `sign_on_type` - (Optional) Sign on type.
+* `source` - (Optional) Source object identified by the name or UID.
+* `timeout` - (Optional) Session timeout settings.timeout blocks are documented below.
+* `tracking` - (Optional) Tracking method.
+* `unlimited_sessions` - (Optional) Allow an unlimited number of sessions.
+
+
+`timeout` supports the following:
+
+* `enable` - (Optional) Enable session timeout.
+* `minutes` - (Optional) Session timeout in minutes.
+* `refreshable` - (Optional) Whether the timeout is refreshable.
+
+
+`user_auth_settings` supports the following:
+
+* `allowed_http_servers` - (Optional) Allowed HTTP servers.
+* `destination` - (Optional) Destination object identified by the name or UID.
+* `source` - (Optional) Source object identified by the name or UID.

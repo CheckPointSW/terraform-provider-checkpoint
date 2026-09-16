@@ -124,6 +124,68 @@ func dataSourceManagementHttpsRule() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"hits": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Hits count object.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"first_date": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "N/A",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"last_date": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "N/A",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"level": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "N/A",
+						},
+						"percentage": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "N/A",
+						},
+						"value": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "N/A",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -296,6 +358,43 @@ func dataSourceManagementHttpsRuleRead(d *schema.ResourceData, m interface{}) er
 
 	if v := httpsRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := httpsRule["hits"]; v != nil {
+		hitsShow := v.(map[string]interface{})
+		hitsState := make(map[string]interface{})
+		if v := hitsShow["first-date"]; v != nil {
+			firstDateShow := v.(map[string]interface{})
+			firstDateState := make(map[string]interface{})
+			if v := firstDateShow["iso-8601"]; v != nil {
+				firstDateState["iso_8601"] = v
+			}
+			if v := firstDateShow["posix"]; v != nil {
+				firstDateState["posix"] = v
+			}
+			hitsState["first_date"] = []interface{}{firstDateState}
+		}
+		if v := hitsShow["last-date"]; v != nil {
+			lastDateShow := v.(map[string]interface{})
+			lastDateState := make(map[string]interface{})
+			if v := lastDateShow["iso-8601"]; v != nil {
+				lastDateState["iso_8601"] = v
+			}
+			if v := lastDateShow["posix"]; v != nil {
+				lastDateState["posix"] = v
+			}
+			hitsState["last_date"] = []interface{}{lastDateState}
+		}
+		if v := hitsShow["level"]; v != nil {
+			hitsState["level"] = v
+		}
+		if v := hitsShow["percentage"]; v != nil {
+			hitsState["percentage"] = v
+		}
+		if v := hitsShow["value"]; v != nil {
+			hitsState["value"] = v
+		}
+		_ = d.Set("hits", []interface{}{hitsState})
 	}
 
 	return nil

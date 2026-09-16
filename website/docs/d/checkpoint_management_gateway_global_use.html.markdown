@@ -32,6 +32,9 @@ The following arguments are supported:
 * `uid` - Object Identifier.
 * `name` - Object Name.
 * `domain` - data about doamin
+* `enable_identity_sharing` - Indicates whether Identity Awareness Sharing global use is enabled on the target.
+* `enable_vpn` - Indicates whether VPN global use is enabled on the target.
+* `identity_sharing_domains` - Domains that Identity Awareness Sharing global use applied to them.
 
 `domain` supports the following:
 

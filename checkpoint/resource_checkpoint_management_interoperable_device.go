@@ -250,6 +250,11 @@ func resourceManagementInteroperableDevice() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"autonomous_system_number": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The Autonomous System Number (ASN) for this Interoperable Device object.",
+			},
 		},
 	}
 }
@@ -396,6 +401,9 @@ func createManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 
 	log.Println("Create InteroperableDevice - Map = ", interoperableDevice)
 
+	if v, ok := d.GetOk("autonomous_system_number"); ok {
+		interoperableDevice["autonomous-system-number"] = v.(string)
+	}
 	addInteroperableDeviceRes, err := client.ApiCall("add-interoperable-device", interoperableDevice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addInteroperableDeviceRes.Success {
 		if addInteroperableDeviceRes.ErrorMsg != "" {
@@ -633,6 +641,10 @@ func readManagementInteroperableDevice(d *schema.ResourceData, m interface{}) er
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := interoperableDevice["autonomous-system-number"]; v != nil {
+		_ = d.Set("autonomous_system_number", v)
+	}
+
 	return nil
 
 }
@@ -806,6 +818,9 @@ func updateManagementInteroperableDevice(d *schema.ResourceData, m interface{}) 
 
 	log.Println("Update InteroperableDevice - Map = ", interoperableDevice)
 
+	if ok := d.HasChange("autonomous_system_number"); ok {
+		interoperableDevice["autonomous-system-number"] = d.Get("autonomous_system_number")
+	}
 	updateInteroperableDeviceRes, err := client.ApiCall("set-interoperable-device", interoperableDevice, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateInteroperableDeviceRes.Success {
 		if updateInteroperableDeviceRes.ErrorMsg != "" {

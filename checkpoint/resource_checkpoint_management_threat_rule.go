@@ -169,6 +169,11 @@ func resourceManagementThreatRule() *schema.Resource {
 							Optional:    true,
 							Description: "Packet capture.",
 						},
+						"forensics": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to enable forensics.",
+						},
 					},
 				},
 			},
@@ -299,6 +304,9 @@ func createManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 			if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
 				trackSettingsPayload["packet-capture"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("track_settings.0.forensics"); ok {
+				trackSettingsPayload["forensics"] = v.(bool)
 			}
 			threatRule["track-settings"] = trackSettingsPayload
 		}
@@ -480,6 +488,9 @@ func readManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 		if v := trackSettingsMap["packet-capture"]; v != nil {
 			trackSettingsState["packet_capture"] = v.(bool)
 		}
+		if v := trackSettingsMap["forensics"]; v != nil {
+			trackSettingsState["forensics"] = v
+		}
 		_ = d.Set("track_settings", []interface{}{trackSettingsState})
 	}
 
@@ -622,6 +633,9 @@ func updateManagementThreatRule(d *schema.ResourceData, m interface{}) error {
 
 				if v, ok := d.GetOkExists("track_settings.0.packet_capture"); ok {
 					trackSettingsPayload["packet-capture"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("track_settings.0.forensics"); ok {
+					trackSettingsPayload["forensics"] = v.(bool)
 				}
 				threatRule["track-settings"] = trackSettingsPayload
 			}

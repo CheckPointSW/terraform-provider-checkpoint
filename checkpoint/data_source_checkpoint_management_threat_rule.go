@@ -112,6 +112,11 @@ func dataSourceManagementThreatRule() *schema.Resource {
 							Computed:    true,
 							Description: "Packet capture.",
 						},
+						"forensics": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to enable forensics.",
+						},
 					},
 				},
 			},
@@ -127,6 +132,11 @@ func dataSourceManagementThreatRule() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			},
+			"exceptions_layer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The rule's exceptions layer.",
 			},
 		},
 	}
@@ -290,6 +300,9 @@ func dataSourceManagementThreatRuleRead(d *schema.ResourceData, m interface{}) e
 			trackSettingsState["packet_capture"] = v.(bool)
 		}
 
+		if v := trackSettingsMap["forensics"]; v != nil {
+			trackSettingsState["forensics"] = v
+		}
 		_ = d.Set("track_settings", []interface{}{trackSettingsState})
 	}
 
@@ -307,6 +320,10 @@ func dataSourceManagementThreatRuleRead(d *schema.ResourceData, m interface{}) e
 
 	if v := threatRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := threatRule["exceptions-layer"]; v != nil {
+		_ = d.Set("exceptions_layer", v)
 	}
 
 	return nil

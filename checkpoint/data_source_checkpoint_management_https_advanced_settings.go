@@ -123,6 +123,11 @@ func dataSourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 				Computed:    true,
 				Description: "The value \"true\" configures the Security Gateway to send HTTPS Inspection session logs.<br>The default value is true.",
 			},
+			"show_block_page": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether a block page should be displayed when TLS Inspection rejects a connection due to server certificate issues.",
+			},
 		},
 	}
 }
@@ -236,6 +241,10 @@ func dataSourceManagementSetHttpsAdvancedSettingsRead(d *schema.ResourceData, m 
 	}
 	if v := httpsAdvancedSettings["log-sessions"]; v != nil {
 		d.Set("log_sessions", v)
+	}
+
+	if v := httpsAdvancedSettings["show-block-page"]; v != nil {
+		_ = d.Set("show_block_page", v)
 	}
 
 	return nil

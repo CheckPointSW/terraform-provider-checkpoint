@@ -62,6 +62,7 @@ func resourceManagementCheckNetworkFeed() *schema.Resource {
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "password for authenticating with the URL.",
 						},
 						"username": {

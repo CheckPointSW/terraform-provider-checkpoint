@@ -60,6 +60,12 @@ The following arguments are supported:
 * `provisioning_state` -  Provisioning state. This field is relevant just for SMB clusters. By default the state is 'manual'- enable provisioning but not attach to profile.If 'using-profile' state is provided a provisioning profile must be provided in provisioning-settings. 
 * `sic_name` - Secure Internal Communication name.
 * `sic_state`- Secure Internal Communication state.
+* `gateway_status` - The current status of the Cluster member. Shown only when the 'show-statuses' parameter is set to 'true'.
+* `last_applied_provisioning_settings_time` - The last time when the Provisioning Settings were changed. Shown only when the 'show-statuses' parameter is set to 'true'.last_applied_provisioning_settings_time blocks are documented below.
+* `last_policy_fetch_time` - The last time when the Security Policy was fetched. Shown only when the 'show-statuses' parameter is set to 'true'.last_policy_fetch_time blocks are documented below.
+* `last_provisioning_settings_sync_time` - The last time of Provisioning Settings synchronization with the Cluster member. Shown only when the 'show-statuses' parameter is set to 'true'.last_provisioning_settings_sync_time blocks are documented below.
+* `policy_status` - The current status of the Security Policy. Shown only when the 'show-statuses' parameter is set to 'true'.
+* `provisioning_settings_status` - The current status of the Provisioning Settings. Shown only when the 'show-statuses' parameter is set to 'true'.
 
 
 
@@ -93,3 +99,21 @@ This field is relevant only when 'manual' option of vpn-domain is checked.manual
 
 * `from_ipv4_address` -  First IPv4 address of the IP address range. 
 * `to_ipv4_address` -  Last IPv4 address of the IP address range. 
+
+
+`last_applied_provisioning_settings_time` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`last_policy_fetch_time` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`last_provisioning_settings_sync_time` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

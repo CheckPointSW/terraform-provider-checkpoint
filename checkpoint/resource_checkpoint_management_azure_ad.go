@@ -46,6 +46,7 @@ func resourceManagementAzureAd() *schema.Resource {
 			"application_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 				Description: "The key created for the Service Principal. Required for authentication-method: service-principal-authentication.",
 			},
 			"directory_id": {

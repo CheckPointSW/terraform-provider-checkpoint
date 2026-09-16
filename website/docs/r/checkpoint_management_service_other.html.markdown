@@ -47,6 +47,7 @@ Example: tcp, dport = 21, direction = 0 matches incoming FTP control connections
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `protocol` - (Optional) Protocol name or uid. The protocol type associated with the service, and by implication, the management server (if any) that enforces Content Security and Authe.
 
 
 `aggressive_aging` supports the following:

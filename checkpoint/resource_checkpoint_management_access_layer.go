@@ -108,6 +108,11 @@ func resourceManagementAccessLayer() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"dynamic_layer": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether this layer is set as a Dynamic layer.",
+			},
 		},
 	}
 }
@@ -179,6 +184,9 @@ func createManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create AccessLayer - Map = ", accessLayer)
 
+	if v, ok := d.GetOkExists("dynamic_layer"); ok {
+		accessLayer["dynamic-layer"] = v.(bool)
+	}
 	addAccessLayerRes, err := client.ApiCall("add-access-layer", accessLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessLayerRes.Success {
 		if addAccessLayerRes.ErrorMsg != "" {
@@ -296,6 +304,10 @@ func readManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := accessLayer["dynamic-layer"]; v != nil {
+		_ = d.Set("dynamic_layer", v)
+	}
+
 	return nil
 
 }
@@ -374,6 +386,9 @@ func updateManagementAccessLayer(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update AccessLayer - Map = ", accessLayer)
 
+	if ok := d.HasChange("dynamic_layer"); ok {
+		accessLayer["dynamic-layer"] = d.Get("dynamic_layer")
+	}
 	updateAccessLayerRes, err := client.ApiCall("set-access-layer", accessLayer, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateAccessLayerRes.Success {
 		if updateAccessLayerRes.ErrorMsg != "" {

@@ -28,6 +28,59 @@ func dataSourceManagementTask() *schema.Resource {
 				Description: "N/A",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"previous_task_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the previous task in the execution sequence, on which this task depends.",
+						},
+						"progress_description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "N/A",
+						},
+						"revert_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "N/A",
+						},
+						"start_time": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "N/A",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"last_update_time": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "N/A",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -104,6 +157,28 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 
 				tasksMapToAdd := make(map[string]interface{})
 
+				if v := tasksMap["start-time"]; v != nil {
+					startTimeShow := v.(map[string]interface{})
+					startTimeState := make(map[string]interface{})
+					if v := startTimeShow["iso-8601"]; v != nil {
+						startTimeState["iso_8601"] = v
+					}
+					if v := startTimeShow["posix"]; v != nil {
+						startTimeState["posix"] = v
+					}
+					tasksMapToAdd["start_time"] = []interface{}{startTimeState}
+				}
+				if v := tasksMap["last-update-time"]; v != nil {
+					lastUpdateTimeShow := v.(map[string]interface{})
+					lastUpdateTimeState := make(map[string]interface{})
+					if v := lastUpdateTimeShow["iso-8601"]; v != nil {
+						lastUpdateTimeState["iso_8601"] = v
+					}
+					if v := lastUpdateTimeShow["posix"]; v != nil {
+						lastUpdateTimeState["posix"] = v
+					}
+					tasksMapToAdd["last_update_time"] = []interface{}{lastUpdateTimeState}
+				}
 				if v, _ := tasksMap["comments"]; v != nil {
 					tasksMapToAdd["comments"] = v
 				}
@@ -121,6 +196,15 @@ func dataSourceManagementTaskRead(d *schema.ResourceData, m interface{}) error {
 				}
 				if v, _ := tasksMap["suppressed"]; v != nil {
 					tasksMapToAdd["suppressed"] = v
+				}
+				if v := tasksMap["previous-task-id"]; v != nil {
+					tasksMapToAdd["previous_task_id"] = v
+				}
+				if v := tasksMap["progress-description"]; v != nil {
+					tasksMapToAdd["progress_description"] = v
+				}
+				if v := tasksMap["revert-status"]; v != nil {
+					tasksMapToAdd["revert_status"] = v
 				}
 				tasksListToReturn = append(tasksListToReturn, tasksMapToAdd)
 			}

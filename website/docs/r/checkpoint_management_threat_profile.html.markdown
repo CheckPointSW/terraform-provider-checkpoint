@@ -51,6 +51,10 @@ The following arguments are supported:
 * `tags` - (Optional) Collection of tag identifiers.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+* `advanced_dns_settings` - (Optional) Advanced DNS Settings.advanced_dns_settings blocks are documented below.
+* `ai_guard` - (Optional) Is AI Guard blade activated.
+* `ai_guard_api_key` - (Optional) Lakera AI Guard API key. <font color='red'>Required only if</font> AI Guard is enabled.
+* `ai_guard_settings` - (Optional) AI Guard blade settings.ai_guard_settings blocks are documented below.
 
 `indicator_overrides` supports the following:
 
@@ -121,3 +125,16 @@ The following arguments are supported:
 * `action` - Protection action.
 * `capture_packets` - Capture packets.
 * `track` - Tracking method for protection.
+
+
+`advanced_dns_settings` supports the following:
+
+* `dga_detection` - (Optional) Enable/Disable DGA based domains detection.
+* `dns_domain_tunneling` - (Optional) Enable/Disable DNS Tunneling based on domains detection.
+* `dns_over_https` - (Optional) Enable/Disable parsing of DNS over HTTPS protocol.
+* `nxns_attack_detection` - (Optional) Enable/Disable NXNS attack detection.
+
+
+`ai_guard_settings` supports the following:
+
+* `project_id` - (Optional) Lakera project ID to associate with this profile.

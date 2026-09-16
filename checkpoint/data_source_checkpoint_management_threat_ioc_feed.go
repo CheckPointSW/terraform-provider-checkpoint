@@ -143,6 +143,26 @@ func dataSourceManagementThreatIocFeed() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"confidence": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"performance_impact": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"severity": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"use_snort_format": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "N/A",
+			},
 		},
 	}
 }
@@ -314,6 +334,22 @@ func dataSourceManagementThreatIocFeedRead(d *schema.ResourceData, m interface{}
 
 	if v := threatIocFeed["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := threatIocFeed["confidence"]; v != nil {
+		_ = d.Set("confidence", v)
+	}
+
+	if v := threatIocFeed["performance-impact"]; v != nil {
+		_ = d.Set("performance_impact", v)
+	}
+
+	if v := threatIocFeed["severity"]; v != nil {
+		_ = d.Set("severity", v)
+	}
+
+	if v := threatIocFeed["use-snort-format"]; v != nil {
+		_ = d.Set("use_snort_format", v)
 	}
 
 	return nil

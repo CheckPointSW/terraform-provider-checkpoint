@@ -28,6 +28,7 @@ The following arguments are supported:
 * `show_membership` - (Optional) Indicates whether to calculate and show "groups" field for every object in reply. 
 * `indirect` - (Optional) Search for indirect usage. 
 * `indirect_max_depth` - (Optional) Maximum nesting level during indirect usage search. 
+* `domains_to_process` - (Optional) Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...
 
 
 ## How To Use

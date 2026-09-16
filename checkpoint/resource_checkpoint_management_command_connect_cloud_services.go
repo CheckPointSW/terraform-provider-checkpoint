@@ -27,6 +27,7 @@ func resourceManagementConnectCloudServices() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "Copy the authentication token from the Smart-1 cloud service hosted in the Infinity Portal.",
 			},
 			"status": {
@@ -58,6 +59,42 @@ func resourceManagementConnectCloudServices() *schema.Resource {
 				Computed:    true,
 				Description: "The Management Server's public URL.",
 			},
+			"gateways_onboarding_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Gateways on-boarding to Infinity Portal settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_method": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Indicate whether Gateways will be connected to Infinity Portal automatically or only after policy installation.",
+						},
+						"details_level": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The level of detail for some of the fields in the response can vary from showing only the UID value of the object to a fully detailed representation o...",
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable/Disable automatic connection of Security Gateways to Infinity Portal.",
+						},
+						"participant_gateways": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Which Gateways will be connected to Infinity Portal.",
+						},
+						"specific_gateways": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Selection of targets identified by the name or UID which will be on-boarded to the cloud. Configuration will be applied only when 'participant-gateway...",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -69,6 +106,26 @@ func createManagementConnectCloudServices(d *schema.ResourceData, m interface{})
 
 	if v, ok := d.GetOk("auth_token"); ok {
 		payload["auth-token"] = v.(string)
+	}
+
+	if _, ok := d.GetOk("gateways_onboarding_settings"); ok {
+		gatewaysOnboardingSettingsPayload := make(map[string]interface{})
+		if v, ok := d.GetOk("gateways_onboarding_settings.0.connection_method"); ok {
+			gatewaysOnboardingSettingsPayload["connection-method"] = v.(string)
+		}
+		if v, ok := d.GetOk("gateways_onboarding_settings.0.details_level"); ok {
+			gatewaysOnboardingSettingsPayload["details-level"] = v.(string)
+		}
+		if v, ok := d.GetOkExists("gateways_onboarding_settings.0.enabled"); ok {
+			gatewaysOnboardingSettingsPayload["enabled"] = v.(bool)
+		}
+		if v, ok := d.GetOk("gateways_onboarding_settings.0.participant_gateways"); ok {
+			gatewaysOnboardingSettingsPayload["participant-gateways"] = v.(string)
+		}
+		if v, ok := d.GetOk("gateways_onboarding_settings.0.specific_gateways"); ok {
+			gatewaysOnboardingSettingsPayload["specific-gateways"] = v.(string)
+		}
+		payload["gateways-onboarding-settings"] = gatewaysOnboardingSettingsPayload
 	}
 
 	ConnectCloudServicesRes, err := client.ApiCall("connect-cloud-services", payload, client.GetSessionID(), true, client.IsProxyUsed())

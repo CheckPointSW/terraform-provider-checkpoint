@@ -112,6 +112,32 @@ func dataSourceManagementMdPermissionsProfile() *schema.Resource {
 				Computed:    true,
 				Description: "The level of the Multi Domain Permissions Profile.<br>The level cannot be changed after creation.",
 			},
+			"limit_mgmt_api_commands": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable limitation of Management API commands the profile may or may not run.",
+			},
+			"manage_all_domains": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Create and manage all Domains and Global Domains.",
+			},
+			"allowed_mgmt_api_commands": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"blocked_mgmt_api_commands": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -246,6 +272,21 @@ func dataSourceManagementMdPermissionsProfileRead(d *schema.ResourceData, m inte
 
 	if v := mdPermissionsProfile["permission-level"]; v != nil {
 		_ = d.Set("permission_level", v)
+	}
+
+	if v := mdPermissionsProfile["limit-mgmt-api-commands"]; v != nil {
+		_ = d.Set("limit_mgmt_api_commands", v)
+	}
+
+	if v := mdPermissionsProfile["manage-all-domains"]; v != nil {
+		_ = d.Set("manage_all_domains", v)
+	}
+
+	if v := mdPermissionsProfile["allowed-mgmt-api-commands"]; v != nil {
+		_ = d.Set("allowed_mgmt_api_commands", v)
+	}
+	if v := mdPermissionsProfile["blocked-mgmt-api-commands"]; v != nil {
+		_ = d.Set("blocked_mgmt_api_commands", v)
 	}
 
 	return nil

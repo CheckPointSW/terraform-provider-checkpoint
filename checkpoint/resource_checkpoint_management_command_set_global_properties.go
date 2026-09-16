@@ -210,11 +210,13 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 									"http_next_proxy_host": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Deprecated:  "Deprecated - no longer sent to the Management API. Retained so existing configurations keep working.",
 										Description: "HTTP next proxy host is the host name of the HTTP proxy behind the Check Point Security Gateway HTTP security server (if there is one). Changing the HTTP Next Proxy fields takes effect after the Security Gateway database is downloaded to the authenticating gateway, or after the security policy is re-installed. <br>These settings apply only to firewalled gateways prior to NG. For later versions, these settings should be defined in the Node Properties window.",
 									},
 									"http_next_proxy_port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Deprecated:  "Deprecated - no longer sent to the Management API. Retained so existing configurations keep working.",
 										Description: "HTTP next proxy port is the port of the HTTP proxy behind the Check Point Security Gateway HTTP security server (if there is one). Changing the HTTP Next Proxy fields takes effect after the Security Gateway database is downloaded to the authenticating gateway, or after the security policy is re-installed. <br>These settings apply only to firewalled gateways prior to NG. For later versions, these settings should be defined in the Node Properties window.",
 									},
 									"http_servers": {
@@ -487,6 +489,7 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
+										Deprecated:  "Deprecated - moved to the checkpoint_management_vpn_community_remote_access resource under encryption: use encryption.ike_phase_1 instead of ike, and encryption.ike_phase_2 instead of ipsec. No longer sent to the Management API.",
 										Description: "Select the methods negotiated in IKE phase 2 and used in IPSec connections.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -698,6 +701,7 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 									"encryption_method": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Deprecated:  "Deprecated - moved to the checkpoint_management_vpn_community_remote_access resource as encryption.encryption_method. No longer sent to the Management API.",
 										Description: "Select the encryption method.",
 										Default:     "ike_v1_only",
 									},
@@ -728,6 +732,7 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 									"l2tp_pre_shared_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Type in the pre-shared key.<br>Available only if support-l2tp-with-pre-shared-key is set to true.",
 									},
 								},
@@ -1596,6 +1601,11 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 				ForceNew:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"ip_options_drop": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IP Options drop specifies the action to take when a packet with IP Options is encountered. The Check Point Security Gateway always drops these packets...",
+						},
 						"administrative_notifications": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -1930,6 +1940,11 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 				ForceNew:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"keep_ike_sas": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enabled: Keep ALL IKEv1 phase 1 Security Associations (SA) upon policy installation.<br>Disabled: Delete ALL IKEv1 phase 1 Security Associations (SA) ...",
+						},
 						"certs_and_pki": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
@@ -1993,6 +2008,27 @@ func resourceManagementSetGlobalProperties() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
+			},
+			"identity_awareness": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Configure Identity Awareness properties.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cache_mode": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "True: In case of connectivity loss from the Policy-Decision-Point (PDP), extend Identity cache up-to 'cache-mode-duration'.<br>False: Identity Cache M...",
+						},
+						"cache_mode_duration": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Time limit for keeping Identities in the cache.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -3222,6 +3258,9 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 				}
 				advancedConfPayload["certs-and-pki"] = certsAndPkiPayload
 			}
+			if v, ok := d.GetOkExists("advanced_conf.0.keep_ike_sas"); ok {
+				advancedConfPayload["keep-ike-sas"] = v.(bool)
+			}
 			payload["advanced-conf"] = advancedConfPayload
 		}
 	}
@@ -3244,6 +3283,17 @@ func readManagementSetGlobalProperties(d *schema.ResourceData, m interface{}) er
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		payload["ignore-errors"] = v.(bool)
+	}
+
+	if _, ok := d.GetOk("identity_awareness"); ok {
+		identityAwarenessPayload := make(map[string]interface{})
+		if v, ok := d.GetOkExists("identity_awareness.0.cache_mode"); ok {
+			identityAwarenessPayload["cache-mode"] = v.(bool)
+		}
+		if v, ok := d.GetOk("identity_awareness.0.cache_mode_duration"); ok {
+			identityAwarenessPayload["cache-mode-duration"] = v.(int)
+		}
+		payload["identity-awareness"] = identityAwarenessPayload
 	}
 
 	SetGlobalPropertiesRes, _ := client.ApiCall("set-global-properties", payload, client.GetSessionID(), true, client.IsProxyUsed())

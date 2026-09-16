@@ -47,4 +47,5 @@ Identified by name or UID.file_groups_list blocks are documented below.
 * `tags` -  Collection of tag identifiers.tags blocks are documented below.
 * `color` -  Color of the object. Should be one of existing colors. 
 * `comments` -  Comments string. 
+* `related_file_types` - List of Content Awareness file types.
 

@@ -30,3 +30,5 @@ The following arguments are supported:
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 * `add_default_rule` - (Optional) Indicates whether to include a default rule in the new layer. 
+* `permissions_profiles` - (Optional) Collection of permission profile identifiers. Each can be a name or UUID.
+* `shared` - (Optional) Whether this layer is shared.

@@ -35,6 +35,7 @@ func resourceManagementSetTrust() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Description: "Shared password to establish SIC between the Security Management and the Security Gateway.",
 			},
 			"trust_method": {

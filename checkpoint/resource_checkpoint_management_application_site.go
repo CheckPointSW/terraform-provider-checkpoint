@@ -91,6 +91,36 @@ func resourceManagementApplicationSite() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"match_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Match settings for application services.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Match mode for the application services.",
+						},
+						"negate": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "All ports except those listed in override-services.",
+						},
+						"override_services": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Service names or UIDs used when matching is customized.<br><font color='red'>Required only when</font> mode is set to 'customize'.",
+						},
+						"recommended_services": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Recommended services for this application. Use when mode is set to 'recommended'.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -149,6 +179,17 @@ func createManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 	}
 
 	log.Println("Create ApplicationSite - Map = ", applicationSite)
+
+	if _, ok := d.GetOk("match_settings"); ok {
+		matchSettingsPayload := make(map[string]interface{})
+		if v, ok := d.GetOk("match_settings.0.mode"); ok {
+			matchSettingsPayload["mode"] = v.(string)
+		}
+		if v, ok := d.GetOk("match_settings.0.override_services"); ok {
+			matchSettingsPayload["override-services"] = v.(string)
+		}
+		applicationSite["match-settings"] = matchSettingsPayload
+	}
 
 	addApplicationSiteRes, err := client.ApiCall("add-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addApplicationSiteRes.Success {
@@ -271,6 +312,24 @@ func readManagementApplicationSite(d *schema.ResourceData, m interface{}) error 
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := applicationSite["match-settings"]; v != nil {
+		matchSettingsShow := v.(map[string]interface{})
+		matchSettingsState := make(map[string]interface{})
+		if v := matchSettingsShow["mode"]; v != nil {
+			matchSettingsState["mode"] = v
+		}
+		if v := matchSettingsShow["negate"]; v != nil {
+			matchSettingsState["negate"] = v
+		}
+		if v := matchSettingsShow["override-services"]; v != nil {
+			matchSettingsState["override_services"] = v
+		}
+		if v := matchSettingsShow["recommended-services"]; v != nil {
+			matchSettingsState["recommended_services"] = v
+		}
+		_ = d.Set("match_settings", []interface{}{matchSettingsState})
+	}
+
 	return nil
 
 }
@@ -348,6 +407,22 @@ func updateManagementApplicationSite(d *schema.ResourceData, m interface{}) erro
 	}
 
 	log.Println("Update ApplicationSite - Map = ", applicationSite)
+
+	if ok := d.HasChange("match_settings"); ok {
+		if _, ok := d.GetOk("match_settings"); ok {
+			matchSettingsPayload := make(map[string]interface{})
+			if v, ok := d.GetOk("match_settings.0.mode"); ok {
+				matchSettingsPayload["mode"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("match_settings.0.negate"); ok {
+				matchSettingsPayload["negate"] = v.(bool)
+			}
+			if v, ok := d.GetOk("match_settings.0.override_services"); ok {
+				matchSettingsPayload["override-services"] = v.(string)
+			}
+			applicationSite["match-settings"] = matchSettingsPayload
+		}
+	}
 
 	updateApplicationSiteRes, err := client.ApiCall("set-application-site", applicationSite, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateApplicationSiteRes.Success {

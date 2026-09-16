@@ -177,6 +177,30 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 				Description: "Overrides per profile for this protection.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"override": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Settings overrides.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"action": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Protection action.",
+									},
+									"capture_packets": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Capture packets.",
+									},
+									"track": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Tracking method for protection.",
+									},
+								},
+							},
+						},
 						"protection": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -424,6 +448,54 @@ func dataSourceManagementThreatProfile() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"ai_guard": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Is AI Guard blade activated.",
+			},
+			"advanced_dns_settings": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Advanced DNS Settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dga_detection": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Enable/Disable DGA based domains detection.",
+						},
+						"dns_domain_tunneling": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Enable/Disable DNS Tunneling based on domains detection.",
+						},
+						"dns_over_https": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Enable/Disable parsing of DNS over HTTPS protocol.",
+						},
+						"nxns_attack_detection": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Enable/Disable NXNS attack detection.",
+						},
+					},
+				},
+			},
+			"ai_guard_settings": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "AI Guard blade settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"project_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Lakera project ID to associate with this profile.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -587,6 +659,20 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 			for i := range overridesList {
 				overridesJson := overridesList[i].(map[string]interface{})
 				overrideState := make(map[string]interface{})
+				if v := overridesJson["override"]; v != nil {
+					overrideObjShow := v.(map[string]interface{})
+					overrideObjState := make(map[string]interface{})
+					if v := overrideObjShow["action"]; v != nil {
+						overrideObjState["action"] = v
+					}
+					if v := overrideObjShow["capture-packets"]; v != nil {
+						overrideObjState["capture_packets"] = v
+					}
+					if v := overrideObjShow["track"]; v != nil {
+						overrideObjState["track"] = v
+					}
+					overrideState["override"] = []interface{}{overrideObjState}
+				}
 				if v, _ := overridesJson["protection"]; v != nil {
 					overrideState["protection"] = v
 				}
@@ -772,6 +858,37 @@ func dataSourceManagementThreatProfileRead(d *schema.ResourceData, m interface{}
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := threatProfile["ai-guard"]; v != nil {
+		_ = d.Set("ai_guard", v)
+	}
+
+	if v := threatProfile["advanced-dns-settings"]; v != nil {
+		advancedDnsSettingsShow := v.(map[string]interface{})
+		advancedDnsSettingsState := make(map[string]interface{})
+		if v := advancedDnsSettingsShow["dga-detection"]; v != nil {
+			advancedDnsSettingsState["dga_detection"] = v
+		}
+		if v := advancedDnsSettingsShow["dns-domain-tunneling"]; v != nil {
+			advancedDnsSettingsState["dns_domain_tunneling"] = v
+		}
+		if v := advancedDnsSettingsShow["dns-over-https"]; v != nil {
+			advancedDnsSettingsState["dns_over_https"] = v
+		}
+		if v := advancedDnsSettingsShow["nxns-attack-detection"]; v != nil {
+			advancedDnsSettingsState["nxns_attack_detection"] = v
+		}
+		_ = d.Set("advanced_dns_settings", []interface{}{advancedDnsSettingsState})
+	}
+
+	if v := threatProfile["ai-guard-settings"]; v != nil {
+		aiGuardSettingsShow := v.(map[string]interface{})
+		aiGuardSettingsState := make(map[string]interface{})
+		if v := aiGuardSettingsShow["project-id"]; v != nil {
+			aiGuardSettingsState["project_id"] = v
+		}
+		_ = d.Set("ai_guard_settings", []interface{}{aiGuardSettingsState})
 	}
 
 	return nil

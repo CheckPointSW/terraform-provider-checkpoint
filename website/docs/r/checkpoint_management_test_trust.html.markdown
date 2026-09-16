@@ -27,6 +27,7 @@ The following arguments are supported:
 * `uid` - (Optional) Object unique identifier.
 * `name` - (Optional) Minimum Check Point password length.
 * `trust_method` - (Optional) Trust method to use for establishing communication.
+* `domains_to_process` - (Optional) Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

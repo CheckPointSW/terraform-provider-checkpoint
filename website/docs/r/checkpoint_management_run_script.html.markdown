@@ -33,6 +33,7 @@ The following arguments are supported:
 * `timeout` - (Optional) Script timeout in seconds.
 * `tasks` - (Computed) Collection of asynchronous task unique identifiers.
 * `response` - Response message in JSON format.
+* `script_type` - (Optional) Type of script. Run a new script ('one time') or an existing script from the repository ('repository').
 
 ## How To Use
 Make sure this command will be executed in the right execution order. 

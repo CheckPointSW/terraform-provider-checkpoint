@@ -55,3 +55,5 @@ The following arguments are supported:
 * `enable_ike` - (Optional) Enable IKE encryption for users. 
 * `enable_public_key` - (Optional) Enable IKE public key. 
 * `enable_shared_secret` - (Optional) Enable IKE shared secret.
+* `data_integrity_algorithm` - (Optional) IKE data integrity algorithm.
+* `encryption_algorithm` - (Optional) IKE encryption algorithm.

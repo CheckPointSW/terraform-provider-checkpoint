@@ -74,6 +74,16 @@ func dataSourceManagementExternalTrustedCa() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"cache_crl": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Cache Certificate Revocation List on the Security Gateway.",
+			},
+			"retrieve_crl_from_ldap_servers": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether to retrieve Certificate Revocation List from ldap servers.",
+			},
 		},
 	}
 }
@@ -200,6 +210,14 @@ func dataSourceManagementExternalTrustedCaRead(d *schema.ResourceData, m interfa
 
 	if v := externalTrustedCa["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := externalTrustedCa["cache-crl"]; v != nil {
+		_ = d.Set("cache_crl", v)
+	}
+
+	if v := externalTrustedCa["retrieve-crl-from-ldap-servers"]; v != nil {
+		_ = d.Set("retrieve_crl_from_ldap_servers", v)
 	}
 
 	return nil

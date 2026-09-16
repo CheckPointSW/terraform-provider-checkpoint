@@ -43,6 +43,15 @@ func resourceManagementWhereUsed() *schema.Resource {
 				ForceNew:    true,
 				Description: "Maximum nesting level during indirect usage search.",
 			},
+			"domains_to_process": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -69,6 +78,10 @@ func createManagementWhereUsed(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("indirect_max_depth"); ok {
 		payload["indirect-max-depth"] = v.(int)
+	}
+
+	if v, ok := d.GetOk("domains_to_process"); ok {
+		payload["domains-to-process"] = v.(*schema.Set).List()
 	}
 
 	WhereUsedRes, _ := client.ApiCall("where-used", payload, client.GetSessionID(), true, client.IsProxyUsed())

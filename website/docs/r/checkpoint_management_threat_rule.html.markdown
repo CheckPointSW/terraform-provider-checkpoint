@@ -57,6 +57,7 @@ The following arguments are supported:
 `track_settings` supports the following:
 
 * `packet_capture` - (Optional) Packet capture.
+* `forensics` - (Optional) Whether to enable forensics.
 
 
 ## Import

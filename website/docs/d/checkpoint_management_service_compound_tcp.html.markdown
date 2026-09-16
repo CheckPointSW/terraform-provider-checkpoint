@@ -36,3 +36,4 @@ The following arguments are supported:
 * `tags` - Collection of tag identifiers.
 * `color` - Color of the object.
 * `comments` - Comments string. 
+* `port` - Service port.

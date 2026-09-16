@@ -163,6 +163,12 @@ func resourceManagementSetHttpsAdvancedSettings() *schema.Resource {
 				ForceNew:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 			},
+			"show_block_page": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Whether a block page should be displayed when TLS Inspection rejects a connection due to server certificate issues.<br>The default value is true.",
+			},
 		},
 	}
 }
@@ -276,6 +282,10 @@ func createManagementSetHttpsAdvancedSettings(d *schema.ResourceData, m interfac
 
 	if v, ok := d.GetOkExists("ignore_errors"); ok {
 		payload["ignore-errors"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("show_block_page"); ok {
+		payload["show-block-page"] = v.(bool)
 	}
 
 	SetHttpsAdvancedSettingsRes, _ := client.ApiCall("set-https-advanced-settings", payload, client.GetSessionID(), true, false)

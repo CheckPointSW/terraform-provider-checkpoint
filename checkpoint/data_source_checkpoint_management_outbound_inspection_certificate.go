@@ -70,6 +70,16 @@ func dataSourceManagementOutboundInspectionCertificate() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"public_key_algorithm": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Public key algorithm and size of the outbound certificate.",
+			},
+			"subject": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Certificate's subject.",
+			},
 		},
 	}
 }
@@ -159,6 +169,14 @@ func dataSourceManagementOutboundInspectionCertificateRead(d *schema.ResourceDat
 
 	if v := outboundInspectionCertificate["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := outboundInspectionCertificate["public-key-algorithm"]; v != nil {
+		_ = d.Set("public_key_algorithm", v)
+	}
+
+	if v := outboundInspectionCertificate["subject"]; v != nil {
+		_ = d.Set("subject", v)
 	}
 
 	return nil

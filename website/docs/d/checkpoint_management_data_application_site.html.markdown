@@ -41,3 +41,22 @@ The following arguments are supported:
 * `color` - Color of the object. Should be one of existing colors. 
 * `comments` - Comments string. 
 * `groups` - Collection of group identifiers.
+* `additional_categories_ids` - Additional categories Id's.
+* `application_id` - N/A.
+* `match_settings` - Match settings for application services.match_settings blocks are documented below.
+* `primary_category_id` - Primary category id.
+* `risk` - N/A.
+* `user_defined` - True if this application site was defined by user (not predefined one).
+
+
+`match_settings` supports the following:
+
+* `mode` - Match mode for the application services.
+* `negate` - All ports except those listed in override-services.
+* `override_services` - Services used when matching is customized.
+* `recommended_services` - Recommended services for this application. Use when mode is set to 'recommended'.recommended_services blocks are documented below.
+
+
+`recommended_services` supports the following:
+
+* `port` - Service port.

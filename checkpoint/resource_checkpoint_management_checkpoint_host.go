@@ -141,6 +141,16 @@ func resourceManagementCheckpointHost() *schema.Resource {
 							Optional:    true,
 							Description: "NAT translation method.",
 						},
+						"automatic_nat_rules": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to add automatic address translation rules.<br>checkpoint-gateway: generate automatic address translation rules using the install-on values.<br>third-pa",
+						},
+						"communication_with_this_server": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "How gateways will communicate with this server.<br> <br>Note: original-ip-only and translated-ip-only Supported only by Security Gateways R82 and higher.",
+						},
 					},
 				},
 			},
@@ -401,6 +411,16 @@ func resourceManagementCheckpointHost() *schema.Resource {
 							Description: "Update account log in every amount of seconds.",
 							Default:     3600,
 						},
+						"distribute_logs_between_all_active_servers": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Distribute logs between all active servers.",
+						},
+						"include_tcp_state_information": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Include TCP state information. Relevant only when Firewall blade is enabled.",
+						},
 					},
 				},
 			},
@@ -463,6 +483,11 @@ func resourceManagementCheckpointHost() *schema.Resource {
 				Optional:    true,
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
+			},
+			"dns_server": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "DNS Server.",
 			},
 		},
 	}
@@ -555,6 +580,12 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 			}
 			if v, ok := d.GetOk("nat_settings.0.method"); ok {
 				natSettingsPayload["method"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.communication_with_this_server"); ok {
+				natSettingsPayload["communication-with-this-server"] = v.(string)
+			}
+			if v, ok := d.GetOk("nat_settings.0.automatic_nat_rules"); ok {
+				natSettingsPayload["automatic-nat-rules"] = v.(string)
 			}
 			if v, ok := d.GetOk("nat_settings.0.communication_with_this_server"); ok {
 				natSettingsPayload["communication-with-this-server"] = v.(string)
@@ -704,6 +735,12 @@ func createManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 			}
 			if v, ok := d.GetOk("logs_settings.0.update_account_log_every"); ok {
 				logsSettingsPayload["update-account-log-every"] = v.(int)
+			}
+			if v, ok := d.GetOkExists("logs_settings.0.distribute_logs_between_all_active_servers"); ok {
+				logsSettingsPayload["distribute-logs-between-all-active-servers"] = v.(bool)
+			}
+			if v, ok := d.GetOk("logs_settings.0.include_tcp_state_information"); ok {
+				logsSettingsPayload["include-tcp-state-information"] = v.(string)
 			}
 			checkpointHost["logs-settings"] = logsSettingsPayload
 		}
@@ -880,6 +917,12 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
 			natSettingsMapToReturn["communication_with_this_server"] = v
 		}
 
+		if v := natSettingsMap["automatic-nat-rules"]; v != nil {
+			natSettingsMapToReturn["automatic_nat_rules"] = v
+		}
+		if v := natSettingsMap["communication-with-this-server"]; v != nil {
+			natSettingsMapToReturn["communication_with_this_server"] = v
+		}
 		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {
@@ -1019,6 +1062,12 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
 		if v := logSettingsJson["update-account-log-every"]; v != nil {
 			logSettingsState["update_account_log_every"] = int(math.Round(v.(float64)))
 		}
+		if v := logSettingsJson["distribute-logs-between-all-active-servers"]; v != nil {
+			logSettingsState["distribute_logs_between_all_active_servers"] = v
+		}
+		if v := logSettingsJson["include-tcp-state-information"]; v != nil {
+			logSettingsState["include_tcp_state_information"] = v
+		}
 		_ = d.Set("logs_settings", []interface{}{logSettingsState})
 	} else {
 		_ = d.Set("logs_settings", nil)
@@ -1098,6 +1147,10 @@ func readManagementCheckpointHost(d *schema.ResourceData, m interface{}) error {
 
 	if v := checkpointHost["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := checkpointHost["dns-server"]; v != nil {
+		_ = d.Set("dns_server", v)
 	}
 
 	return nil
@@ -1209,6 +1262,12 @@ func updateManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 				}
 				if v, ok := d.GetOk("nat_settings.0.method"); ok {
 					natSettingsPayload["method"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.communication_with_this_server"); ok {
+					natSettingsPayload["communication-with-this-server"] = v.(string)
+				}
+				if v, ok := d.GetOk("nat_settings.0.automatic_nat_rules"); ok {
+					natSettingsPayload["automatic-nat-rules"] = v.(string)
 				}
 				if v, ok := d.GetOk("nat_settings.0.communication_with_this_server"); ok {
 					natSettingsPayload["communication-with-this-server"] = v.(string)
@@ -1362,6 +1421,12 @@ func updateManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 				if v, ok := d.GetOk("logs_settings.0.update_account_log_every"); ok {
 					logsSettingsPayload["update-account-log-every"] = v.(int)
 				}
+				if v, ok := d.GetOkExists("logs_settings.0.distribute_logs_between_all_active_servers"); ok {
+					logsSettingsPayload["distribute-logs-between-all-active-servers"] = v.(bool)
+				}
+				if v, ok := d.GetOk("logs_settings.0.include_tcp_state_information"); ok {
+					logsSettingsPayload["include-tcp-state-information"] = v.(string)
+				}
 				checkpointHost["logs-settings"] = logsSettingsPayload
 			}
 		}
@@ -1433,6 +1498,12 @@ func updateManagementCheckpointHost(d *schema.ResourceData, m interface{}) error
 	}
 
 	log.Println("Update CheckpointHost - Map = ", checkpointHost)
+
+	if ok := d.HasChange("dns_server"); ok {
+		if v, ok := d.GetOkExists("dns_server"); ok {
+			checkpointHost["dns-server"] = v.(bool)
+		}
+	}
 
 	updateCheckpointHostRes, err := client.ApiCall("set-checkpoint-host", checkpointHost, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateCheckpointHostRes.Success {

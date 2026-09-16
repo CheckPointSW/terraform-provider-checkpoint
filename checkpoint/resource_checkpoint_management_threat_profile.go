@@ -459,6 +459,62 @@ func resourceManagementThreatProfile() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"ai_guard": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Is AI Guard blade activated.",
+			},
+			"advanced_dns_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Advanced DNS Settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dga_detection": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable/Disable DGA based domains detection.",
+						},
+						"dns_domain_tunneling": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable/Disable DNS Tunneling based on domains detection.",
+						},
+						"dns_over_https": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable/Disable parsing of DNS over HTTPS protocol.",
+						},
+						"nxns_attack_detection": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable/Disable NXNS attack detection.",
+						},
+					},
+				},
+			},
+			"ai_guard_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "AI Guard blade settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"project_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Lakera project ID to associate with this profile.",
+						},
+					},
+				},
+			},
+			"ai_guard_api_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Lakera AI Guard API key. <font color='red'>Required only if</font> AI Guard is enabled.",
+			},
 		},
 	}
 }
@@ -715,6 +771,40 @@ func createManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Create Threat Profile - Map = ", threatProfile)
+
+	if v, ok := d.GetOkExists("ai_guard"); ok {
+		threatProfile["ai-guard"] = v.(bool)
+	}
+	if _, ok := d.GetOk("advanced_dns_settings"); ok {
+
+		advancedDnsSettingsPayload := make(map[string]interface{})
+
+		if v, ok := d.GetOk("advanced_dns_settings.0.dga_detection"); ok {
+			advancedDnsSettingsPayload["dga-detection"] = v.(string)
+		}
+		if v, ok := d.GetOk("advanced_dns_settings.0.dns_domain_tunneling"); ok {
+			advancedDnsSettingsPayload["dns-domain-tunneling"] = v.(string)
+		}
+		if v, ok := d.GetOk("advanced_dns_settings.0.dns_over_https"); ok {
+			advancedDnsSettingsPayload["dns-over-https"] = v.(string)
+		}
+		if v, ok := d.GetOk("advanced_dns_settings.0.nxns_attack_detection"); ok {
+			advancedDnsSettingsPayload["nxns-attack-detection"] = v.(string)
+		}
+		threatProfile["advanced-dns-settings"] = advancedDnsSettingsPayload
+	}
+	if _, ok := d.GetOk("ai_guard_settings"); ok {
+
+		aiGuardSettingsPayload := make(map[string]interface{})
+
+		if v, ok := d.GetOk("ai_guard_settings.0.project_id"); ok {
+			aiGuardSettingsPayload["project-id"] = v.(string)
+		}
+		threatProfile["ai-guard-settings"] = aiGuardSettingsPayload
+	}
+	if v, ok := d.GetOk("ai_guard_api_key"); ok {
+		threatProfile["ai-guard-api-key"] = v.(string)
+	}
 
 	threatProfileRes, err := client.ApiCall("add-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {
@@ -1069,6 +1159,37 @@ func readManagementThreatProfile(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("tags", nil)
 	}
 
+	if v := threatProfile["ai-guard"]; v != nil {
+		_ = d.Set("ai_guard", v)
+	}
+
+	if v := threatProfile["advanced-dns-settings"]; v != nil {
+		advancedDnsSettingsJson := v.(map[string]interface{})
+		advancedDnsSettingsState := make(map[string]interface{})
+		if v := advancedDnsSettingsJson["dga-detection"]; v != nil {
+			advancedDnsSettingsState["dga_detection"] = v
+		}
+		if v := advancedDnsSettingsJson["dns-domain-tunneling"]; v != nil {
+			advancedDnsSettingsState["dns_domain_tunneling"] = v
+		}
+		if v := advancedDnsSettingsJson["dns-over-https"]; v != nil {
+			advancedDnsSettingsState["dns_over_https"] = v
+		}
+		if v := advancedDnsSettingsJson["nxns-attack-detection"]; v != nil {
+			advancedDnsSettingsState["nxns_attack_detection"] = v
+		}
+		_ = d.Set("advanced_dns_settings", []interface{}{advancedDnsSettingsState})
+	}
+
+	if v := threatProfile["ai-guard-settings"]; v != nil {
+		aiGuardSettingsJson := v.(map[string]interface{})
+		aiGuardSettingsState := make(map[string]interface{})
+		if v := aiGuardSettingsJson["project-id"]; v != nil {
+			aiGuardSettingsState["project_id"] = v
+		}
+		_ = d.Set("ai_guard_settings", []interface{}{aiGuardSettingsState})
+	}
+
 	return nil
 }
 
@@ -1370,6 +1491,46 @@ func updateManagementThreatProfile(d *schema.ResourceData, m interface{}) error 
 	}
 
 	log.Println("Update Threat Profile - Map = ", threatProfile)
+
+	if ok := d.HasChange("ai_guard"); ok {
+		threatProfile["ai-guard"] = d.Get("ai_guard")
+	}
+	if ok := d.HasChange("advanced_dns_settings"); ok {
+		if _, ok := d.GetOk("advanced_dns_settings"); ok {
+
+			advancedDnsSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("advanced_dns_settings.0.dga_detection"); ok {
+				advancedDnsSettingsPayload["dga-detection"] = v.(string)
+			}
+			if v, ok := d.GetOk("advanced_dns_settings.0.dns_domain_tunneling"); ok {
+				advancedDnsSettingsPayload["dns-domain-tunneling"] = v.(string)
+			}
+			if v, ok := d.GetOk("advanced_dns_settings.0.dns_over_https"); ok {
+				advancedDnsSettingsPayload["dns-over-https"] = v.(string)
+			}
+			if v, ok := d.GetOk("advanced_dns_settings.0.nxns_attack_detection"); ok {
+				advancedDnsSettingsPayload["nxns-attack-detection"] = v.(string)
+			}
+			threatProfile["advanced-dns-settings"] = advancedDnsSettingsPayload
+		}
+	}
+	if ok := d.HasChange("ai_guard_settings"); ok {
+		if _, ok := d.GetOk("ai_guard_settings"); ok {
+
+			aiGuardSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("ai_guard_settings.0.project_id"); ok {
+				aiGuardSettingsPayload["project-id"] = v.(string)
+			}
+			threatProfile["ai-guard-settings"] = aiGuardSettingsPayload
+		}
+	}
+	if ok := d.HasChange("ai_guard_api_key"); ok {
+		if v, ok := d.GetOk("ai_guard_api_key"); ok {
+			threatProfile["ai-guard-api-key"] = v.(string)
+		}
+	}
 
 	threatProfileRes, err := client.ApiCall("set-threat-profile", threatProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil {

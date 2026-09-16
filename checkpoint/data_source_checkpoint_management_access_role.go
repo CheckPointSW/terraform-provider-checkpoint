@@ -106,6 +106,11 @@ func dataSourceManagementAccessRole() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"remote_access_client": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Remote access clients identified by name or UID. Level of details in the output corresponds to the number of details for search. This table shows the ...",
+			},
 		},
 	}
 }
@@ -319,6 +324,10 @@ func dataSourceManagementAccessRoleRead(d *schema.ResourceData, m interface{}) e
 
 	if v := accessRole["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := accessRole["remote-access-client"]; v != nil {
+		_ = d.Set("remote_access_client", v.(map[string]interface{})["name"])
 	}
 
 	return nil

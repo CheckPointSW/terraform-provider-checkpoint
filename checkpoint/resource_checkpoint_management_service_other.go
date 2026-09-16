@@ -149,6 +149,11 @@ func resourceManagementServiceOther() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"protocol": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Protocol name or uid. The protocol type associated with the service, and by implication, the management server (if any) that enforces Content Security and Authe",
+			},
 		},
 	}
 }
@@ -248,6 +253,9 @@ func createManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create ServiceOther - Map = ", serviceOther)
 
+	if v, ok := d.GetOk("protocol"); ok {
+		serviceOther["protocol"] = v.(string)
+	}
 	addServiceOtherRes, err := client.ApiCall("add-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addServiceOtherRes.Success {
 		if addServiceOtherRes.ErrorMsg != "" {
@@ -386,6 +394,10 @@ func readManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := serviceOther["protocol"]; v != nil {
+		_ = d.Set("protocol", v)
+	}
+
 	return nil
 
 }
@@ -497,6 +509,9 @@ func updateManagementServiceOther(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Update ServiceOther - Map = ", serviceOther)
 
+	if ok := d.HasChange("protocol"); ok {
+		serviceOther["protocol"] = d.Get("protocol")
+	}
 	updateServiceOtherRes, err := client.ApiCall("set-service-other", serviceOther, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateServiceOtherRes.Success {
 		if updateServiceOtherRes.ErrorMsg != "" {

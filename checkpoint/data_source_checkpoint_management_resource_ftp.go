@@ -64,6 +64,11 @@ func dataSourceManagementResourceFtp() *schema.Resource {
 							Computed:    true,
 							Description: "Designates when the CVP server returns data to the Security Gateway security server.",
 						},
+						"cvp_server_is_allowed_to_modify_content": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Configures the CVP server to inspect but not modify content.",
+						},
 					},
 				},
 			},
@@ -84,6 +89,11 @@ func dataSourceManagementResourceFtp() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Comments string.",
+			},
+			"resource_path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Refers to a location on the FTP server.",
 			},
 		},
 	}
@@ -167,6 +177,9 @@ func dataSourceManagementResourceFtpRead(d *schema.ResourceData, m interface{}) 
 		if v, _ := cvpMap["reply-order"]; v != nil {
 			cvpMapToReturn["reply_order"] = v
 		}
+		if v := cvpMap["cvp-server-is-allowed-to-modify-content"]; v != nil {
+			cvpMapToReturn["cvp_server_is_allowed_to_modify_content"] = v
+		}
 		_ = d.Set("cvp", []interface{}{cvpMapToReturn})
 	} else {
 		_ = d.Set("cvp", nil)
@@ -202,6 +215,10 @@ func dataSourceManagementResourceFtpRead(d *schema.ResourceData, m interface{}) 
 
 	if v := resourceFtp["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := resourceFtp["resource-path"]; v != nil {
+		_ = d.Set("resource_path", v)
 	}
 
 	return nil

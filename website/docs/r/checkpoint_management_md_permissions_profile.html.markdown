@@ -43,3 +43,6 @@ The following arguments are supported:
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 * `permission_level` - (Optional) The level of the Multi Domain Permissions Profile.<br>The level cannot be changed after creation. 
+* `allowed_mgmt_api_commands` - (Optional) List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...
+* `blocked_mgmt_api_commands` - (Optional) List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...
+* `limit_mgmt_api_commands` - (Optional) Enable limitation of Management API commands the profile may or may not run.

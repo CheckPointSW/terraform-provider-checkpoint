@@ -76,6 +76,64 @@ func dataSourceManagementDomain() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"domain_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"global_domain_assignments": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "N/A",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"assignment_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "N/A",
+						},
+						"assignment_up_to_date": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "The time when the assignment was assigned.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"global_access_policy": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Global domain access policy that is assigned to a dependent domain.",
+						},
+						"global_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Global domain. Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard l...",
+						},
+						"global_threat_prevention_policy": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Global domain threat prevention policy that is assigned to a dependent domain.",
+						},
+						"manage_protection_actions": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "N/A",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -170,6 +228,47 @@ func dataSourceManagementDomainRead(d *schema.ResourceData, m interface{}) error
 
 	if v := domain["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := domain["domain-type"]; v != nil {
+		_ = d.Set("domain_type", v)
+	}
+
+	if v := domain["global-domain-assignments"]; v != nil {
+		globalDomainAssignmentsList := v.([]interface{})
+		var globalDomainAssignmentsListState []map[string]interface{}
+		for i := range globalDomainAssignmentsList {
+			globalDomainAssignmentsShow := globalDomainAssignmentsList[i].(map[string]interface{})
+			globalDomainAssignmentsState := make(map[string]interface{})
+			if v := globalDomainAssignmentsShow["assignment-status"]; v != nil {
+				globalDomainAssignmentsState["assignment_status"] = v
+			}
+			if v := globalDomainAssignmentsShow["assignment-up-to-date"]; v != nil {
+				assignmentUpToDateShow := v.(map[string]interface{})
+				assignmentUpToDateState := make(map[string]interface{})
+				if v := assignmentUpToDateShow["iso-8601"]; v != nil {
+					assignmentUpToDateState["iso_8601"] = v
+				}
+				if v := assignmentUpToDateShow["posix"]; v != nil {
+					assignmentUpToDateState["posix"] = v
+				}
+				globalDomainAssignmentsState["assignment_up_to_date"] = []interface{}{assignmentUpToDateState}
+			}
+			if v := globalDomainAssignmentsShow["global-access-policy"]; v != nil {
+				globalDomainAssignmentsState["global_access_policy"] = v
+			}
+			if v := globalDomainAssignmentsShow["global-domain"]; v != nil {
+				globalDomainAssignmentsState["global_domain"] = v.(map[string]interface{})["name"]
+			}
+			if v := globalDomainAssignmentsShow["global-threat-prevention-policy"]; v != nil {
+				globalDomainAssignmentsState["global_threat_prevention_policy"] = v
+			}
+			if v := globalDomainAssignmentsShow["manage-protection-actions"]; v != nil {
+				globalDomainAssignmentsState["manage_protection_actions"] = v
+			}
+			globalDomainAssignmentsListState = append(globalDomainAssignmentsListState, globalDomainAssignmentsState)
+		}
+		_ = d.Set("global_domain_assignments", globalDomainAssignmentsListState)
 	}
 
 	return nil

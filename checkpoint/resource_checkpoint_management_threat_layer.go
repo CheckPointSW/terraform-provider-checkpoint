@@ -69,6 +69,19 @@ func resourceManagementThreatLayer() *schema.Resource {
 				Computed:    true,
 				Description: "N/A",
 			},
+			"shared": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether this layer is shared.",
+			},
+			"permissions_profiles": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of permission profile identifiers. Each can be a name or UUID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -107,6 +120,13 @@ func createManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Create Threat Layer - Map = ", threatLayer)
+
+	if v, ok := d.GetOkExists("shared"); ok {
+		threatLayer["shared"] = v.(bool)
+	}
+	if v, ok := d.GetOk("permissions_profiles"); ok {
+		threatLayer["permissions-profiles"] = v.(*schema.Set).List()
+	}
 
 	addThreatLayerRes, err := client.ApiCall("add-threat-layer", threatLayer, client.GetSessionID(), true, client.IsProxyUsed())
 
@@ -186,6 +206,19 @@ func readManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 		_ = d.Set("parent_layer", v)
 	}
 
+	if v := threatLayer["shared"]; v != nil {
+		_ = d.Set("shared", v)
+	}
+
+	if v := threatLayer["permissions-profiles"]; v != nil {
+		permissionsProfilesList := v.([]interface{})
+		permissionsProfilesIds := make([]string, 0)
+		for _, item := range permissionsProfilesList {
+			permissionsProfilesIds = append(permissionsProfilesIds, item.(map[string]interface{})["name"].(string))
+		}
+		_ = d.Set("permissions_profiles", permissionsProfilesIds)
+	}
+
 	return nil
 }
 
@@ -228,6 +261,15 @@ func updateManagementThreatLayer(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Threat Layer - Map = ", threatLayer)
+	if ok := d.HasChange("shared"); ok {
+		threatLayer["shared"] = d.Get("shared")
+	}
+	if ok := d.HasChange("permissions_profiles"); ok {
+		if v, ok := d.GetOk("permissions_profiles"); ok {
+			threatLayer["permissions-profiles"] = v.(*schema.Set).List()
+		}
+	}
+
 	updateThreatLayerRes, err := client.ApiCall("set-threat-layer", threatLayer, client.GetSessionID(), true, client.IsProxyUsed())
 
 	if err != nil || !updateThreatLayerRes.Success {

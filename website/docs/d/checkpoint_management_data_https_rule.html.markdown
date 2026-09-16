@@ -56,3 +56,25 @@ The following arguments are supported:
 * `source_negate` - TRUE if "negate" value is set for Source. 
 * `track` - "None","Log","Alert","Mail","SNMP trap","Mail","User Alert", "User Alert 2", "User Alert 3". 
 * `comments` - Comments string.
+* `hits` - Hits count object.hits blocks are documented below.
+
+
+`hits` supports the following:
+
+* `first_date` - N/A.first_date blocks are documented below.
+* `last_date` - N/A.last_date blocks are documented below.
+* `level` - N/A.
+* `percentage` - N/A.
+* `value` - N/A.
+
+
+`first_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.
+
+
+`last_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

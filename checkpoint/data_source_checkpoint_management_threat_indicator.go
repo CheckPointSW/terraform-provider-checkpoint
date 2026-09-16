@@ -63,6 +63,16 @@ func dataSourceManagementThreatIndicator() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"number_of_observables": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The amount of observables in the indicator.",
+			},
+			"observables_raw_data": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The contents of the file containing the indicator's observables.<br>Available only when details-level is full.",
+			},
 		},
 	}
 }
@@ -159,6 +169,14 @@ func dataSourceManagementThreatIndicatorRead(d *schema.ResourceData, m interface
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := threatIndicator["number-of-observables"]; v != nil {
+		_ = d.Set("number_of_observables", v)
+	}
+
+	if v := threatIndicator["observables-raw-data"]; v != nil {
+		_ = d.Set("observables_raw_data", v)
 	}
 
 	return nil

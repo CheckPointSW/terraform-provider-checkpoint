@@ -56,6 +56,7 @@ func dataSourceManagementCMEAccountsAWS() *schema.Resource {
 			"secret_key": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 				Description: "AWS secret key.",
 			},
 			"sts_role": {
@@ -125,6 +126,7 @@ func dataSourceManagementCMEAccountsAWS() *schema.Resource {
 						"secret_key": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Sensitive:   true,
 							Description: "AWS secret key.",
 						},
 						"sts_role": {

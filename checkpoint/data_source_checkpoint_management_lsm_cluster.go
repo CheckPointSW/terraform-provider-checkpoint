@@ -125,6 +125,78 @@ func dataSourceManagementLsmCluster() *schema.Resource {
 				Description: "Cluster members.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"gateway_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The current status of the Cluster member. Shown only when the 'show-statuses' parameter is set to 'true'.",
+						},
+						"policy_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The current status of the Security Policy. Shown only when the 'show-statuses' parameter is set to 'true'.",
+						},
+						"provisioning_settings_status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The current status of the Provisioning Settings. Shown only when the 'show-statuses' parameter is set to 'true'.",
+						},
+						"last_provisioning_settings_sync_time": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "The last time of Provisioning Settings synchronization with the Cluster member. Shown only when the 'show-statuses' parameter is set to 'true'.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"last_policy_fetch_time": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "The last time when the Security Policy was fetched. Shown only when the 'show-statuses' parameter is set to 'true'.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+						"last_applied_provisioning_settings_time": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "The last time when the Provisioning Settings were changed. Shown only when the 'show-statuses' parameter is set to 'true'.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
 						"member_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -437,6 +509,39 @@ func dataSourceManagementLsmClusterRead(d *schema.ResourceData, m interface{}) e
 
 			memberMap := make(map[string]interface{})
 
+			if v := memeberObj["last-provisioning-settings-sync-time"]; v != nil {
+				lastProvisioningSettingsSyncTimeShow := v.(map[string]interface{})
+				lastProvisioningSettingsSyncTimeState := make(map[string]interface{})
+				if v := lastProvisioningSettingsSyncTimeShow["iso-8601"]; v != nil {
+					lastProvisioningSettingsSyncTimeState["iso_8601"] = v
+				}
+				if v := lastProvisioningSettingsSyncTimeShow["posix"]; v != nil {
+					lastProvisioningSettingsSyncTimeState["posix"] = v
+				}
+				memberMap["last_provisioning_settings_sync_time"] = []interface{}{lastProvisioningSettingsSyncTimeState}
+			}
+			if v := memeberObj["last-policy-fetch-time"]; v != nil {
+				lastPolicyFetchTimeShow := v.(map[string]interface{})
+				lastPolicyFetchTimeState := make(map[string]interface{})
+				if v := lastPolicyFetchTimeShow["iso-8601"]; v != nil {
+					lastPolicyFetchTimeState["iso_8601"] = v
+				}
+				if v := lastPolicyFetchTimeShow["posix"]; v != nil {
+					lastPolicyFetchTimeState["posix"] = v
+				}
+				memberMap["last_policy_fetch_time"] = []interface{}{lastPolicyFetchTimeState}
+			}
+			if v := memeberObj["last-applied-provisioning-settings-time"]; v != nil {
+				lastAppliedProvisioningSettingsTimeShow := v.(map[string]interface{})
+				lastAppliedProvisioningSettingsTimeState := make(map[string]interface{})
+				if v := lastAppliedProvisioningSettingsTimeShow["iso-8601"]; v != nil {
+					lastAppliedProvisioningSettingsTimeState["iso_8601"] = v
+				}
+				if v := lastAppliedProvisioningSettingsTimeShow["posix"]; v != nil {
+					lastAppliedProvisioningSettingsTimeState["posix"] = v
+				}
+				memberMap["last_applied_provisioning_settings_time"] = []interface{}{lastAppliedProvisioningSettingsTimeState}
+			}
 			if v := memeberObj["member-name"]; v != nil {
 				memberMap["member_name"] = v.(string)
 			}
@@ -502,6 +607,15 @@ func dataSourceManagementLsmClusterRead(d *schema.ResourceData, m interface{}) e
 				memberMap["interfaces"] = nil
 			}
 
+			if v := memeberObj["gateway-status"]; v != nil {
+				memberMap["gateway_status"] = v
+			}
+			if v := memeberObj["policy-status"]; v != nil {
+				memberMap["policy_status"] = v
+			}
+			if v := memeberObj["provisioning-settings-status"]; v != nil {
+				memberMap["provisioning_settings_status"] = v
+			}
 			listOfMembersObject = append(listOfMembersObject, memberMap)
 		}
 

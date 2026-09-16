@@ -50,6 +50,7 @@ The following arguments are supported:
 * `mask_length6` - IPv6 network mask length.
 * `color` - Color of the object. Should be one of existing colors.
 * `comments` - Comments string.
+* `subnet_mask` - IPv4 network mask.
 
 `nat_settings` supports the following:
 
@@ -74,3 +75,4 @@ The following arguments are supported:
 * `listen_standard_port` - "Whether server listens to standard port.
 * `operating_system` - Operating System.
 * `protected_by` - Network object which protects this server identified by the name or UID.
+* `standard_port_number` - Server standard port number.

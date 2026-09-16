@@ -52,6 +52,16 @@ func dataSourceManagementApplicationSiteCategory() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"category_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Web category ID.",
+			},
+			"user_defined": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "True if application site category was defined by user (not predefined one).",
+			},
 		},
 	}
 }
@@ -134,6 +144,14 @@ func dataSourceManagementApplicationSiteCategoryRead(d *schema.ResourceData, m i
 		}
 	} else {
 		_ = d.Set("groups", nil)
+	}
+
+	if v := applicationSiteCategory["category-id"]; v != nil {
+		_ = d.Set("category_id", v)
+	}
+
+	if v := applicationSiteCategory["user-defined"]; v != nil {
+		_ = d.Set("user_defined", v)
 	}
 
 	return nil

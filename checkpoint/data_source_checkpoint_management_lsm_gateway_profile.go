@@ -411,6 +411,11 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 							Optional:    true,
 							Description: "NAT translation method.",
 						},
+						"apply_control_connections": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "This option performs NAT on VPN control connections to and from this object.",
+						},
 					},
 				},
 			},
@@ -523,6 +528,7 @@ func dataSourceManagementLsmGatewayProfile() *schema.Resource {
 			"zero_phishing_fqdn": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Deprecated:  "Deprecated - no longer sent to the Management API. Retained so existing configurations keep working.",
 				Description: "Zero Phishing gateway FQDN.",
 			},
 			"color": {
@@ -661,10 +667,6 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 
 	if v := lsmGatewayProfile["version"]; v != nil {
 		_ = d.Set("version", v)
-	}
-
-	if v := lsmGatewayProfile["zero-phishing-fqdn"]; v != nil {
-		_ = d.Set("zero_phishing_fqdn", v)
 	}
 
 	if v := lsmGatewayProfile["color"]; v != nil {
@@ -928,6 +930,9 @@ func dataSourceManagementLsmGatewayProfileRead(d *schema.ResourceData, m interfa
 			natSettingsMapToReturn["method"] = v
 		}
 
+		if v := natSettingsMap["apply-control-connections"]; v != nil {
+			natSettingsMapToReturn["apply_control_connections"] = v
+		}
 		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {

@@ -40,6 +40,7 @@ func dataGaiaShowSnmpTrapReceivers() *schema.Resource {
                         "community_string": {
                             Type:        schema.TypeString,
                             Computed:    true,
+                            Sensitive:   true,
                             Description: `N/A`,
                         },
                         "member_id": {

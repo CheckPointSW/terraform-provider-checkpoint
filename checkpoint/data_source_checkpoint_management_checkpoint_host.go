@@ -116,6 +116,21 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 							Computed:    true,
 							Description: "NAT translation method.",
 						},
+						"automatic_nat_rules": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Whether to add automatic address translation rules.<br>checkpoint-gateway: generate automatic address translation rules using the install-on values.<b...",
+						},
+						"communication_with_this_server": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "How gateways will communicate with this server.<br> <br>Note: original-ip-only and translated-ip-only Supported only by Security Gateways R82 and higher.",
+						},
+						"enable_address_translation": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to enable address translation.",
+						},
 					},
 				},
 			},
@@ -339,6 +354,36 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 							Computed:    true,
 							Description: "Update account log in every amount of seconds.",
 						},
+						"alert_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Alert when free disk space below metrics.",
+						},
+						"delete_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Delete when free disk space below metrics.",
+						},
+						"distribute_logs_between_all_active_servers": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Distribute logs between all active servers.",
+						},
+						"include_tcp_state_information": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Include TCP state information. Relevant only when Firewall blade is enabled.",
+						},
+						"smart_event_intro_correlation_unit": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "SmartEvent intro correlation unit enabled.",
+						},
+						"stop_logging_when_free_disk_space_below_metrics": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Stop logging when free disk space below metrics.",
+						},
 					},
 				},
 			},
@@ -388,6 +433,16 @@ func dataSourceManagementCheckpointHost() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Comments string.",
+			},
+			"dns_server": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "DNS Server.",
+			},
+			"firewall": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Firewall blade enabled.",
 			},
 		},
 	}
@@ -515,6 +570,15 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 			natSettingsMapToReturn["method"] = v
 		}
 
+		if v := natSettingsMap["automatic-nat-rules"]; v != nil {
+			natSettingsMapToReturn["automatic_nat_rules"] = v
+		}
+		if v := natSettingsMap["communication-with-this-server"]; v != nil {
+			natSettingsMapToReturn["communication_with_this_server"] = v
+		}
+		if v := natSettingsMap["enable-address-translation"]; v != nil {
+			natSettingsMapToReturn["enable_address_translation"] = v
+		}
 		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
 
 	} else {
@@ -682,6 +746,24 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 			logsSettingsMapToReturn["update_account_log_every"] = v
 		}
 
+		if v := logsSettingsMap["alert-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["alert_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logsSettingsMap["delete-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["delete_when_free_disk_space_below_metrics"] = v
+		}
+		if v := logsSettingsMap["distribute-logs-between-all-active-servers"]; v != nil {
+			logsSettingsMapToReturn["distribute_logs_between_all_active_servers"] = v
+		}
+		if v := logsSettingsMap["include-tcp-state-information"]; v != nil {
+			logsSettingsMapToReturn["include_tcp_state_information"] = v
+		}
+		if v := logsSettingsMap["smart-event-intro-correlation-unit"]; v != nil {
+			logsSettingsMapToReturn["smart_event_intro_correlation_unit"] = v
+		}
+		if v := logsSettingsMap["stop-logging-when-free-disk-space-below-metrics"]; v != nil {
+			logsSettingsMapToReturn["stop_logging_when_free_disk_space_below_metrics"] = v
+		}
 		_ = d.Set("logs_settings", []interface{}{logsSettingsMapToReturn})
 
 	} else {
@@ -762,6 +844,14 @@ func dataSourceManagementCheckpointHostRead(d *schema.ResourceData, m interface{
 
 	if v := checkpointHost["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := checkpointHost["dns-server"]; v != nil {
+		_ = d.Set("dns_server", v)
+	}
+
+	if v := checkpointHost["firewall"]; v != nil {
+		_ = d.Set("firewall", v)
 	}
 
 	return nil

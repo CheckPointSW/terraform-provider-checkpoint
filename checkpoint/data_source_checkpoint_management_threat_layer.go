@@ -49,6 +49,19 @@ func dataSourceManagementThreatLayer() *schema.Resource {
 				Computed:    true,
 				Description: "N/A",
 			},
+			"shared": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether this layer is shared.",
+			},
+			"permissions_profiles": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Collection of permission profile objects associated with this layer.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -117,6 +130,21 @@ func dataSourceManagementThreatLayerRead(d *schema.ResourceData, m interface{}) 
 
 	if v := threatLayer["parent-layer"]; v != nil {
 		_ = d.Set("parent_layer", v)
+	}
+
+	if v := threatLayer["shared"]; v != nil {
+		_ = d.Set("shared", v)
+	}
+
+	if v := threatLayer["permissions-profiles"]; v != nil {
+		permissionsprofilesIdsList := v.([]interface{})
+		var permissionsprofilesIds = make([]string, 0)
+		if len(permissionsprofilesIdsList) > 0 {
+			for _, item := range permissionsprofilesIdsList {
+				permissionsprofilesIds = append(permissionsprofilesIds, item.(map[string]interface{})["name"].(string))
+			}
+		}
+		_ = d.Set("permissions_profiles", permissionsprofilesIds)
 	}
 
 	return nil

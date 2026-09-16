@@ -25,6 +25,7 @@ The following arguments are supported:
 
 * `name` - (Optional) Gateway, cluster member or Check Point host name. 
 * `uid` - (Optional) Gateway, cluster member or Check Point host name.
+* `domains_to_process` - (Optional) Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...
 
 
 ## How To Use

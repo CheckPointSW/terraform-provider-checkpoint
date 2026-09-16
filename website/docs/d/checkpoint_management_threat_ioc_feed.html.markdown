@@ -31,3 +31,7 @@ The following arguments are supported:
 
 * `uid` - (Optional) Object unique identifier.
 * `name` - (Optional) Object name.
+* `confidence` - N/A.
+* `performance_impact` - N/A.
+* `severity` - N/A.
+* `use_snort_format` - N/A.

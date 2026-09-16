@@ -121,6 +121,31 @@ func dataSourceManagementUser() *schema.Resource {
 							Computed:    true,
 							Description: "Enable IKE shared secret.",
 						},
+						"data_integrity_algorithm": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IKE data integrity algorithm.",
+						},
+						"encryption_algorithm": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IKE encryption algorithm.",
+						},
+						"ike": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE users encryption enabled.",
+						},
+						"public_key": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE public key enabled.",
+						},
+						"shared_secret": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "IKE shared secret enabled.",
+						},
 					},
 				},
 			},
@@ -141,6 +166,64 @@ func dataSourceManagementUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Comments string.",
+			},
+			"certificates": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "User certificates.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"base64_certificate": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Certificate file encoded in base64.<br/>File format: .P12.",
+						},
+						"comments": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Certificate comments.",
+						},
+						"registration_key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Registration key for enrollment.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Certificate status.",
+						},
+						"subject": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Certificate subject.",
+						},
+						"uid": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Object unique identifier.",
+						},
+						"valid_to": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Expiration date.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"iso_8601": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Date and time represented in international ISO 8601 format.",
+									},
+									"posix": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -263,6 +346,21 @@ func dataSourceManagementUserRead(d *schema.ResourceData, m interface{}) error {
 			encryptionMapToReturn["enable_shared_secret"] = v.(bool)
 		}
 
+		if v := encryptionMap["data-integrity-algorithm"]; v != nil {
+			encryptionMapToReturn["data_integrity_algorithm"] = v
+		}
+		if v := encryptionMap["encryption-algorithm"]; v != nil {
+			encryptionMapToReturn["encryption_algorithm"] = v
+		}
+		if v := encryptionMap["ike"]; v != nil {
+			encryptionMapToReturn["ike"] = v
+		}
+		if v := encryptionMap["public-key"]; v != nil {
+			encryptionMapToReturn["public_key"] = v
+		}
+		if v := encryptionMap["shared-secret"]; v != nil {
+			encryptionMapToReturn["shared_secret"] = v
+		}
 		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
 
 	} else {
@@ -291,6 +389,46 @@ func dataSourceManagementUserRead(d *schema.ResourceData, m interface{}) error {
 
 	if v := user["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := user["certificates"]; v != nil {
+		certificatesList := v.([]interface{})
+		var certificatesListState []map[string]interface{}
+		for i := range certificatesList {
+			certificatesShow := certificatesList[i].(map[string]interface{})
+			certificatesState := make(map[string]interface{})
+			if v := certificatesShow["base64-certificate"]; v != nil {
+				certificatesState["base64_certificate"] = v
+			}
+			if v := certificatesShow["comments"]; v != nil {
+				certificatesState["comments"] = v
+			}
+			if v := certificatesShow["registration-key"]; v != nil {
+				certificatesState["registration_key"] = v
+			}
+			if v := certificatesShow["status"]; v != nil {
+				certificatesState["status"] = v
+			}
+			if v := certificatesShow["subject"]; v != nil {
+				certificatesState["subject"] = v
+			}
+			if v := certificatesShow["uid"]; v != nil {
+				certificatesState["uid"] = v
+			}
+			if v := certificatesShow["valid-to"]; v != nil {
+				validToShow := v.(map[string]interface{})
+				validToState := make(map[string]interface{})
+				if v := validToShow["iso-8601"]; v != nil {
+					validToState["iso_8601"] = v
+				}
+				if v := validToShow["posix"]; v != nil {
+					validToState["posix"] = v
+				}
+				certificatesState["valid_to"] = []interface{}{validToState}
+			}
+			certificatesListState = append(certificatesListState, certificatesState)
+		}
+		_ = d.Set("certificates", certificatesListState)
 	}
 
 	return nil

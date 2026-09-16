@@ -36,6 +36,7 @@ The following arguments are supported:
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `groups` - (Optional) Collection of group identifiers.groups blocks are documented below.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `autonomous_system_number` - (Optional) The Autonomous System Number (ASN) for this Interoperable Device object.
 
 
 `interfaces` supports the following:

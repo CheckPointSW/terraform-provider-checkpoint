@@ -284,6 +284,22 @@ func resourceManagementDomainPermissionsProfile() *schema.Resource {
 				Description: "Management permissions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"allowed_mgmt_api_commands": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"blocked_mgmt_api_commands": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 						"cme_operations": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -323,6 +339,11 @@ func resourceManagementDomainPermissionsProfile() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: "Manage integration with Cloud Services.",
+						},
+						"limit_mgmt_api_commands": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable limitation of Management API commands the profile may or may not run.<br>Only a 'Customized' permission-type profile can edit this permission.<br>Not sup",
 						},
 					},
 				},
@@ -730,6 +751,15 @@ func createManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 			if v, ok := d.GetOkExists("management.0.manage_integration_with_cloud_services"); ok {
 				managementPayload["manage-integration-with-cloud-services"] = v.(bool)
 			}
+			if v, ok := d.GetOkExists("management.0.limit_mgmt_api_commands"); ok {
+				managementPayload["limit-mgmt-api-commands"] = v.(bool)
+			}
+			if v, ok := d.GetOk("management.0.allowed_mgmt_api_commands"); ok {
+				managementPayload["allowed-mgmt-api-commands"] = v.(*schema.Set).List()
+			}
+			if v, ok := d.GetOk("management.0.blocked_mgmt_api_commands"); ok {
+				managementPayload["blocked-mgmt-api-commands"] = v.(*schema.Set).List()
+			}
 			domainPermissionsProfile["management"] = managementPayload
 		}
 	}
@@ -1116,6 +1146,15 @@ func readManagementDomainPermissionsProfile(d *schema.ResourceData, m interface{
 		if v, _ := managementMap["manage-integration-with-cloud-services"]; v != nil {
 			managementMapToReturn["manage_integration_with_cloud_services"] = v.(bool)
 		}
+		if v := managementMap["limit-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["limit_mgmt_api_commands"] = v
+		}
+		if v := managementMap["allowed-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["allowed_mgmt_api_commands"] = v
+		}
+		if v := managementMap["blocked-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["blocked_mgmt_api_commands"] = v
+		}
 		_ = d.Set("management", []interface{}{managementMapToReturn})
 
 	} else {
@@ -1500,6 +1539,15 @@ func updateManagementDomainPermissionsProfile(d *schema.ResourceData, m interfac
 				}
 				if v, ok := d.GetOkExists("management.0.manage_integration_with_cloud_services"); ok {
 					managementPayload["manage-integration-with-cloud-services"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("management.0.limit_mgmt_api_commands"); ok {
+					managementPayload["limit-mgmt-api-commands"] = v.(bool)
+				}
+				if v, ok := d.GetOk("management.0.allowed_mgmt_api_commands"); ok {
+					managementPayload["allowed-mgmt-api-commands"] = v.(*schema.Set).List()
+				}
+				if v, ok := d.GetOk("management.0.blocked_mgmt_api_commands"); ok {
+					managementPayload["blocked-mgmt-api-commands"] = v.(*schema.Set).List()
 				}
 				domainPermissionsProfile["management"] = managementPayload
 			}

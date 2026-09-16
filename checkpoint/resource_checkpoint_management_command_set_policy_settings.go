@@ -42,6 +42,11 @@ func resourceManagementSetPolicySettings() *schema.Resource {
 				ForceNew:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"track": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Track default value for new rule creation. Log or None.",
+						},
 						"destination": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -62,6 +67,12 @@ func resourceManagementSetPolicySettings() *schema.Resource {
 						},
 					},
 				},
+			},
+			"log_generation": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Log generation settings for existing and new rules.",
 			},
 		},
 	}
@@ -101,6 +112,10 @@ func createManagementSetPolicySettings(d *schema.ResourceData, m interface{}) er
 			}
 			payload["security-access-defaults"] = securityAccessDefaultsPayload
 		}
+	}
+
+	if v, ok := d.GetOk("log_generation"); ok {
+		payload["log-generation"] = v.(string)
 	}
 
 	SetPolicySettingsRes, _ := client.ApiCall("set-policy-settings", payload, client.GetSessionID(), true, client.IsProxyUsed())

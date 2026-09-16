@@ -69,6 +69,11 @@ func resourceManagementDataTypePatterns() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"use_statistical_analysis": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Indicates whether to use statistical analysis to enhance accuracy. Relevant only for built-in data types.",
+			},
 		},
 	}
 }
@@ -203,6 +208,10 @@ func readManagementDataTypePatterns(d *schema.ResourceData, m interface{}) error
 		_ = d.Set("ignore_errors", v)
 	}
 
+	if v := dataTypePatterns["use-statistical-analysis"]; v != nil {
+		_ = d.Set("use_statistical_analysis", v)
+	}
+
 	return nil
 
 }
@@ -263,6 +272,12 @@ func updateManagementDataTypePatterns(d *schema.ResourceData, m interface{}) err
 	}
 
 	log.Println("Update DataTypePatterns - Map = ", dataTypePatterns)
+
+	if ok := d.HasChange("use_statistical_analysis"); ok {
+		if v, ok := d.GetOkExists("use_statistical_analysis"); ok {
+			dataTypePatterns["use-statistical-analysis"] = v.(bool)
+		}
+	}
 
 	updateDataTypePatternsRes, err := client.ApiCall("set-data-type-patterns", dataTypePatterns, client.GetSessionID(), true, false)
 	if err != nil || !updateDataTypePatternsRes.Success {

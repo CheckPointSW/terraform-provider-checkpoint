@@ -81,6 +81,12 @@ func resourceManagementSetAutomaticPurge() *schema.Resource {
 					},
 				},
 			},
+			"ignore_domain_backup": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Ignore global domain sessions that are linked to the latest local domain backups, and purge them anyway.",
+			},
 		},
 	}
 }
@@ -128,6 +134,10 @@ func createManagementSetAutomaticPurge(d *schema.ResourceData, m interface{}) er
 			}
 			payload["scheduling"] = schedulingPayload
 		}
+	}
+
+	if v, ok := d.GetOkExists("ignore_domain_backup"); ok {
+		payload["ignore-domain-backup"] = v.(bool)
 	}
 
 	SetAutomaticPurgeRes, _ := client.ApiCall("set-automatic-purge", payload, client.GetSessionID(), true, client.IsProxyUsed())

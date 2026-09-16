@@ -49,6 +49,11 @@ func dataSourceManagementServiceCompoundTcp() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"port": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Service port.",
+			},
 		},
 	}
 }
@@ -119,6 +124,10 @@ func dataSourceManagementServiceCompoundTcpRead(d *schema.ResourceData, m interf
 
 	if v := serviceCompoundTcp["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := serviceCompoundTcp["port"]; v != nil {
+		_ = d.Set("port", v)
 	}
 
 	return nil

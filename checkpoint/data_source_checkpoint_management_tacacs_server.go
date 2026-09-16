@@ -69,6 +69,43 @@ func dataSourceManagementTacacsServer() *schema.Resource {
 				Description: "Server service, only relevant when \"server-type\" is TACACS.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"groups": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard level.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"aggressive_aging": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Sets short (aggressive) timeouts for idle connections.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"default_timeout": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Default aggressive aging timeout in seconds.",
+									},
+									"enable": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "N/A",
+									},
+									"timeout": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Aggressive aging timeout in seconds.",
+									},
+									"use_default_timeout": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -78,6 +115,41 @@ func dataSourceManagementTacacsServer() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Object unique identifier.",
+						},
+						"keep_connections_open_after_policy_installation": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Keep connections open after policy has been installed even if they are not allowed under the new policy. This overrides the settings in the Connection...",
+						},
+						"match_for_any": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether this service is used when 'Any' is set as the rule's service and there are several service objects with the same source port and pro...",
+						},
+						"port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The number of the port used to provide this service.",
+						},
+						"session_timeout": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Time (in seconds) before the session times out.",
+						},
+						"source_port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Port number for the client side service. If specified, only those Source port Numbers will be Accepted, Dropped, or Rejected during packet inspection....",
+						},
+						"sync_connections_on_cluster": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enables state-synchronized High Availability or Load Sharing on a ClusterXL or OPSEC-certified cluster.",
+						},
+						"use_default_session_timeout": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Use default virtual session timeout.",
 						},
 					},
 				},
@@ -173,6 +245,23 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 
 		serviceMapToReturn := make(map[string]interface{})
 
+		if v := serviceMap["aggressive-aging"]; v != nil {
+			aggressiveAgingShow := v.(map[string]interface{})
+			aggressiveAgingState := make(map[string]interface{})
+			if v := aggressiveAgingShow["default-timeout"]; v != nil {
+				aggressiveAgingState["default_timeout"] = v
+			}
+			if v := aggressiveAgingShow["enable"]; v != nil {
+				aggressiveAgingState["enable"] = v
+			}
+			if v := aggressiveAgingShow["timeout"]; v != nil {
+				aggressiveAgingState["timeout"] = v
+			}
+			if v := aggressiveAgingShow["use-default-timeout"]; v != nil {
+				aggressiveAgingState["use_default_timeout"] = v
+			}
+			serviceMapToReturn["aggressive_aging"] = []interface{}{aggressiveAgingState}
+		}
 		if v := serviceMap["name"]; v != nil {
 			serviceMapToReturn["name"] = v
 		}
@@ -180,6 +269,35 @@ func dataSourceManagementTacacsServerRead(d *schema.ResourceData, m interface{})
 			serviceMapToReturn["uid"] = v
 		}
 
+		if v := serviceMap["keep-connections-open-after-policy-installation"]; v != nil {
+			serviceMapToReturn["keep_connections_open_after_policy_installation"] = v
+		}
+		if v := serviceMap["match-for-any"]; v != nil {
+			serviceMapToReturn["match_for_any"] = v
+		}
+		if v := serviceMap["port"]; v != nil {
+			serviceMapToReturn["port"] = v
+		}
+		if v := serviceMap["session-timeout"]; v != nil {
+			serviceMapToReturn["session_timeout"] = v
+		}
+		if v := serviceMap["source-port"]; v != nil {
+			serviceMapToReturn["source_port"] = v
+		}
+		if v := serviceMap["sync-connections-on-cluster"]; v != nil {
+			serviceMapToReturn["sync_connections_on_cluster"] = v
+		}
+		if v := serviceMap["use-default-session-timeout"]; v != nil {
+			serviceMapToReturn["use_default_session_timeout"] = v
+		}
+		if v := serviceMap["groups"]; v != nil {
+			groupsList := v.([]interface{})
+			groupsIds := make([]string, 0)
+			for _, item := range groupsList {
+				groupsIds = append(groupsIds, item.(map[string]interface{})["name"].(string))
+			}
+			serviceMapToReturn["groups"] = groupsIds
+		}
 		_ = d.Set("service", []interface{}{serviceMapToReturn})
 
 	} else {

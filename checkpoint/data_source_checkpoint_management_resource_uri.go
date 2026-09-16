@@ -277,6 +277,11 @@ func dataDourceManagementResourceUri() *schema.Resource {
 							Computed:    true,
 							Description: "Improves the performance of the CVP server. This option does not send to the CVP server traffic that is considered safe.",
 						},
+						"cvp_server_is_allowed_to_modify_content": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Configures the CVP server to inspect but not modify content.",
+						},
 					},
 				},
 			},
@@ -564,6 +569,9 @@ func dataSourceManagementResourceUriRead(d *schema.ResourceData, m interface{}) 
 		}
 		if v, _ := cvpMap["send-only-unsafe-file-types"]; v != nil {
 			cvpMapToReturn["send_only_unsafe_file_types"] = v
+		}
+		if v := cvpMap["cvp-server-is-allowed-to-modify-content"]; v != nil {
+			cvpMapToReturn["cvp_server_is_allowed_to_modify_content"] = v
 		}
 		_ = d.Set("cvp", []interface{}{cvpMapToReturn})
 	} else {

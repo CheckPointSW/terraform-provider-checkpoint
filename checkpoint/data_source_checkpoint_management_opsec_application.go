@@ -87,6 +87,11 @@ func dataSourceManagementOpsecApplication() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"server": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The UID or Name of the host that is the OPSEC Server.",
+			},
 		},
 	}
 }
@@ -201,6 +206,10 @@ func dataSourceManagementOpsecApplicationRead(d *schema.ResourceData, m interfac
 
 	if v := opsecApplication["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := opsecApplication["server"]; v != nil {
+		_ = d.Set("server", v.(map[string]interface{})["name"])
 	}
 
 	return nil

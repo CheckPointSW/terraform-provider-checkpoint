@@ -50,6 +50,10 @@ URL should be written as http or https.
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `confidence` - (Optional) Set in order to configure the confidence of the snort protections in snort format. 1-Low, 5-High.
+* `performance_impact` - (Optional) Set in order to configure the performance impact of the snort protections in snort format. 1-Very Low, 4-High.
+* `severity` - (Optional) Set in order to configure the severity of the snort protections in snort format. 1-Low, 4-Critical.
+* `use_snort_format` - (Optional) Set in order to configure a snort format indicator feed.
 
 
 `custom_header` supports the following:

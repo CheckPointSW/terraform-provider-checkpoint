@@ -66,6 +66,12 @@ func resourceManagementRunScript() *schema.Resource {
 				Computed:    true,
 				Description: "Response message in JSON format",
 			},
+			"script_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Type of script. Run a new script ('one time') or an existing script from the repository ('repository').",
+			},
 		},
 	}
 }
@@ -96,6 +102,10 @@ func createManagementRunScript(d *schema.ResourceData, m interface{}) error {
 
 	if v, ok := d.GetOk("timeout"); ok {
 		payload["timeout"] = v
+	}
+
+	if v, ok := d.GetOk("script_type"); ok {
+		payload["script-type"] = v.(string)
 	}
 
 	runScriptRes, err := client.ApiCall("run-script", payload, client.GetSessionID(), true, client.IsProxyUsed())

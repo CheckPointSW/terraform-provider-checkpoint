@@ -40,6 +40,15 @@ func resourceManagementTestSicStatus() *schema.Resource {
 				Computed:    true,
 				Description: "Command asynchronous task unique identifier.",
 			},
+			"domains_to_process": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -55,6 +64,10 @@ func readManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
 	var payload = map[string]interface{}{}
 	if v, ok := d.GetOk("name"); ok {
 		payload["name"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("domains_to_process"); ok {
+		payload["domains-to-process"] = v.(*schema.Set).List()
 	}
 
 	TestSicStatusRes, _ := client.ApiCall("test-sic-status", payload, client.GetSessionID(), true, client.IsProxyUsed())

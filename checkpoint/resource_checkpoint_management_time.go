@@ -51,6 +51,16 @@ func resourceManagementTime() *schema.Resource {
 							Optional:    true,
 							Description: "Time in format HH:mm.",
 						},
+						"iso_8601": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date and time represented in international ISO 8601 format. Time zone information is ignored.",
+						},
+						"posix": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+						},
 					},
 				},
 			},
@@ -105,6 +115,16 @@ func resourceManagementTime() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Time in format HH:mm.",
+						},
+						"iso_8601": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date and time represented in international ISO 8601 format. Time zone information is ignored.",
+						},
+						"posix": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
 						},
 					},
 				},
@@ -205,6 +225,12 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		if v, ok := d.GetOk("end.0.time"); ok {
 			res["time"] = v.(string)
 		}
+		if v, ok := d.GetOk("end.0.iso_8601"); ok {
+			res["iso-8601"] = v.(string)
+		}
+		if v, ok := d.GetOk("end.0.posix"); ok {
+			res["posix"] = v.(int)
+		}
 		time["end"] = res
 	}
 
@@ -250,6 +276,12 @@ func createManagementTime(d *schema.ResourceData, m interface{}) error {
 		}
 		if v, ok := d.GetOk("start.0.time"); ok {
 			res["time"] = v.(string)
+		}
+		if v, ok := d.GetOk("start.0.iso_8601"); ok {
+			res["iso-8601"] = v.(string)
+		}
+		if v, ok := d.GetOk("start.0.posix"); ok {
+			res["posix"] = v.(int)
 		}
 		time["start"] = res
 	}
@@ -352,6 +384,12 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 			endMapToReturn["time"] = v.(string)
 		}
 
+		if v := endMap["iso-8601"]; v != nil {
+			endMapToReturn["iso_8601"] = v
+		}
+		if v := endMap["posix"]; v != nil {
+			endMapToReturn["posix"] = v
+		}
 		_ = d.Set("end", []interface{}{endMapToReturn})
 	}
 
@@ -407,6 +445,12 @@ func readManagementTime(d *schema.ResourceData, m interface{}) error {
 			startMapToReturn["time"] = v.(string)
 		}
 
+		if v := startMap["iso-8601"]; v != nil {
+			startMapToReturn["iso_8601"] = v
+		}
+		if v := startMap["posix"]; v != nil {
+			startMapToReturn["posix"] = v
+		}
 		_ = d.Set("start", []interface{}{startMapToReturn})
 	}
 
@@ -520,6 +564,12 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 					endPayload["time"] = v.(string)
 				}
 				if len(endPayload) > 0 {
+					if v, ok := d.GetOk("end.0.iso_8601"); ok {
+						endPayload["iso-8601"] = v.(string)
+					}
+					if v, ok := d.GetOk("end.0.posix"); ok {
+						endPayload["posix"] = v.(int)
+					}
 					time["end"] = endPayload
 				}
 			}
@@ -577,6 +627,12 @@ func updateManagementTime(d *schema.ResourceData, m interface{}) error {
 					startPayload["time"] = v.(string)
 				}
 				if len(startPayload) > 0 {
+					if v, ok := d.GetOk("start.0.iso_8601"); ok {
+						startPayload["iso-8601"] = v.(string)
+					}
+					if v, ok := d.GetOk("start.0.posix"); ok {
+						startPayload["posix"] = v.(int)
+					}
 					time["start"] = startPayload
 				}
 			}

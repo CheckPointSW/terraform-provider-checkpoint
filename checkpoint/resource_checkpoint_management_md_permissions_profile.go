@@ -130,6 +130,27 @@ func resourceManagementMdPermissionsProfile() *schema.Resource {
 				Description: "The level of the Multi Domain Permissions Profile.<br>The level cannot be changed after creation.",
 				Default:     "manager",
 			},
+			"limit_mgmt_api_commands": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable limitation of Management API commands the profile may or may not run.",
+			},
+			"allowed_mgmt_api_commands": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"blocked_mgmt_api_commands": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -220,6 +241,16 @@ func createManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	}
 
 	log.Println("Create MdPermissionsProfile - Map = ", mdPermissionsProfile)
+
+	if v, ok := d.GetOkExists("limit_mgmt_api_commands"); ok {
+		mdPermissionsProfile["limit-mgmt-api-commands"] = v.(bool)
+	}
+	if v, ok := d.GetOk("allowed_mgmt_api_commands"); ok {
+		mdPermissionsProfile["allowed-mgmt-api-commands"] = v.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("blocked_mgmt_api_commands"); ok {
+		mdPermissionsProfile["blocked-mgmt-api-commands"] = v.(*schema.Set).List()
+	}
 
 	addMdPermissionsProfileRes, err := client.ApiCall("add-md-permissions-profile", mdPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addMdPermissionsProfileRes.Success {
@@ -362,6 +393,17 @@ func readManagementMdPermissionsProfile(d *schema.ResourceData, m interface{}) e
 		_ = d.Set("permission_level", v)
 	}
 
+	if v := mdPermissionsProfile["limit-mgmt-api-commands"]; v != nil {
+		_ = d.Set("limit_mgmt_api_commands", v)
+	}
+
+	if v := mdPermissionsProfile["allowed-mgmt-api-commands"]; v != nil {
+		_ = d.Set("allowed_mgmt_api_commands", v)
+	}
+	if v := mdPermissionsProfile["blocked-mgmt-api-commands"]; v != nil {
+		_ = d.Set("blocked_mgmt_api_commands", v)
+	}
+
 	return nil
 
 }
@@ -466,6 +508,20 @@ func updateManagementMdPermissionsProfile(d *schema.ResourceData, m interface{})
 	}
 
 	log.Println("Update MdPermissionsProfile - Map = ", mdPermissionsProfile)
+
+	if ok := d.HasChange("limit_mgmt_api_commands"); ok {
+		mdPermissionsProfile["limit-mgmt-api-commands"] = d.Get("limit_mgmt_api_commands")
+	}
+	if ok := d.HasChange("allowed_mgmt_api_commands"); ok {
+		if v, ok := d.GetOk("allowed_mgmt_api_commands"); ok {
+			mdPermissionsProfile["allowed-mgmt-api-commands"] = v.(*schema.Set).List()
+		}
+	}
+	if ok := d.HasChange("blocked_mgmt_api_commands"); ok {
+		if v, ok := d.GetOk("blocked_mgmt_api_commands"); ok {
+			mdPermissionsProfile["blocked-mgmt-api-commands"] = v.(*schema.Set).List()
+		}
+	}
 
 	updateMdPermissionsProfileRes, err := client.ApiCall("set-md-permissions-profile", mdPermissionsProfile, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateMdPermissionsProfileRes.Success {

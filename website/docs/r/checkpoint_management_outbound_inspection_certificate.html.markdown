@@ -41,3 +41,4 @@ The following arguments are supported:
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
 * `base64_certificate` -  Certificate file encoded in base64.
 * `base64_public_certificate` - Public Certificate file encoded in base64 (pem format).
+* `public_key_algorithm` - (Optional) Public key algorithm and size of the outbound certificate.

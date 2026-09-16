@@ -40,3 +40,12 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `match_settings` - (Optional) Match settings for application services.match_settings blocks are documented below.
+
+
+`match_settings` supports the following:
+
+* `mode` - (Optional) Match mode for the application services.
+* `negate` - (Optional) All ports except those listed in override-services.
+* `override_services` - (Optional) Service names or UIDs used when matching is customized.<br><font color='red'>Required only when</font> mode is set to 'customize'.
+* `recommended_services` - (Computed) Recommended services for this application. Use when mode is set to 'recommended'.

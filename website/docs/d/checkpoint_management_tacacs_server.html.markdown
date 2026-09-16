@@ -69,3 +69,11 @@ The following arguments are supported:
 * `enabled`
 * `timeout` - Aggressive aging timeout in seconds.
 * `use_default_timeout`
+
+
+`aggressive_aging` supports the following:
+
+* `default_timeout` - Default aggressive aging timeout in seconds.
+* `enable` - N/A.
+* `timeout` - Aggressive aging timeout in seconds.
+* `use_default_timeout` - N/A.

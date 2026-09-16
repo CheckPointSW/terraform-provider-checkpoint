@@ -267,6 +267,22 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 				Description: "Management permissions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"allowed_mgmt_api_commands": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"blocked_mgmt_api_commands": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 						"cme_operations": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -306,6 +322,11 @@ func dataSourceManagementDomainPermissionsProfile() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Manage integration with Cloud Services.",
+						},
+						"limit_mgmt_api_commands": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enable limitation of Management API commands the profile may or may not run.<br>Not supported for Multi-Domain Servers.",
 						},
 					},
 				},
@@ -736,6 +757,15 @@ func dataSourceManagementDomainPermissionsProfileRead(d *schema.ResourceData, m 
 			managementMapToReturn["manage_integration_with_cloud_services"] = v
 		}
 
+		if v := managementMap["limit-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["limit_mgmt_api_commands"] = v
+		}
+		if v := managementMap["allowed-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["allowed_mgmt_api_commands"] = v
+		}
+		if v := managementMap["blocked-mgmt-api-commands"]; v != nil {
+			managementMapToReturn["blocked_mgmt_api_commands"] = v
+		}
 		_ = d.Set("management", []interface{}{managementMapToReturn})
 
 	} else {

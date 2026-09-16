@@ -335,6 +335,11 @@ func dataSourceManagementInterface() *schema.Resource {
 				Optional:    true,
 				Description: "Comments string.",
 			},
+			"gateway": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Properties of the gateway or cluster that the interface belongs to.",
+			},
 		},
 	}
 }
@@ -646,6 +651,10 @@ func dataSourceManagementInterfaceRead(d *schema.ResourceData, m interface{}) er
 
 	if v := interfaceMap["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := interfaceMap["gateway"]; v != nil {
+		_ = d.Set("gateway", v.(map[string]interface{})["name"])
 	}
 
 	return nil

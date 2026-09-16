@@ -46,6 +46,7 @@ The following arguments are supported:
 * `sic_state` - (Computed) State the Secure Internal Connection Trust.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `dns_server` - (Optional) DNS Server.
 
 
 `interfaces` supports the following:
@@ -70,6 +71,8 @@ The following arguments are supported:
 * `hide_behind` - (Optional) Hide behind method. This parameter is not required in case "method" parameter is "static". 
 * `install_on` - (Optional) Which gateway should apply the NAT translation. 
 * `method` - (Optional) NAT translation method. 
+* `automatic_nat_rules` - (Optional) Whether to add automatic address translation rules.<br>checkpoint-gateway: generate automatic address translation rules using the install-on values.<br>third-pa.
+* `communication_with_this_server` - (Optional) How gateways will communicate with this server.<br> <br>Note: original-ip-only and translated-ip-only Supported only by Security Gateways R82 and higher.
 
 
 `management_blades` supports the following:
@@ -113,3 +116,5 @@ The following arguments are supported:
 * `stop_logging_when_free_disk_space_below_threshold` - (Optional) Stop logging when free disk space below threshold. 
 * `turn_on_qos_logging` - (Optional) Enable turn on qos logging. 
 * `update_account_log_every` - (Optional) Update account log in every amount of seconds.
+* `distribute_logs_between_all_active_servers` - (Optional) Distribute logs between all active servers.
+* `include_tcp_state_information` - (Optional) Include TCP state information. Relevant only when Firewall blade is enabled.

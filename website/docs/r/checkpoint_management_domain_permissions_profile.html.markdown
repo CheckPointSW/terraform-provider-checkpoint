@@ -100,6 +100,9 @@ The following arguments are supported:
 * `approve_or_reject_sessions` - (Optional) Approve / reject other sessions. 
 * `publish_sessions` - (Optional) Allow session publishing without an approval. 
 * `manage_integration_with_cloud_services` - (Optional) Manage integration with Cloud Services. 
+* `allowed_mgmt_api_commands` - (Optional) List of allowed Management API commands the profile can run. All available commands can be viewed using show-commands Management API.<br><font color='...
+* `blocked_mgmt_api_commands` - (Optional) List of Management API commands the profile cannot run. All available commands can be viewed using show-commands Management API.<br><font color='red'>...
+* `limit_mgmt_api_commands` - (Optional) Enable limitation of Management API commands the profile may or may not run.<br>Only a 'Customized' permission-type profile can edit this permission.<br>Not sup.
 
 
 `monitoring_and_logging` supports the following:

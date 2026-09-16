@@ -102,6 +102,11 @@ func dataSourceManagementTrustedClient() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"subnet_mask4": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IPv4 mask.",
+			},
 		},
 	}
 }
@@ -232,6 +237,10 @@ func dataSourceManagementTrustedClientRead(d *schema.ResourceData, m interface{}
 
 	if v := trustedClient["ignore-errors"]; v != nil {
 		_ = d.Set("ignore_errors", v)
+	}
+
+	if v := trustedClient["subnet-mask4"]; v != nil {
+		_ = d.Set("subnet_mask4", v)
 	}
 
 	return nil

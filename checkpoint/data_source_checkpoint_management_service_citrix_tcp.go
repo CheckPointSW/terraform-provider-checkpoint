@@ -44,6 +44,11 @@ func dataSourceManagementServiceCitrixTcp() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"port": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Service port.",
+			},
 		},
 	}
 }
@@ -110,6 +115,10 @@ func dataSourceManagementServiceCitrixTcpRead(d *schema.ResourceData, m interfac
 
 	if v := serviceCitrixTcp["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := serviceCitrixTcp["port"]; v != nil {
+		_ = d.Set("port", v)
 	}
 
 	return nil

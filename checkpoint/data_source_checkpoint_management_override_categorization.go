@@ -64,6 +64,11 @@ func dataSourceManagementOverrideCategorization() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"comment": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Comment for the categorization override.",
+			},
 		},
 	}
 }
@@ -156,6 +161,10 @@ func dataSourceManagementOverrideCategorizationRead(d *schema.ResourceData, m in
 
 	if v := overrideCategorization["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := overrideCategorization["comment"]; v != nil {
+		_ = d.Set("comment", v)
 	}
 
 	return nil

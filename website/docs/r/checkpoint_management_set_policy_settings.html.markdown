@@ -27,6 +27,7 @@ The following arguments are supported:
 * `last_in_cell` - (Optional) Added object after removing the last object in cell. 
 * `none_object_behavior` - (Optional) 'None' object behavior. Rules with object 'None' will never be matched. 
 * `security_access_defaults` - (Optional) Access Policy default values. security_access_defaults blocks are documented below.
+* `log_generation` - (Optional) Log generation settings for existing and new rules.
 
 
 `security_access_defaults` supports the following:
@@ -34,6 +35,7 @@ The following arguments are supported:
 * `destination` - (Optional) Destination default value for new rule creation. Any or None. 
 * `service` - (Optional) Service and Applications default value for new rule creation. Any or None. 
 * `source` - (Optional) Source default value for new rule creation. Any or None. 
+* `track` - (Optional) Track default value for new rule creation. Log or None.
 
 
 

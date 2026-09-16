@@ -63,6 +63,16 @@ func resourceManagementRequirement() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"new_regulation_uid": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The new regulation UID for this requirement.",
+			},
+			"regulation_uid": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The relevant regulation UID for this requirement.",
+			},
 		},
 	}
 }
@@ -105,6 +115,10 @@ func createManagementRequirement(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Create Requirement - Map = ", requirement)
+
+	if v, ok := d.GetOk("regulation_uid"); ok {
+		requirement["regulation-uid"] = v.(string)
+	}
 
 	addRequirementRes, err := client.ApiCall("add-requirement", requirement, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addRequirementRes.Success {
@@ -253,6 +267,12 @@ func updateManagementRequirement(d *schema.ResourceData, m interface{}) error {
 	}
 
 	log.Println("Update Requirement - Map = ", requirement)
+
+	if ok := d.HasChange("new_regulation_uid"); ok {
+		if v, ok := d.GetOk("new_regulation_uid"); ok {
+			requirement["new-regulation-uid"] = v.(string)
+		}
+	}
 
 	updateRequirementRes, err := client.ApiCall("set-requirement", requirement, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateRequirementRes.Success {

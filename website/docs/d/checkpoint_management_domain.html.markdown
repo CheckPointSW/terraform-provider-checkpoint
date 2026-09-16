@@ -32,3 +32,21 @@ The following arguments are supported:
 
 * `name` - (Optional) Object name. Must be unique in the domain.
 * `uid` - (Optional) Object unique identifier.
+* `domain_type` - N/A.
+* `global_domain_assignments` - N/A.global_domain_assignments blocks are documented below.
+
+
+`global_domain_assignments` supports the following:
+
+* `assignment_status` - N/A.
+* `assignment_up_to_date` - The time when the assignment was assigned.assignment_up_to_date blocks are documented below.
+* `global_access_policy` - Global domain access policy that is assigned to a dependent domain.
+* `global_domain` - Global domain. Level of details in the output corresponds to the number of details for search. This table shows the level of details in the Standard l...
+* `global_threat_prevention_policy` - Global domain threat prevention policy that is assigned to a dependent domain.
+* `manage_protection_actions` - N/A.
+
+
+`assignment_up_to_date` supports the following:
+
+* `iso_8601` - Date and time represented in international ISO 8601 format.
+* `posix` - Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.

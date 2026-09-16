@@ -54,6 +54,69 @@ func dataSourceManagementServiceGroup() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"ranges": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Displays the service group's matched content as ranges of port numbers, in case 'show-as-ranges' is set to true.<br />In this case, the 'members' para...",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"excluded_others": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Objects which are not represented as port numbers and are negated in the given rule - for example if negate is set for the service of this rule. The d...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"others": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Objects which are not represented as port numbers and match the given rule. The details-level parameter of the request determines whether they are dis...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"tcp": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Range of TCP ports that match in the given rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"end": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+									"start": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
+						"udp": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Range of UDP ports that match in the given rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"end": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+									"start": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -148,6 +211,60 @@ func dataSourceManagementServiceGroupRead(d *schema.ResourceData, m interface{})
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := serviceGroup["ranges"]; v != nil {
+		rangesShow := v.(map[string]interface{})
+		rangesState := make(map[string]interface{})
+		if v := rangesShow["excluded-others"]; v != nil {
+			excludedOthersIdsList := v.([]interface{})
+			var excludedOthersIds = make([]string, 0)
+			for _, item := range excludedOthersIdsList {
+				excludedOthersIds = append(excludedOthersIds, item.(map[string]interface{})["name"].(string))
+			}
+			rangesState["excluded_others"] = excludedOthersIds
+		}
+		if v := rangesShow["others"]; v != nil {
+			othersIdsList := v.([]interface{})
+			var othersIds = make([]string, 0)
+			for _, item := range othersIdsList {
+				othersIds = append(othersIds, item.(map[string]interface{})["name"].(string))
+			}
+			rangesState["others"] = othersIds
+		}
+		if v := rangesShow["tcp"]; v != nil {
+			tcpList := v.([]interface{})
+			var tcpListState []map[string]interface{}
+			for i := range tcpList {
+				tcpShow := tcpList[i].(map[string]interface{})
+				tcpState := make(map[string]interface{})
+				if v := tcpShow["end"]; v != nil {
+					tcpState["end"] = v
+				}
+				if v := tcpShow["start"]; v != nil {
+					tcpState["start"] = v
+				}
+				tcpListState = append(tcpListState, tcpState)
+			}
+			rangesState["tcp"] = tcpListState
+		}
+		if v := rangesShow["udp"]; v != nil {
+			udpList := v.([]interface{})
+			var udpListState []map[string]interface{}
+			for i := range udpList {
+				udpShow := udpList[i].(map[string]interface{})
+				udpState := make(map[string]interface{})
+				if v := udpShow["end"]; v != nil {
+					udpState["end"] = v
+				}
+				if v := udpShow["start"]; v != nil {
+					udpState["start"] = v
+				}
+				udpListState = append(udpListState, udpState)
+			}
+			rangesState["udp"] = udpListState
+		}
+		_ = d.Set("ranges", []interface{}{rangesState})
 	}
 
 	return nil

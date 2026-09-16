@@ -211,6 +211,11 @@ func resourceManagementThreatException() *schema.Resource {
 				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
 				Default:     false,
 			},
+			"exception_number": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "N/A",
+			},
 		},
 	}
 }
@@ -691,6 +696,12 @@ func updateManagementThreatException(d *schema.ResourceData, m interface{}) erro
 	}
 
 	log.Println("Update Threat Exception - Map = ", threatException)
+
+	if ok := d.HasChange("exception_number"); ok {
+		if v, ok := d.GetOk("exception_number"); ok {
+			threatException["exception-number"] = v.(int)
+		}
+	}
 
 	updateThreatExceptionRes, err := client.ApiCall("set-threat-exception", threatException, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !updateThreatExceptionRes.Success {

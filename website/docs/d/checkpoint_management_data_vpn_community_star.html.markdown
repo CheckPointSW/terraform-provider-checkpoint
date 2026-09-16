@@ -58,6 +58,7 @@ The following arguments are supported:
 * `comments` - Comments string. 
 * `ignore_warnings` - Apply changes ignoring warnings. 
 * `ignore_errors` - Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+* `route_based_settings` - <html>VPN Community Route-Based settings.<br><b>Relevant only in Route-Based VPN Communities</b></html>.route_based_settings blocks are documented below.
 
 `encrypted_traffic` supports the following:
 
@@ -93,6 +94,9 @@ granular_encryptions` supports the following:
 * `diffie_hellman_group` - The Diffie-Hellman group to be used.
 * `encryption_algorithm` - The encryption algorithm to be used.
 * `ike_p1_rekey_time` - Indicates the time interval for IKE phase 1 renegotiation.
+* `multiple_key_exchanges` - Multiple Key Exchanges proposal object.
+* `use_multiple_key_exchanges` - Indicates whether to use a proposal with Multiple Key Exchanges.
+* `use_standard_proposal` - Indicates whether to use a proposal with a single Diffie-Hellman group.
 
 
 `ike_phase_2` supports the following:
@@ -102,6 +106,9 @@ granular_encryptions` supports the following:
 * `ike_p2_use_pfs` - Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.
 * `ike_p2_pfs_dh_grp` - The Diffie-Hellman group to be used: group-1, group-2, group-5, group-14, group-15, group-16, group-17, group-18, group-19, group-20, group-24.
 * `ike_p2_rekey_time` - Indicates the time interval for IKE phase 2 renegotiation.
+* `multiple_key_exchanges` - Multiple Key Exchanges proposal object to use when PFS is enabled and multiple key exchanges are configured.
+* `use_multiple_key_exchanges` - Indicates whether to use a proposal with Multiple Key Exchanges when PFS is enabled.
+* `use_standard_proposal` - Indicates whether to use a proposal with a single Diffie-Hellman group when PFS is enabled.
 
 `mep` supports the following:
 
@@ -137,6 +144,7 @@ granular_encryptions` supports the following:
 * `first_priority_center_gateways` - Collection of first priority center gateways identified by the name or UID.first_priority_center_gateways blocks are documented below.
 * `second_priority_center_gateways` - Collection of second priority center gateways identified by the name or UID.second_priority_center_gateways blocks are documented below.
 * `third_priority_center_gateways` - Collection of third priority center gateways identified by the name or UID.third_priority_center_gateways blocks are documented below.
+* `satellite_gateways` - Collection of satellite VPN Gateway and VPN Device objects identified by the name or UID.
 
 `exception_priority_rules` supports the following:
 
@@ -170,3 +178,51 @@ granular_encryptions` supports the following:
 * `enable_on_center_gateways` - Indicates whether to enable automatic Route Injection Mechanism on center gateways.
 * `enable_on_satellite_gateways` - Indicates whether to enable automatic Route Injection Mechanism on satellite gateways.
 * `route_injection_track` - Route injection track method. 
+
+
+`ike_phase_1` supports the following:
+
+* `multiple_key_exchanges` - Multiple Key Exchanges proposal object.
+* `use_multiple_key_exchanges` - Indicates whether to use a proposal with Multiple Key Exchanges.
+* `use_standard_proposal` - Indicates whether to use a proposal with a single Diffie-Hellman group.
+
+
+`ike_phase_2` supports the following:
+
+* `multiple_key_exchanges` - Multiple Key Exchanges proposal object to use when PFS is enabled and multiple key exchanges are configured.
+* `use_multiple_key_exchanges` - Indicates whether to use a proposal with Multiple Key Exchanges when PFS is enabled.
+* `use_standard_proposal` - Indicates whether to use a proposal with a single Diffie-Hellman group when PFS is enabled.
+
+
+`interfaces` supports the following:
+
+* `ip_version` - The IP version of the interface's IP address (IPv4/IPv6).
+
+
+`route_based_settings` supports the following:
+
+* `add_automatic_routes` - <html>The type of routes to use for the automatic Route-Based configuration.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `advanced` - <html>Advanced settings<br><b>Relevant only in Route-Based VPN Communities</b></html>.advanced blocks are documented below.
+* `override_routes` - <html>Override automatic routing settings in a specific Security Gateway in this VPN Community.<br><b>Relevant only in Route-Based VPN Communities</b>...override_routes blocks are documented below.
+
+
+`advanced` supports the following:
+
+* `bfd` - <html>Indicates whether to enable Bidirectional Forwarding Detection.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `graceful_restart` - <html>Indicates whether to enable Graceful Restart in the applicable Dynamic Routing protocols.<br><b>Relevant only in Route-Based VPN Communities</b>...
+
+
+`override_routes` supports the following:
+
+* `auto_config` - <html>Indicates whether to configure the routing settings automatically for the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</...
+* `exported_routes` - <html>Exported Routes.<br><b>Relevant only in Route-Based VPN Communities</b></html>.exported_routes blocks are documented below.
+* `gateway` - <html>Name of the Security Gateway object in which to override the automatic routing settings.<br><b>Relevant only in Route-Based VPN Communities</b><...
+* `mode` - <html>Specifies how to export routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+
+
+`exported_routes` supports the following:
+
+* `custom_routes` - <html>Specifies to export user-defined networks from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `custom_routes_object` - <html>Specifies the name of the Network object or Network Group object that represents the exported routes.<br><b>Relevant only in Route-Based VPN Com...
+* `internal_interfaces` - <html>Specifies to export networks from interfaces with Topology 'Internal' from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communit...
+* `static_routes` - <html>Specifies to export static routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.

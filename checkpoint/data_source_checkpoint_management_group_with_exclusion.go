@@ -57,6 +57,69 @@ func dataSourceManagementGroupWithExclusion() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"ranges": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Displays the group with exclusion's matched content as ranges of IP addresses, in case 'show-as-ranges' is set to true.<br />In this case, the 'includ...",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"excluded_others": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Objects which are not represented as IP addresses and are negated in the given rule - for example if negate is set for the source or destination of th...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"ipv4": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Range of IPv4 addresses that match in the given rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"end": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+									"start": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
+						"ipv6": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Range of IPv6 addresses that match in the given rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"end": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+									"start": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
+						"others": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Objects which are not represented as IP addresses and match the given rule. The details-level parameter of the request determines whether they are dis...",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -143,6 +206,60 @@ func dataSourceManagementGroupWithExclusionRead(d *schema.ResourceData, m interf
 		}
 	} else {
 		_ = d.Set("groups", nil)
+	}
+
+	if v := groupWithExclusion["ranges"]; v != nil {
+		rangesShow := v.(map[string]interface{})
+		rangesState := make(map[string]interface{})
+		if v := rangesShow["excluded-others"]; v != nil {
+			excludedOthersIdsList := v.([]interface{})
+			var excludedOthersIds = make([]string, 0)
+			for _, item := range excludedOthersIdsList {
+				excludedOthersIds = append(excludedOthersIds, item.(map[string]interface{})["name"].(string))
+			}
+			rangesState["excluded_others"] = excludedOthersIds
+		}
+		if v := rangesShow["ipv4"]; v != nil {
+			ipv4List := v.([]interface{})
+			var ipv4ListState []map[string]interface{}
+			for i := range ipv4List {
+				ipv4Show := ipv4List[i].(map[string]interface{})
+				ipv4State := make(map[string]interface{})
+				if v := ipv4Show["end"]; v != nil {
+					ipv4State["end"] = v
+				}
+				if v := ipv4Show["start"]; v != nil {
+					ipv4State["start"] = v
+				}
+				ipv4ListState = append(ipv4ListState, ipv4State)
+			}
+			rangesState["ipv4"] = ipv4ListState
+		}
+		if v := rangesShow["ipv6"]; v != nil {
+			ipv6List := v.([]interface{})
+			var ipv6ListState []map[string]interface{}
+			for i := range ipv6List {
+				ipv6Show := ipv6List[i].(map[string]interface{})
+				ipv6State := make(map[string]interface{})
+				if v := ipv6Show["end"]; v != nil {
+					ipv6State["end"] = v
+				}
+				if v := ipv6Show["start"]; v != nil {
+					ipv6State["start"] = v
+				}
+				ipv6ListState = append(ipv6ListState, ipv6State)
+			}
+			rangesState["ipv6"] = ipv6ListState
+		}
+		if v := rangesShow["others"]; v != nil {
+			othersIdsList := v.([]interface{})
+			var othersIds = make([]string, 0)
+			for _, item := range othersIdsList {
+				othersIds = append(othersIds, item.(map[string]interface{})["name"].(string))
+			}
+			rangesState["others"] = othersIds
+		}
+		_ = d.Set("ranges", []interface{}{rangesState})
 	}
 
 	return nil

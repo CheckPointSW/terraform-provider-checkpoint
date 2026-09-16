@@ -36,3 +36,4 @@ For custom-made data types, you can use this field to provide more details.
 * `comments` - (Optional) Comments string.
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings.
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `use_statistical_analysis` - (Optional) Indicates whether to use statistical analysis to enhance accuracy. Relevant only for built-in data types.

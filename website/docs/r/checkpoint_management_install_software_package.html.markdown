@@ -28,6 +28,8 @@ The following arguments are supported:
 * `cluster_installation_settings` - (Optional) Installation settings for cluster.cluster_installation_settings blocks are documented below.
 * `concurrency_limit` - (Optional) The number of targets, on which the same package is installed at the same time. 
 * `task_id` - (Computed) Asynchronous task unique identifier. 
+* `method` - (Optional) How we want to use the package.
+* `package_location` - (Optional) The package repository.
 
 
 `cluster_installation_settings` supports the following:

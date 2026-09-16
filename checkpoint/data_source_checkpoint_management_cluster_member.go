@@ -150,6 +150,69 @@ func dataSourceManagementClusterMember() *schema.Resource {
 					},
 				},
 			},
+			"auto_generate_ip": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Use an automatically generated IP address for the Gateway object (applies only to Smart-1 Cloud).",
+			},
+			"trust_method": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Trust method that was used for establishing communication.",
+			},
+			"trust_details": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Details for trusted communication.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"authentication_token": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Authentication token to use on the Gateway side to establish the communication between the Gateway and the Management Server (applies only to Smart-1 ...",
+						},
+						"cloud_communication_details": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Details about the communication status with cloud (applies only to Smart-1 Cloud).",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "IP address used for communication between the Gateway and the Management Server (used when 'auto-generate-ip=true').",
+									},
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Status of communication between the Gateway and the Management Server.",
+									},
+								},
+							},
+						},
+						"gateway_mac_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Use the Security Gateway MAC address, relevant for the gateway_mac_address identification-method.",
+						},
+						"identification_method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "How to identify the gateway (relevant for DAIP gateways only).",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Status of the trusted communication with the Security Gateway.",
+						},
+						"token_expiration_date": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Details about the communication status with cloud (applies only to Smart-1 Cloud).",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -293,6 +356,46 @@ func dataSourceManagementClusterMemberRead(d *schema.ResourceData, m interface{}
 
 	} else {
 		_ = d.Set("nat_settings", nil)
+	}
+
+	if v := clusterMember["auto-generate-ip"]; v != nil {
+		_ = d.Set("auto_generate_ip", v)
+	}
+
+	if v := clusterMember["trust-method"]; v != nil {
+		_ = d.Set("trust_method", v)
+	}
+
+	if v := clusterMember["trust-details"]; v != nil {
+		trustDetailsShow := v.(map[string]interface{})
+		trustDetailsState := make(map[string]interface{})
+		if v := trustDetailsShow["authentication-token"]; v != nil {
+			trustDetailsState["authentication_token"] = v
+		}
+		if v := trustDetailsShow["cloud-communication-details"]; v != nil {
+			cloudCommunicationDetailsShow := v.(map[string]interface{})
+			cloudCommunicationDetailsState := make(map[string]interface{})
+			if v := cloudCommunicationDetailsShow["ip"]; v != nil {
+				cloudCommunicationDetailsState["ip"] = v
+			}
+			if v := cloudCommunicationDetailsShow["status"]; v != nil {
+				cloudCommunicationDetailsState["status"] = v
+			}
+			trustDetailsState["cloud_communication_details"] = []interface{}{cloudCommunicationDetailsState}
+		}
+		if v := trustDetailsShow["gateway-mac-address"]; v != nil {
+			trustDetailsState["gateway_mac_address"] = v
+		}
+		if v := trustDetailsShow["identification-method"]; v != nil {
+			trustDetailsState["identification_method"] = v
+		}
+		if v := trustDetailsShow["status"]; v != nil {
+			trustDetailsState["status"] = v
+		}
+		if v := trustDetailsShow["token-expiration-date"]; v != nil {
+			trustDetailsState["token_expiration_date"] = v
+		}
+		_ = d.Set("trust_details", []interface{}{trustDetailsState})
 	}
 
 	return nil

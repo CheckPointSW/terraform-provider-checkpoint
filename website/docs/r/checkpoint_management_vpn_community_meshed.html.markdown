@@ -48,6 +48,7 @@ The following arguments are supported:
 * `comments` - (Optional) Comments string. 
 * `ignore_warnings` - (Optional) Apply changes ignoring warnings. 
 * `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored. 
+* `route_based_settings` - (Optional) <html>VPN Community Route-Based settings.<br><b>Relevant only in Route-Based VPN Communities</b></html>.route_based_settings blocks are documented below.
 
 `encrypted_traffic` supports the following:
 
@@ -79,6 +80,10 @@ The following arguments are supported:
 * `diffie_hellman_group` - (Optional) The Diffie-Hellman group to be used.
 * `encryption_algorithm` - (Optional) The encryption algorithm to be used.
 * `ike_p1_rekey_time` - (Optional) Indicates the time interval for IKE phase 1 renegotiation.
+* `ike_p1_rekey_time_unit` - (Optional) Indicates the time unit for the 'ike-p1-rekey-time-unit' parameter, rounded up to minutes scale.
+* `multiple_key_exchanges` - (Optional) Multiple Key Exchanges proposal object.
+* `use_multiple_key_exchanges` - (Optional) Indicates whether to use a proposal with Multiple Key Exchanges.
+* `use_standard_proposal` - (Optional) Indicates whether to use a proposal with a single Diffie-Hellman group.
 
 
 `ike_phase_2` supports the following:
@@ -88,6 +93,7 @@ The following arguments are supported:
 * `ike_p2_use_pfs` - (Optional) Indicates whether Perfect Forward Secrecy (PFS) is being used for IKE phase 2.
 * `ike_p2_pfs_dh_grp` - (Optional) The Diffie-Hellman group to be used: group-1, group-2, group-5, group-14, group-15, group-16, group-17, group-18, group-19, group-20, group-24.
 * `ike_p2_rekey_time` - (Optional) Indicates the time interval for IKE phase 2 renegotiation.
+* `ike_p2_rekey_time_unit` - (Optional) N/A.
 
 `permanent_tunnels` supports the following:
 
@@ -134,3 +140,45 @@ The following arguments are supported:
 * `enabled` - (Optional) Indicates whether Route Injection Mechanism is enabled.
 * `enable_on_gateways` - (Optional) Indicates whether to enable automatic Route Injection Mechanism for gateways.
 * `route_injection_track` - (Optional) Route injection track method. 
+
+
+`ike_phase_2` supports the following:
+
+* `ike_p2_rekey_time_unit` - (Optional) Indicates the time unit for the 'ike-p2-rekey-time-unit' parameter, rounded up to minutes scale.
+* `multiple_key_exchanges` - (Optional) Multiple Key Exchanges proposal object.
+* `use_multiple_key_exchanges` - (Optional) Indicates whether to use a proposal with Multiple Key Exchanges.
+* `use_standard_proposal` - (Optional) Indicates whether to use a proposal with a single Diffie-Hellman group.
+
+
+`interfaces` supports the following:
+
+* `ip_version` - (Optional) The IP version of the interface's IP address (IPv4/IPv6).
+
+
+`route_based_settings` supports the following:
+
+* `add_automatic_routes` - (Optional) <html>The type of routes to use for the automatic Route-Based configuration.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `advanced` - (Optional) <html>Advanced settings<br><b>Relevant only in Route-Based VPN Communities</b></html>.advanced blocks are documented below.
+* `override_routes` - (Optional) <html>Override automatic routing settings in a specific Security Gateway in this VPN Community.<br><b>Relevant only in Route-Based VPN Communities</b>...override_routes blocks are documented below.
+
+
+`advanced` supports the following:
+
+* `bfd` - (Optional) <html>Indicates whether to enable Bidirectional Forwarding Detection.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `graceful_restart` - (Optional) <html>Indicates whether to enable Graceful Restart in the applicable Dynamic Routing protocols.<br><b>Relevant only in Route-Based VPN Communities</b>...
+
+
+`override_routes` supports the following:
+
+* `auto_config` - (Optional) <html>Indicates whether to configure the routing settings automatically for the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</...
+* `exported_routes` - (Optional) <html>Exported Routes.<br><b>Relevant only in Route-Based VPN Communities</b></html>.exported_routes blocks are documented below.
+* `gateway` - (Optional) <html>Name of the Security Gateway object in which to override the automatic routing settings.<br><b>Relevant only in Route-Based VPN Communities</b><...
+* `mode` - (Optional) <html>Specifies how to export routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+
+
+`exported_routes` supports the following:
+
+* `custom_routes` - (Optional) <html>Specifies to export user-defined networks from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.
+* `custom_routes_object` - (Optional) <html>Specifies the name of the Network object or Network Group object that represents the exported routes.<br><b>Relevant only in Route-Based VPN Com...
+* `internal_interfaces` - (Optional) <html>Specifies to export networks from interfaces with Topology 'Internal' from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communit...
+* `static_routes` - (Optional) <html>Specifies to export static routes from the Security Gateway.<br><b>Relevant only in Route-Based VPN Communities</b></html>.

@@ -69,6 +69,11 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 										Description: "Direct tcp transport layer settings.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
+												"ip_address": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Certificate authority IP address.",
+												},
 												"port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
@@ -97,6 +102,11 @@ func dataSourceManagementSubordinateCa() *schema.Resource {
 										Description: "Direct tcp transport layer settings.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
+												"ip_address": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Certificate authority IP address.",
+												},
 												"port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
@@ -235,6 +245,9 @@ func dataSourceManagementSubordinateCaRead(d *schema.ResourceData, m interface{}
 				directTcpSettingsMap := v.(map[string]interface{})
 				directTcpSettingsMapToReturn := make(map[string]interface{})
 
+				if v, _ := directTcpSettingsMap["ip-address"]; v != nil {
+					directTcpSettingsMapToReturn["ip_address"] = v
+				}
 				if v, _ := directTcpSettingsMap["port"]; v != nil {
 					directTcpSettingsMapToReturn["port"] = v
 				}
@@ -257,6 +270,9 @@ func dataSourceManagementSubordinateCaRead(d *schema.ResourceData, m interface{}
 				directTcpSettingsMap := v.(map[string]interface{})
 				directTcpSettingsMapToReturn := make(map[string]interface{})
 
+				if v, _ := directTcpSettingsMap["ip-address"]; v != nil {
+					directTcpSettingsMapToReturn["ip_address"] = v
+				}
 				if v, _ := directTcpSettingsMap["port"]; v != nil {
 					directTcpSettingsMapToReturn["port"] = v
 				}

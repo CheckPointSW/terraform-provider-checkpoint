@@ -33,6 +33,7 @@ Note: when the automatic purge feature is enabled, this field and/or the "keep-s
 Note: when the automatic purge feature is enabled, this field and/or the "keep-sessions-by-count" field must be set to 'true'. 
 * `number_of_days_to_keep` - (Optional) When "keep-sessions-by-days = true" this sets the number of days to keep the sessions. 
 * `scheduling` - (Optional) When to purge sessions that do not meet the "keep" criteria. Note: when the automatic purge feature is enabled, this field must be set.scheduling blocks are documented below.
+* `ignore_domain_backup` - (Optional) Ignore global domain sessions that are linked to the latest local domain backups, and purge them anyway.
 
 
 `scheduling` supports the following:

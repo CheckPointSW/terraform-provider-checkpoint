@@ -56,6 +56,24 @@ func dataSourceManagementSetGatewayGlobalUse() *schema.Resource {
 					},
 				},
 			},
+			"enable_identity_sharing": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether Identity Awareness Sharing global use is enabled on the target.",
+			},
+			"enable_vpn": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether VPN global use is enabled on the target.",
+			},
+			"identity_sharing_domains": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Domains that Identity Awareness Sharing global use applied to them.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -104,5 +122,24 @@ func dataSourceManagementSetGatewayGlobalUseRead(d *schema.ResourceData, m inter
 
 		_ = d.Set("domain", []interface{}{mapToReturn})
 	}
+	if v := showGatewatGlobalUseData["enable-identity-sharing"]; v != nil {
+		_ = d.Set("enable_identity_sharing", v)
+	}
+
+	if v := showGatewatGlobalUseData["enable-vpn"]; v != nil {
+		_ = d.Set("enable_vpn", v)
+	}
+
+	if v := showGatewatGlobalUseData["identity-sharing-domains"]; v != nil {
+		identitysharingdomainsIdsList := v.([]interface{})
+		var identitysharingdomainsIds = make([]string, 0)
+		if len(identitysharingdomainsIdsList) > 0 {
+			for _, item := range identitysharingdomainsIdsList {
+				identitysharingdomainsIds = append(identitysharingdomainsIds, item.(map[string]interface{})["name"].(string))
+			}
+		}
+		_ = d.Set("identity_sharing_domains", identitysharingdomainsIds)
+	}
+
 	return nil
 }

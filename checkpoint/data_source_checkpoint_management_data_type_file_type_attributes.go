@@ -79,6 +79,14 @@ func dataSourceManagementDataTypeFileAttributes() *schema.Resource {
 				Computed:    true,
 				Description: "Comments string.",
 			},
+			"related_file_types": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "List of Content Awareness file types.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -184,6 +192,10 @@ func dataSourceManagementDataTypeFileAttributesRead(d *schema.ResourceData, m in
 
 	if v := dataTypeFileAttributes["comments"]; v != nil {
 		_ = d.Set("comments", v)
+	}
+
+	if v := dataTypeFileAttributes["related-file-types"]; v != nil {
+		_ = d.Set("related_file_types", v)
 	}
 
 	return nil

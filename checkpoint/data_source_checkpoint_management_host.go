@@ -37,6 +37,11 @@ func dataSourceManagementHost() *schema.Resource {
 				Description: "Host interfaces.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"subnet_mask": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IPv4 network mask.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -168,6 +173,11 @@ func dataSourceManagementHost() *schema.Resource {
 										Computed:    true,
 										Description: "Network object which protects this server identified by the name or UID.",
 									},
+									"standard_port_number": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Server standard port number.",
+									},
 								},
 							},
 						},
@@ -291,6 +301,9 @@ func dataSourceManagementHostRead(d *schema.ResourceData, m interface{}) error {
 				if v, _ := interfaceMap["comments"]; v != nil {
 					interfaceMapToAdd["comments"] = v
 				}
+				if v := interfaceMap["subnet-mask"]; v != nil {
+					interfaceMapToAdd["subnet_mask"] = v
+				}
 				interfacesListToReturn = append(interfacesListToReturn, interfaceMapToAdd)
 			}
 
@@ -380,6 +393,9 @@ func dataSourceManagementHostRead(d *schema.ResourceData, m interface{}) error {
 				}
 
 				webServerConfigMapToReturn["protected_by"] = showProtectedByRes.GetData()["object"].(map[string]interface{})["name"]
+			}
+			if v := webServerConfigMap["standard-port-number"]; v != nil {
+				webServerConfigMapToReturn["standard_port_number"] = v
 			}
 			hostServersMapToReturn["web_server_config"] = []interface{}{webServerConfigMapToReturn}
 		}

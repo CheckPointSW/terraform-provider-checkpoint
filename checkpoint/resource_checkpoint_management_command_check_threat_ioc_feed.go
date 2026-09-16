@@ -32,6 +32,26 @@ func resourceManagementCheckThreatIocFeed() *schema.Resource {
 				ForceNew:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"use_snort_format": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Set in order to configure a snort format indicator feed.",
+						},
+						"severity": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Set in order to configure the severity of the snort protections in snort format. 1-Low, 4-Critical.",
+						},
+						"performance_impact": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Set in order to configure the performance impact of the snort protections in snort format. 1-Very Low, 4-High.",
+						},
+						"confidence": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Set in order to configure the confidence of the snort protections in snort format. 1-Low, 5-High.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -115,6 +135,7 @@ func resourceManagementCheckThreatIocFeed() *schema.Resource {
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "password for authenticating with the URL.",
 						},
 						"use_custom_feed_settings": {

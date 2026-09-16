@@ -100,6 +100,106 @@ func resourceManagementAccessRule() *schema.Resource {
 							Optional:    true,
 							Description: "N/A",
 						},
+						"client_auth_settings": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Client authentication settings.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"source": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Source object identified by the name or UID.",
+									},
+									"destination": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Destination object identified by the name or UID.",
+									},
+									"sign_on_method": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Sign on method.",
+									},
+									"sign_on_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Sign on type.",
+									},
+									"tracking": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Tracking method.",
+									},
+									"sessions_limit": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Maximum number of concurrent sessions.",
+									},
+									"unlimited_sessions": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Allow an unlimited number of sessions.",
+									},
+									"require_desktop_config_verification": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Require Desktop configuration verification.",
+									},
+									"timeout": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "Session timeout settings.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Enable session timeout.",
+												},
+												"minutes": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Session timeout in minutes.",
+												},
+												"refreshable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether the timeout is refreshable.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"user_auth_settings": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "User authentication settings.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"source": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Source object identified by the name or UID.",
+									},
+									"destination": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Destination object identified by the name or UID.",
+									},
+									"allowed_http_servers": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Allowed HTTP servers.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -360,6 +460,11 @@ func resourceManagementAccessRule() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"service_resource": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Resource of the service identified by the name or UID. When a service-resource exists, the service parameter should contains exactly one service element.",
+			},
 		},
 	}
 }
@@ -419,6 +524,66 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 			}
 			if v, ok := d.GetOk("action_settings.0.limit"); ok {
 				actionSettingsPayload["limit"] = v.(string)
+			}
+			if _, ok := d.GetOk("action_settings.0.client_auth_settings"); ok {
+
+				clientAuthSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.source"); ok {
+					clientAuthSettingsPayload["source"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.destination"); ok {
+					clientAuthSettingsPayload["destination"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_method"); ok {
+					clientAuthSettingsPayload["sign-on-method"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_type"); ok {
+					clientAuthSettingsPayload["sign-on-type"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.tracking"); ok {
+					clientAuthSettingsPayload["tracking"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sessions_limit"); ok {
+					clientAuthSettingsPayload["sessions-limit"] = v.(int)
+				}
+				if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.unlimited_sessions"); ok {
+					clientAuthSettingsPayload["unlimited-sessions"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.require_desktop_config_verification"); ok {
+					clientAuthSettingsPayload["require-desktop-config-verification"] = v.(bool)
+				}
+				if _, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout"); ok {
+
+					timeoutPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.enable"); ok {
+						timeoutPayload["enable"] = v.(bool)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout.0.minutes"); ok {
+						timeoutPayload["minutes"] = v.(int)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.refreshable"); ok {
+						timeoutPayload["refreshable"] = v.(bool)
+					}
+					clientAuthSettingsPayload["timeout"] = timeoutPayload
+				}
+				actionSettingsPayload["client-auth-settings"] = clientAuthSettingsPayload
+			}
+			if _, ok := d.GetOk("action_settings.0.user_auth_settings"); ok {
+
+				userAuthSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.source"); ok {
+					userAuthSettingsPayload["source"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.destination"); ok {
+					userAuthSettingsPayload["destination"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.allowed_http_servers"); ok {
+					userAuthSettingsPayload["allowed-http-servers"] = v.(string)
+				}
+				actionSettingsPayload["user-auth-settings"] = userAuthSettingsPayload
 			}
 			accessRule["action-settings"] = actionSettingsPayload
 		}
@@ -568,6 +733,10 @@ func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("Create Access Rule - Map = ", accessRule)
 
+	if v, ok := d.GetOk("service_resource"); ok {
+		accessRule["service-resource"] = v.(string)
+	}
+
 	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 	if err != nil || !addAccessRuleRes.Success {
 		if addAccessRuleRes.ErrorMsg != "" {
@@ -630,6 +799,63 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 		}
 		if v := actionSettingsMap["limit"]; v != nil {
 			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
+		}
+		if v := actionSettingsMap["client-auth-settings"]; v != nil {
+			clientAuthSettingsMap := v.(map[string]interface{})
+			clientAuthSettingsMapToReturn := make(map[string]interface{})
+			if v := clientAuthSettingsMap["source"]; v != nil {
+				clientAuthSettingsMapToReturn["source"] = v
+			}
+			if v := clientAuthSettingsMap["destination"]; v != nil {
+				clientAuthSettingsMapToReturn["destination"] = v
+			}
+			if v := clientAuthSettingsMap["sign-on-method"]; v != nil {
+				clientAuthSettingsMapToReturn["sign_on_method"] = v
+			}
+			if v := clientAuthSettingsMap["sign-on-type"]; v != nil {
+				clientAuthSettingsMapToReturn["sign_on_type"] = v
+			}
+			if v := clientAuthSettingsMap["tracking"]; v != nil {
+				clientAuthSettingsMapToReturn["tracking"] = v
+			}
+			if v := clientAuthSettingsMap["sessions-limit"]; v != nil {
+				clientAuthSettingsMapToReturn["sessions_limit"] = v
+			}
+			if v := clientAuthSettingsMap["unlimited-sessions"]; v != nil {
+				clientAuthSettingsMapToReturn["unlimited_sessions"] = v
+			}
+			if v := clientAuthSettingsMap["require-desktop-config-verification"]; v != nil {
+				clientAuthSettingsMapToReturn["require_desktop_config_verification"] = v
+			}
+			if v := clientAuthSettingsMap["timeout"]; v != nil {
+				timeoutMap := v.(map[string]interface{})
+				timeoutMapToReturn := make(map[string]interface{})
+				if v := timeoutMap["enable"]; v != nil {
+					timeoutMapToReturn["enable"] = v
+				}
+				if v := timeoutMap["minutes"]; v != nil {
+					timeoutMapToReturn["minutes"] = v
+				}
+				if v := timeoutMap["refreshable"]; v != nil {
+					timeoutMapToReturn["refreshable"] = v
+				}
+				clientAuthSettingsMapToReturn["timeout"] = []interface{}{timeoutMapToReturn}
+			}
+			actionSettingsMapToReturn["client_auth_settings"] = []interface{}{clientAuthSettingsMapToReturn}
+		}
+		if v := actionSettingsMap["user-auth-settings"]; v != nil {
+			userAuthSettingsMap := v.(map[string]interface{})
+			userAuthSettingsMapToReturn := make(map[string]interface{})
+			if v := userAuthSettingsMap["source"]; v != nil {
+				userAuthSettingsMapToReturn["source"] = v
+			}
+			if v := userAuthSettingsMap["destination"]; v != nil {
+				userAuthSettingsMapToReturn["destination"] = v
+			}
+			if v := userAuthSettingsMap["allowed-http-servers"]; v != nil {
+				userAuthSettingsMapToReturn["allowed_http_servers"] = v
+			}
+			actionSettingsMapToReturn["user_auth_settings"] = []interface{}{userAuthSettingsMapToReturn}
 		}
 		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
 
@@ -836,6 +1062,10 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v := accessRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
+	if v := accessRule["service-resource"]; v != nil {
+		_ = d.Set("service_resource", v.(map[string]interface{})["name"])
+	}
+
 	return nil
 }
 
@@ -907,6 +1137,66 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 				}
 				if v, ok := d.GetOk("action_settings.0.limit"); ok {
 					actionSettingsPayload["limit"] = v.(string)
+				}
+				if _, ok := d.GetOk("action_settings.0.client_auth_settings"); ok {
+
+					clientAuthSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.source"); ok {
+						clientAuthSettingsPayload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.destination"); ok {
+						clientAuthSettingsPayload["destination"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_method"); ok {
+						clientAuthSettingsPayload["sign-on-method"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_type"); ok {
+						clientAuthSettingsPayload["sign-on-type"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.tracking"); ok {
+						clientAuthSettingsPayload["tracking"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sessions_limit"); ok {
+						clientAuthSettingsPayload["sessions-limit"] = v.(int)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.unlimited_sessions"); ok {
+						clientAuthSettingsPayload["unlimited-sessions"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.require_desktop_config_verification"); ok {
+						clientAuthSettingsPayload["require-desktop-config-verification"] = v.(bool)
+					}
+					if _, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout"); ok {
+
+						timeoutPayload := make(map[string]interface{})
+
+						if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.enable"); ok {
+							timeoutPayload["enable"] = v.(bool)
+						}
+						if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout.0.minutes"); ok {
+							timeoutPayload["minutes"] = v.(int)
+						}
+						if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.refreshable"); ok {
+							timeoutPayload["refreshable"] = v.(bool)
+						}
+						clientAuthSettingsPayload["timeout"] = timeoutPayload
+					}
+					actionSettingsPayload["client-auth-settings"] = clientAuthSettingsPayload
+				}
+				if _, ok := d.GetOk("action_settings.0.user_auth_settings"); ok {
+
+					userAuthSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.source"); ok {
+						userAuthSettingsPayload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.destination"); ok {
+						userAuthSettingsPayload["destination"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.allowed_http_servers"); ok {
+						userAuthSettingsPayload["allowed-http-servers"] = v.(string)
+					}
+					actionSettingsPayload["user-auth-settings"] = userAuthSettingsPayload
 				}
 				accessRule["action-settings"] = actionSettingsPayload
 			}
@@ -1137,6 +1427,12 @@ func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	log.Println("Update Access Rule - Map = ", accessRule)
 
 	if len(accessRule) != 4 {
+		if ok := d.HasChange("service_resource"); ok {
+			if v, ok := d.GetOk("service_resource"); ok {
+				accessRule["service-resource"] = v.(string)
+			}
+		}
+
 		updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
 		if err != nil || !updateAccessRuleRes.Success {
 			if updateAccessRuleRes.ErrorMsg != "" {

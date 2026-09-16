@@ -110,6 +110,11 @@ func dataSourceManagementNetwork() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"subnet_mask": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IPv4 network mask.",
+			},
 		},
 	}
 }
@@ -239,6 +244,10 @@ func dataSourceManagementNetworkRead(d *schema.ResourceData, m interface{}) erro
 		_ = d.Set("tags", tagsIds)
 	} else {
 		_ = d.Set("tags", nil)
+	}
+
+	if v := network["subnet-mask"]; v != nil {
+		_ = d.Set("subnet_mask", v)
 	}
 
 	return nil
