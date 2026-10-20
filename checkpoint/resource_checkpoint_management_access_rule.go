@@ -1,8 +1,8 @@
 package checkpoint
 
 import (
-	"github.com/CheckPointSW/terraform-provider-checkpoint/v3/upgraders"
 	"fmt"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/v3/upgraders"
 	"log"
 	"strings"
 
@@ -1062,8 +1062,8 @@ func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
 	if v := accessRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
-	if v := accessRule["service-resource"]; v != nil {
-		_ = d.Set("service_resource", v.(map[string]interface{})["name"])
+	if v, ok := accessRule["service-resource"].(map[string]interface{}); ok {
+		_ = d.Set("service_resource", v["name"])
 	}
 
 	return nil

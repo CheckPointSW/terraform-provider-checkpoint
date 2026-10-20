@@ -993,8 +993,8 @@ func dataSourceManagementAccessRuleRead(d *schema.ResourceData, m interface{}) e
 	if v := accessRule["comments"]; v != nil {
 		_ = d.Set("comments", v)
 	}
-	if v := accessRule["service-resource"]; v != nil {
-		_ = d.Set("service_resource", v.(map[string]interface{})["name"])
+	if v, ok := accessRule["service-resource"].(map[string]interface{}); ok {
+		_ = d.Set("service_resource", v["name"])
 	}
 
 	if v := accessRule["expiration-settings"]; v != nil {
