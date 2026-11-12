@@ -34,3 +34,18 @@ The following arguments are supported:
 * `auto_negotiation` - (Optional) If true, Auto Negotiation will be turned on, and vice versa 
 * `qsfp_mode` - (Optional) Port QSFP mode. Valid values are: '4x10G', '4x25G', '25G', '40G', '100G' 
 * `type` - (Optional) Port type. Valid values are: 'downlink', 'uplink', 'site_sync', 'ssm_sync', 'mgmt' 
+
+
+## Import
+
+Use the existing resource's `resource_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_maestro_port.example '1/13/1'
+```
+
+To specify optional read context or filters (`interface_name`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

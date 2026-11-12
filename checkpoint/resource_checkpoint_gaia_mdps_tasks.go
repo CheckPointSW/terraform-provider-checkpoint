@@ -15,6 +15,9 @@ func resourceGaiaMdpsTasks() *schema.Resource {
         Read:   readGaiaMdpsTasks,
         Update: updateGaiaMdpsTasks,
         Delete: deleteGaiaMdpsTasks,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

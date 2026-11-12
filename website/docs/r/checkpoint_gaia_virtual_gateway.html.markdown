@@ -64,3 +64,18 @@ The following arguments are supported:
 * `ipv6_address` - (Optional) IPv6 address 
 * `ipv6_mask` - (Optional) IPv6 mask length 
 * `ipv6_default_gateway` - (Optional) IPv6 default gateway 
+
+
+## Import
+
+Use the existing resource's `resource_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_virtual_gateway.example '1'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

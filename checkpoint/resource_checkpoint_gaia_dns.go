@@ -15,6 +15,10 @@ func resourceGaiaDns() *schema.Resource {
         Read:   readGaiaDns,
         Update: updateGaiaDns,
         Delete: deleteGaiaDns,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

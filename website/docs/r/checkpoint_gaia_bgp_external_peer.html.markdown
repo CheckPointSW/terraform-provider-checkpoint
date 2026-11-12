@@ -132,3 +132,14 @@ The following arguments are supported:
 
 * `name` - (Optional) The name of the routemap condition 
 * `condition` - (Optional) The condition can be any-pass or no-pass 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `peer`, `remote_as`.
+
+```shell
+terraform import checkpoint_gaia_bgp_external_peer.example '{"peer":"192.0.2.1","remote_as":"65001"}'
+```
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

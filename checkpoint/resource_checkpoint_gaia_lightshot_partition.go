@@ -16,6 +16,9 @@ func resourceGaiaLightshotPartition() *schema.Resource {
         Read:   readGaiaLightshotPartition,
         Update: updateGaiaLightshotPartition,
         Delete: deleteGaiaLightshotPartition,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

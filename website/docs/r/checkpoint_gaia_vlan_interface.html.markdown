@@ -105,3 +105,22 @@ Supported starting from R81.20 JHF 14 sd_wan blocks are documented below.
 
 * `upload_speed` - (Optional) In Mbps 
 * `download_speed` - (Optional) In Mbps 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `name`, `resource_id`.
+
+```shell
+terraform import checkpoint_gaia_vlan_interface.example '{"name":"eth1.1","resource_id":1}'
+```
+
+To specify optional read context or filters (`virtual_system_id`, `member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+```shell
+terraform import checkpoint_gaia_vlan_interface.example '{"name":"myname","member_id":"1_1"}'
+```
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

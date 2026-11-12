@@ -50,3 +50,20 @@ The following arguments are supported:
 
 * `gateway` - (Optional) IP address or logical name for the static next-hop gateway 
 * `priority` - (Optional) Priority defines which gateway to select as the next-hop. The lower the priority, the higher the preference. Possible values: default or integer 1-8 
+
+
+## Import
+
+Use the existing resource's `table` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_pbr_table.example '<table>'
+```
+
+To specify optional read context or filters (`virtual_system_id`, `member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

@@ -15,6 +15,10 @@ func resourceGaiaSnmpTrapReceiver() *schema.Resource {
         Read:   readGaiaSnmpTrapReceiver,
         Update: updateGaiaSnmpTrapReceiver,
         Delete: deleteGaiaSnmpTrapReceiver,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "address": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "address"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

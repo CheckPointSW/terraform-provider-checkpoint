@@ -81,3 +81,18 @@ The following arguments are supported:
 
 * `from` - (Optional) Specifies the lower limit of the range of mask lengths 
 * `to` - (Optional) Specifies the upper limit of the range of mask lengths 
+
+
+## Import
+
+Use the existing resource's `policy_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_inbound_route_filter_bgp_policy.example '1'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

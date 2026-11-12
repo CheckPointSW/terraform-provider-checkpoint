@@ -15,6 +15,12 @@ func resourceGaiaStaticMroute() *schema.Resource {
         Read:   readGaiaStaticMroute,
         Update: updateGaiaStaticMroute,
         Delete: deleteGaiaStaticMroute,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "address": schema.TypeString,
+            "mask_length": schema.TypeInt,
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }, "address", "mask_length"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,
@@ -245,7 +251,9 @@ func readGaiaStaticMroute(d *schema.ResourceData, m interface{}) error {
         }
     }
     if v, exists := staticMroute["virtual-system-id"]; exists {
-        d.Set("virtual_system_id", fmt.Sprintf("%v", v))
+        if err := gaiaSetInt(d, "virtual_system_id", v); err != nil {
+            return err
+        }
     }
     d.SetId(d.Id())
     return nil

@@ -15,6 +15,9 @@ func resourceGaiaGrubPassword() *schema.Resource {
         Read:   readGaiaGrubPassword,
         Update: updateGaiaGrubPassword,
         Delete: deleteGaiaGrubPassword,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

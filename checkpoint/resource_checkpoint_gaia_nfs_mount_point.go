@@ -14,6 +14,10 @@ func resourceGaiaNfsMountPoint() *schema.Resource {
         Create: createGaiaNfsMountPoint,
         Read:   readGaiaNfsMountPoint,
         Delete: deleteGaiaNfsMountPoint,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "mount_point": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "mount_point"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

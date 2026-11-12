@@ -15,6 +15,9 @@ func resourceGaiaDhcp6Config() *schema.Resource {
         Read:   readGaiaDhcp6Config,
         Update: updateGaiaDhcp6Config,
         Delete: deleteGaiaDhcp6Config,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

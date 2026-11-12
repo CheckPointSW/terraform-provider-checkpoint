@@ -15,6 +15,10 @@ func resourceGaiaBgpInternalPeer() *schema.Resource {
         Read:   readGaiaBgpInternalPeer,
         Update: updateGaiaBgpInternalPeer,
         Delete: deleteGaiaBgpInternalPeer,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "peer": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "peer"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

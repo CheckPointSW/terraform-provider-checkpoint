@@ -15,6 +15,11 @@ func resourceGaiaPhysicalInterface() *schema.Resource {
         Read:   readGaiaPhysicalInterface,
         Update: updateGaiaPhysicalInterface,
         Delete: deleteGaiaPhysicalInterface,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "name": schema.TypeString,
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }, "name"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,
@@ -750,7 +755,9 @@ func readGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {
         d.Set("member_id", fmt.Sprintf("%v", v))
     }
     if v, exists := physicalInterface["virtual-system-id"]; exists {
-        d.Set("virtual_system_id", fmt.Sprintf("%v", v))
+        if err := gaiaSetInt(d, "virtual_system_id", v); err != nil {
+            return err
+        }
     }
     d.SetId(d.Id())
     return nil

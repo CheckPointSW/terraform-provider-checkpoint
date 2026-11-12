@@ -15,6 +15,10 @@ func resourceGaiaPimInterface() *schema.Resource {
         Read:   readGaiaPimInterface,
         Update: updateGaiaPimInterface,
         Delete: deleteGaiaPimInterface,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "name": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "name"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

@@ -15,6 +15,9 @@ func resourceGaiaSyslog() *schema.Resource {
         Read:   readGaiaSyslog,
         Update: updateGaiaSyslog,
         Delete: deleteGaiaSyslog,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

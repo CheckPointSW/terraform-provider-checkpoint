@@ -47,3 +47,24 @@ The following arguments are supported:
 
 * `protocol` - (Optional) Privacy protocol 
 * `password` - (Optional) Privacy Password - (8 or more printable characters) An SNMPv3 USM user with a privacy security level must have a privacy pass phrase. This will be used by the SNMPv3 agent to keep other parties from eavesdropping on the SNMP interaction.  
+
+
+## Import
+
+Use the existing resource's `name` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_snmp_user.example 'myname'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+```shell
+terraform import checkpoint_gaia_snmp_user.example '{"name":"myname","member_id":"1_1"}'
+```
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

@@ -15,6 +15,12 @@ func resourceGaiaStaticRoute() *schema.Resource {
         Read:   readGaiaStaticRoute,
         Update: updateGaiaStaticRoute,
         Delete: deleteGaiaStaticRoute,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "address": schema.TypeString,
+            "mask_length": schema.TypeInt,
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }, "address", "mask_length"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

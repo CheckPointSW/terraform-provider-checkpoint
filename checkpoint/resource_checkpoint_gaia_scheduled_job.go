@@ -15,6 +15,10 @@ func resourceGaiaScheduledJob() *schema.Resource {
         Read:   readGaiaScheduledJob,
         Update: updateGaiaScheduledJob,
         Delete: deleteGaiaScheduledJob,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "name": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "name"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,
