@@ -71,3 +71,24 @@ The following arguments are supported:
 * `max_disk_space` - (Optional) Maximum diskspace to keep on the local machine (MB) 
 * `min_num_of_backups` - (Optional) Minimum backups to keep 
 * `max_num_of_backups` - (Optional) Maximum backups to keep 
+
+
+## Import
+
+Use the existing resource's `name` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_scheduled_backup.example 'myname'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+```shell
+terraform import checkpoint_gaia_scheduled_backup.example '{"name":"myname","member_id":"1_1"}'
+```
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

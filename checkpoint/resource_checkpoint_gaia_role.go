@@ -15,6 +15,10 @@ func resourceGaiaRole() *schema.Resource {
         Read:   readGaiaRole,
         Update: updateGaiaRole,
         Delete: deleteGaiaRole,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "name": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "name"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

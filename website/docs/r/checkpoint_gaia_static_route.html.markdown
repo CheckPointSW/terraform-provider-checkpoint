@@ -48,3 +48,18 @@ The following arguments are supported:
 
 * `gateway` - (Optional) IP address or logical name for the static next-hop gateway 
 * `priority` - (Optional) Priority defines which gateway to select as the next-hop. The lower the priority, the higher the preference. Possible values: default or integer 1-8 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `address`, `mask_length`.
+
+```shell
+terraform import checkpoint_gaia_static_route.example '{"address":"192.0.2.0","mask_length":24}'
+```
+
+To specify optional read context or filters (`virtual_system_id`, `member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

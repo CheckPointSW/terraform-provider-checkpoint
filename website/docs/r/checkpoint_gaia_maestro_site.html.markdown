@@ -36,3 +36,14 @@ The following arguments are supported:
 
 * `security_group` - (Optional) The Site Security Group 
 * `description` - (Optional) Site description 
+
+
+## Import
+
+Use the existing resource's `site_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_maestro_site.example '1'
+```
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

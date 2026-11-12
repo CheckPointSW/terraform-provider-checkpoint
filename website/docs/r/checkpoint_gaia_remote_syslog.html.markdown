@@ -55,3 +55,20 @@ The following arguments are supported:
          Note that usually a single remote peer should be all you need.
          Support for multiple peers is primarily included in support of load balancing scenarios.
          If the connection goes to a specific server, only one specific peer is ever expected. Supported starting from Gaia version R82 permitted_peers blocks are documented below.
+
+
+## Import
+
+Use the existing resource's `server_ip` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_remote_syslog.example '192.0.2.1'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

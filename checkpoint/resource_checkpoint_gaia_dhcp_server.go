@@ -15,6 +15,10 @@ func resourceGaiaDhcpServer() *schema.Resource {
         Read:   readGaiaDhcpServer,
         Update: updateGaiaDhcpServer,
         Delete: deleteGaiaDhcpServer,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

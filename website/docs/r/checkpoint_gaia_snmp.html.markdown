@@ -57,3 +57,18 @@ The following arguments are supported:
 * `enabled` - (Optional) True if SNMP is in vsx mode 
 * `vs_access` - (Optional) SNMP vs-access type direct/indirect queries on Virtual-Devices direct: SNMP direct queries on Virtual-Devices indirect: SNMP direct queries via VS0 
 * `sysname` - (Optional) This command is relevant only for VSX with SNMP VS mode, Where: False (default) = the sysname OID for all Virtual Devices will return the same result: VS0 hostname True = * VS0 sysname OID returns the VSX hostname * Virtual Device sysname OID returns the Check Point object name of the Virtual Device 
+
+
+## Import
+
+Use `settings` to import the existing configuration on the connected Gaia machine.
+
+```shell
+terraform import checkpoint_gaia_snmp.example 'settings'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

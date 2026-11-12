@@ -15,6 +15,13 @@ func resourceGaiaIsisInterface() *schema.Resource {
         Read:   readGaiaIsisInterface,
         Update: updateGaiaIsisInterface,
         Delete: deleteGaiaIsisInterface,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "protocol_instance": schema.TypeString,
+            "name": schema.TypeString,
+            "member_id": schema.TypeString,
+            "interface": schema.TypeString,
+            "address_family": schema.TypeString,
+        }, "name", "interface", "address_family"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

@@ -15,6 +15,9 @@ func resourceGaiaAllowedClients() *schema.Resource {
         Read:   readGaiaAllowedClients,
         Update: updateGaiaAllowedClients,
         Delete: deleteGaiaAllowedClients,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

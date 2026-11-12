@@ -16,6 +16,11 @@ func resourceGaiaPbrTable() *schema.Resource {
         Read:   readGaiaPbrTable,
         Update: updateGaiaPbrTable,
         Delete: deleteGaiaPbrTable,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "table": schema.TypeString,
+            "virtual_system_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }, "table"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

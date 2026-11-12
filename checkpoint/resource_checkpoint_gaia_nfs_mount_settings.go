@@ -15,6 +15,9 @@ func resourceGaiaNfsMountSettings() *schema.Resource {
         Read:   readGaiaNfsMountSettings,
         Update: updateGaiaNfsMountSettings,
         Delete: deleteGaiaNfsMountSettings,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

@@ -15,6 +15,9 @@ func resourceGaiaHostnameOnLoginPage() *schema.Resource {
         Read:   readGaiaHostnameOnLoginPage,
         Update: updateGaiaHostnameOnLoginPage,
         Delete: deleteGaiaHostnameOnLoginPage,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "member_id": schema.TypeString,
+        }),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

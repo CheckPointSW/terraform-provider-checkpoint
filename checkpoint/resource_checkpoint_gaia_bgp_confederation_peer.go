@@ -15,6 +15,10 @@ func resourceGaiaBgpConfederationPeer() *schema.Resource {
         Read:   readGaiaBgpConfederationPeer,
         Update: updateGaiaBgpConfederationPeer,
         Delete: deleteGaiaBgpConfederationPeer,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "peer": schema.TypeString,
+            "member_as": schema.TypeString,
+        }, "peer", "member_as"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

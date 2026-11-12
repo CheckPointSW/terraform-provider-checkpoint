@@ -80,3 +80,14 @@ The following arguments are supported:
 
 `trace` supports the following:
 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `peer`, `member_as`.
+
+```shell
+terraform import checkpoint_gaia_bgp_confederation_peer.example '{"peer":"192.0.2.1","member_as":"65001"}'
+```
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

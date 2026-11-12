@@ -43,3 +43,18 @@ The following arguments are supported:
 * `source` - (Optional) The IPv6 source from which to receive traffic for this static group 
 * `source_count` - (Optional) The number of adjacent static group sources 
 * `source_increment` - (Optional) The increment between MLD static group sources (default: ::1) 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `interface`, `static_group`.
+
+```shell
+terraform import checkpoint_gaia_mld_interface_static_group.example '{"interface":"eth1","static_group":"239.1.1.1"}'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

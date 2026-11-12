@@ -15,6 +15,10 @@ func resourceGaiaInboundRouteFilterBgpPolicy() *schema.Resource {
         Read:   readGaiaInboundRouteFilterBgpPolicy,
         Update: updateGaiaInboundRouteFilterBgpPolicy,
         Delete: deleteGaiaInboundRouteFilterBgpPolicy,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "policy_id": schema.TypeInt,
+            "member_id": schema.TypeString,
+        }, "policy_id"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

@@ -15,6 +15,10 @@ func resourceGaiaRemoteSyslog() *schema.Resource {
         Read:   readGaiaRemoteSyslog,
         Update: updateGaiaRemoteSyslog,
         Delete: deleteGaiaRemoteSyslog,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "server_ip": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "server_ip"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

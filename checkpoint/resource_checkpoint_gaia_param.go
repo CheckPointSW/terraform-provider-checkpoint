@@ -15,6 +15,12 @@ func resourceGaiaParam() *schema.Resource {
         Read:   readGaiaParam,
         Update: updateGaiaParam,
         Delete: deleteGaiaParam,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "virtual_system_id": schema.TypeString,
+            "param_path": schema.TypeString,
+            "filter_by": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "param_path"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

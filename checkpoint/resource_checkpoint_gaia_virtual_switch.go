@@ -16,6 +16,10 @@ func resourceGaiaVirtualSwitch() *schema.Resource {
         Read:   readGaiaVirtualSwitch,
         Update: updateGaiaVirtualSwitch,
         Delete: deleteGaiaVirtualSwitch,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "resource_id": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "resource_id"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,

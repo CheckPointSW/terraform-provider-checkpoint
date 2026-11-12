@@ -15,6 +15,10 @@ func resourceGaiaUser() *schema.Resource {
         Read:   readGaiaUser,
         Update: updateGaiaUser,
         Delete: deleteGaiaUser,
+        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+            "name": schema.TypeString,
+            "member_id": schema.TypeString,
+        }, "name"),
         Schema: map[string]*schema.Schema{
             "debug": {
                 Type:        schema.TypeBool,
@@ -307,7 +311,21 @@ func readGaiaUser(d *schema.ResourceData, m interface{}) error {
         }
     }
     if v, exists := user["secondary-system-groups"]; exists {
-        d.Set("secondary_system_groups", v.([]interface{}))
+        groups := make([]interface{}, 0)
+        for _, item := range v.([]interface{}) {
+            if group, ok := item.(map[string]interface{}); ok {
+                name, ok := group["name"].(string)
+                if !ok {
+                    return fmt.Errorf("secondary system group is missing its name")
+                }
+                groups = append(groups, name)
+            } else {
+                groups = append(groups, item)
+            }
+        }
+        if err := d.Set("secondary_system_groups", groups); err != nil {
+            return fmt.Errorf("failed to read secondary system groups: %v", err)
+        }
     }
     if v, exists := user["real-name"]; exists {
         d.Set("real_name", fmt.Sprintf("%v", v))

@@ -106,3 +106,22 @@ The following arguments are supported:
 
 * `metric` - (Optional) Set the interface metric interval configuration 
 * `level` - (Optional) Set the level for this metric configuration 
+
+
+## Import
+
+Use a JSON object containing these lookup fields: `name`, `interface`, `address_family`.
+
+```shell
+terraform import checkpoint_gaia_isis_interface.example '{"name":"myname","interface":"eth1","address_family":"ipv4"}'
+```
+
+To specify optional read context or filters (`protocol_instance`, `member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+```shell
+terraform import checkpoint_gaia_isis_interface.example '{"name":"myname","member_id":"1_1"}'
+```
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

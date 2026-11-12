@@ -34,3 +34,20 @@ The following arguments are supported:
 * `message` - (Computed) Computed field, returned in the response. 
 * `vsxd_task_id` - (Computed) Computed field, returned in the response. 
 * `vs_id` - (Computed) Computed field, returned in the response. 
+
+
+## Import
+
+Use the existing resource's `resource_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_virtual_switch.example '1'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

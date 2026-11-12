@@ -96,3 +96,20 @@ The following arguments are supported:
 
 * `type` - (Optional) Trigger either a route update or a request for a route update to be sent to the given peer. 
 * `family` - (Optional) The address family to send the route refresh for. 
+
+
+## Import
+
+Use the existing resource's `peer` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_bgp_internal_peer.example '192.0.2.1'
+```
+
+To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.
+
+IDs beginning with `{` must use the JSON-object form; JSON syntax is reserved for structured import IDs.
+
+`member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.

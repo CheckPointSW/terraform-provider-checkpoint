@@ -94,3 +94,14 @@ The following arguments are supported:
 
 * `create_mgmt_as_bond` - (Optional) If True, a magg interface will be created for MGMT traffic. Every assigned MGMT interface will be enslaved to this magg. If False, only one of the assigned MGMT interfaces will be used for MGMT traffic. 
 * `bond_mode` - (Optional) If create-mgmt-as-bond is true, this field determines the magg bond type. If create-mgmt-as-bond is false, this field will be ignored.Note that using "xor" or "8023AD" entails configuring a bond on the device this Maestro environment is connected to. 
+
+
+## Import
+
+Use the existing resource's `resource_id` as the import ID.
+
+```shell
+terraform import checkpoint_gaia_maestro_security_group.example '1'
+```
+
+Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.
