@@ -1,0 +1,740 @@
+package checkpoint
+
+import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/v3/upgraders"
+	"fmt"
+	"log"
+	"math"
+	"strconv"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func resourceManagementTime() *schema.Resource {
+	return &schema.Resource{
+		Create: createManagementTime,
+		Read:   readManagementTime,
+		Update: updateManagementTime,
+		Delete: deleteManagementTime,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementTimeV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementTimeStateUpgradeV0,
+				Version: 0,
+			},
+		},
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Object name.",
+			},
+			"end": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "End time. Note: Each gateway may interpret this time differently according to its time zone.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"date": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date in format dd-MMM-yyyy.",
+						},
+						"time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time in format HH:mm.",
+						},
+						"iso_8601": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date and time represented in international ISO 8601 format. Time zone information is ignored.",
+						},
+						"posix": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+						},
+					},
+				},
+			},
+			"end_never": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "End never.",
+				Default:     true,
+			},
+			"hours_ranges": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Hours recurrence. Note: Each gateway may interpret this time differently according to its time zone.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Is hour range enabled.",
+						},
+						"from": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time in format HH:MM.",
+						},
+						"index": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Hour range index.",
+						},
+						"to": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time in format HH:MM.",
+						},
+					},
+				},
+			},
+			"start": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Starting time. Note: Each gateway may interpret this time differently according to its time zone.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"date": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date in format dd-MMM-yyyy.",
+						},
+						"time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time in format HH:mm.",
+						},
+						"iso_8601": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Date and time represented in international ISO 8601 format. Time zone information is ignored.",
+						},
+						"posix": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Number of milliseconds that have elapsed since 00:00:00, 1 January 1970.",
+						},
+					},
+				},
+			},
+			"start_now": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Start immediately.",
+				Default:     true,
+			},
+			"recurrence": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Days recurrence.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"days": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Valid on specific days. Multiple options, support range of days in months. Example:[\"1\",\"3\",\"9-20\"].",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"month": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Valid on month. Example: \"1\", \"2\",\"12\",\"Any\".",
+						},
+						"pattern": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Valid on \"Interval\", \"Daily\", \"Weekly\", \"Monthly\" base.",
+						},
+						"weekdays": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Valid on weekdays. Example: \"Sun\", \"Mon\"...\"Sat\".",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+			"tags": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of tag identifiers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"color": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default:     "black",
+			},
+			"comments": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Comments string.",
+			},
+			"ignore_warnings": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring warnings.",
+				Default:     false,
+			},
+			"ignore_errors": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
+				Default:     false,
+			},
+		},
+	}
+}
+
+func createManagementTime(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
+	time := make(map[string]interface{})
+
+	if v, ok := d.GetOk("name"); ok {
+		time["name"] = v.(string)
+	}
+
+	if _, ok := d.GetOk("end"); ok {
+
+		res := make(map[string]interface{})
+
+		if v, ok := d.GetOk("end.0.date"); ok {
+			res["date"] = v.(string)
+		}
+		if v, ok := d.GetOk("end.0.time"); ok {
+			res["time"] = v.(string)
+		}
+		if v, ok := d.GetOk("end.0.iso_8601"); ok {
+			res["iso-8601"] = v.(string)
+		}
+		if v, ok := d.GetOk("end.0.posix"); ok {
+			res["posix"] = v.(int)
+		}
+		time["end"] = res
+	}
+
+	if v, ok := d.GetOkExists("end_never"); ok {
+		time["end-never"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("hours_ranges"); ok {
+
+		hoursRangesList := v.([]interface{})
+
+		if len(hoursRangesList) > 0 {
+			var hourRangesPayload []map[string]interface{}
+
+			for i := range hoursRangesList {
+
+				Payload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".enabled"); ok {
+					Payload["enabled"] = v.(bool)
+				}
+				if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".from"); ok {
+					Payload["from"] = v.(string)
+				}
+				if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".index"); ok {
+					Payload["index"] = v.(int)
+				}
+				if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".to"); ok {
+					Payload["to"] = v.(string)
+				}
+				hourRangesPayload = append(hourRangesPayload, Payload)
+			}
+			time["hours-ranges"] = hourRangesPayload
+		}
+	}
+
+	if _, ok := d.GetOk("start"); ok {
+
+		res := make(map[string]interface{})
+
+		if v, ok := d.GetOk("start.0.date"); ok {
+			res["date"] = v.(string)
+		}
+		if v, ok := d.GetOk("start.0.time"); ok {
+			res["time"] = v.(string)
+		}
+		if v, ok := d.GetOk("start.0.iso_8601"); ok {
+			res["iso-8601"] = v.(string)
+		}
+		if v, ok := d.GetOk("start.0.posix"); ok {
+			res["posix"] = v.(int)
+		}
+		time["start"] = res
+	}
+
+	if v, ok := d.GetOkExists("start_now"); ok {
+		time["start-now"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		time["tags"] = v.(*schema.Set).List()
+	}
+
+	if _, ok := d.GetOk("recurrence"); ok {
+
+		res := make(map[string]interface{})
+
+		if v, ok := d.GetOk("recurrence.days"); ok {
+			res["days"] = v.(*schema.Set).List()
+		}
+		if v, ok := d.GetOk("recurrence.month"); ok {
+			res["month"] = v.(string)
+		}
+		if v, ok := d.GetOk("recurrence.pattern"); ok {
+			res["pattern"] = v.(string)
+		}
+		if v, ok := d.GetOk("recurrence.weekdays"); ok {
+			res["weekdays"] = v.(*schema.Set).List()
+		}
+		time["recurrence"] = res
+	}
+
+	if v, ok := d.GetOk("color"); ok {
+		time["color"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("comments"); ok {
+		time["comments"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		time["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		time["ignore-errors"] = v.(bool)
+	}
+
+	log.Println("Create Time - Map = ", time)
+
+	addTimeRes, err := client.ApiCall("add-time", time, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !addTimeRes.Success {
+		if addTimeRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", addTimeRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+
+	d.SetId(addTimeRes.GetData()["uid"].(string))
+
+	return readManagementTime(d, m)
+}
+
+func readManagementTime(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	payload := map[string]interface{}{
+		"uid": d.Id(),
+	}
+
+	showTimeRes, err := client.ApiCall("show-time", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf("%s", err.Error())
+	}
+	if !showTimeRes.Success {
+		if objectNotFound(showTimeRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf("%s", showTimeRes.ErrorMsg)
+	}
+
+	time := showTimeRes.GetData()
+
+	log.Println("Read Time - Show JSON = ", time)
+
+	if v := time["name"]; v != nil {
+		_ = d.Set("name", v)
+	}
+
+	if time["end"] != nil {
+		endMap := time["end"].(map[string]interface{})
+
+		endMapToReturn := make(map[string]interface{})
+
+		if v, _ := endMap["date"]; v != nil {
+			endMapToReturn["date"] = v.(string)
+		}
+		if v, _ := endMap["time"]; v != nil {
+			endMapToReturn["time"] = v.(string)
+		}
+
+		if v := endMap["iso-8601"]; v != nil {
+			endMapToReturn["iso_8601"] = v
+		}
+		if v := endMap["posix"]; v != nil {
+			endMapToReturn["posix"] = v
+		}
+		_ = d.Set("end", []interface{}{endMapToReturn})
+	}
+
+	if v := time["end-never"]; v != nil {
+		_ = d.Set("end_never", v)
+	}
+
+	if time["hours-ranges"] != nil {
+
+		hoursRangesList, ok := time["hours-ranges"].([]interface{})
+
+		if ok {
+
+			if len(hoursRangesList) > 0 {
+
+				var hourRangesListToReturn []map[string]interface{}
+
+				for i := range hoursRangesList {
+
+					hoursRangesMap := hoursRangesList[i].(map[string]interface{})
+
+					hoursRangesMapToAdd := make(map[string]interface{})
+
+					if v, _ := hoursRangesMap["enabled"]; v != nil {
+						hoursRangesMapToAdd["enabled"] = v.(bool)
+					}
+					if v, _ := hoursRangesMap["from"]; v != nil {
+						hoursRangesMapToAdd["from"] = v.(string)
+					}
+					if v, _ := hoursRangesMap["index"]; v != nil {
+						hoursRangesMapToAdd["index"] = int(math.Round(v.(float64)))
+					}
+					if v, _ := hoursRangesMap["to"]; v != nil {
+						hoursRangesMapToAdd["to"] = v.(string)
+					}
+
+					hourRangesListToReturn = append(hourRangesListToReturn, hoursRangesMapToAdd)
+				}
+				_ = d.Set("hours_ranges", hourRangesListToReturn)
+			}
+		}
+	}
+
+	if time["start"] != nil {
+		startMap := time["start"].(map[string]interface{})
+
+		startMapToReturn := make(map[string]interface{})
+
+		if v, _ := startMap["date"]; v != nil {
+			startMapToReturn["date"] = v.(string)
+		}
+		if v, _ := startMap["time"]; v != nil {
+			startMapToReturn["time"] = v.(string)
+		}
+
+		if v := startMap["iso-8601"]; v != nil {
+			startMapToReturn["iso_8601"] = v
+		}
+		if v := startMap["posix"]; v != nil {
+			startMapToReturn["posix"] = v
+		}
+		_ = d.Set("start", []interface{}{startMapToReturn})
+	}
+
+	if v := time["start-now"]; v != nil {
+		_ = d.Set("start_now", v)
+	}
+
+	if time["tags"] != nil {
+		tagsJson, ok := time["tags"].([]interface{})
+		if ok {
+			tagsIds := make([]string, 0)
+			if len(tagsJson) > 0 {
+				for _, tags := range tagsJson {
+					tags := tags.(map[string]interface{})
+					tagsIds = append(tagsIds, tags["name"].(string))
+				}
+			}
+			_ = d.Set("tags", tagsIds)
+		}
+	} else {
+		_ = d.Set("tags", nil)
+	}
+
+	if time["recurrence"] != nil {
+		endMap := time["recurrence"].(map[string]interface{})
+
+		endMapToReturn := make(map[string]interface{})
+
+		if v, _ := endMap["days"]; v != nil {
+			tagsJson, ok := endMap["days"].([]interface{})
+			if ok {
+				tagsIds := make([]string, 0)
+				if len(tagsJson) > 0 {
+					for _, tags := range tagsJson {
+						tagsIds = append(tagsIds, tags.(string))
+					}
+					endMapToReturn["days"] = tagsIds
+				}
+			}
+		}
+		if v, _ := endMap["month"]; v != nil {
+			endMapToReturn["month"] = v.(string)
+		}
+		if v, _ := endMap["pattern"]; v != nil {
+			endMapToReturn["pattern"] = v.(string)
+		}
+		if v, _ := endMap["weekdays"]; v != nil {
+			tagsJson, ok := endMap["weekdays"].([]interface{})
+			if ok {
+				tagsIds := make([]string, 0)
+				if len(tagsJson) > 0 {
+					for _, tags := range tagsJson {
+						tagsIds = append(tagsIds, tags.(string))
+					}
+					endMapToReturn["weekdays"] = tagsIds
+				}
+			}
+		}
+		if len(endMapToReturn) > 0 {
+			_ = d.Set("recurrence", []interface{}{endMapToReturn})
+		}
+	}
+
+	if v := time["color"]; v != nil {
+		_ = d.Set("color", v)
+	}
+
+	if v := time["comments"]; v != nil {
+		_ = d.Set("comments", v)
+	}
+
+	if v := time["ignore-warnings"]; v != nil {
+		_ = d.Set("ignore_warnings", v)
+	}
+
+	if v := time["ignore-errors"]; v != nil {
+		_ = d.Set("ignore_errors", v)
+	}
+
+	return nil
+
+}
+
+func updateManagementTime(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+	time := make(map[string]interface{})
+
+	if ok := d.HasChange("name"); ok {
+		oldName, newName := d.GetChange("name")
+		time["name"] = oldName
+		time["new-name"] = newName
+	} else {
+		time["name"] = d.Get("name")
+	}
+
+	if d.HasChange("end") {
+
+		if v, ok := d.GetOk("end"); ok {
+
+			endList := v.([]interface{})
+
+			if len(endList) > 0 {
+
+				endPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("end.0.date"); ok {
+					endPayload["date"] = v.(string)
+				}
+				if v, ok := d.GetOk("end.0.time"); ok {
+					endPayload["time"] = v.(string)
+				}
+				if len(endPayload) > 0 {
+					if v, ok := d.GetOk("end.0.iso_8601"); ok {
+						endPayload["iso-8601"] = v.(string)
+					}
+					if v, ok := d.GetOk("end.0.posix"); ok {
+						endPayload["posix"] = v.(int)
+					}
+					time["end"] = endPayload
+				}
+			}
+		}
+	}
+
+	if v, ok := d.GetOk("end_never"); ok {
+		time["end-never"] = v.(bool)
+	}
+
+	if d.HasChange("hours_ranges") {
+		var serversPayload []map[string]interface{}
+		defaultAmountOfRanges := 3
+		for i := 0; i < defaultAmountOfRanges; i++ {
+			serverPayload := make(map[string]interface{})
+			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".enabled"); ok {
+				serverPayload["enabled"] = v.(bool)
+			} else {
+				serverPayload["enabled"] = false
+			}
+			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".from"); ok {
+				serverPayload["from"] = v.(string)
+			} else {
+				serverPayload["from"] = "00:00"
+			}
+			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".index"); ok {
+				serverPayload["index"] = v.(int)
+			} else {
+				serverPayload["index"] = i + 1
+			}
+			if v, ok := d.GetOk("hours_ranges." + strconv.Itoa(i) + ".to"); ok {
+				serverPayload["to"] = v.(string)
+			} else {
+				serverPayload["to"] = "00:00"
+			}
+			serversPayload = append(serversPayload, serverPayload)
+		}
+		time["hours-ranges"] = serversPayload
+	}
+
+	if d.HasChange("start") {
+
+		if v, ok := d.GetOk("start"); ok {
+
+			startList := v.([]interface{})
+
+			if len(startList) > 0 {
+
+				startPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("start.0.date"); ok {
+					startPayload["date"] = v.(string)
+				}
+				if v, ok := d.GetOk("start.0.time"); ok {
+					startPayload["time"] = v.(string)
+				}
+				if len(startPayload) > 0 {
+					if v, ok := d.GetOk("start.0.iso_8601"); ok {
+						startPayload["iso-8601"] = v.(string)
+					}
+					if v, ok := d.GetOk("start.0.posix"); ok {
+						startPayload["posix"] = v.(int)
+					}
+					time["start"] = startPayload
+				}
+			}
+		}
+	}
+
+	if d.HasChange("start_now") {
+		time["start-now"] = d.Get("start_now")
+	}
+
+	if d.HasChange("recurrence") {
+		defaultRecurrenceMap := map[string]interface{}{
+			"pattern": "Daily",
+			"month":   "Any",
+		}
+		res := make(map[string]interface{})
+
+		if d.HasChange("recurrence.days") {
+			res["days"] = d.Get("recurrence.days")
+		} else {
+			res["days"] = nil
+		}
+		if d.HasChange("recurrence.month") {
+			res["month"] = d.Get("recurrence.month")
+		} else {
+			res["month"] = defaultRecurrenceMap["month"]
+		}
+		if d.HasChange("recurrence.pattern") {
+			res["pattern"] = d.Get("recurrence.pattern")
+		} else {
+			res["pattern"] = defaultRecurrenceMap["pattern"]
+		}
+		if d.HasChange("recurrence.weekdays") {
+			res["weekdays"] = d.Get("recurrence.weekdays")
+		} else {
+			res["weekdays"] = nil
+		}
+		time["recurrence"] = res
+	}
+
+	if d.HasChange("tags") {
+		if v, ok := d.GetOk("tags"); ok {
+			time["tags"] = v.(*schema.Set).List()
+		} else {
+			oldTags, _ := d.GetChange("tags")
+			time["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		}
+	}
+
+	if ok := d.HasChange("color"); ok {
+		time["color"] = d.Get("color")
+	}
+
+	if ok := d.HasChange("comments"); ok {
+		time["comments"] = d.Get("comments")
+	}
+
+	if v, ok := d.GetOk("ignore_warnings"); ok {
+		time["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("ignore_errors"); ok {
+		time["ignore-errors"] = v.(bool)
+	}
+
+	log.Println("Update Time - Map = ", time)
+
+	updateTimeRes, err := client.ApiCall("set-time", time, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !updateTimeRes.Success {
+		if updateTimeRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", updateTimeRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+
+	return readManagementTime(d, m)
+}
+
+func deleteManagementTime(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	timePayload := map[string]interface{}{
+		"uid": d.Id(),
+	}
+	if v, ok := d.GetOk("ignore_warnings"); ok {
+		timePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("ignore_errors"); ok {
+		timePayload["ignore-errors"] = v.(bool)
+	}
+	log.Println("Delete Time")
+
+	deleteTimeRes, err := client.ApiCall("delete-time", timePayload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !deleteTimeRes.Success {
+		if deleteTimeRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", deleteTimeRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+	d.SetId("")
+
+	return nil
+}

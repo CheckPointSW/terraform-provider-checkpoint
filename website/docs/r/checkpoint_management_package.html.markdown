@@ -1,0 +1,49 @@
+---
+layout: "checkpoint"
+page_title: "checkpoint_management_package "
+sidebar_current: "docs-checkpoint-resource-checkpoint-management-package"
+description: |-
+  This resource allows you to add/update/delete Check Point Package Object.
+---
+
+# Resource: checkpoint_management_package
+
+This resource allows you to add/update/delete Check Point Package Object.
+
+## Example Usage
+
+```hcl
+resource "checkpoint_management_package" "example" {
+  name = "New_Standard_Package_1"
+  comments = "My Comments"
+  color = "green"
+  threat_prevention = false
+  access = true
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `name` - (Required) Object name. Should be unique in the domain.
+* `access` - (Optional) True - enables, False - disables access & NAT policies, empty - nothing is changed.
+* `desktop_security` - (Optional) True - enables, False - disables Desktop security policy, empty - nothing is changed.
+* `installation_targets` - (Optional) Which Gateways identified by the name or UID to install the policy on. "[]" - Empty the list of specified Gateways on which to install the policy.
+* `access_layers` - (Optional) Access policy layers. Applied via `set-package` only (ignored on create).
+* `threat_layers` - (Optional) Threat policy layers. Applied via `set-package` only (ignored on create).
+* `https_inspection_layers` - (Optional) HTTPS inspection policy layers. Applied via `set-package` only (ignored on create). https_inspection_layers block is documented below
+* `qos` - (Optional) True - enables, False - disables QoS policy, empty - nothing is changed.
+* `qos_policy_type` - (Optional) QoS policy type.
+* `threat_prevention` - (Optional) True - enables, False - disables Threat policy, empty - nothing is changed.
+* `vpn_traditional_mode` - (Optional) True - enables, False - disables VPN traditional mode, empty - nothing is changed.
+* `color` - (Optional) Color of the object. Should be one of existing colors.
+* `ignore_warnings` - (Optional) Apply changes ignoring warnings.
+* `ignore_errors` - (Optional) Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.
+* `comments` - (Optional) Comments string.
+* `tags` - (Optional) Collection of tag identifiers.
+
+`https_inspection_layers` supports the following:
+
+* `inbound_https_layer` - (Optional) HTTPS inspection policy inbound layer identified by name or UID.
+* `outbound_https_layer` - (Optional) HTTPS inspection policy outbound layer identified by name or UID.

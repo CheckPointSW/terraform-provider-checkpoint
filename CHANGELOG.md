@@ -1,0 +1,1317 @@
+## 3.4.0 (September 16, 2026)
+
+ENHANCEMENTS
+* Add new fields to the following resources and data sources according to Management API v2.2:
+  * **Resource:** `checkpoint_management_access_layer`
+  * **Resource:** `checkpoint_management_access_rule`
+  * **Resource:** `checkpoint_management_application_site`
+  * **Resource:** `checkpoint_management_checkpoint_host`
+  * **Resource:** `checkpoint_management_command_check_threat_ioc_feed`
+  * **Resource:** `checkpoint_management_command_connect_cloud_services`
+  * **Resource:** `checkpoint_management_command_export_management`
+  * **Resource:** `checkpoint_management_command_import_management`
+  * **Resource:** `checkpoint_management_command_install_software_package`
+  * **Resource:** `checkpoint_management_command_reset_sic`
+  * **Resource:** `checkpoint_management_command_run_script`
+  * **Resource:** `checkpoint_management_command_set_automatic_purge`
+  * **Resource:** `checkpoint_management_command_set_gateway_global_use`
+  * **Resource:** `checkpoint_management_command_set_global_properties`
+  * **Resource:** `checkpoint_management_command_set_https_advanced_settings`
+  * **Resource:** `checkpoint_management_command_set_policy_settings`
+  * **Resource:** `checkpoint_management_command_test_sic_status`
+  * **Resource:** `checkpoint_management_command_test_trust`
+  * **Resource:** `checkpoint_management_command_verify_software_package`
+  * **Resource:** `checkpoint_management_command_where_used`
+  * **Resource:** `checkpoint_management_data_type_patterns`
+  * **Resource:** `checkpoint_management_domain_permissions_profile`
+  * **Resource:** `checkpoint_management_interoperable_device`
+  * **Resource:** `checkpoint_management_log_exporter`
+  * **Resource:** `checkpoint_management_md_permissions_profile`
+  * **Resource:** `checkpoint_management_outbound_inspection_certificate`
+  * **Resource:** `checkpoint_management_requirement`
+  * **Resource:** `checkpoint_management_service_other`
+  * **Resource:** `checkpoint_management_service_tcp`
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_threat_exception`
+  * **Resource:** `checkpoint_management_threat_ioc_feed`
+  * **Resource:** `checkpoint_management_threat_layer`
+  * **Resource:** `checkpoint_management_threat_profile`
+  * **Resource:** `checkpoint_management_threat_rule`
+  * **Resource:** `checkpoint_management_time`
+  * **Resource:** `checkpoint_management_trusted_client`
+  * **Resource:** `checkpoint_management_user`
+  * **Resource:** `checkpoint_management_user_template`
+  * **Resource:** `checkpoint_management_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_vpn_community_star`
+  * **Data Source:** `checkpoint_management_access_layer`
+  * **Data Source:** `checkpoint_management_access_role`
+  * **Data Source:** `checkpoint_management_access_rule`
+  * **Data Source:** `checkpoint_management_application_site`
+  * **Data Source:** `checkpoint_management_application_site_category`
+  * **Data Source:** `checkpoint_management_best_practice`
+  * **Data Source:** `checkpoint_management_checkpoint_host`
+  * **Data Source:** `checkpoint_management_cloud_services`
+  * **Data Source:** `checkpoint_management_cluster_member`
+  * **Data Source:** `checkpoint_management_data_type_file_type_attributes`
+  * **Data Source:** `checkpoint_management_data_type_patterns`
+  * **Data Source:** `checkpoint_management_domain`
+  * **Data Source:** `checkpoint_management_domain_permissions_profile`
+  * **Data Source:** `checkpoint_management_external_trusted_ca`
+  * **Data Source:** `checkpoint_management_gateway_capabilities`
+  * **Data Source:** `checkpoint_management_gateway_global_use`
+  * **Data Source:** `checkpoint_management_group`
+  * **Data Source:** `checkpoint_management_group_with_exclusion`
+  * **Data Source:** `checkpoint_management_host`
+  * **Data Source:** `checkpoint_management_https_advanced_settings`
+  * **Data Source:** `checkpoint_management_https_rule`
+  * **Data Source:** `checkpoint_management_interface`
+  * **Data Source:** `checkpoint_management_interoperable_device`
+  * **Data Source:** `checkpoint_management_log_exporter`
+  * **Data Source:** `checkpoint_management_lsm_cluster`
+  * **Data Source:** `checkpoint_management_lsm_cluster_profile`
+  * **Data Source:** `checkpoint_management_lsm_gateway`
+  * **Data Source:** `checkpoint_management_lsm_gateway_profile`
+  * **Data Source:** `checkpoint_management_md_permissions_profile`
+  * **Data Source:** `checkpoint_management_mds`
+  * **Data Source:** `checkpoint_management_nat_rule`
+  * **Data Source:** `checkpoint_management_network`
+  * **Data Source:** `checkpoint_management_opsec_application`
+  * **Data Source:** `checkpoint_management_outbound_inspection_certificate`
+  * **Data Source:** `checkpoint_management_override_categorization`
+  * **Data Source:** `checkpoint_management_package`
+  * **Data Source:** `checkpoint_management_policy_settings`
+  * **Data Source:** `checkpoint_management_resource_ftp`
+  * **Data Source:** `checkpoint_management_resource_smtp`
+  * **Data Source:** `checkpoint_management_resource_tcp`
+  * **Data Source:** `checkpoint_management_resource_uri`
+  * **Data Source:** `checkpoint_management_server_certificate`
+  * **Data Source:** `checkpoint_management_service_citrix_tcp`
+  * **Data Source:** `checkpoint_management_service_compound_tcp`
+  * **Data Source:** `checkpoint_management_service_group`
+  * **Data Source:** `checkpoint_management_service_other`
+  * **Data Source:** `checkpoint_management_service_tcp`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_subordinate_ca`
+  * **Data Source:** `checkpoint_management_tacacs_server`
+  * **Data Source:** `checkpoint_management_task`
+  * **Data Source:** `checkpoint_management_threat_indicator`
+  * **Data Source:** `checkpoint_management_threat_ioc_feed`
+  * **Data Source:** `checkpoint_management_threat_layer`
+  * **Data Source:** `checkpoint_management_threat_profile`
+  * **Data Source:** `checkpoint_management_threat_rule`
+  * **Data Source:** `checkpoint_management_trusted_client`
+  * **Data Source:** `checkpoint_management_user`
+  * **Data Source:** `checkpoint_management_user_template`
+  * **Data Source:** `checkpoint_management_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_vpn_community_star`
+* Mark credential fields as sensitive across resources and data sources
+
+DEPRECATED
+* **Field:** `encryption_algorithms` in `checkpoint_management_command_set_global_properties` - use `encryption.ike_phase_1` and `encryption.ike_phase_2` in `checkpoint_management_vpn_community_remote_access` instead
+* **Field:** `encryption_method` in `checkpoint_management_command_set_global_properties` - use `encryption.encryption_method` in `checkpoint_management_vpn_community_remote_access` instead
+* **Field:** `http_next_proxy_host` and `http_next_proxy_port` in `checkpoint_management_command_set_global_properties`
+* **Field:** `zero_phishing_fqdn` in `checkpoint_management_lsm_gateway_profile` and `checkpoint_management_lsm_cluster_profile` data sources
+
+## 3.3.1 (September 1, 2026)
+
+BUG FIXES
+* Fix `custom_header` field in `checkpoint_management_network_feed` resource
+* Fix `mask_length` field in `checkpoint_gaia_static_route` resource
+
+## 3.3.0 (July 30, 2026)
+
+FEATURES
+* **New Resource:** `checkpoint_management_checkpoint_sase_data_center_server`
+* **New Resource:** `checkpoint_management_claroty_ctd_data_center_server`
+* **New Resource:** `checkpoint_management_def_setting`
+* **New Resource:** `checkpoint_management_dlp_next_data_type`
+* **New Resource:** `checkpoint_management_export_access_rulebase`
+* **New Resource:** `checkpoint_management_firewall_best_practice`
+* **New Resource:** `checkpoint_management_guardicore_data_center_server`
+* **New Resource:** `checkpoint_management_guideline`
+* **New Resource:** `checkpoint_management_guideline_cell_approvals`
+* **New Resource:** `checkpoint_management_nozomi_data_center_server`
+* **New Resource:** `checkpoint_management_regulation`
+* **New Resource:** `checkpoint_management_requirement`
+* **New Resource:** `checkpoint_management_scheduled_event`
+* **New Resource:** `checkpoint_management_servicenow_cmdb_data_center_server`
+* **New Resource:** `checkpoint_management_set_cloud_license_gateway`
+* **New Resource:** `checkpoint_management_set_cloud_license_pool`
+* **New Resource:** `checkpoint_management_set_cloud_license_scope`
+* **New Resource:** `checkpoint_management_set_threat_emulation_file_type`
+* **New Resource:** `checkpoint_management_set_threat_emulation_file_types`
+* **New Resource:** `checkpoint_management_set_threat_extraction_file_type`
+* **New Resource:** `checkpoint_management_set_threat_extraction_file_types`
+* **New Resource:** `checkpoint_management_set_threat_protection_category`
+* **New Resource:** `checkpoint_management_set_threat_protection_sub_category`
+* **New Resource:** `checkpoint_management_test_ai_guard_api_key`
+* **New Resource:** `checkpoint_management_update_cloud_license`
+* **New Data Source:** `checkpoint_management_checkpoint_sase_data_center_server`
+* **New Data Source:** `checkpoint_management_claroty_ctd_data_center_server`
+* **New Data Source:** `checkpoint_management_cloud_license_gateway`
+* **New Data Source:** `checkpoint_management_cloud_license_pool`
+* **New Data Source:** `checkpoint_management_cloud_license_scope`
+* **New Data Source:** `checkpoint_management_def_setting`
+* **New Data Source:** `checkpoint_management_dlp_next_data_type`
+* **New Data Source:** `checkpoint_management_firewall_best_practice`
+* **New Data Source:** `checkpoint_management_guardicore_data_center_server`
+* **New Data Source:** `checkpoint_management_guideline`
+* **New Data Source:** `checkpoint_management_nozomi_data_center_server`
+* **New Data Source:** `checkpoint_management_regulation`
+* **New Data Source:** `checkpoint_management_requirement`
+* **New Data Source:** `checkpoint_management_scheduled_event`
+* **New Data Source:** `checkpoint_management_servicenow_cmdb_data_center_server`
+* **New Data Source:** `checkpoint_management_threat_emulation_file_type`
+* **New Data Source:** `checkpoint_management_threat_emulation_image`
+* **New Data Source:** `checkpoint_management_threat_extraction_file_type`
+* **New Data Source:** `checkpoint_management_threat_protection_category`
+* **New Data Source:** `checkpoint_management_threat_protection_sub_category`
+
+DEPRECATED
+* **Resource:** `checkpoint_hostname`
+* **Resource:** `checkpoint_physical_interface`
+* **Resource:** `checkpoint_put_file`
+
+BUG FIXES
+* Redact credential fields and restrict file permissions in the debug log written by the GAiA resources `debug` flag
+
+## 3.2.0 (June 14, 2026)
+
+ENHANCEMENTS
+* Add `additional_permission_profiles` field to `checkpoint_management_access_layer` resource and data source
+
+FEATURES
+* **New Resource:** `checkpoint_gaia_alias_interface`
+* **New Resource:** `checkpoint_gaia_allowed_clients`
+* **New Resource:** `checkpoint_gaia_arp`
+* **New Resource:** `checkpoint_gaia_authentication_order`
+* **New Resource:** `checkpoint_gaia_banner`
+* **New Resource:** `checkpoint_gaia_bgp_confederation_peer`
+* **New Resource:** `checkpoint_gaia_bgp_external_peer`
+* **New Resource:** `checkpoint_gaia_bgp_internal_peer`
+* **New Resource:** `checkpoint_gaia_bond_interface`
+* **New Resource:** `checkpoint_gaia_bridge_interface`
+* **New Resource:** `checkpoint_gaia_cluster_member`
+* **New Resource:** `checkpoint_gaia_custom_intelligence_feed`
+* **New Resource:** `checkpoint_gaia_custom_intelligence_interval`
+* **New Resource:** `checkpoint_gaia_dhcp6_config`
+* **New Resource:** `checkpoint_gaia_dhcp6_server`
+* **New Resource:** `checkpoint_gaia_dhcp_server`
+* **New Resource:** `checkpoint_gaia_dns`
+* **New Resource:** `checkpoint_gaia_expert_password`
+* **New Resource:** `checkpoint_gaia_fips`
+* **New Resource:** `checkpoint_gaia_gre_interface`
+* **New Resource:** `checkpoint_gaia_grub_password`
+* **New Resource:** `checkpoint_gaia_hostname`
+* **New Resource:** `checkpoint_gaia_hostname_on_login_page`
+* **New Resource:** `checkpoint_gaia_igmp_interface`
+* **New Resource:** `checkpoint_gaia_igmp_interface_local_group`
+* **New Resource:** `checkpoint_gaia_igmp_interface_static_group`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_bgp_policy`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_ospf2`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_ospf3`
+* **New Resource:** `checkpoint_gaia_inbound_route_filter_rip`
+* **New Resource:** `checkpoint_gaia_ipv6`
+* **New Resource:** `checkpoint_gaia_ipv6_pim_interface`
+* **New Resource:** `checkpoint_gaia_isis_interface`
+* **New Resource:** `checkpoint_gaia_keyboard_layout`
+* **New Resource:** `checkpoint_gaia_license`
+* **New Resource:** `checkpoint_gaia_lightshot`
+* **New Resource:** `checkpoint_gaia_lightshot_partition`
+* **New Resource:** `checkpoint_gaia_lldp`
+* **New Resource:** `checkpoint_gaia_loopback_interface`
+* **New Resource:** `checkpoint_gaia_maestro_gateway`
+* **New Resource:** `checkpoint_gaia_maestro_port`
+* **New Resource:** `checkpoint_gaia_maestro_security_group`
+* **New Resource:** `checkpoint_gaia_maestro_site`
+* **New Resource:** `checkpoint_gaia_management_interface`
+* **New Resource:** `checkpoint_gaia_mdps`
+* **New Resource:** `checkpoint_gaia_mdps_tasks`
+* **New Resource:** `checkpoint_gaia_message_of_the_day`
+* **New Resource:** `checkpoint_gaia_mld_interface`
+* **New Resource:** `checkpoint_gaia_mld_interface_local_group`
+* **New Resource:** `checkpoint_gaia_mld_interface_static_group`
+* **New Resource:** `checkpoint_gaia_nat_pool`
+* **New Resource:** `checkpoint_gaia_nfs_mount_point`
+* **New Resource:** `checkpoint_gaia_nfs_mount_settings`
+* **New Resource:** `checkpoint_gaia_ntp`
+* **New Resource:** `checkpoint_gaia_open_telemetry`
+* **New Resource:** `checkpoint_gaia_param`
+* **New Resource:** `checkpoint_gaia_password_policy`
+* **New Resource:** `checkpoint_gaia_pbr_rule`
+* **New Resource:** `checkpoint_gaia_pbr_table`
+* **New Resource:** `checkpoint_gaia_physical_interface`
+* **New Resource:** `checkpoint_gaia_pim_interface`
+* **New Resource:** `checkpoint_gaia_pppoe_interface`
+* **New Resource:** `checkpoint_gaia_proxy`
+* **New Resource:** `checkpoint_gaia_radius`
+* **New Resource:** `checkpoint_gaia_remote_syslog`
+* **New Resource:** `checkpoint_gaia_role`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_bgp_as`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_isis`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ospf2`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ospf3`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_rip`
+* **New Resource:** `checkpoint_gaia_route_redistribution_to_ripng`
+* **New Resource:** `checkpoint_gaia_routemap_id`
+* **New Resource:** `checkpoint_gaia_router_id`
+* **New Resource:** `checkpoint_gaia_scheduled_backup`
+* **New Resource:** `checkpoint_gaia_scheduled_job`
+* **New Resource:** `checkpoint_gaia_scheduled_job_mail`
+* **New Resource:** `checkpoint_gaia_scheduled_snapshot`
+* **New Resource:** `checkpoint_gaia_snmp`
+* **New Resource:** `checkpoint_gaia_snmp_custom_trap`
+* **New Resource:** `checkpoint_gaia_snmp_pre_defined_traps`
+* **New Resource:** `checkpoint_gaia_snmp_trap_receiver`
+* **New Resource:** `checkpoint_gaia_snmp_user`
+* **New Resource:** `checkpoint_gaia_ssh_server_settings`
+* **New Resource:** `checkpoint_gaia_static_mroute`
+* **New Resource:** `checkpoint_gaia_static_route`
+* **New Resource:** `checkpoint_gaia_syslog`
+* **New Resource:** `checkpoint_gaia_system_group`
+* **New Resource:** `checkpoint_gaia_tacacs`
+* **New Resource:** `checkpoint_gaia_time_and_date`
+* **New Resource:** `checkpoint_gaia_user`
+* **New Resource:** `checkpoint_gaia_virtual_gateway`
+* **New Resource:** `checkpoint_gaia_virtual_switch`
+* **New Resource:** `checkpoint_gaia_vlan_interface`
+* **New Resource:** `checkpoint_gaia_vxlan_interface`
+* **New Data Source:** `checkpoint_gaia_command_apply_maestro_security_groups_changes`
+* **New Data Source:** `checkpoint_gaia_command_discard_maestro_security_groups_changes`
+* **New Data Source:** `checkpoint_gaia_command_get_file`
+* **New Data Source:** `checkpoint_gaia_command_keepalive`
+* **New Data Source:** `checkpoint_gaia_command_login`
+* **New Data Source:** `checkpoint_gaia_command_logout`
+* **New Data Source:** `checkpoint_gaia_command_put_file`
+* **New Data Source:** `checkpoint_gaia_command_run_reboot`
+* **New Data Source:** `checkpoint_gaia_command_run_script`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_confederation`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_external`
+* **New Data Source:** `checkpoint_gaia_command_set_bgp_internal`
+* **New Data Source:** `checkpoint_gaia_command_set_dynamic_content`
+* **New Data Source:** `checkpoint_gaia_command_set_initial_setup`
+* **New Data Source:** `checkpoint_gaia_command_set_ipv6_pim`
+* **New Data Source:** `checkpoint_gaia_command_set_isis`
+* **New Data Source:** `checkpoint_gaia_command_set_pbr_table_static_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_set_pim`
+* **New Data Source:** `checkpoint_gaia_command_set_snmp_session`
+* **New Data Source:** `checkpoint_gaia_command_set_static_mroute_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_set_static_route_next_hop_priority`
+* **New Data Source:** `checkpoint_gaia_command_simulate_packet`
+* **New Data Source:** `checkpoint_gaia_show_alias_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_api_versions`
+* **New Data Source:** `checkpoint_gaia_show_asset`
+* **New Data Source:** `checkpoint_gaia_show_bgp_errors`
+* **New Data Source:** `checkpoint_gaia_show_bgp_groups`
+* **New Data Source:** `checkpoint_gaia_show_bgp_paths`
+* **New Data Source:** `checkpoint_gaia_show_bgp_peer`
+* **New Data Source:** `checkpoint_gaia_show_bgp_peers`
+* **New Data Source:** `checkpoint_gaia_show_bgp_route_in`
+* **New Data Source:** `checkpoint_gaia_show_bgp_route_out`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routemaps`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routes_in`
+* **New Data Source:** `checkpoint_gaia_show_bgp_routes_out`
+* **New Data Source:** `checkpoint_gaia_show_bgp_stats`
+* **New Data Source:** `checkpoint_gaia_show_bgp_summary`
+* **New Data Source:** `checkpoint_gaia_show_bond_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_bootp_interface`
+* **New Data Source:** `checkpoint_gaia_show_bootp_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_bootp_stats`
+* **New Data Source:** `checkpoint_gaia_show_bridge_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_cluster_members`
+* **New Data Source:** `checkpoint_gaia_show_cluster_state`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_confederation_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_external_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal_peer`
+* **New Data Source:** `checkpoint_gaia_show_configuration_bgp_internal_peers`
+* **New Data Source:** `checkpoint_gaia_show_configuration_ipv6_pim`
+* **New Data Source:** `checkpoint_gaia_show_configuration_isis`
+* **New Data Source:** `checkpoint_gaia_show_configuration_pim`
+* **New Data Source:** `checkpoint_gaia_show_connections`
+* **New Data Source:** `checkpoint_gaia_show_connections_presets`
+* **New Data Source:** `checkpoint_gaia_show_custom_intelligence_feeds`
+* **New Data Source:** `checkpoint_gaia_show_diagnostics`
+* **New Data Source:** `checkpoint_gaia_show_diagnostics_topics`
+* **New Data Source:** `checkpoint_gaia_show_dynamic_layer`
+* **New Data Source:** `checkpoint_gaia_show_dynamic_layers`
+* **New Data Source:** `checkpoint_gaia_show_extended_commands`
+* **New Data Source:** `checkpoint_gaia_show_features`
+* **New Data Source:** `checkpoint_gaia_show_gre_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_igmp_groups`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interface_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_igmp_interfaces_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_stats`
+* **New Data Source:** `checkpoint_gaia_show_igmp_summary`
+* **New Data Source:** `checkpoint_gaia_show_interface`
+* **New Data Source:** `checkpoint_gaia_show_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_interfaces_by_type`
+* **New Data Source:** `checkpoint_gaia_show_ip_conflicts`
+* **New Data Source:** `checkpoint_gaia_show_ip_conflicts_configuration`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_bootstrap`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_candidate_rp`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_group_rp_mapping`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_joins`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_memory`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_rps`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_sparse_mode_stats`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_stats`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_summary`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_timers`
+* **New Data Source:** `checkpoint_gaia_show_ipv6_pim_virtual_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_isis_database`
+* **New Data Source:** `checkpoint_gaia_show_isis_errors`
+* **New Data Source:** `checkpoint_gaia_show_isis_hostnames`
+* **New Data Source:** `checkpoint_gaia_show_isis_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_isis_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_isis_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_isis_packets`
+* **New Data Source:** `checkpoint_gaia_show_isis_summary`
+* **New Data Source:** `checkpoint_gaia_show_isis_topology`
+* **New Data Source:** `checkpoint_gaia_show_licenses`
+* **New Data Source:** `checkpoint_gaia_show_lightshots`
+* **New Data Source:** `checkpoint_gaia_show_loopback_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_maestro_gateways`
+* **New Data Source:** `checkpoint_gaia_show_maestro_ports`
+* **New Data Source:** `checkpoint_gaia_show_maestro_security_groups`
+* **New Data Source:** `checkpoint_gaia_show_maestro_sites`
+* **New Data Source:** `checkpoint_gaia_show_mld_groups`
+* **New Data Source:** `checkpoint_gaia_show_mld_interface_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_mld_interfaces_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_stats`
+* **New Data Source:** `checkpoint_gaia_show_mld_summary`
+* **New Data Source:** `checkpoint_gaia_show_nat_pools`
+* **New Data Source:** `checkpoint_gaia_show_nfs_mount_points`
+* **New Data Source:** `checkpoint_gaia_show_ospf_border_routers`
+* **New Data Source:** `checkpoint_gaia_show_ospf_database`
+* **New Data Source:** `checkpoint_gaia_show_ospf_errors`
+* **New Data Source:** `checkpoint_gaia_show_ospf_events`
+* **New Data Source:** `checkpoint_gaia_show_ospf_interface`
+* **New Data Source:** `checkpoint_gaia_show_ospf_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_ospf_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_ospf_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_ospf_packets`
+* **New Data Source:** `checkpoint_gaia_show_ospf_routemap`
+* **New Data Source:** `checkpoint_gaia_show_ospf_summary`
+* **New Data Source:** `checkpoint_gaia_show_pbr_rules`
+* **New Data Source:** `checkpoint_gaia_show_pbr_tables`
+* **New Data Source:** `checkpoint_gaia_show_physical_interface_xcvr`
+* **New Data Source:** `checkpoint_gaia_show_physical_interface_xcvr_detail`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces_xcvr`
+* **New Data Source:** `checkpoint_gaia_show_physical_interfaces_xcvr_detail`
+* **New Data Source:** `checkpoint_gaia_show_pim_bootstrap`
+* **New Data Source:** `checkpoint_gaia_show_pim_candidate_rp`
+* **New Data Source:** `checkpoint_gaia_show_pim_group_rp_mapping`
+* **New Data Source:** `checkpoint_gaia_show_pim_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_pim_joins`
+* **New Data Source:** `checkpoint_gaia_show_pim_memory`
+* **New Data Source:** `checkpoint_gaia_show_pim_neighbor`
+* **New Data Source:** `checkpoint_gaia_show_pim_neighbors`
+* **New Data Source:** `checkpoint_gaia_show_pim_rps`
+* **New Data Source:** `checkpoint_gaia_show_pim_sparse_mode_stats`
+* **New Data Source:** `checkpoint_gaia_show_pim_stats`
+* **New Data Source:** `checkpoint_gaia_show_pim_summary`
+* **New Data Source:** `checkpoint_gaia_show_pim_timers`
+* **New Data Source:** `checkpoint_gaia_show_pim_virtual_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_pppoe_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_remote_syslogs`
+* **New Data Source:** `checkpoint_gaia_show_roles`
+* **New Data Source:** `checkpoint_gaia_show_routemaps`
+* **New Data Source:** `checkpoint_gaia_show_routes`
+* **New Data Source:** `checkpoint_gaia_show_routes_aggregate`
+* **New Data Source:** `checkpoint_gaia_show_routes_bgp`
+* **New Data Source:** `checkpoint_gaia_show_routes_direct`
+* **New Data Source:** `checkpoint_gaia_show_routes_kernel`
+* **New Data Source:** `checkpoint_gaia_show_routes_ospf`
+* **New Data Source:** `checkpoint_gaia_show_routes_rip`
+* **New Data Source:** `checkpoint_gaia_show_routes_static`
+* **New Data Source:** `checkpoint_gaia_show_serial_number`
+* **New Data Source:** `checkpoint_gaia_show_snmp_custom_traps`
+* **New Data Source:** `checkpoint_gaia_show_snmp_oid`
+* **New Data Source:** `checkpoint_gaia_show_snmp_trap_receivers`
+* **New Data Source:** `checkpoint_gaia_show_snmp_users`
+* **New Data Source:** `checkpoint_gaia_show_static_mroutes`
+* **New Data Source:** `checkpoint_gaia_show_static_routes`
+* **New Data Source:** `checkpoint_gaia_show_statistics`
+* **New Data Source:** `checkpoint_gaia_show_statistics_info`
+* **New Data Source:** `checkpoint_gaia_show_statistics_view_info`
+* **New Data Source:** `checkpoint_gaia_show_system_groups`
+* **New Data Source:** `checkpoint_gaia_show_task`
+* **New Data Source:** `checkpoint_gaia_show_timezones`
+* **New Data Source:** `checkpoint_gaia_show_users`
+* **New Data Source:** `checkpoint_gaia_show_version`
+* **New Data Source:** `checkpoint_gaia_show_virtual_gateways`
+* **New Data Source:** `checkpoint_gaia_show_virtual_switches`
+* **New Data Source:** `checkpoint_gaia_show_virtual_systems`
+* **New Data Source:** `checkpoint_gaia_show_vlan_interfaces`
+* **New Data Source:** `checkpoint_gaia_show_vsnext_state`
+* **New Data Source:** `checkpoint_gaia_show_vxlan_interfaces`
+* **New Resource:** `checkpoint_management_literal`
+
+## 3.1.0 (May 26, 2026)
+
+ENHANCEMENTS
+* Add `access_layers`, `threat_layers` and `https_inspection_layers` fields to `checkpoint_management_package` resource and data source
+* Add `layer_type` field to `checkpoint_management_https_layer` resource and data source
+* Update documentation HCL examples to v2 block syntax following the SDK v2 migration
+
+FEATURES
+* **New Resource:** `checkpoint_management_illumio_data_center_server`
+* **New Data Source:** `checkpoint_management_illumio_data_center_server`
+
+BUG FIXES
+* Fix `installation_targets` empty list handling in `checkpoint_management_package` resource
+
+## 3.0.0 (March 29, 2026)
+
+ENHANCEMENTS
+* **Terraform Plugin SDK upgrade from v1.17.0 to v2.34.0** — aligning the provider with the current Terraform ecosystem and enabling compatibility with the latest Terraform versions
+* State upgraders added to all resources to ensure seamless migration of existing Terraform state files
+
+BREAKING CHANGES
+* **Schema migration from TypeMap to TypeList (MaxItems: 1)** — structured map fields have been migrated to block-style syntax. The `=` sign must be removed from these fields in existing configurations:
+  ```
+  # Before (v2.x)
+  nat_settings = {
+    auto_rule = true
+    method    = "hide"
+  }
+
+  # After (v3.0.0)
+  nat_settings {
+    auto_rule = true
+    method    = "hide"
+  }
+  ```
+
+BUG FIXES
+* Fix `checkpoint_management_azure_ad` resource when authentication method is set to "service-principal-authentication"
+* General bug fixes across all provider resources and data sources following the SDK v2 migration
+
+## 2.12.0 (November 10, 2025)
+
+ENHANCEMENTS
+* Add `timeout` field to run script resource
+* Add new fields to the following resources and data sources according to Management API v2.0.1:
+  * **Resource:** `checkpoint_management_simple_cluster`
+  * **Resource:** `checkpoint_management_simple_gateway`
+  * **Resource:** `checkpoint_management_data_vpn_community_meshed`
+  * **Resource:** `checkpoint_management_vpn_community_remote_access`
+  * **Resource:** `checkpoint_management_data_vpn_community_star`
+  * **Data Source:** `checkpoint_management_data_package`
+  * **Data Source:** `checkpoint_management_simple_cluster`
+  * **Data Source:** `checkpoint_management_simple_gateway`
+  * **Data Source:** `checkpoint_management_data_vpn_community_meshed`
+  * **Data Source:** `checkpoint_management_vpn_community_remote_access`
+  * **Data Source:** `checkpoint_management_data_vpn_community_star`
+
+FEATURES
+* **New Resource:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Resource:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Resource:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Resource:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Resource:** `checkpoint_management_subordinate_ca`
+* **New Resource:** `checkpoint_management_set_smart_console_idle_timeout`
+* **New Resource:** `checkpoint_management_set_login_restrictions`
+* **New Resource:** `checkpoint_management_logical_server`
+* **New Resource:** `checkpoint_management_renew_scaled_sharing_server_certificate`
+* **New Resource:** `checkpoint_management_set_default_administrator_settings`
+* **New Resource:** `checkpoint_management_compliance_scan`
+* **New Resource:** `checkpoint_management_set_cp_password_requirements`
+* **New Resource:** `checkpoint_management_change_password_on_next_login`
+* **New Data Source:** `checkpoint_management_voip_domain_sip_proxy`
+* **New Data Source:** `checkpoint_management_voip_domain_sccp_call_manager`
+* **New Data Source:** `checkpoint_management_voip_domain_mgcp_call_agent`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gateway`
+* **New Data Source:** `checkpoint_management_voip_domain_h323_gatekeeper`
+* **New Data Source:** `checkpoint_management_subordinate_ca`
+* **New Data Source:** `checkpoint_management_smart_console_idle_timeout`
+* **New Data Source:** `checkpoint_management_login_restrictions`
+* **New Data Source:** `checkpoint_management_logical_server`
+* **New Data Source:** `checkpoint_management_default_administrator_settings`
+* **New Data Source:** `checkpoint_management_cp_password_requirements`
+* **New Data Source:** `checkpoint_management_best_practice`
+
+BUG FIXES
+* Fix `enabled` field in `checkpoint_management_access_rule` resource
+* Fix `task_id` field in `checkpoint_management_repository_package` data source
+
+## 2.11.0 (September 3, 2025)
+
+ENHANCEMENTS
+* Use GO SDK v1.9.0
+* Use CME v1.3.1
+* Add new fields to `checkpoint_management_threat_profile`
+
+FEATURES
+* **New Resource:** `checkpoint_management_syslog_server`
+* **New Resource:** `checkpoint_management_securid_server`
+* **New Resource:** `checkpoint_management_securemote_dns_server`
+* **New Resource:** `checkpoint_management_resource_uri_for_qos`
+* **New Resource:** `checkpoint_management_resource_tcp`
+* **New Resource:** `checkpoint_management_resource_mms`
+* **New Resource:** `checkpoint_management_log_exporter`
+* **New Resource:** `checkpoint_management_ldap_group`
+* **New Resource:** `checkpoint_management_identity_provider`
+* **New Resource:** `checkpoint_management_if_map_server`
+* **New Resource:** `checkpoint_management_set_anti_malware_update_schedule`
+* **New Resource:** `checkpoint_management_set_app_control_update_schedule`
+* **New Resource:** `checkpoint_management_run_app_control_update`
+* **New Resource:** `checkpoint_management_set_sync_with_user_center`
+* **New Data Source:** `checkpoint_management_hosts`
+* **New Data Source:** `checkpoint_management_networks`
+* **New Data Source:** `checkpoint_management_services_tcp`
+* **New Data Source:** `checkpoint_management_services_udp`
+* **New Data Source:** `checkpoint_management_syslog_server`
+* **New Data Source:** `checkpoint_management_securid_server`
+* **New Data Source:** `checkpoint_management_securemote_dns_server`
+* **New Data Source:** `checkpoint_management_resource_uri_for_qos`
+* **New Data Source:** `checkpoint_management_resource_tcp`
+* **New Data Source:** `checkpoint_management_resource_mms`
+* **New Data Source:** `checkpoint_management_log_exporter`
+* **New Data Source:** `checkpoint_management_ldap_group`
+* **New Data Source:** `checkpoint_management_identity_provider`
+* **New Data Source:** `checkpoint_management_if_map_server`
+* **New Data Source:** `checkpoint_management_anti_malware_update_schedule`
+* **New Data Source:** `checkpoint_management_app_control_status`
+* **New Data Source:** `checkpoint_management_app_control_update_schedule`
+* **New Data Source:** `checkpoint_management_sync_with_user_center`
+
+## 2.10.0 (May 29, 2025)
+
+ENHANCEMENTS
+* Add new field with JSON response to `checkpoint_management_task`, `checkpoint_management_show_objects` and `checkpoint_management_run_script`
+* Update API calls will not send null values or undefined fields in `checkpoint_management_simple_cluster`, `checkpoint_management_simple_gateway`, `checkpoint_management_host`, `checkpoint_management_network`, `checkpoint_management_service_tcp` and `checkpoint_management_service_udp`
+
+BUG FIXES
+* Fix `checkpoint_management_https_rule` resource
+* Fix `checkpoint_management_install_policy` resource
+
+## 2.9.0 (February 10, 2025)
+
+ENHANCEMENTS
+* Add support to CME API v1.2.2
+* Use GO SDK v1.8.0
+* Add support to ignore fingerprint check using `ignore_server_certificate` or via environment variable `CHECKPOINT_IGNORE_SERVER_CERTIFICATE`
+* Add support to wait for data center object to sync with the management server using `wait_for_object_sync` flag
+
+BUG FIXES
+* Fix bug in remove dynamic objects from `lsm-gateway` or `lsm-cluster`
+
+## 2.8.1 (November 10, 2024)
+
+FEATURES
+* **New Resource:** `checkpoint_generic_api`
+
+BUG FIXES
+* Fix bug in resource `resource_checkpoint_management_command_gaia_api`
+
+## 2.8.0 (September 30, 2024)
+
+FEATURES
+* **New Resource:** `checkpoint_management_vsx_provisioning_tool`
+* **New Resource:** `checkpoint_management_outbound_inspection_certificate`
+* **New Resource:** `checkpoint_management_add_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_delete_custom_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_run_trusted_ca_update`
+* **New Resource:** `checkpoint_management_set_gateway_global_use`
+* **New Resource:** `checkpoint_management_set_https_advanced_settings`
+* **New Resource:** `checkpoint_management_delete_infinity_idp_object`
+* **New Resource:** `checkpoint_management_delete_infinity_idp`
+* **New Resource:** `checkpoint_management_mobile_access_section`
+* **New Resource:** `checkpoint_management_mobile_access_rule`
+* **New Resource:** `checkpoint_management_mobile_access_profile_section`
+* **New Resource:** `checkpoint_management_mobile_access_profile_rule`
+* **New Resource:** `checkpoint_management_network_probe`
+* **New Resource:** `checkpoint_management_override_categorization`
+* **New Resource:** `checkpoint_management_interface`
+* **New Resource:** `checkpoint_management_resource_smtp`
+* **New Resource:** `checkpoint_management_resource_uri`
+* **New Resource:** `checkpoint_management_resource_ftp`
+* **New Resource:** `checkpoint_management_resource_cifs`
+* **New Resource:** `checkpoint_management_mobile_profile`
+* **New Resource:** `checkpoint_management_passcode_profile`
+* **New Resource:** `checkpoint_management_command_set_app_control_advanced_settings`
+* **New Resource:** `checkpoint_management_command_set_cp_trusted_ca_certificate`
+* **New Resource:** `checkpoint_management_command_set_trusted_ca_settings`
+* **New Resource:** `checkpoint_management_command_set_internal_trusted_ca`
+* **New Resource:** `checkpoint_management_external_trusted_ca`
+* **New Resource:** `checkpoint_management_opsec_trusted_ca`
+* **New Resource:** `checkpoint_management_multiple_key_exchanges`
+* **New Resource:** `checkpoint_management_limit`
+* **New Resource:** `checkpoint_management_command_set_content_awareness_advanced_settings`
+* **New Resource:** `checkpoint_management_data_type_keywords`
+* **New Resource:** `checkpoint_management_data_type_weighted_keywords`
+* **New Resource:** `checkpoint_management_data_type_patterns`
+* **New Resource:** `checkpoint_management_data_type_file_attributes`
+* **New Resource:** `checkpoint_management_data_type_group`
+* **New Resource:** `checkpoint_management_data_type_traditional_group`
+* **New Resource:** `checkpoint_management_data_type_compound_group`
+* **New Data Source:** `checkpoint_management_custom_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_outbound_inspection_certificate`
+* **New Data Source:** `checkpoint_management_gateway_global_use`
+* **New Data Source:** `checkpoint_management_https_advanced_settings`
+* **New Data Source:** `checkpoint_management_gateway_capabilities`
+* **New Data Source:** `checkpoint_management_infinity_idp_object`
+* **New Data Source:** `checkpoint_management_infinity_idp`
+* **New Data Source:** `checkpoint_management_mobile_access_section`
+* **New Data Source:** `checkpoint_management_mobile_access_rule`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_section`
+* **New Data Source:** `checkpoint_management_mobile_access_profile_rule`
+* **New Data Source:** `checkpoint_management_network_probe`
+* **New Data Source:** `checkpoint_management_override_categorization`
+* **New Data Source:** `checkpoint_management_interface`
+* **New Data Source:** `checkpoint_management_resource_smtp`
+* **New Data Source:** `checkpoint_management_resource_uri`
+* **New Data Source:** `checkpoint_management_resource_ftp`
+* **New Data Source:** `checkpoint_management_resource_cifs`
+* **New Data Source:** `checkpoint_management_mobile_profile`
+* **New Data Source:** `checkpoint_management_passcode_profile`
+* **New Data Source:** `checkpoint_management_app_control_advanced_settings`
+* **New Data Source:** `checkpoint_management_cp_trusted_ca_certificate`
+* **New Data Source:** `checkpoint_management_trusted_ca_settings`
+* **New Data Source:** `checkpoint_management_internal_trusted_ca`
+* **New Data Source:** `checkpoint_management_external_trusted_ca`
+* **New Data Source:** `checkpoint_management_opsec_trusted_ca`
+* **New Data Source:** `checkpoint_management_multiple_key_exchanges`
+* **New Data Source:** `checkpoint_management_limit`
+* **New Data Source:** `checkpoint_management_content_awareness_advanced_settings`
+* **New Data Source:** `checkpoint_management_data_type_keywords`
+* **New Data Source:** `checkpoint_management_data_type_weighted_keywords`
+* **New Data Source:** `checkpoint_management_data_type_patterns`
+* **New Data Source:** `checkpoint_management_data_type_file_attributes`
+* **New Data Source:** `checkpoint_management_data_type_group`
+* **New Data Source:** `checkpoint_management_data_type_traditional_group`
+* **New Data Source:** `checkpoint_management_data_type_compound_group`
+
+ENHANCEMENTS
+* Add support to CME API v1.2
+* Use GO SDK v1.7.2
+
+BUG FIXES
+* Add support to manage VPN communities in `resource_checkpoint_management_access_rule` by using new fields `vpn_communities` and `vpn_directional`
+
+
+## 2.7.0 (February 19, 2024)
+
+FEATURES
+* **New Resource:** `checkpoint_management_cme_accounts_aws`
+* **New Resource:** `checkpoint_management_cme_accounts_azure`
+* **New Resource:** `checkpoint_management_cme_accounts_gcp`
+* **New Resource:** `checkpoint_management_cme_gw_configurations_aws`
+* **New Resource:** `checkpoint_management_cme_gw_configurations_azure`
+* **New Resource:** `checkpoint_management_cme_gw_configurations_gcp`
+* **New Resource:** `checkpoint_management_cme_management`
+* **New Resource:** `checkpoint_management_cme_delay_cycle`
+* **New Resource:** `checkpoint_management_data_center_object`
+* **New Data Source:** `checkpoint_management_cme_accounts_aws`
+* **New Data Source:** `checkpoint_management_cme_accounts_azure`
+* **New Data Source:** `checkpoint_management_cme_accounts_gcp`
+* **New Data Source:** `checkpoint_management_cme_accounts`
+* **New Data Source:** `checkpoint_management_cme_gw_configurations_aws`
+* **New Data Source:** `checkpoint_management_cme_gw_configurations_azure`
+* **New Data Source:** `checkpoint_management_cme_gw_configurations_gcp`
+* **New Data Source:** `checkpoint_management_cme_gw_configurations`
+* **New Data Source:** `checkpoint_management_cme_management`
+* **New Data Source:** `checkpoint_management_cme_delay_cycle`
+* **New Data Source:** `checkpoint_management_cme_version`
+* **New Data Source:** `checkpoint_management_cme_api_versions`
+* **New Data Source:** `checkpoint_management_data_center_object`
+
+DEPRECATED
+* **Resource:** `resource_checkpoint_management_command_add_data_center_object`
+* **Resource:** `resource_checkpoint_management_command_delete_data_center_object`
+
+BUG FIXES
+* Fix bug in `action` field in `resource_checkpoint_management_access_rule` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/165)
+* Fix bug in `method` field in `resource_checkpoint_management_nat_rule` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/163)
+* Fix bug in `fetch_policy` field in `resource_checkpoint_management_simple_gateway` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/161)
+
+ENHANCEMENTS
+* Add `geo_mode` field in `resource_checkpoint_management_simple_cluster` and `data_source_checkpoint_management_simple_cluster` (https://github.com/CheckPointSW/terraform-provider-checkpoint/issues/157)
+* Add `ForceNew: true` attribute to `layer` field in `resource_checkpoint_management_access_rule` that when the `layer` changes it will first destroy rule and then recreate the resource on a new layer (https://github.com/CheckPointSW/terraform-provider-checkpoint/pull/80)
+* Increase Go SDK default timeout to `120`
+* Use Go SDK v1.7.1
+
+## 2.6.0 (August 14, 2023)
+
+FEATURES
+* **New Resource:** `resouce_checkpoint_management_lsm_gateway`
+* **New Resource:** `resouce_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_lsm_gateway`
+* **New Data Source:** `data_source_checkpoint_management_lsm_cluster`
+* **New Data Source:** `data_source_checkpoint_management_updatable_object`
+
+BUG FIXES
+* Fix data source `checkpoint_management_show_updatable_objects_repository_content`  
+
+ENHANCEMENTS
+* Add new flag `run_publish_on_destroy`to `checkpoint_management_publish` which indicates whether to run publish on destroy.
+
+## 2.5.1 (June 18, 2023)
+
+BUG FIXES
+* Fix issue in `resource_checkpoint_management_simple_cluster`.
+* Fix issue in `resource_checkpoint_management_aws_data_center_server`.
+
+## 2.5.0 (June 15, 2023)
+
+FEATURES
+* **New Resource:** `resouce_checkpoint_management_service_gtp`
+* **New Resource:** `resouce_checkpoint_management_smart_task`
+* **New Resource:** `resouce_checkpoint_management_server_certificate`
+* **New Data Source:** `data_source_checkpoint_management_threat_rule_exception_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_smart_task`
+* **New Data Source:** `data_source_checkpoint_management_service_gtp`
+* **New Data Source:** `data_source_checkpoint_management_server_certificate`
+
+ENHANCEMENTS
+* Add support to auto publish mode using `auto_publish_batch_size` or via the `CHECKPOINT_AUTO_PUBLISH_BATCH_SIZE` environment variable to configure the number of batch size to automatically run publish.
+
+BUG FIXES
+* Fix issue in `fetch_policy` field in the read function of `checkpoint_management_simple_cluster` resource and data source.
+* Fix issue in `applied_threat_rules` field in `checkpoint_management_exception_group` update function.
+* Add the `ignore_warnings` and `ignore_errors` flags to multiple resources if they were missing.
+
+## 2.4.0 (May 4, 2023)
+
+ENHANCEMENTS
+* Add support to set session timeout using `session_timeout` or via the `CHECKPOINT_SESSION_TIMEOUT` environment variable.
+* Add `verify-policy` post apply script.
+
+BUG FIXES
+* Fix `user_check` field in `resource_checkpoint_management_access_rule`.
+* Fix `sts_external_id` field in `resource_checkpoint_management_aws_data_center_server`.
+
+## 2.3.0 (December 18, 2022)
+
+FEATURES
+* **New Resource:** `resource_checkpoint_management_gaia_best_practice`
+* **New Resource:** `resource_checkpoint_management_dynamic_global_network_object`
+* **New Resource:** `resource_checkpoint_management_global_assignment`
+* **New Data Source:** `data_source_checkpoint_management_gaia_best_practice`
+* **New Data Source:** `data_source_checkpoint_management_dynamic_global_network_object`
+* **New Data Source:** `data_source_checkpoint_management_global_assignment`
+
+ENHANCEMENTS
+* Add support to new fields `tenant_id` and `gateways_onboarding_settings` in `data_source_checkpoint_management_cloud_services`.
+* Add Tips & Best Practices section in provider documentation.
+
+BUG FIXES
+* Fix bugs in VPN resources, `resource_checkpoint_management_exception_group`, `resource_checkpoint_management_threat_exception`.
+
+## 2.2.0 (November 8, 2022)
+
+FEATURES
+* **New Resource:** `resource_checkpoint_management_administrator`
+* **New Resource:** `resource_checkpoint_management_azure_ad`
+* **New Resource:** `resource_checkpoint_management_lsv_profile`
+* **New Resource:** `resource_checkpoint_management_tacacs_group`
+* **New Resource:** `resource_checkpoint_management_tacacs_server`
+* **New Resource:** `resource_checkpoint_management_tag`
+* **New Resource:** `resource_checkpoint_management_threat_layer`
+* **New Resource:** `resource_checkpoint_management_nutanix_data_center_server`
+* **New Resource:** `resource_checkpoint_management_oracle_cloud_data_center_server`
+* **New Resource:** `resource_checkpoint_management_radius_server`
+* **New Resource:** `resource_checkpoint_management_radius_group`
+* **New Data Source:** `data_source_checkpoint_management_administrator`
+* **New Data Source:** `data_source_checkpoint_management_azure_ad`
+* **New Data Source:** `data_source_checkpoint_management_azure_ad_content`
+* **New Data Source:** `data_source_checkpoint_management_lsv_profile`
+* **New Data Source:** `data_source_checkpoint_management_tacacs_group`
+* **New Data Source:** `data_source_checkpoint_management_tacacs_server`
+* **New Data Source:** `data_source_checkpoint_management_tag`
+* **New Data Source:** `data_source_checkpoint_management_threat_layer`
+* **New Data Source:** `data_source_checkpoint_management_nutanix_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_oracle_cloud_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_radius_server`
+* **New Data Source:** `data_source_checkpoint_management_radius_group`
+
+ENHANCEMENTS
+* Add support to new parameters of `checkpoint_management_simple_gateway`, `checkpoint_management_simple_cluster` from API V1.9.
+* Add support to set session description using `session_description` or via environment variable `CHECKPOINT_SESSION_DESCRIPTION`.
+
+## 2.1.0 (September 20, 2022)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_command_get_interfaces`
+* **New Resource:** `resource_checkpoint_management_command_abort_get_interfaces`
+* **New Resource:** `resource_checkpoint_management_command_export_management`
+* **New Resource:** `resource_checkpoint_management_command_import_management`
+* **New Resource:** `resource_checkpoint_management_command_export_smart_task`
+* **New Resource:** `resource_checkpoint_management_command_import_smart_task`
+* **New Resource:** `resource_checkpoint_management_command_gaia_api`
+* **New Resource:** `resource_checkpoint_management_command_lock_object`
+* **New Resource:** `resource_checkpoint_management_command_unlock_object`
+* **New Resource:** `resource_checkpoint_management_command_login_to_domain`
+* **New Resource:** `resource_checkpoint_management_command_vsx_run_operation`
+* **New Resource:** `resource_checkpoint_management_command_set_policy_settings`
+* **New Resource:** `resource_checkpoint_management_command_set_threat_advanced_settings`
+* **New Resource:** `resource_checkpoint_management_command_set_global_properties`
+* **New Data Source:** `data_source_checkpoint_management_task`
+* **New Data Source:** `data_source_checkpoint_management_global_domain`
+* **New Data Source:** `data_source_checkpoint_management_automatic_purge`
+* **New Data Source:** `data_source_checkpoint_management_objects`
+* **New Data Source:** `data_source_checkpoint_management_login_message`
+* **New Data Source:** `data_source_checkpoint_management_threat_advanced_settings`
+* **New Data Source:** `data_source_checkpoint_management_policy_settings`
+* **New Data Source:** `data_source_checkpoint_management_ips_protection_extended_attribute`
+* **New Data Source:** `data_source_checkpoint_management_ips_update_schedule`
+* **New Data Source:** `data_source_checkpoint_management_smart_task_trigger`
+* **New Data Source:** `data_source_checkpoint_management_api_settings`
+
+## 2.0.0 (June 23, 2022)
+
+ENHANCEMENTS
+
+* Add support to connect Smart-1 Cloud using `cloud_mgmt_id` or via environment variable `CHECKPOINT_CLOUD_MGMT_ID`.
+* Mark sensitive fields in all resources.
+
+BUG FIXES
+
+* Fix bugs in VPN resources.
+
+## 1.9.1 (June 16, 2022)
+
+BUG FIXES
+
+* Fix certificate error (Use GO SDK v1.5.1).
+
+## 1.9.0 (June 14, 2022)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_get_platform`
+* **New Resource:** `resource_checkpoint_management_reset_sic`
+* **New Resource:** `resource_checkpoint_management_test_sic_status`
+* **New Resource:** `resource_checkpoint_management_set_idp_default_assignment`
+* **New Resource:** `resource_checkpoint_management_set_idp_to_domain_assignment`
+* **New Resource:** `resource_checkpoint_management_interoperable_device`
+* **New Resource:** `resource_checkpoint_management_install_lsm_police`
+* **New Resource:** `resource_checkpoint_management_install_lsm_settings`
+* **New Resource:** `resource_checkpoint_management_lsm_run_script`
+* **New Resource:** `resource_checkpoint_management_update_provisioned_satellites`
+* **New Resource:** `resource_checkpoint_management_repository_script`
+* **New Resource:** `resource_checkpoint_management_smtp_server`
+* **New Resource:** `resource_checkpoint_management_check_threat_ioc_feed`
+* **New Resource:** `resource_checkpoint_management_domain_permissions_profile`
+* **New Resource:** `resource_checkpoint_management_idp_administrator_group`
+* **New Resource:** `resource_checkpoint_management_md_permissions_profile`
+* **New Resource:** `resource_checkpoint_management_network_feed`
+* **New Resource:** `resource_checkpoint_management_check_network_feed`
+* **New Resource:** `resource_checkpoint_management_connect_cloud_services`
+* **New Resource:** `resource_checkpoint_management_disconnect_cloud_services`
+* **New Data Source:** `data_source_checkpoint_management_cluster_member`
+* **New Data Source:** `data_source_checkpoint_management_domain_permissions_profile`
+* **New Data Source:** `data_source_checkpoint_management_idp_default_assignment`
+* **New Data Source:** `data_source_checkpoint_management_lsm_cluster_profile`
+* **New Data Source:** `data_source_checkpoint_management_lsm_gateway_profile`
+* **New Data Source:** `data_source_checkpoint_management_provisioning_profile`
+* **New Data Source:** `data_source_checkpoint_management_interoperable_device`
+* **New Data Source:** `data_source_checkpoint_management_repository_script`
+* **New Data Source:** `data_source_checkpoint_management_smtp_server`
+* **New Data Source:** `data_source_checkpoint_management_idp_administrator_group`
+* **New Data Source:** `data_source_checkpoint_management_md_permissions_profile`
+* **New Data Source:** `data_source_checkpoint_management_network_feed`
+* **New Data Source:** `data_source_checkpoint_management_cloud_services`
+
+ENHANCEMENTS
+
+* Add `approve_session`, `submit_session` and `reject_session` post apply scripts.
+* Add `session_name` field to provider to specify login session name.
+* Add `granular_encryptions` and `tunnel_granularity` fields to VPN resources and data sources.
+
+## 1.8.0 (May 22, 2022)
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_threat_ioc_feed`
+* **New Resource:** `resource_checkpoint_management_domain`
+* **New Resource:** `resource_checkpoint_management_add_repository_package`
+* **New Resource:** `resource_checkpoint_management_delete_repository_package`
+* **New Resource:** `resource_checkpoint_management_time`
+* **New Resource:** `resource_checkpoint_management_trusted_client`
+* **New Data Source:** `data_source_checkpoint_management_threat_ioc_feed`
+* **New Data Source:** `data_source_checkpoint_management_domain`
+* **New Data Source:** `data_source_checkpoint_management_repository_package`
+* **New Data Source:** `data_source_checkpoint_management_time`
+* **New Data Source:** `data_source_checkpoint_management_trusted_client`
+
+ENHANCEMENTS
+
+* `data_source_checkpoint_management_simple_gateway` - Add support to `application_control_and_url_filtering_settings` field.
+* `resource_checkpoint_management_simple_gateway` - Add support to `application_control_and_url_filtering_settings` field.
+
+BUG FIXES
+
+* `resource_checkpoint_management_checkpoint_host` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_checkpoint_host` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `resource_checkpoint_management_aws_data_center_server` - Fix bug that the `enable_sts_assume_role` field treated as string instead of bool.
+
+## 1.7.0 (February 24, 2022)
+
+ENHANCEMENTS
+
+* `commands/discard/discard.go`: Add support for discard post apply script.
+
+BUG FIXES
+
+* updated `go.sum` to fix usage of packages with security vulnerabilities.
+* `resource_checkpoint_management_access_rule` - Fix bug that the `track` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_access_rule` - Fix bug that the `track` field forced user to put default values as input. Made name field optional and not required.
+* `resource_checkpoint_management_simple_gateway` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+* `data_source_checkpoint_management_simple_gateway` - Fix bug that the `logs_settings` field forced user to put default values as input. Made name field optional and not required.
+
+## 1.6.0 (November 24, 2021)
+
+
+FEATURES
+
+* **New Resource:** `resource_checkpoint_management_aws_data_center_server`
+* **New Resource:** `resource_checkpoint_management_azure_data_center_server`
+* **New Resource:** `resource_checkpoint_management_gcp_data_center_server`
+* **New Resource:** `resource_checkpoint_management_vmware_data_center_server`
+* **New Resource:** `resource_checkpoint_management_aci_data_center_server`
+* **New Resource:** `resource_checkpoint_management_ise_data_center_server`
+* **New Resource:** `resource_checkpoint_management_nuage_data_center_server`
+* **New Resource:** `resource_checkpoint_management_openstack_data_center_server`
+* **New Resource:** `resource_checkpoint_management_kubernetes_data_center_server`
+* **New Resource:** `resource_checkpoint_management_data_center_query`
+* **New Data Source:** `data_source_checkpoint_management_aws_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_azure_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_gcp_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_vmware_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_aci_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_ise_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_nuage_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_openstack_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_kubernetes_data_center_server`
+* **New Data Source:** `data_source_checkpoint_management_data_center_query`
+* **New Data Source:** `data_source_checkpoint_management_data_center_content`
+* **New Data Source:** `data_source_checkpoint_management_access_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_threat_rulebase`
+* **New Data Source:** `data_source_checkpoint_management_https_rulebase`
+
+ENHANCEMENTS
+
+* Add support to authenticate management server with api key using `api_key` or via environment variable `CHECKPOINT_API_KEY`.
+* Add support to select proxy host using `proxy_host` or via environment variable `CHECKPOINT_PROXY_HOST`.
+* Add support to select proxy port using `proxy_port` or via environment variable `CHECKPOINT_PROXY_PORT`.
+
+BUG FIXES
+
+* `resource_checkpoint_management_simple_cluster` - Fix bug that the `members` field did not import properly.
+* `data_source_checkpoint_management_nat_rulebase` - Save all relevant fields in read function.
+
+## 1.5.0 (October 28, 2021)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_generic_data_center_server`
+* **New Data Source:** `checkpoint_management_generic_data_center_server`
+
+ENHANCEMENTS
+
+* `commands/logout/logout.go`: Add support for logout post apply script.
+* `resource_checkpoint_management_access_role`: Increase timeout on access-role resource.
+* Add support to select session file name via environment variable `CHECKPOINT_SESSION_FILE_NAME`, default value remains `sid.json`.
+
+BUG FIXES
+
+* `resource_checkpoint_management_access_role`: Fix bug that caused when updating `comment` field.
+* `resource_checkpoint_management_threat_rule`: Fix general bug in read function.
+* `resource_checkpoint_management_access_rule`: Fix bug in `track` field.
+* `resource_checkpoint_management_access_section`: Add `layer` field in update and read functions.
+* `resource_checkpoint_management_access_layer`: Remove `detect_using_x_forward_for` field default value from schema.
+* `resource_checkpoint_management_service_tcp`: Save `color` field into state.
+* `resource_checkpoint_management_service_udp`: Save `color` field into state.
+
+## 1.4.0 (March 22, 2021)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_threat_profile`
+* **New Data Source:** `checkpoint_management_threat_profile`
+
+ENHANCEMENTS
+
+* `checkpoint_management_simple_gateway`: Add support for default logs settings.
+
+BUG FIXES
+
+* `checkpoint_management_access_rule`: Add inline layer to payload if action field has changed.
+* `checkpoint_management_simple_cluster`: Change members field to type list.
+
+## 1.3.0 (January 12, 2021)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_simple_gateway`
+* **New Resource:** `checkpoint_management_simple_cluster`
+* **New Data Source:** `checkpoint_management_simple_gateway`
+* **New Data Source:** `checkpoint_management_simple_cluster`
+
+ENHANCEMENTS
+
+* `checkpoint_management_access_section`: Add support for position below specific section or rule.
+* `checkpoint_management_access_layer`: Add `add_default_rule` flag indicates whether to include a cleanup rule in the
+  new layer.
+
+BUG FIXES
+
+* `checkpoint_management_nat_rule`: Fix call to wrong read function after update resource.
+
+## 1.2.0 (December 17, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_nat_rule`
+* **New Resource:** `checkpoint_management_nat_section`
+* **New Resource:** `checkpoint_management_threat_exception`
+* **New Resource:** `checkpoint_management_threat_rule`
+* **New Data Source:** `checkpoint_management_nat_rule`
+* **New Data Source:** `checkpoint_management_nat_section`
+* **New Data Source:** `checkpoint_management_threat_exception`
+* **New Data Source:** `checkpoint_management_threat_rule`
+* **New Data Source:** `checkpoint_management_show_objects`
+* **New Data Source:** `checkpoint_management_show_updatable_objects_repository_content`
+
+ENHANCEMENTS
+
+* Add `triggers` field to resource `checkpoint_management_install_policy`, `checkpoint_management_publish`
+  and `checkpoint_management_logout` for re-execution if there are any changes in this list.
+* Print publish / install-policy script output to console include task-id.
+* Print error message if API server needs to be configured to accept requests from all IP addresses.
+
+BUG FIXES
+
+* `checkpoint_management_access_rule`: Use object UID in update call instead of name.
+
+## 1.1.0 (October 1, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_access_point_name`
+* **New Resource:** `checkpoint_management_checkpoint_host`
+* **New Resource:** `checkpoint_management_gsn_handover_group`
+* **New Resource:** `checkpoint_management_identity_tag`
+* **New Resource:** `checkpoint_management_mds`
+* **New Resource:** `checkpoint_management_service_citrix_tcp`
+* **New Resource:** `checkpoint_management_service_compound_tcp`
+* **New Resource:** `checkpoint_management_user`
+* **New Resource:** `checkpoint_management_user_group`
+* **New Resource:** `checkpoint_management_user_template`
+* **New Resource:** `checkpoint_management_vpn_community_remote_access`
+* **New Resource:** `checkpoint_management_ha_full_sync`
+* **New Resource:** `checkpoint_management_set_automatic_purge`
+* **New Resource:** `checkpoint_management_set_ha_state`
+* **New Resource:** `checkpoint_management_get_attachment`
+* **New Data Source:** `checkpoint_management_access_point_name`
+* **New Data Source:** `checkpoint_management_checkpoint_host`
+* **New Data Source:** `checkpoint_management_mds`
+* **New Data Source:** `checkpoint_management_gsn_handover_group`
+* **New Data Source:** `checkpoint_management_identity_tag`
+* **New Data Source:** `checkpoint_management_service_citrix_tcp`
+* **New Data Source:** `checkpoint_management_service_compound_tcp`
+* **New Data Source:** `checkpoint_management_user`
+* **New Data Source:** `checkpoint_management_user_group`
+* **New Data Source:** `checkpoint_management_user_template`
+* **New Data Source:** `checkpoint_management_vpn_community_remote_access`
+
+ENHANCEMENTS
+
+* Resources of type command that returns asynchronous task-id(s), will save task-id(s) in state.
+
+BUG FIXES
+
+* Resources of type command are execute as part of 'add' method and are one-use only.
+
+## 1.0.5 (September 9, 2020)
+
+FEATURES
+
+* **New Resource:** `checkpoint_management_put_file`
+
+ENHANCEMENTS
+
+* Resource `checkpoint_management_access_rule`: Add rule in position relative to specific section
+* Print login error message to console and exit
+
+BUG FIXES
+
+* Fix resource `checkpoint_management_access_role`
+* Fix import access rule. Use the following UID format: <LAYER_NAME>;<RULE_UID>
+
+## 1.0.4 (September 3, 2020)
+
+* Release for Terraform Registry
+
+## 1.0.3 (July 21, 2020)
+
+FEATURES
+
+* **New Data Source:** `checkpoint_management_data_wildcard`
+* **New Data Source:** `checkpoint_management_data_security_zone`
+* **New Data Source:** `checkpoint_management_data_time_group`
+* **New Data Source:** `checkpoint_management_data_group`
+* **New Data Source:** `checkpoint_management_data_exception_group`
+* **New Data Source:** `checkpoint_management_data_group_with_exclusion`
+* **New Data Source:** `checkpoint_management_data_dynamic_object`
+* **New Data Source:** `checkpoint_management_data_dns_domain`
+* **New Data Source:** `checkpoint_management_data_opsec_application`
+* **New Data Source:** `checkpoint_management_data_service_icmp`
+* **New Data Source:** `checkpoint_management_data_service_icmp6`
+* **New Data Source:** `checkpoint_management_data_service_sctp`
+* **New Data Source:** `checkpoint_management_data_service_other`
+* **New Data Source:** `checkpoint_management_data_service_group`
+* **New Data Source:** `checkpoint_management_data_service_tcp`
+* **New Data Source:** `checkpoint_management_data_service_udp`
+* **New Data Source:** `checkpoint_management_data_service_dce_rpc`
+* **New Data Source:** `checkpoint_management_data_service_rpc`
+* **New Data Source:** `checkpoint_management_data_application_site`
+* **New Data Source:** `checkpoint_management_data_application_site_category`
+* **New Data Source:** `checkpoint_management_data_application_site_group`
+* **New Data Source:** `checkpoint_management_data_access_section`
+* **New Data Source:** `checkpoint_management_data_access_role`
+* **New Data Source:** `checkpoint_management_data_access_layer`
+* **New Data Source:** `checkpoint_management_data_access_rule`
+* **New Data Source:** `checkpoint_management_data_package`
+* **New Data Source:** `checkpoint_management_data_vpn_community_meshed`
+* **New Data Source:** `checkpoint_management_data_vpn_community_star`
+* **New Data Source:** `checkpoint_management_data_https_rule`
+* **New Data Source:** `checkpoint_management_data_https_section`
+* **New Data Source:** `checkpoint_management_data_https_layer`
+* **New Data Source:** `checkpoint_management_data_network`
+* **New Data Source:** `checkpoint_management_data_host`
+* **New Data Source:** `checkpoint_management_data_address_range`
+* **New Data Source:** `checkpoint_management_data_multicast_address_range`
+* **New Data Source:** `checkpoint_management_data_threat_indicator`
+
+ENHANCEMENTS
+
+* Use port and timeout via environment variable in publish and install-policy script
+* Save publish and install-policy scripts output to dedicated log file
+* Add support for import resources
+
+BUG FIXES
+
+* Fix groups circular dependency
+* Fix internal test of few resources
+
+## 1.0.2 (May 13, 2020)
+
+FEATURES:
+
+* Add support to configure timeout and port of provider
+* Add support to user agent
+* Fix resources: `checkpoint_management_application_site`, `checkpoint_management_application_site_group`
+  , `checkpoint_management_https_layer`, `checkpoint_management_service_sctp` and `checkpoint_management_service_other`
+
+## 1.0.1 (March 17, 2020)
+
+FEATURES:
+
+* **New Resource:** `checkpoint_management_wildcard`
+* **New Resource:** `checkpoint_management_multicast_address_range`
+* **New Resource:** `checkpoint_management_group_with_exclusion`
+* **New Resource:** `checkpoint_management_security_zone`
+* **New Resource:** `checkpoint_management_time_group`
+* **New Resource:** `checkpoint_management_access_role`
+* **New Resource:** `checkpoint_management_dynamic_object`
+* **New Resource:** `checkpoint_management_dns_domain`
+* **New Resource:** `checkpoint_management_opsec_application`
+* **New Resource:** `checkpoint_management_service_icmp`
+* **New Resource:** `checkpoint_management_service_icmp6`
+* **New Resource:** `checkpoint_management_service_sctp`
+* **New Resource:** `checkpoint_management_service_other`
+* **New Resource:** `checkpoint_management_application_site`
+* **New Resource:** `checkpoint_management_application_site_category`
+* **New Resource:** `checkpoint_management_application_site_group`
+* **New Resource:** `checkpoint_management_service_dce_rpc`
+* **New Resource:** `checkpoint_management_service_rpc`
+* **New Resource:** `checkpoint_management_access_section`
+* **New Resource:** `checkpoint_management_access_layer`
+* **New Resource:** `checkpoint_management_vpn_community_meshed`
+* **New Resource:** `checkpoint_management_vpn_community_star`
+* **New Resource:** `checkpoint_management_exception_group`
+* **New Resource:** `checkpoint_management_https_rule`
+* **New Resource:** `checkpoint_management_https_section`
+* **New Resource:** `checkpoint_management_https_layer`
+* **New Resource:** `checkpoint_management_discard`
+* **New Resource:** `checkpoint_management_disconnect`
+* **New Resource:** `checkpoint_management_keepalive`
+* **New Resource:** `checkpoint_management_revert_to_revision`
+* **New Resource:** `checkpoint_management_verify_revert`
+* **New Resource:** `checkpoint_management_set_login_message`
+* **New Resource:** `checkpoint_management_add_data_center_object`
+* **New Resource:** `checkpoint_management_delete_data_center_object`
+* **New Resource:** `checkpoint_management_update_updatable_objects_repository_content`
+* **New Resource:** `checkpoint_management_add_updatable_object`
+* **New Resource:** `checkpoint_management_delete_updatable_object`
+* **New Resource:** `checkpoint_management_set_ips_update_schedule`
+* **New Resource:** `checkpoint_management_run_threat_emulation_file_types_offline_update`
+* **New Resource:** `checkpoint_management_verify_policy`
+* **New Resource:** `checkpoint_management_set_global_domain`
+* **New Resource:** `checkpoint_management_assign_global_assignment`
+* **New Resource:** `checkpoint_management_restore_domain`
+* **New Resource:** `checkpoint_management_migrate_import_domain`
+* **New Resource:** `checkpoint_management_backup_domain`
+* **New Resource:** `checkpoint_management_migrate_export_domain`
+* **New Resource:** `checkpoint_management_uninstall_software_package`
+* **New Resource:** `checkpoint_management_verify_software_package`
+* **New Resource:** `checkpoint_management_install_software_package`
+* **New Resource:** `checkpoint_management_unlock_administrator`
+* **New Resource:** `checkpoint_management_add_api_key`
+* **New Resource:** `checkpoint_management_delete_api_key`
+* **New Resource:** `checkpoint_management_set_api_settings`
+* **New Resource:** `checkpoint_management_export`
+* **New Resource:** `checkpoint_management_put_file`
+* **New Resource:** `checkpoint_management_where_used`
+* **New Resource:** `checkpoint_management_run_script`
+* **New Resource:** `checkpoint_management_install_database`
+* **New Resource:** `checkpoint_management_set_threat_protection`
+* **New Resource:** `checkpoint_management_add_threat_protections`
+* **New Resource:** `checkpoint_management_delete_threat_protections`
+* **New Feature:** Added multi domain server support
+* **New Feature:** Added commands support - publish and install policy after execution
+
+## 1.0.0 (January 13, 2020)
+
+FEATURES:
+
+* **New Resource:** `checkpoint_management_network`
+* **New Resource:** `checkpoint_management_host`
+* **New Resource:** `checkpoint_management_publish`
+* **New Resource:** `checkpoint_hostname`
+* **New Resource:** `checkpoint_physical_interface`
+* **New Resource:** `checkpoint_put_file`
+* **New Resource:** `checkpoint_management_install_policy`
+* **New Resource:** `checkpoint_management_run_ips_update`
+* **New Resource:** `checkpoint_management_address_range`
+* **New Resource:** `checkpoint_management_group`
+* **New Resource:** `checkpoint_management_service_group`
+* **New Resource:** `checkpoint_management_service_tcp`
+* **New Resource:** `checkpoint_management_service_udp`
+* **New Resource:** `checkpoint_management_package`
+* **New Resource:** `checkpoint_management_access_rule`
+* **New Resource:** `checkpoint_management_login`
+* **New Resource:** `checkpoint_management_logout`
+* **New Resource:** `checkpoint_management_threat_indicator`

@@ -1,0 +1,37 @@
+---
+layout: "checkpoint"
+page_title: "checkpoint_management_where_used"
+sidebar_current: "docs-checkpoint-resource-checkpoint-management-where-used"
+description: |-
+  This resource allows you to execute Check Point Where Used.
+---
+
+# Resource: checkpoint_management_where_used
+
+This command resource allows you to execute Check Point Where Used.
+
+## Example Usage
+
+
+```hcl
+resource "checkpoint_management_where_used" "example" {
+  name = "Host 1"
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `name` - (Required) Object name. 
+* `dereference_group_members` - (Optional) Indicates whether to dereference "members" field by details level for every object in reply. 
+* `show_membership` - (Optional) Indicates whether to calculate and show "groups" field for every object in reply. 
+* `indirect` - (Optional) Search for indirect usage. 
+* `indirect_max_depth` - (Optional) Maximum nesting level during indirect usage search. 
+* `domains_to_process` - (Optional) Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...
+
+
+## How To Use
+Make sure this command will be executed in the right execution order. 
+note: terraform execution is not sequential.  
+

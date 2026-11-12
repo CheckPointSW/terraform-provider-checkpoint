@@ -1,0 +1,62 @@
+package checkpoint
+
+import (
+	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
+)
+
+func dataSourceManagementRepositoryPackage() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceManagementRepositoryPackageRead,
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of the repository package.",
+			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Unique identifier of the 'show-repository-package' task. Use the 'show-task' command to check the progress of the task.",
+			},
+		},
+	}
+}
+
+func dataSourceManagementRepositoryPackageRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
+	name := d.Get("name").(string)
+
+	payload := make(map[string]interface{})
+
+	payload["name"] = name
+
+	showRepositoryPackageRes, err := client.ApiCall("show-repository-package", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf("%s", err.Error())
+	}
+	if !showRepositoryPackageRes.Success {
+		return fmt.Errorf("%s", showRepositoryPackageRes.ErrorMsg)
+	}
+
+	RepositoryPackage := showRepositoryPackageRes.GetData()
+
+	log.Println("Read RepositoryPackage - Show JSON = ", RepositoryPackage)
+
+	taskId := resolveTaskId(RepositoryPackage)
+
+	if taskId != nil {
+		d.SetId(taskId.(string))
+	}
+
+	if v, ok := d.GetOk("name"); ok {
+		_ = d.Set("name", v.(string))
+	}
+
+	_ = d.Set("task_id", taskId)
+
+	return nil
+}

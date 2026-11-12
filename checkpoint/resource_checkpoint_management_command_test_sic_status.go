@@ -1,0 +1,102 @@
+package checkpoint
+
+import (
+	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
+)
+
+func resourceManagementTestSicStatus() *schema.Resource {
+	return &schema.Resource{
+		Create: createManagementTestSicStatus,
+		Read:   readManagementTestSicStatus,
+		Delete: deleteManagementTestSicStatus,
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Gateway, cluster member or Check Point host name.",
+			},
+			"sic_message": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "SIC message from the gateway.",
+			},
+			"sic_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "SIC (Secure Internal Communication) name.",
+			},
+			"sic_status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "SIC Status reflects the state of the gateway after it has received the certificate issued by the ICA.",
+			},
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Command asynchronous task unique identifier.",
+			},
+			"domains_to_process": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates which domains to process the commands on. It cannot be used with the details-level full, must be run from the System Domain only and with ig...",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+		},
+	}
+}
+
+func createManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
+	return readManagementTestSicStatus(d, m)
+}
+
+func readManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	var payload = map[string]interface{}{}
+	if v, ok := d.GetOk("name"); ok {
+		payload["name"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("domains_to_process"); ok {
+		payload["domains-to-process"] = v.(*schema.Set).List()
+	}
+
+	TestSicStatusRes, _ := client.ApiCall("test-sic-status", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if !TestSicStatusRes.Success {
+		return fmt.Errorf("%s", TestSicStatusRes.ErrorMsg)
+	}
+
+	d.SetId("test-sic-status" + acctest.RandString(10))
+	_ = d.Set("task_id", resolveTaskId(TestSicStatusRes.GetData()))
+	testSicStatusProfile := TestSicStatusRes.GetData()
+
+	log.Println("Read TestSicStatus - Show JSON = ", testSicStatusProfile)
+
+	if v := testSicStatusProfile["sic-message"]; v != nil {
+		_ = d.Set("sic_message", v)
+	}
+
+	if v := testSicStatusProfile["sic-name"]; v != nil {
+		_ = d.Set("sic_name", v)
+	}
+
+	if v := testSicStatusProfile["sic-status"]; v != nil {
+		_ = d.Set("sic_status", v)
+	}
+	return nil
+}
+
+func deleteManagementTestSicStatus(d *schema.ResourceData, m interface{}) error {
+
+	d.SetId("")
+	return nil
+}

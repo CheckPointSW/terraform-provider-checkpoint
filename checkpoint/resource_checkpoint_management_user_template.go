@@ -1,0 +1,625 @@
+package checkpoint
+
+import (
+	"github.com/CheckPointSW/terraform-provider-checkpoint/v3/upgraders"
+	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
+	"strings"
+)
+
+func resourceManagementUserTemplate() *schema.Resource {
+	return &schema.Resource{
+		Create: createManagementUserTemplate,
+		Read:   readManagementUserTemplate,
+		Update: updateManagementUserTemplate,
+		Delete: deleteManagementUserTemplate,
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementUserTemplateV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementUserTemplateStateUpgradeV0,
+				Version: 0,
+			},
+		},
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Object name.",
+			},
+			"expiration_by_global_properties": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Expiration date according to global properties.",
+			},
+			"expiration_date": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Expiration date in format: yyyy-MM-dd.",
+			},
+			"authentication_method": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Authentication method.",
+				Default:     "undefined",
+			},
+			"radius_server": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "RADIUS server object identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"RADIUS\".",
+			},
+			"tacacs_server": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "TACACS server object identified by the name or UID. Must be set when \"authentication-method\" was selected to be \"TACACS\".",
+			},
+			"connect_on_days": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Days users allow to connect.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"connect_daily": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Connect every day.",
+				Default:     true,
+			},
+			"from_hour": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Allow users connect from hour.",
+				Default:     "00:00",
+			},
+			"to_hour": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Allow users connect until hour.",
+				Default:     "23:59",
+			},
+			"allowed_locations": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "User allowed locations.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destinations": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Collection of allowed destination locations name or uid.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"sources": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Collection of allowed source locations name or uid.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+			"encryption": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "User encryption.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_ike": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable IKE encryption for users.",
+						},
+						"enable_public_key": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable IKE public key.",
+						},
+						"enable_shared_secret": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Enable IKE shared secret.",
+						},
+						"data_integrity_algorithm": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IKE data integrity algorithm.",
+						},
+						"encryption_algorithm": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IKE encryption algorithm.",
+						},
+					},
+				},
+			},
+			"tags": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of tag identifiers.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"color": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Color of the object. Should be one of existing colors.",
+				Default:     "black",
+			},
+			"comments": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Comments string.",
+			},
+			"ignore_warnings": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring warnings.",
+				Default:     false,
+			},
+			"ignore_errors": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
+				Default:     false,
+			},
+		},
+	}
+}
+
+func createManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*checkpoint.ApiClient)
+
+	userTemplate := make(map[string]interface{})
+
+	if v, ok := d.GetOk("name"); ok {
+		userTemplate["name"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("expiration_by_global_properties"); ok {
+		userTemplate["expiration-by-global-properties"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("expiration_date"); ok {
+		userTemplate["expiration-date"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("authentication_method"); ok {
+		userTemplate["authentication-method"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("radius_server"); ok {
+		userTemplate["radius-server"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("tacacs_server"); ok {
+		userTemplate["tacacs-server"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("connect_on_days"); ok {
+		userTemplate["connect-on-days"] = v.(*schema.Set).List()
+	}
+
+	if v, ok := d.GetOkExists("connect_daily"); ok {
+		userTemplate["connect-daily"] = v.(bool)
+	}
+
+	if v, ok := d.GetOk("from_hour"); ok {
+		userTemplate["from-hour"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("to_hour"); ok {
+		userTemplate["to-hour"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("allowed_locations"); ok {
+
+		allowedLocationsList := v.([]interface{})
+
+		if len(allowedLocationsList) > 0 {
+
+			allowedLocationsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
+				allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
+			}
+			if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
+				allowedLocationsPayload["sources"] = v.(*schema.Set).List()
+			}
+			userTemplate["allowed-locations"] = allowedLocationsPayload
+		}
+	}
+
+	if v, ok := d.GetOk("encryption"); ok {
+
+		encryptionList := v.([]interface{})
+
+		if len(encryptionList) > 0 {
+
+			encryptionPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("encryption.0.enable_ike"); ok {
+				encryptionPayload["enable-ike"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("encryption.0.enable_public_key"); ok {
+				encryptionPayload["enable-public-key"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
+				encryptionPayload["enable-shared-secret"] = v.(bool)
+			}
+			if v, ok := d.GetOk("encryption.0.data_integrity_algorithm"); ok {
+				encryptionPayload["data-integrity-algorithm"] = v.(string)
+			}
+			if v, ok := d.GetOk("encryption.0.encryption_algorithm"); ok {
+				encryptionPayload["encryption-algorithm"] = v.(string)
+			}
+			userTemplate["encryption"] = encryptionPayload
+		}
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		userTemplate["tags"] = v.(*schema.Set).List()
+	}
+
+	if v, ok := d.GetOk("color"); ok {
+		userTemplate["color"] = v.(string)
+	}
+
+	if v, ok := d.GetOk("comments"); ok {
+		userTemplate["comments"] = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userTemplate["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userTemplate["ignore-errors"] = v.(bool)
+	}
+
+	log.Println("Create UserTemplate - Map = ", userTemplate)
+
+	addUserTemplateRes, err := client.ApiCall("add-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !addUserTemplateRes.Success {
+		if addUserTemplateRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", addUserTemplateRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+
+	d.SetId(addUserTemplateRes.GetData()["uid"].(string))
+
+	return readManagementUserTemplate(d, m)
+}
+
+func readManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	payload := map[string]interface{}{
+		"uid": d.Id(),
+	}
+
+	showUserTemplateRes, err := client.ApiCall("show-user-template", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf("%s", err.Error())
+	}
+	if !showUserTemplateRes.Success {
+		if objectNotFound(showUserTemplateRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf("%s", showUserTemplateRes.ErrorMsg)
+	}
+
+	userTemplate := showUserTemplateRes.GetData()
+
+	log.Println("Read UserTemplate - Show JSON = ", userTemplate)
+
+	if v := userTemplate["name"]; v != nil {
+		_ = d.Set("name", v)
+	}
+
+	if v := userTemplate["expiration-by-global-properties"]; v != nil {
+		_ = d.Set("expiration_by_global_properties", v)
+	}
+
+	if v := userTemplate["expiration-date"]; v != nil {
+		isoDate := v.(map[string]interface{})["iso-8601"].(string)
+		date := strings.Split(isoDate, "T")[0]
+		_ = d.Set("expiration_date", date)
+	}
+
+	if v := userTemplate["authentication-method"]; v != nil {
+		_ = d.Set("authentication_method", v)
+	}
+
+	if v := userTemplate["radius-server"]; v != nil {
+		_ = d.Set("radius_server", v.(map[string]interface{})["name"].(string))
+	}
+
+	if v := userTemplate["tacacs-server"]; v != nil {
+		_ = d.Set("tacacs_server", v.(map[string]interface{})["name"].(string))
+	}
+
+	if userTemplate["connect_on_days"] != nil {
+		connectOnDaysJson, ok := userTemplate["connect_on_days"].([]interface{})
+		if ok {
+			_ = d.Set("connect_on_days", connectOnDaysJson)
+		}
+	} else {
+		_ = d.Set("connect_on_days", nil)
+	}
+
+	if v := userTemplate["connect-daily"]; v != nil {
+		_ = d.Set("connect_daily", v)
+	}
+
+	if v := userTemplate["from-hour"]; v != nil {
+		_ = d.Set("from_hour", v)
+	}
+
+	if v := userTemplate["to-hour"]; v != nil {
+		_ = d.Set("to_hour", v)
+	}
+
+	if userTemplate["allowed-locations"] != nil {
+
+		allowedLocationsMap := userTemplate["allowed-locations"].(map[string]interface{})
+
+		allowedLocationsMapToReturn := make(map[string]interface{})
+
+		if v := allowedLocationsMap["destinations"]; v != nil {
+			allowedLocationsMapToReturn["destinations"] = v
+		}
+		if v := allowedLocationsMap["sources"]; v != nil {
+			allowedLocationsMapToReturn["sources"] = v
+		}
+
+		_ = d.Set("allowed_locations", []interface{}{allowedLocationsMapToReturn})
+
+	} else {
+		_ = d.Set("allowed_locations", nil)
+	}
+
+	if userTemplate["encryption"] != nil {
+
+		encryptionMap := userTemplate["encryption"].(map[string]interface{})
+
+		encryptionMapToReturn := make(map[string]interface{})
+
+		if v := encryptionMap["enable-ike"]; v != nil {
+			encryptionMapToReturn["enable_ike"] = v
+		}
+		if v := encryptionMap["enable-public-key"]; v != nil {
+			encryptionMapToReturn["enable_public_key"] = v
+		}
+		if v := encryptionMap["enable-shared-secret"]; v != nil {
+			encryptionMapToReturn["enable_shared_secret"] = v
+		}
+
+		if v := encryptionMap["data-integrity-algorithm"]; v != nil {
+			encryptionMapToReturn["data_integrity_algorithm"] = v
+		}
+		if v := encryptionMap["encryption-algorithm"]; v != nil {
+			encryptionMapToReturn["encryption_algorithm"] = v
+		}
+		_ = d.Set("encryption", []interface{}{encryptionMapToReturn})
+
+	} else {
+		_ = d.Set("encryption", nil)
+	}
+
+	if userTemplate["tags"] != nil {
+		tagsJson, ok := userTemplate["tags"].([]interface{})
+		if ok {
+			tagsIds := make([]string, 0)
+			if len(tagsJson) > 0 {
+				for _, tags := range tagsJson {
+					tags := tags.(map[string]interface{})
+					tagsIds = append(tagsIds, tags["name"].(string))
+				}
+			}
+			_ = d.Set("tags", tagsIds)
+		}
+	} else {
+		_ = d.Set("tags", nil)
+	}
+
+	if v := userTemplate["color"]; v != nil {
+		_ = d.Set("color", v)
+	}
+
+	if v := userTemplate["comments"]; v != nil {
+		_ = d.Set("comments", v)
+	}
+
+	if v := userTemplate["ignore-warnings"]; v != nil {
+		_ = d.Set("ignore_warnings", v)
+	}
+
+	if v := userTemplate["ignore-errors"]; v != nil {
+		_ = d.Set("ignore_errors", v)
+	}
+
+	return nil
+
+}
+
+func updateManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+	userTemplate := make(map[string]interface{})
+
+	if ok := d.HasChange("name"); ok {
+		oldName, newName := d.GetChange("name")
+		userTemplate["name"] = oldName
+		userTemplate["new-name"] = newName
+	} else {
+		userTemplate["name"] = d.Get("name")
+	}
+
+	if v, ok := d.GetOkExists("expiration_by_global_properties"); ok {
+		userTemplate["expiration-by-global-properties"] = v.(bool)
+	}
+
+	if ok := d.HasChange("expiration_date"); ok {
+		userTemplate["expiration-date"] = d.Get("expiration_date")
+	}
+
+	if ok := d.HasChange("authentication_method"); ok {
+		userTemplate["authentication-method"] = d.Get("authentication_method")
+	}
+
+	if ok := d.HasChange("radius_server"); ok {
+		userTemplate["radius-server"] = d.Get("radius_server")
+	}
+
+	if ok := d.HasChange("tacacs_server"); ok {
+		userTemplate["tacacs-server"] = d.Get("tacacs_server")
+	}
+
+	if d.HasChange("connect_on_days") {
+		if v, ok := d.GetOk("connect_on_days"); ok {
+			userTemplate["connect_on_days"] = v.(*schema.Set).List()
+		}
+	}
+
+	if v, ok := d.GetOkExists("connect_daily"); ok {
+		userTemplate["connect-daily"] = v.(bool)
+	}
+
+	if ok := d.HasChange("from_hour"); ok {
+		userTemplate["from-hour"] = d.Get("from_hour")
+	}
+
+	if ok := d.HasChange("to_hour"); ok {
+		userTemplate["to-hour"] = d.Get("to_hour")
+	}
+
+	if d.HasChange("allowed_locations") {
+
+		if v, ok := d.GetOk("allowed_locations"); ok {
+
+			allowedLocationsList := v.([]interface{})
+
+			if len(allowedLocationsList) > 0 {
+
+				allowedLocationsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("allowed_locations.0.destinations"); ok {
+					allowedLocationsPayload["destinations"] = v.(*schema.Set).List()
+				}
+				if v, ok := d.GetOk("allowed_locations.0.sources"); ok {
+					allowedLocationsPayload["sources"] = v.(*schema.Set).List()
+				}
+				userTemplate["allowed-locations"] = allowedLocationsPayload
+			}
+		}
+	}
+
+	if d.HasChange("encryption") {
+
+		if v, ok := d.GetOk("encryption"); ok {
+
+			encryptionList := v.([]interface{})
+
+			if len(encryptionList) > 0 {
+
+				encryptionPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("encryption.0.enable_ike"); ok {
+					encryptionPayload["enable-ike"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("encryption.0.enable_public_key"); ok {
+					encryptionPayload["enable-public-key"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("encryption.0.enable_shared_secret"); ok {
+					encryptionPayload["enable-shared-secret"] = v.(bool)
+				}
+				if v, ok := d.GetOk("encryption.0.data_integrity_algorithm"); ok {
+					encryptionPayload["data-integrity-algorithm"] = v.(string)
+				}
+				if v, ok := d.GetOk("encryption.0.encryption_algorithm"); ok {
+					encryptionPayload["encryption-algorithm"] = v.(string)
+				}
+				userTemplate["encryption"] = encryptionPayload
+			}
+		}
+	}
+
+	if d.HasChange("tags") {
+		if v, ok := d.GetOk("tags"); ok {
+			userTemplate["tags"] = v.(*schema.Set).List()
+		} else {
+			oldTags, _ := d.GetChange("tags")
+			userTemplate["tags"] = map[string]interface{}{"remove": oldTags.(*schema.Set).List()}
+		}
+	}
+
+	if ok := d.HasChange("color"); ok {
+		userTemplate["color"] = d.Get("color")
+	}
+
+	if ok := d.HasChange("comments"); ok {
+		userTemplate["comments"] = d.Get("comments")
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userTemplate["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userTemplate["ignore-errors"] = v.(bool)
+	}
+
+	log.Println("Update UserTemplate - Map = ", userTemplate)
+
+	updateUserTemplateRes, err := client.ApiCall("set-user-template", userTemplate, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !updateUserTemplateRes.Success {
+		if updateUserTemplateRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", updateUserTemplateRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+
+	return readManagementUserTemplate(d, m)
+}
+
+func deleteManagementUserTemplate(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	userTemplatePayload := map[string]interface{}{
+		"uid": d.Id(),
+	}
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		userTemplatePayload["ignore-warnings"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		userTemplatePayload["ignore-errors"] = v.(bool)
+	}
+	log.Println("Delete UserTemplate")
+
+	deleteUserTemplateRes, err := client.ApiCall("delete-user-template", userTemplatePayload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !deleteUserTemplateRes.Success {
+		if deleteUserTemplateRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", deleteUserTemplateRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+	d.SetId("")
+
+	return nil
+}

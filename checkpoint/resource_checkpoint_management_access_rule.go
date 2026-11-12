@@ -1,0 +1,1471 @@
+package checkpoint
+
+import (
+	"fmt"
+	"github.com/CheckPointSW/terraform-provider-checkpoint/v3/upgraders"
+	"log"
+	"strings"
+
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func resourceManagementAccessRule() *schema.Resource {
+	return &schema.Resource{
+		Create: createManagementAccessRule,
+		Read:   readManagementAccessRule,
+		Update: updateManagementAccessRule,
+		Delete: deleteManagementAccessRule,
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+				arr := strings.Split(d.Id(), ";")
+				if len(arr) != 2 {
+					return nil, fmt.Errorf("invalid unique identifier format. UID format: <LAYER_IDENTIFIER>;<RULE_UID>")
+				}
+				_ = d.Set("layer", arr[0])
+				d.SetId(arr[1])
+				return []*schema.ResourceData{d}, nil
+			},
+		},
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    upgraders.ResourceManagementAccessRuleV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: upgraders.ResourceManagementAccessRuleStateUpgradeV0,
+				Version: 0,
+			},
+		},
+		Schema: map[string]*schema.Schema{
+			"layer": &schema.Schema{
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Layer that the rule belongs to identified by the name or UID.",
+			},
+			"position": &schema.Schema{
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Required:    true,
+				Description: "Position in the rulebase.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"top": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Add rule on top of specific section identified by uid or name. Select value 'top' for entire rule base.",
+						},
+						"above": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Add rule above specific section/rule identified by uid or name.",
+						},
+						"below": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Add rule below specific section/rule identified by uid or name.",
+						},
+						"bottom": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Add rule in the bottom of specific section identified by uid or name. Select value 'bottom' for entire rule base.",
+						},
+					},
+				},
+			},
+			"name": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Rule name.",
+			},
+			"action": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "\"Accept\", \"Drop\", \"Ask\", \"Inform\", \"Reject\", \"User Auth\", \"Client Auth\", \"Apply Layer\".",
+				Default:     "Drop",
+			},
+			"action_settings": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Action settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enable_identity_captive_portal": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "N/A",
+						},
+						"limit": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "N/A",
+						},
+						"client_auth_settings": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Client authentication settings.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"source": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Source object identified by the name or UID.",
+									},
+									"destination": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Destination object identified by the name or UID.",
+									},
+									"sign_on_method": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Sign on method.",
+									},
+									"sign_on_type": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Sign on type.",
+									},
+									"tracking": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Tracking method.",
+									},
+									"sessions_limit": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Maximum number of concurrent sessions.",
+									},
+									"unlimited_sessions": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Allow an unlimited number of sessions.",
+									},
+									"require_desktop_config_verification": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Require Desktop configuration verification.",
+									},
+									"timeout": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "Session timeout settings.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Enable session timeout.",
+												},
+												"minutes": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Session timeout in minutes.",
+												},
+												"refreshable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether the timeout is refreshable.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"user_auth_settings": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "User authentication settings.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"source": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Source object identified by the name or UID.",
+									},
+									"destination": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Destination object identified by the name or UID.",
+									},
+									"allowed_http_servers": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Allowed HTTP servers.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"content": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of processed file types that this rule applies on.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"content_direction": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "On which direction the file types processing is applied.",
+				Default:     "any",
+			},
+			"content_negate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "True if negate is set for data.",
+				Default:     false,
+			},
+			"custom_fields": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "Custom fields.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"field_1": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "First custom field.",
+						},
+						"field_2": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Second custom field.",
+						},
+						"field_3": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Third custom field.",
+						},
+					},
+				},
+			},
+			"destination": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of Network objects identified by the name or UID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Default: nil,
+			},
+			"destination_negate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "True if negate is set for destination.",
+				Default:     false,
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable/Disable the rule.",
+				Default:     true,
+			},
+			"inline_layer": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Inline Layer identified by the name or UID. Relevant only if \"Action\" was set to \"Apply Layer\".",
+			},
+			"install_on": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Which Gateways identified by the name or UID to install the policy on.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"service": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of Network objects identified by the name or UID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"service_negate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "True if negate is set for service.",
+				Default:     false,
+			},
+			"source": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of Network objects identified by the name or UID.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"source_negate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "True if negate is set for source.",
+				Default:     false,
+			},
+			"time": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of time objects. For example: \"Weekend\", \"Off-Work\", \"Every-Day\".",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"track": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Track Settings.",
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"accounting": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Turns accounting for track on and off.",
+						},
+						"alert": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Type of alert for the track.",
+						},
+						"enable_firewall_session": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Determine whether to generate session log to firewall only connections.",
+						},
+						"per_connection": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Determines whether to perform the log per connection.",
+						},
+						"per_session": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Determines whether to perform the log per session.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "\"Log\", \"Extended Log\", \"Detailed Log\", \"None\".",
+						},
+					},
+				},
+			},
+			"user_check": &schema.Schema{
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "User check settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"confirm": &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "N/A",
+						},
+						"custom_frequency": &schema.Schema{
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "N/A",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"every": &schema.Schema{
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "N/A",
+									},
+									"unit": &schema.Schema{
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "N/A",
+									},
+								},
+							},
+						},
+						"frequency": &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "N/A",
+						},
+						"interaction": &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "N/A",
+						},
+					},
+				},
+			},
+			"vpn": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Valid values \"Any\", \"All_GwToGw\" or VPN community name",
+			},
+			"vpn_communities": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Collection of VPN communities identified by name",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"vpn_directional": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Collection of VPN directional",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"from": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "From VPN community",
+						},
+						"to": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "To VPN community",
+						},
+					},
+				},
+			},
+			"ignore_warnings": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring warnings.",
+				Default:     false,
+			},
+			"ignore_errors": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Apply changes ignoring errors. You won't be able to publish such a changes. If ignore-warnings flag was omitted - warnings will also be ignored.",
+				Default:     false,
+			},
+			"comments": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Comments string.",
+			},
+			"fields_with_uid_identifier": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "List of resource fields that will use object UIDs as object identifiers. Default is object name.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"service_resource": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Resource of the service identified by the name or UID. When a service-resource exists, the service parameter should contains exactly one service element.",
+			},
+		},
+	}
+}
+
+func createManagementAccessRule(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	accessRule := make(map[string]interface{})
+
+	if v, ok := d.GetOk("layer"); ok {
+		accessRule["layer"] = v.(string)
+	}
+	if _, ok := d.GetOk("position"); ok {
+
+		if v, ok := d.GetOk("position.0.top"); ok {
+			if v.(string) == "top" {
+				accessRule["position"] = "top" // entire rule-base
+			} else {
+				accessRule["position"] = map[string]interface{}{"top": v.(string)} // section-name
+			}
+		}
+
+		if v, ok := d.GetOk("position.0.above"); ok {
+			accessRule["position"] = map[string]interface{}{"above": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.below"); ok {
+			accessRule["position"] = map[string]interface{}{"below": v.(string)}
+		}
+
+		if v, ok := d.GetOk("position.0.bottom"); ok {
+			if v.(string) == "bottom" {
+				accessRule["position"] = "bottom" // entire rule-base
+			} else {
+				accessRule["position"] = map[string]interface{}{"bottom": v.(string)} // section-name
+			}
+		}
+	}
+
+	if v, ok := d.GetOk("name"); ok {
+		accessRule["name"] = v.(string)
+	}
+	if v, ok := d.GetOk("action"); ok {
+		accessRule["action"] = v.(string)
+	}
+	if v, ok := d.GetOk("action_settings"); ok {
+
+		actionSettingsList := v.([]interface{})
+
+		if len(actionSettingsList) > 0 {
+
+			actionSettingsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("action_settings.0.enable_identity_captive_portal"); ok {
+				actionSettingsPayload["enable-identity-captive-portal"] = v.(bool)
+			}
+			if v, ok := d.GetOk("action_settings.0.limit"); ok {
+				actionSettingsPayload["limit"] = v.(string)
+			}
+			if _, ok := d.GetOk("action_settings.0.client_auth_settings"); ok {
+
+				clientAuthSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.source"); ok {
+					clientAuthSettingsPayload["source"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.destination"); ok {
+					clientAuthSettingsPayload["destination"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_method"); ok {
+					clientAuthSettingsPayload["sign-on-method"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_type"); ok {
+					clientAuthSettingsPayload["sign-on-type"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.tracking"); ok {
+					clientAuthSettingsPayload["tracking"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sessions_limit"); ok {
+					clientAuthSettingsPayload["sessions-limit"] = v.(int)
+				}
+				if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.unlimited_sessions"); ok {
+					clientAuthSettingsPayload["unlimited-sessions"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.require_desktop_config_verification"); ok {
+					clientAuthSettingsPayload["require-desktop-config-verification"] = v.(bool)
+				}
+				if _, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout"); ok {
+
+					timeoutPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.enable"); ok {
+						timeoutPayload["enable"] = v.(bool)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout.0.minutes"); ok {
+						timeoutPayload["minutes"] = v.(int)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.refreshable"); ok {
+						timeoutPayload["refreshable"] = v.(bool)
+					}
+					clientAuthSettingsPayload["timeout"] = timeoutPayload
+				}
+				actionSettingsPayload["client-auth-settings"] = clientAuthSettingsPayload
+			}
+			if _, ok := d.GetOk("action_settings.0.user_auth_settings"); ok {
+
+				userAuthSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.source"); ok {
+					userAuthSettingsPayload["source"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.destination"); ok {
+					userAuthSettingsPayload["destination"] = v.(string)
+				}
+				if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.allowed_http_servers"); ok {
+					userAuthSettingsPayload["allowed-http-servers"] = v.(string)
+				}
+				actionSettingsPayload["user-auth-settings"] = userAuthSettingsPayload
+			}
+			accessRule["action-settings"] = actionSettingsPayload
+		}
+	}
+	if v, ok := d.GetOk("content"); ok {
+		accessRule["content"] = v.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("content_direction"); ok {
+		accessRule["content-direction"] = v.(string)
+	}
+	if v, ok := d.GetOk("content_negate"); ok {
+		accessRule["content-negate"] = v.(bool)
+	}
+	if v, ok := d.GetOk("custom_fields"); ok {
+
+		customFieldsList := v.([]interface{})
+
+		if len(customFieldsList) > 0 {
+
+			customFieldsPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("custom_fields.0.field_1"); ok {
+				customFieldsPayload["field-1"] = v.(string)
+			}
+			if v, ok := d.GetOk("custom_fields.0.field_2"); ok {
+				customFieldsPayload["field-2"] = v.(string)
+			}
+			if v, ok := d.GetOk("custom_fields.0.field_3"); ok {
+				customFieldsPayload["field-3"] = v.(string)
+			}
+			accessRule["custom-fields"] = customFieldsPayload
+		}
+	}
+	if val, ok := d.GetOk("destination"); ok {
+		accessRule["destination"] = val.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("destination_negate"); ok {
+		accessRule["destination-negate"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enabled"); ok {
+		accessRule["enabled"] = v.(bool)
+	}
+	if val, ok := d.GetOk("inline_layer"); ok {
+		accessRule["inline-layer"] = val.(string)
+	}
+	if val, ok := d.GetOk("install_on"); ok {
+		accessRule["install-on"] = val.(*schema.Set).List()
+	}
+	if val, ok := d.GetOk("service"); ok {
+		accessRule["service"] = val.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("service_negate"); ok {
+		accessRule["service-negate"] = v.(bool)
+	}
+	if val, ok := d.GetOk("source"); ok {
+		accessRule["source"] = val.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("source_negate"); ok {
+		accessRule["source-negate"] = v.(bool)
+	}
+	if v, ok := d.GetOk("time"); ok {
+		accessRule["time"] = v.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("track"); ok {
+
+		trackList := v.([]interface{})
+
+		if len(trackList) > 0 {
+
+			trackPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOkExists("track.0.accounting"); ok {
+				trackPayload["accounting"] = v.(bool)
+			}
+			if v, ok := d.GetOk("track.0.alert"); ok {
+				trackPayload["alert"] = v.(string)
+			}
+			if v, ok := d.GetOkExists("track.0.enable_firewall_session"); ok {
+				trackPayload["enable-firewall-session"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("track.0.per_connection"); ok {
+				trackPayload["per-connection"] = v.(bool)
+			}
+			if v, ok := d.GetOkExists("track.0.per_session"); ok {
+				trackPayload["per-session"] = v.(bool)
+			}
+			if v, ok := d.GetOk("track.0.type"); ok {
+				trackPayload["type"] = v.(string)
+			}
+			accessRule["track"] = trackPayload
+		}
+	}
+
+	if v, ok := d.GetOk("user_check"); ok {
+
+		userCheckList := v.([]interface{})
+
+		if len(userCheckList) > 0 {
+
+			userCheckPayload := make(map[string]interface{})
+
+			if v, ok := d.GetOk("user_check.0.confirm"); ok {
+				userCheckPayload["confirm"] = v.(string)
+			}
+			if _, ok := d.GetOk("user_check.0.custom_frequency"); ok {
+
+				customFrequencyPayLoad := make(map[string]interface{})
+
+				if v, ok := d.GetOk("user_check.0.custom_frequency.0.every"); ok {
+					customFrequencyPayLoad["every"] = v
+				}
+				if v, ok := d.GetOk("user_check.0.custom_frequency.0.unit"); ok {
+					customFrequencyPayLoad["unit"] = v.(string)
+				}
+				userCheckPayload["custom-frequency"] = customFrequencyPayLoad
+			}
+			if v, ok := d.GetOk("user_check.0.frequency"); ok {
+				userCheckPayload["frequency"] = v.(string)
+			}
+			if v, ok := d.GetOk("user_check.0.interaction"); ok {
+				userCheckPayload["interaction"] = v.(string)
+			}
+			accessRule["user-check"] = userCheckPayload
+		}
+	}
+	if v, ok := d.GetOk("vpn_directional"); ok {
+		accessRule["vpn"] = v
+	}
+	if v, ok := d.GetOk("vpn_communities"); ok {
+		accessRule["vpn"] = v.(*schema.Set).List()
+	}
+	if v, ok := d.GetOk("vpn"); ok {
+		accessRule["vpn"] = v.(string)
+	}
+	if val, ok := d.GetOk("comments"); ok {
+		accessRule["comments"] = val.(string)
+	}
+	if val, ok := d.GetOk("color"); ok {
+		accessRule["color"] = val.(string)
+	}
+	if val, ok := d.GetOk("ignore_errors"); ok {
+		accessRule["ignore-errors"] = val.(bool)
+	}
+	if val, ok := d.GetOk("ignore_warnings"); ok {
+		accessRule["ignore-warnings"] = val.(bool)
+	}
+
+	log.Println("Create Access Rule - Map = ", accessRule)
+
+	if v, ok := d.GetOk("service_resource"); ok {
+		accessRule["service-resource"] = v.(string)
+	}
+
+	addAccessRuleRes, err := client.ApiCall("add-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !addAccessRuleRes.Success {
+		if addAccessRuleRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", addAccessRuleRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+
+	d.SetId(addAccessRuleRes.GetData()["uid"].(string))
+
+	return readManagementAccessRule(d, m)
+}
+
+func readManagementAccessRule(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	payload := map[string]interface{}{
+		"uid":   d.Id(),
+		"layer": d.Get("layer"),
+	}
+
+	showAccessRuleRes, err := client.ApiCall("show-access-rule", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf("%s", err.Error())
+	}
+	if !showAccessRuleRes.Success {
+		// Handle delete resource from other clients
+		if objectNotFound(showAccessRuleRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf("%s", showAccessRuleRes.ErrorMsg)
+	}
+
+	accessRule := showAccessRuleRes.GetData()
+
+	log.Println("Read Access Rule - Show JSON = ", accessRule)
+
+	if v := accessRule["name"]; v != nil {
+		_ = d.Set("name", v)
+	}
+
+	if v := accessRule["action"]; v != nil {
+		actionId := resolveObjectIdentifier("action", accessRule["action"], d)
+		if actionId == "Inner Layer" {
+			actionId = "Apply Layer"
+		}
+		_ = d.Set("action", actionId)
+	}
+
+	if accessRule["action-settings"] != nil {
+
+		actionSettingsMap := accessRule["action-settings"].(map[string]interface{})
+
+		actionSettingsMapToReturn := make(map[string]interface{})
+
+		if v := actionSettingsMap["enable-identity-captive-portal"]; v != nil {
+			actionSettingsMapToReturn["enable_identity_captive_portal"] = v
+		}
+		if v := actionSettingsMap["limit"]; v != nil {
+			actionSettingsMapToReturn["limit"] = v.(map[string]interface{})["name"].(string)
+		}
+		if v := actionSettingsMap["client-auth-settings"]; v != nil {
+			clientAuthSettingsMap := v.(map[string]interface{})
+			clientAuthSettingsMapToReturn := make(map[string]interface{})
+			if v := clientAuthSettingsMap["source"]; v != nil {
+				clientAuthSettingsMapToReturn["source"] = v
+			}
+			if v := clientAuthSettingsMap["destination"]; v != nil {
+				clientAuthSettingsMapToReturn["destination"] = v
+			}
+			if v := clientAuthSettingsMap["sign-on-method"]; v != nil {
+				clientAuthSettingsMapToReturn["sign_on_method"] = v
+			}
+			if v := clientAuthSettingsMap["sign-on-type"]; v != nil {
+				clientAuthSettingsMapToReturn["sign_on_type"] = v
+			}
+			if v := clientAuthSettingsMap["tracking"]; v != nil {
+				clientAuthSettingsMapToReturn["tracking"] = v
+			}
+			if v := clientAuthSettingsMap["sessions-limit"]; v != nil {
+				clientAuthSettingsMapToReturn["sessions_limit"] = v
+			}
+			if v := clientAuthSettingsMap["unlimited-sessions"]; v != nil {
+				clientAuthSettingsMapToReturn["unlimited_sessions"] = v
+			}
+			if v := clientAuthSettingsMap["require-desktop-config-verification"]; v != nil {
+				clientAuthSettingsMapToReturn["require_desktop_config_verification"] = v
+			}
+			if v := clientAuthSettingsMap["timeout"]; v != nil {
+				timeoutMap := v.(map[string]interface{})
+				timeoutMapToReturn := make(map[string]interface{})
+				if v := timeoutMap["enable"]; v != nil {
+					timeoutMapToReturn["enable"] = v
+				}
+				if v := timeoutMap["minutes"]; v != nil {
+					timeoutMapToReturn["minutes"] = v
+				}
+				if v := timeoutMap["refreshable"]; v != nil {
+					timeoutMapToReturn["refreshable"] = v
+				}
+				clientAuthSettingsMapToReturn["timeout"] = []interface{}{timeoutMapToReturn}
+			}
+			actionSettingsMapToReturn["client_auth_settings"] = []interface{}{clientAuthSettingsMapToReturn}
+		}
+		if v := actionSettingsMap["user-auth-settings"]; v != nil {
+			userAuthSettingsMap := v.(map[string]interface{})
+			userAuthSettingsMapToReturn := make(map[string]interface{})
+			if v := userAuthSettingsMap["source"]; v != nil {
+				userAuthSettingsMapToReturn["source"] = v
+			}
+			if v := userAuthSettingsMap["destination"]; v != nil {
+				userAuthSettingsMapToReturn["destination"] = v
+			}
+			if v := userAuthSettingsMap["allowed-http-servers"]; v != nil {
+				userAuthSettingsMapToReturn["allowed_http_servers"] = v
+			}
+			actionSettingsMapToReturn["user_auth_settings"] = []interface{}{userAuthSettingsMapToReturn}
+		}
+		_ = d.Set("action_settings", []interface{}{actionSettingsMapToReturn})
+
+	} else {
+		_ = d.Set("action_settings", nil)
+	}
+
+	if accessRule["content"] != nil {
+		contentIds := resolveListOfIdentifiers("content", accessRule["content"], d)
+		_ = d.Set("content", contentIds)
+	} else {
+		_ = d.Set("content", nil)
+	}
+
+	if v := accessRule["content-direction"]; v != nil {
+		_ = d.Set("content_direction", v)
+	}
+
+	if v := accessRule["content-negate"]; v != nil {
+		_ = d.Set("content_negate", v)
+	}
+
+	if accessRule["custom-fields"] != nil {
+
+		customFieldsMap := accessRule["custom-fields"].(map[string]interface{})
+
+		customFieldsMapToReturn := make(map[string]interface{})
+
+		if v := customFieldsMap["field-1"]; v != nil {
+			customFieldsMapToReturn["field_1"] = v
+		}
+		if v := customFieldsMap["field-2"]; v != nil {
+			customFieldsMapToReturn["field_2"] = v
+		}
+		if v := customFieldsMap["field-3"]; v != nil {
+			customFieldsMapToReturn["field_3"] = v
+		}
+
+		_ = d.Set("custom_fields", []interface{}{customFieldsMapToReturn})
+
+	} else {
+		_ = d.Set("custom_fields", nil)
+	}
+
+	if accessRule["destination"] != nil {
+		destinationIds := resolveListOfIdentifiers("destination", accessRule["destination"], d)
+		_ = d.Set("destination", destinationIds)
+	}
+
+	if v := accessRule["destination-negate"]; v != nil {
+		_ = d.Set("destination_negate", v)
+	}
+
+	if v := accessRule["enabled"]; v != nil {
+		_ = d.Set("enabled", v)
+	}
+
+	if v := accessRule["inline-layer"]; v != nil {
+		_ = d.Set("inline_layer", v)
+	}
+
+	if accessRule["install-on"] != nil {
+		installOnIds := resolveListOfIdentifiers("install-on", accessRule["install-on"], d)
+		_ = d.Set("install_on", installOnIds)
+	}
+
+	if accessRule["service"] != nil {
+		serviceIds := resolveListOfIdentifiers("service", accessRule["service"], d)
+		_ = d.Set("service", serviceIds)
+	}
+
+	if v := accessRule["service-negate"]; v != nil {
+		_ = d.Set("service_negate", v)
+	}
+
+	if accessRule["source"] != nil {
+		sourceIds := resolveListOfIdentifiers("source", accessRule["source"], d)
+		_ = d.Set("source", sourceIds)
+	}
+
+	if v := accessRule["source-negate"]; v != nil {
+		_ = d.Set("source_negate", v)
+	}
+
+	if accessRule["time"] != nil {
+		timeIds := resolveListOfIdentifiers("time", accessRule["time"], d)
+		_ = d.Set("time", timeIds)
+	}
+
+	if accessRule["track"] != nil {
+
+		trackMap := accessRule["track"].(map[string]interface{})
+
+		trackMapToReturn := make(map[string]interface{})
+
+		if v := trackMap["accounting"]; v != nil {
+			trackMapToReturn["accounting"] = v.(bool)
+		}
+
+		if v, _ := trackMap["alert"]; v != nil {
+			trackMapToReturn["alert"] = v.(string)
+		}
+
+		if v := trackMap["enable-firewall-session"]; v != nil {
+			trackMapToReturn["enable_firewall_session"] = v.(bool)
+		}
+
+		if v := trackMap["per-connection"]; v != nil {
+			trackMapToReturn["per_connection"] = v.(bool)
+		}
+
+		if v := trackMap["per-session"]; v != nil {
+			trackMapToReturn["per_session"] = v.(bool)
+		}
+
+		if v, _ := trackMap["type"]; v != nil {
+			trackMapToReturn["type"] = v.(map[string]interface{})["name"].(string)
+		}
+		_ = d.Set("track", []interface{}{trackMapToReturn})
+
+	} else {
+		_ = d.Set("track", nil)
+	}
+
+	if accessRule["user-check"] != nil {
+
+		userCheckMap := accessRule["user-check"].(map[string]interface{})
+
+		userCheckMapToReturn := make(map[string]interface{})
+
+		if v, _ := userCheckMap["confirm"]; v != nil {
+			userCheckMapToReturn["confirm"] = v
+		}
+
+		if v, ok := userCheckMap["custom-frequency"]; ok {
+
+			userCheckConfigMap := v.(map[string]interface{})
+			userCheckConfigMapToReturn := make(map[string]interface{})
+
+			if v, _ := userCheckConfigMap["every"]; v != nil {
+				userCheckConfigMapToReturn["every"] = v
+			}
+
+			if v, _ := userCheckConfigMap["unit"]; v != nil {
+				userCheckConfigMapToReturn["unit"] = v
+			}
+			userCheckMapToReturn["custom_frequency"] = []interface{}{userCheckConfigMapToReturn}
+		}
+
+		if v, _ := userCheckMap["frequency"]; v != nil {
+			userCheckMapToReturn["frequency"] = v
+		}
+
+		if v, _ := userCheckMap["interaction"]; v != nil {
+			userCheckMapToReturn["interaction"] = v.(map[string]interface{})["name"]
+		}
+
+		_ = d.Set("user_check", []interface{}{userCheckMapToReturn})
+	} else {
+		_ = d.Set("user_check", nil)
+	}
+
+	if v := accessRule["vpn"]; v != nil {
+		vpnList := v.([]interface{})
+		if len(vpnList) > 0 {
+			vpnType := vpnList[0].(map[string]interface{})["type"].(string)
+			if len(vpnList) == 1 && vpnType != "VpnDirectionalElement" { // BC
+				vpnId := resolveObjectIdentifier("vpn", v.([]interface{})[0], d)
+				_, vpnCommunitiesUsed := d.GetOk("vpn_communities")
+				if vpnCommunitiesUsed {
+					_ = d.Set("vpn", nil)
+					_ = d.Set("vpn_communities", []interface{}{vpnId})
+				} else {
+					_ = d.Set("vpn", vpnId)
+					_ = d.Set("vpn_communities", nil)
+				}
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType != "VpnDirectionalElement" {
+				vpnIds := resolveListOfIdentifiers("vpn", vpnList, d)
+				_ = d.Set("vpn_communities", vpnIds)
+				_ = d.Set("vpn", nil)
+				_ = d.Set("vpn_directional", nil)
+			} else if vpnType == "VpnDirectionalElement" {
+				var vpnDirectionalListState []map[string]interface{}
+				for i := range vpnList {
+					vpnDirectionalObj := vpnList[i].(map[string]interface{})
+					if v, _ := vpnDirectionalObj["name"]; v != nil {
+						vpnDirectionalNames := strings.Split(v.(string), "->")
+						vpnDirectionalState := make(map[string]interface{})
+						vpnDirectionalState["from"] = vpnDirectionalNames[0]
+						vpnDirectionalState["to"] = vpnDirectionalNames[1]
+						vpnDirectionalListState = append(vpnDirectionalListState, vpnDirectionalState)
+					}
+				}
+				_ = d.Set("vpn_directional", vpnDirectionalListState)
+				_ = d.Set("vpn_communities", nil)
+				_ = d.Set("vpn", nil)
+			} else {
+				return fmt.Errorf("Cannot read invalid VPN type [%s]", vpnType)
+			}
+		}
+	}
+
+	if v := accessRule["comments"]; v != nil {
+		_ = d.Set("comments", v)
+	}
+	if v, ok := accessRule["service-resource"].(map[string]interface{}); ok {
+		_ = d.Set("service_resource", v["name"])
+	}
+
+	return nil
+}
+
+func updateManagementAccessRule(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+	accessRule := make(map[string]interface{})
+
+	accessRule["uid"] = d.Id()
+	accessRule["layer"] = d.Get("layer")
+
+	if d.HasChange("position") {
+		if _, ok := d.GetOk("position"); ok {
+
+			if v, ok := d.GetOk("position.0.top"); ok {
+				if v.(string) == "top" {
+					accessRule["new-position"] = "top" // entire rule-base
+				} else {
+					accessRule["new-position"] = map[string]interface{}{"top": v.(string)} // specific section-name
+				}
+			}
+
+			if v, ok := d.GetOk("position.0.above"); ok {
+				accessRule["new-position"] = map[string]interface{}{"above": v.(string)}
+			}
+
+			if v, ok := d.GetOk("position.0.below"); ok {
+				accessRule["new-position"] = map[string]interface{}{"below": v.(string)}
+			}
+
+			if v, ok := d.GetOk("position.0.bottom"); ok {
+				if v.(string) == "bottom" {
+					accessRule["new-position"] = "bottom" // entire rule-base
+				} else {
+					accessRule["new-position"] = map[string]interface{}{"bottom": v.(string)} // specific section-name
+				}
+			}
+		}
+	}
+
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			accessRule["new-name"] = v
+		}
+	}
+
+	if d.HasChange("action") {
+		if v, ok := d.GetOk("action"); ok {
+			accessRule["action"] = v
+
+			if val, ok := d.GetOk("inline_layer"); ok {
+				accessRule["inline-layer"] = val.(string)
+			}
+		}
+	}
+
+	if d.HasChange("action_settings") {
+
+		if v, ok := d.GetOk("action_settings"); ok {
+
+			actionSettingsList := v.([]interface{})
+
+			if len(actionSettingsList) > 0 {
+
+				actionSettingsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("action_settings.0.enable_identity_captive_portal"); ok {
+					actionSettingsPayload["enable-identity-captive-portal"] = v.(bool)
+				}
+				if v, ok := d.GetOk("action_settings.0.limit"); ok {
+					actionSettingsPayload["limit"] = v.(string)
+				}
+				if _, ok := d.GetOk("action_settings.0.client_auth_settings"); ok {
+
+					clientAuthSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.source"); ok {
+						clientAuthSettingsPayload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.destination"); ok {
+						clientAuthSettingsPayload["destination"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_method"); ok {
+						clientAuthSettingsPayload["sign-on-method"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sign_on_type"); ok {
+						clientAuthSettingsPayload["sign-on-type"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.tracking"); ok {
+						clientAuthSettingsPayload["tracking"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.sessions_limit"); ok {
+						clientAuthSettingsPayload["sessions-limit"] = v.(int)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.unlimited_sessions"); ok {
+						clientAuthSettingsPayload["unlimited-sessions"] = v.(bool)
+					}
+					if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.require_desktop_config_verification"); ok {
+						clientAuthSettingsPayload["require-desktop-config-verification"] = v.(bool)
+					}
+					if _, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout"); ok {
+
+						timeoutPayload := make(map[string]interface{})
+
+						if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.enable"); ok {
+							timeoutPayload["enable"] = v.(bool)
+						}
+						if v, ok := d.GetOk("action_settings.0.client_auth_settings.0.timeout.0.minutes"); ok {
+							timeoutPayload["minutes"] = v.(int)
+						}
+						if v, ok := d.GetOkExists("action_settings.0.client_auth_settings.0.timeout.0.refreshable"); ok {
+							timeoutPayload["refreshable"] = v.(bool)
+						}
+						clientAuthSettingsPayload["timeout"] = timeoutPayload
+					}
+					actionSettingsPayload["client-auth-settings"] = clientAuthSettingsPayload
+				}
+				if _, ok := d.GetOk("action_settings.0.user_auth_settings"); ok {
+
+					userAuthSettingsPayload := make(map[string]interface{})
+
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.source"); ok {
+						userAuthSettingsPayload["source"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.destination"); ok {
+						userAuthSettingsPayload["destination"] = v.(string)
+					}
+					if v, ok := d.GetOk("action_settings.0.user_auth_settings.0.allowed_http_servers"); ok {
+						userAuthSettingsPayload["allowed-http-servers"] = v.(string)
+					}
+					actionSettingsPayload["user-auth-settings"] = userAuthSettingsPayload
+				}
+				accessRule["action-settings"] = actionSettingsPayload
+			}
+		}
+	}
+
+	if d.HasChange("content") {
+		if v, ok := d.GetOk("content"); ok {
+			accessRule["content"] = v.(*schema.Set).List()
+		}
+		//else {
+		//	oldContent, _ := d.GetChange("content")
+		//	if oldContent != nil {
+		//		accessRule["content"] = map[string]interface{}{"remove": oldContent.(*schema.Set).List()}
+		//	}
+		//}
+	}
+
+	if d.HasChange("content_direction") {
+		if v, ok := d.GetOk("content_direction"); ok {
+			accessRule["content-direction"] = v
+		}
+	}
+
+	if d.HasChange("content_negate") {
+		if v, ok := d.GetOk("content_negate"); ok {
+			accessRule["content-negate"] = v
+		}
+	}
+
+	if d.HasChange("custom_fields") {
+
+		if v, ok := d.GetOk("custom_fields"); ok {
+
+			customFieldsList := v.([]interface{})
+
+			if len(customFieldsList) > 0 {
+
+				customFieldsPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOk("custom_fields.0.field_1"); ok {
+					customFieldsPayload["field-1"] = v.(string)
+				}
+				if v, ok := d.GetOk("custom_fields.0.field_2"); ok {
+					customFieldsPayload["field-2"] = v.(string)
+				}
+				if v, ok := d.GetOk("custom_fields.0.field_3"); ok {
+					customFieldsPayload["field-3"] = v.(string)
+				}
+				accessRule["custom-fields"] = customFieldsPayload
+			}
+		}
+	}
+
+	if d.HasChange("destination") {
+		if v, ok := d.GetOk("destination"); ok {
+			accessRule["destination"] = v.(*schema.Set).List()
+		}
+	}
+
+	if d.HasChange("destination_negate") {
+		if v, ok := d.GetOk("destination_negate"); ok {
+			accessRule["destination-negate"] = v
+		}
+	}
+
+	if d.HasChange("enabled") {
+		if v, ok := d.GetOkExists("enabled"); ok {
+			accessRule["enabled"] = v
+		}
+	}
+
+	if d.HasChange("inline_layer") {
+		if v, ok := d.GetOk("inline_layer"); ok {
+			accessRule["inline-layer"] = v.(string)
+		}
+	}
+
+	if d.HasChange("install_on") {
+		if v, ok := d.GetOk("install_on"); ok {
+			accessRule["install-on"] = v.(*schema.Set).List()
+		}
+		//else {
+		//	oldInstallOn, _ := d.GetChange("install_on")
+		//	accessRule["install-on"] = map[string]interface{}{"remove": oldInstallOn.(*schema.Set).List()}
+		//}
+	}
+
+	if d.HasChange("service") {
+		if v, ok := d.GetOk("service"); ok {
+			accessRule["service"] = v.(*schema.Set).List()
+		}
+		//else {
+		//	oldService, _ := d.GetChange("service")
+		//	accessRule["service"] = map[string]interface{}{"remove": oldService.(*schema.Set).List()}
+		//}
+	}
+
+	if d.HasChange("service_negate") {
+		if v, ok := d.GetOk("service_negate"); ok {
+			accessRule["service-negate"] = v
+		}
+	}
+
+	if d.HasChange("source") {
+		if v, ok := d.GetOk("source"); ok {
+			accessRule["source"] = v.(*schema.Set).List()
+		}
+		//else {
+		//	oldSource, _ := d.GetChange("source")
+		//	accessRule["source"] = map[string]interface{}{"remove": oldSource.(*schema.Set).List()}
+		//}
+	}
+
+	if d.HasChange("source_negate") {
+		if v, ok := d.GetOk("source_negate"); ok {
+			accessRule["source-negate"] = v
+		}
+	}
+
+	if d.HasChange("time") {
+		if v, ok := d.GetOk("time"); ok {
+			accessRule["time"] = v.(*schema.Set).List()
+		}
+		//else {
+		//	oldTime, _ := d.GetChange("time")
+		//	oldTimeLst := oldTime.(*schema.Set).List()
+		//	if len(oldTimeLst) > 0 {
+		//		accessRule["time"] = map[string]interface{}{"remove": oldTimeLst}
+		//	}
+		//}
+	}
+
+	if d.HasChange("track") {
+
+		if v, ok := d.GetOk("track"); ok {
+
+			trackList := v.([]interface{})
+
+			if len(trackList) > 0 {
+
+				trackPayload := make(map[string]interface{})
+
+				if v, ok := d.GetOkExists("track.0.accounting"); ok {
+					trackPayload["accounting"] = v.(bool)
+				}
+				if v, ok := d.GetOk("track.0.alert"); ok {
+					trackPayload["alert"] = v.(string)
+				}
+				if v, ok := d.GetOkExists("track.0.enable_firewall_session"); ok {
+					trackPayload["enable-firewall-session"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("track.0.per_connection"); ok {
+					trackPayload["per-connection"] = v.(bool)
+				}
+				if v, ok := d.GetOkExists("track.0.per_session"); ok {
+					trackPayload["per-session"] = v.(bool)
+				}
+				if v, ok := d.GetOk("track.0.type"); ok {
+					trackPayload["type"] = v.(string)
+				}
+				accessRule["track"] = trackPayload
+			}
+		}
+	}
+
+	if d.HasChange("user_check") {
+		if v, ok := d.GetOk("user_check"); ok {
+			userCheckList := v.([]interface{})
+			if len(userCheckList) > 0 {
+				userCheckPayload := make(map[string]interface{})
+				if v, ok := d.GetOk("user_check.0.confirm"); ok {
+					userCheckPayload["confirm"] = v.(string)
+				}
+				if _, ok := d.GetOk("user_check.0.custom_frequency"); ok {
+					customFrequencyConfigPayLoad := make(map[string]interface{})
+					if v, ok := d.GetOk("user_check.0.custom_frequency.0.every"); ok {
+						customFrequencyConfigPayLoad["every"] = v
+					}
+					if v, ok := d.GetOk("user_check.0.custom_frequency.0.unit"); ok {
+						customFrequencyConfigPayLoad["unit"] = v.(string)
+					}
+					userCheckPayload["custom-frequency"] = customFrequencyConfigPayLoad
+				}
+				if v, ok := d.GetOk("user_check.0.frequency"); ok {
+					userCheckPayload["frequency"] = v.(string)
+				}
+				if v, ok := d.GetOk("user_check.0.interaction"); ok {
+					userCheckPayload["interaction"] = v.(string)
+				}
+				accessRule["user-check"] = userCheckPayload
+			}
+		}
+	}
+
+	if d.HasChange("vpn_directional") {
+		if v, ok := d.GetOk("vpn_directional"); ok {
+			accessRule["vpn"] = v
+		}
+	}
+
+	if d.HasChange("vpn_communities") {
+		if v, ok := d.GetOk("vpn_communities"); ok {
+			accessRule["vpn"] = v.(*schema.Set).List()
+		}
+	}
+
+	if d.HasChange("vpn") {
+		if v, ok := d.GetOk("vpn"); ok {
+			accessRule["vpn"] = v
+		}
+	}
+
+	if d.HasChange("comments") {
+		if v, ok := d.GetOk("comments"); ok {
+			accessRule["comments"] = v
+		}
+	}
+
+	if v, ok := d.GetOkExists("ignore_errors"); ok {
+		accessRule["ignore-errors"] = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("ignore_warnings"); ok {
+		accessRule["ignore-warnings"] = v.(bool)
+	}
+
+	log.Println("Update Access Rule - Map = ", accessRule)
+
+	if len(accessRule) != 4 {
+		if ok := d.HasChange("service_resource"); ok {
+			if v, ok := d.GetOk("service_resource"); ok {
+				accessRule["service-resource"] = v.(string)
+			}
+		}
+
+		updateAccessRuleRes, err := client.ApiCall("set-access-rule", accessRule, client.GetSessionID(), true, client.IsProxyUsed())
+		if err != nil || !updateAccessRuleRes.Success {
+			if updateAccessRuleRes.ErrorMsg != "" {
+				return fmt.Errorf("%s", updateAccessRuleRes.ErrorMsg)
+			}
+			return fmt.Errorf("%s", err.Error())
+		}
+	} else {
+		// Payload contain only required fields: uid, layer, ignore-warnings, ignore-errors
+		// We got empty update, skip update API call...
+		log.Println("Got empty update. Skip update API call...")
+	}
+
+	return readManagementAccessRule(d, m)
+}
+
+func deleteManagementAccessRule(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	accessRulePayload := map[string]interface{}{
+		"uid":   d.Id(),
+		"layer": d.Get("layer"),
+	}
+
+	deleteAccessRuleRes, err := client.ApiCall("delete-access-rule", accessRulePayload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil || !deleteAccessRuleRes.Success {
+		if deleteAccessRuleRes.ErrorMsg != "" {
+			return fmt.Errorf("%s", deleteAccessRuleRes.ErrorMsg)
+		}
+		return fmt.Errorf("%s", err.Error())
+	}
+	d.SetId("")
+
+	return nil
+}

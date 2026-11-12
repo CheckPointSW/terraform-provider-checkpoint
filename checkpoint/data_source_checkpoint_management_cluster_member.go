@@ -1,0 +1,403 @@
+package checkpoint
+
+import (
+	"fmt"
+	checkpoint "github.com/CheckPointSW/cp-mgmt-api-go-sdk/APIFiles"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
+)
+
+func dataSourceManagementClusterMember() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceManagementClusterMemberRead,
+		Schema: map[string]*schema.Schema{
+			"uid": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Cluster member unique identifier.",
+			},
+			"limit_interfaces": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Limit number of cluster member interfaces to show.",
+				Default:     50,
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "N/A",
+			},
+			"cluster_uid": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cluster object (the owner of this member) uid.",
+			},
+			"interfaces": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Cluster member network interfaces.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ipv4_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IPv4 address.",
+						},
+						"ipv4_mask_length": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "IPv4 network mask length.",
+						},
+						"ipv4_network_mask": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IPv4 network mask.",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Cluster member interface name.",
+						},
+						"ipv6_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IPv6 address.",
+						},
+						"ipv6_mask_length": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "IPv6 network mask length.",
+						},
+						"ipv6_network_mask": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IPv6 network mask.",
+						},
+						"uid": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Cluster member interface object UID.",
+						},
+					},
+				},
+			},
+			"ip_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cluster member IP address.",
+			},
+			"ipv6_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cluster member IPv6 address.",
+			},
+			"sic_message": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Secure Internal Communication message.",
+			},
+			"sic_state": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Secure Internal Communication state.",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Object type.",
+			},
+			"priority": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "In a High Availability New mode cluster each machine is given a priority. The highest priority machine serves as the gateway in normal circumstances. If this machine fails, control is passed to the next highest priority machine. If that machine fails, control is passed to the next machine, and so on. In Load Sharing Unicast mode cluster, the highest priority is the pivot machine. The values must be in a range from 1 to N, where N is number of cluster members.",
+			},
+			"nat_settings": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "NAT settings.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"auto_rule": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to add automatic address translation rules.",
+						},
+						"hide_behind": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Hide behind method. This parameter is forbidden in case \"method\" parameter is \"static\".",
+						},
+						"install_on": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Which gateway should apply the NAT translation.",
+						},
+						"ipv4_address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IPv4 address.",
+						},
+						"ipv6_address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IPv6 address.",
+						},
+						"method": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "NAT translation method.",
+						},
+					},
+				},
+			},
+			"auto_generate_ip": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Use an automatically generated IP address for the Gateway object (applies only to Smart-1 Cloud).",
+			},
+			"trust_method": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Trust method that was used for establishing communication.",
+			},
+			"trust_details": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Details for trusted communication.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"authentication_token": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Authentication token to use on the Gateway side to establish the communication between the Gateway and the Management Server (applies only to Smart-1 ...",
+						},
+						"cloud_communication_details": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Details about the communication status with cloud (applies only to Smart-1 Cloud).",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "IP address used for communication between the Gateway and the Management Server (used when 'auto-generate-ip=true').",
+									},
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Status of communication between the Gateway and the Management Server.",
+									},
+								},
+							},
+						},
+						"gateway_mac_address": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Use the Security Gateway MAC address, relevant for the gateway_mac_address identification-method.",
+						},
+						"identification_method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "How to identify the gateway (relevant for DAIP gateways only).",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Status of the trusted communication with the Security Gateway.",
+						},
+						"token_expiration_date": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Details about the communication status with cloud (applies only to Smart-1 Cloud).",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func dataSourceManagementClusterMemberRead(d *schema.ResourceData, m interface{}) error {
+
+	client := m.(*checkpoint.ApiClient)
+
+	uid := d.Get("uid").(string)
+	d.SetId(uid)
+
+	payload := make(map[string]interface{})
+
+	payload["uid"] = uid
+
+	if v, ok := d.GetOk("limit_interfaces"); ok {
+		payload["limit-interfaces"] = v
+	}
+
+	showClusterMemberRes, err := client.ApiCall("show-cluster-member", payload, client.GetSessionID(), true, client.IsProxyUsed())
+	if err != nil {
+		return fmt.Errorf("%s", err.Error())
+	}
+	if !showClusterMemberRes.Success {
+		if objectNotFound(showClusterMemberRes.GetData()["code"].(string)) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf("%s", showClusterMemberRes.ErrorMsg)
+	}
+
+	clusterMember := showClusterMemberRes.GetData()
+
+	log.Println("Read ClusterMember - Show JSON = ", clusterMember)
+
+	if v := clusterMember["name"]; v != nil {
+		_ = d.Set("name", v)
+	}
+
+	if v := clusterMember["type"]; v != nil {
+		_ = d.Set("type", v)
+	}
+
+	if v := clusterMember["cluster-uid"]; v != nil {
+		_ = d.Set("cluster_uid", v)
+	}
+
+	if v := clusterMember["ip-address"]; v != nil {
+		_ = d.Set("ip_address", v)
+	}
+
+	if v := clusterMember["ipv6-address"]; v != nil {
+		_ = d.Set("ipv6_address", v)
+	}
+
+	if v := clusterMember["sic-message"]; v != nil {
+		_ = d.Set("sic_message", v)
+	}
+
+	if v := clusterMember["sic-state"]; v != nil {
+		_ = d.Set("sic_state", v)
+	}
+
+	if v := clusterMember["priority"]; v != nil {
+		_ = d.Set("priority", v.(int))
+	}
+
+	if clusterMember["interfaces"] != nil {
+
+		interfacesList, ok := clusterMember["interfaces"].([]interface{})
+
+		var interfacesListToReturn []map[string]interface{}
+
+		if ok {
+
+			if len(interfacesList) > 0 {
+
+				for i := range interfacesList {
+
+					interfacesMap := interfacesList[i].(map[string]interface{})
+
+					interfacesMapToAdd := make(map[string]interface{})
+
+					if v, _ := interfacesMap["ipv4-address"]; v != nil {
+						interfacesMapToAdd["ipv4_address"] = v
+					}
+					if v, _ := interfacesMap["ipv4-mask-length"]; v != nil {
+						interfacesMapToAdd["ipv4_mask_length"] = v
+					}
+					if v, _ := interfacesMap["ipv4-network-mask"]; v != nil {
+						interfacesMapToAdd["ipv4_network_mask"] = v
+					}
+					if v, _ := interfacesMap["name"]; v != nil {
+						interfacesMapToAdd["name"] = v
+					}
+					if v, _ := interfacesMap["ipv6-address"]; v != nil {
+						interfacesMapToAdd["ipv^_address"] = v
+					}
+					if v, _ := interfacesMap["ipv6-mask-length"]; v != nil {
+						interfacesMapToAdd["ipv6_mask_length"] = v
+					}
+					if v, _ := interfacesMap["ipv6-network-mask"]; v != nil {
+						interfacesMapToAdd["ipv6_network_mask"] = v
+					}
+					if v, _ := interfacesMap["uid"]; v != nil {
+						interfacesMapToAdd["uid"] = v
+					}
+					interfacesListToReturn = append(interfacesListToReturn, interfacesMapToAdd)
+				}
+			}
+		}
+		_ = d.Set("interfaces", interfacesListToReturn)
+	}
+
+	if clusterMember["nat-settings"] != nil {
+
+		natSettingsMap := clusterMember["nat-settings"].(map[string]interface{})
+
+		natSettingsMapToReturn := make(map[string]interface{})
+
+		if v := natSettingsMap["auto-rule"]; v != nil {
+			natSettingsMapToReturn["auto_rule"] = v
+		}
+		if v := natSettingsMap["hide-behind"]; v != nil {
+			natSettingsMapToReturn["hide_behind"] = v
+		}
+		if v := natSettingsMap["install-on"]; v != nil {
+			natSettingsMapToReturn["install_on"] = v
+		}
+		if v := natSettingsMap["ipv4-address"]; v != nil {
+			natSettingsMapToReturn["ipv4_address"] = v
+		}
+		if v := natSettingsMap["ipv6-address"]; v != nil {
+			natSettingsMapToReturn["ipv6_address"] = v
+		}
+		if v := natSettingsMap["method"]; v != nil {
+			natSettingsMapToReturn["method"] = v
+		}
+
+		_ = d.Set("nat_settings", []interface{}{natSettingsMapToReturn})
+
+	} else {
+		_ = d.Set("nat_settings", nil)
+	}
+
+	if v := clusterMember["auto-generate-ip"]; v != nil {
+		_ = d.Set("auto_generate_ip", v)
+	}
+
+	if v := clusterMember["trust-method"]; v != nil {
+		_ = d.Set("trust_method", v)
+	}
+
+	if v := clusterMember["trust-details"]; v != nil {
+		trustDetailsShow := v.(map[string]interface{})
+		trustDetailsState := make(map[string]interface{})
+		if v := trustDetailsShow["authentication-token"]; v != nil {
+			trustDetailsState["authentication_token"] = v
+		}
+		if v := trustDetailsShow["cloud-communication-details"]; v != nil {
+			cloudCommunicationDetailsShow := v.(map[string]interface{})
+			cloudCommunicationDetailsState := make(map[string]interface{})
+			if v := cloudCommunicationDetailsShow["ip"]; v != nil {
+				cloudCommunicationDetailsState["ip"] = v
+			}
+			if v := cloudCommunicationDetailsShow["status"]; v != nil {
+				cloudCommunicationDetailsState["status"] = v
+			}
+			trustDetailsState["cloud_communication_details"] = []interface{}{cloudCommunicationDetailsState}
+		}
+		if v := trustDetailsShow["gateway-mac-address"]; v != nil {
+			trustDetailsState["gateway_mac_address"] = v
+		}
+		if v := trustDetailsShow["identification-method"]; v != nil {
+			trustDetailsState["identification_method"] = v
+		}
+		if v := trustDetailsShow["status"]; v != nil {
+			trustDetailsState["status"] = v
+		}
+		if v := trustDetailsShow["token-expiration-date"]; v != nil {
+			trustDetailsState["token_expiration_date"] = v
+		}
+		_ = d.Set("trust_details", []interface{}{trustDetailsState})
+	}
+
+	return nil
+
+}
